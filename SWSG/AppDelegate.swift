@@ -15,14 +15,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        UINavigationBar.appearance().barTintColor = UIColor(red: 205/255, green: 0/255, blue: 0, alpha: 1)
-        UINavigationBar.appearance().tintColor = UIColor.white
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName:UIColor.white]
-        
+        setNavigationBar()
+        if UserDefaults.standard.object(forKey: "user") == nil {
+            showLogInSignUpScreen()
+        }
         return true
     }
-
+    
+    /// Sets the color of navigation  bar.
+    private func setNavigationBar() {
+        UINavigationBar.appearance().barTintColor = Config.themeColor
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        UINavigationBar.appearance().tintColor = UIColor.white
+    }
+    
+    /// Shows logInSignUp screen if the user hasn't loged in.
+    private func showLogInSignUpScreen() {
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let storyboard = UIStoryboard(name: Config.logInSignUp, bundle: nil)
+        let initialViewController = storyboard.instantiateViewController(withIdentifier: Config.initialScreen)
+        self.window?.rootViewController = initialViewController
+        self.window?.makeKeyAndVisible()
+    }
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
