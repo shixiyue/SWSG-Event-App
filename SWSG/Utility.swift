@@ -24,27 +24,22 @@ struct Utility {
         return emailTest.evaluate(with: testStr)
     }
     
-    static func logOutUser(currentViewController: UIViewController) {
-        UserDefaults.standard.removeObject(forKey: Config.user)
-        showLogInSignUpScreen(currentViewController: currentViewController)
+    /// Jumps to another storyboard
+    static func showStoryboard(storyboard: String, destinationViewController: String, currentViewController: UIViewController) {
+        let storyboard = UIStoryboard(name: storyboard, bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: destinationViewController) as UIViewController
+        currentViewController.present(controller, animated: true, completion: nil)
     }
     
-    private static func showLogInSignUpScreen(currentViewController: UIViewController) {
-        let storyboard = UIStoryboard(name: Config.logInSignUp, bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: Config.initialScreen) as UIViewController
-        currentViewController.present(controller, animated: true, completion: nil)
+    static func logOutUser(currentViewController: UIViewController) {
+        UserDefaults.standard.removeObject(forKey: Config.user)
+        showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
     }
     
     static func logInUser(user: User, currentViewController: UIViewController) {
         let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: user)
         UserDefaults.standard.set(encodedData, forKey: Config.user)
-        showMainMenuScreen(currentViewController: currentViewController)
-    }
-    
-    private static func showMainMenuScreen(currentViewController: UIViewController) {
-        let storyboard = UIStoryboard(name: Config.main, bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: Config.mainMenuScreen) as UIViewController
-        currentViewController.present(controller, animated: true, completion: nil)
+        showStoryboard(storyboard: Config.main, destinationViewController: Config.navigationController, currentViewController: currentViewController)
     }
     
     static func getFailAlertController(message: String) -> UIAlertController {
