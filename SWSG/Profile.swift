@@ -18,7 +18,7 @@ class Profile: NSObject, NSCoding {
     public private (set) var country: String
     public private (set) var education: String
     public private (set) var skills: String
-    public private (set) var description: String
+    public private (set) var desc: String
 
     init(name: String, image: UIImage, job: String, company: String, country: String,
          education: String, skills: String, description: String) {
@@ -29,7 +29,7 @@ class Profile: NSObject, NSCoding {
         self.country = country
         self.education = education
         self.skills = skills
-        self.description = description
+        self.desc = description
     }
     
     convenience init(name: String, job: String, country: String, education: String, skills: String) {
@@ -42,10 +42,18 @@ class Profile: NSObject, NSCoding {
             return nil
         }
         self.name = name
+        guard let image = aDecoder.decodeObject(forKey: Config.image) as? UIImage else {
+            return nil
+        }
+        self.image = image
         guard let job = aDecoder.decodeObject(forKey: Config.job) as? String else {
             return nil
         }
         self.job = job
+        guard let company = aDecoder.decodeObject(forKey: Config.company) as? String else {
+            return nil
+        }
+        self.company = company
         guard let country = aDecoder.decodeObject(forKey: Config.country) as? String else {
             return nil
         }
@@ -58,6 +66,10 @@ class Profile: NSObject, NSCoding {
             return nil
         }
         self.skills = skills
+        guard let desc = aDecoder.decodeObject(forKey: Config.desc) as? String else {
+            return nil
+        }
+        self.desc = desc
     }
     
     func encode(with aCoder: NSCoder) {

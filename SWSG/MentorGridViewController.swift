@@ -24,7 +24,7 @@ class MentorGridViewController: BaseViewController {
         mentorCollection.dataSource = self
         
         let image = UIImage(named: "Profile")
-        let profile = Profile(name: "Mr Tan Hwee Huat", image: image!, position: "Asset Manager",
+        let profile = Profile(name: "Mr Tan Hwee Huat", image: image!, job: "Asset Manager",
                               company: "UOB Pte. Ltd.", country: "Singapore",
                               education: "National University of Singapore",
                               skills: "Financial Planning", description: "Awesome guy")
@@ -69,7 +69,7 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
         
         cell.iconIV.image = profile.image
         cell.nameLbl.text = profile.name
-        cell.positionLbl.text = profile.position
+        cell.positionLbl.text = profile.job
         cell.companyLbl.text = profile.company
         
         return cell

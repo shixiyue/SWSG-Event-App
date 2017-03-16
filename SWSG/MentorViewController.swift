@@ -39,7 +39,7 @@ class MentorViewController: UIViewController {
         
         profileImg.image = profile.image
         nameLbl.text = profile.name
-        positionLbl.text = profile.position
+        positionLbl.text = profile.job
         companyLbl.text = profile.company
         descriptionTB.text = profile.description
     }
@@ -50,7 +50,7 @@ class MentorViewController: UIViewController {
         }
         
         mentor.days[dayIndex].slots[index].status = .booked
-        mentor.days[dayIndex].slots[index].team = SystemSettings.team
+        mentor.days[dayIndex].slots[index].team = Participant.team
     }
     
     @IBAction func backButtonPressed(_ sender: UIBarButtonItem) {
