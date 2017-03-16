@@ -33,6 +33,8 @@ class EventScheduleTableViewController: UITableViewController {
             guard let indexPath = eventsTableView.indexPathForRow(at: point) else {
                 return
             }
+            let event = events.retrieveEventAt(index: indexPath.item)
+            Utility.showStoryboard(storyboard: Config.eventSystem, destinationViewController: "EventDetailsTableViewController", currentViewController: self)
         }
     }
     
@@ -45,7 +47,10 @@ class EventScheduleTableViewController: UITableViewController {
         }
     }
     
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationItem.hidesBackButton = self.navigationController?.isNavigationBarHidden ?? false
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -135,14 +140,20 @@ class EventScheduleTableViewController: UITableViewController {
      }
      */
     
-    /*
+    
      // MARK: - Navigation
      
      // In a storyboard-based application, you will often want to do a little preparation before navigation
      override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
      // Get the new view controller using segue.destinationViewController.
      // Pass the selected object to the new view controller.
+       // let destinationvc = segue.destination
+     //   let tableCellSelected = sender as? LevelSelectionTableViewCell
+     //   if destinationvc is GamePlayViewController {
+       //     GamePlayViewController.currentLevel = tableCellSelected?.levelName.text
+        //}
+
      }
-     */
+    
     
 }
