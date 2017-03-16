@@ -36,8 +36,8 @@
 		E3220C291E796BC0008AFA85 /* EventSystem.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3220C281E796BC0008AFA85 /* EventSystem.storyboard */; };
 		E3220C2B1E796C7B008AFA85 /* EventScheduleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */; };
 		E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */; };
-		E3220C2F1E7A3013008AFA85 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2E1E7A3013008AFA85 /* Event.swift */; };
-		E3220C311E7A3B99008AFA85 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C301E7A3B99008AFA85 /* Events.swift */; };
+		E3220C311E7A3B99008AFA85 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C301E7A3B99008AFA85 /* Event.swift */; };
+		E3220C331E7A62F9008AFA85 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C321E7A62F9008AFA85 /* Events.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,8 +72,8 @@
 		E3220C281E796BC0008AFA85 /* EventSystem.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = EventSystem.storyboard; sourceTree = "<group>"; };
 		E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleTableViewController.swift; sourceTree = "<group>"; };
 		E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleTableViewCell.swift; sourceTree = "<group>"; };
-		E3220C2E1E7A3013008AFA85 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = "../2017-final-group10/SWSG/Event.swift"; sourceTree = "<group>"; };
-		E3220C301E7A3B99008AFA85 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Events.swift; path = SWSG/Events.swift; sourceTree = SOURCE_ROOT; };
+		E3220C301E7A3B99008AFA85 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = SWSG/Event.swift; sourceTree = SOURCE_ROOT; };
+		E3220C321E7A62F9008AFA85 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,8 +146,6 @@
 				CC1F2B4F1E77D66F0096C271 /* Team.swift */,
 				CC1F2B4B1E77D6560096C271 /* Profile.swift */,
 				CC1F2B4D1E77D6610096C271 /* User.swift */,
-				E3220C2E1E7A3013008AFA85 /* Event.swift */,
-				E3220C301E7A3B99008AFA85 /* Events.swift */,
 			);
 			name = Model;
 			path = ../../SWSG;
@@ -171,6 +169,8 @@
 				E3220C281E796BC0008AFA85 /* EventSystem.storyboard */,
 				E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */,
 				E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */,
+				E3220C301E7A3B99008AFA85 /* Event.swift */,
+				E3220C321E7A62F9008AFA85 /* Events.swift */,
 			);
 			name = EventSystem;
 			sourceTree = "<group>";
@@ -254,7 +254,8 @@
 				CC1AA6BE1E77C328004F5F95 /* InitialViewController.swift in Sources */,
 				3F12AFD31E711CBB00B26D67 /* SWSG.xcdatamodeld in Sources */,
 				3F12AFCD1E711CBB00B26D67 /* HomeViewController.swift in Sources */,
-				E3220C311E7A3B99008AFA85 /* Events.swift in Sources */,
+				E3220C331E7A62F9008AFA85 /* Events.swift in Sources */,
+				E3220C311E7A3B99008AFA85 /* Event.swift in Sources */,
 				CC1AA6C31E77C328004F5F95 /* Utility.swift in Sources */,
 				CC1AA6C21E77C328004F5F95 /* SignUpViewController.swift in Sources */,
 				3FED301A1E76FC9A00C007AD /* MenuCell.swift in Sources */,
@@ -267,7 +268,6 @@
 				3FED30181E76FBCE00C007AD /* MenuItems.swift in Sources */,
 				3F12AFCB1E711CBB00B26D67 /* AppDelegate.swift in Sources */,
 				CC1AA6C41E77C328004F5F95 /* Extensions.swift in Sources */,
-				E3220C2F1E7A3013008AFA85 /* Event.swift in Sources */,
 				CC1AA6C11E77C328004F5F95 /* SignUpTableViewController.swift in Sources */,
 				CC1AA6C51E77C328004F5F95 /* Config.swift in Sources */,
 				3FED301C1E77930200C007AD /* BaseViewController.swift in Sources */,

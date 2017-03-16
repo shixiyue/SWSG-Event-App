@@ -9,7 +9,11 @@
 import UIKit
 
 class EventScheduleTableViewCell: UITableViewCell {
-
+    
+    @IBOutlet weak var eventName: UILabel!
+    @IBOutlet weak var eventTimeVenue: UILabel!
+    @IBOutlet weak var eventDescription: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

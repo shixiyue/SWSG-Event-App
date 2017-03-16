@@ -8,56 +8,28 @@
 
 import UIKit
 
-class Events: Event {
+class Events {
     
-    var image: UIImage {
+    var events = [Event(image: nil, name: "Check-In Registration", date_time: Date(), venue: "Outside Meeting Room 1", description: "Please register and collect your breakfast outside Meeting Room 1", details: "blah blah blah"),
+                  Event(image: nil, name: "Morning Keynote", date_time: Date(), venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah")]
+    var count: Int {
         get {
-            return self.image
-        }
-        set {
-            self.image = newValue
-        }
-    }
-    var date_time: Date {
-        get {
-            return self.date_time
-        }
-        set {
-            self.date_time = newValue
-        }
-    }
-    var venue: String {
-        get {
-            return self.venue
-        }
-        set {
-            self.venue = newValue
-        }
-    }
-    var description: String {
-        get {
-            return self.description
-        }
-        set {
-            self.description = newValue
-        }
-    }
-    var details: String {
-        get {
-            return self.details
-        }
-        set {
-            self.details = newValue
+            return events.count
         }
     }
     
-    init(image: UIImage, date_time: Date, venue: String, description: String, details: String) {
-        self.image = image
-        self.date_time = date_time
-        self.venue = venue
-        self.description = description
-        self.details = details
+    public func addEvent(event: Event) {
+        events.append(event)
     }
-
+    
+    public func deleteEventAt(index: Int) {
+        events.remove(at: index)
+    }
+    
+    public func retrieveEventAt(index: Int) -> Event? {
+        return events[index]
+    }
+    
     
 }
+
