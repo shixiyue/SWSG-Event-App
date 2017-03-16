@@ -2,19 +2,69 @@
 //  Profile.swift
 //  SWSG
 //
-//  Created by Jeremy Jee on 14/3/17.
+//  Created by shixiyue on 11/3/17.
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
 import UIKit
 
-struct Profile {
-    var name: String
-    var image: UIImage
-    var position: String
-    var company: String
-    var country: String
-    var education: String
-    var skills: String
-    var description: String
+/// `Profile` represents the profile of a User.
+class Profile: NSObject, NSCoding {
+    
+    public private (set) var name: String
+    public private (set) var image: UIImage
+    public private (set) var job: String
+    public private (set) var company: String
+    public private (set) var country: String
+    public private (set) var education: String
+    public private (set) var skills: String
+    public private (set) var description: String
+
+    init(name: String, image: UIImage, job: String, company: String, country: String,
+         education: String, skills: String, description: String) {
+        self.name = name
+        self.image = image
+        self.job = job
+        self.company = company
+        self.country = country
+        self.education = education
+        self.skills = skills
+        self.description = description
+    }
+    
+    convenience init(name: String, job: String, country: String, education: String, skills: String) {
+        self.init(name: name, image: UIImage(), job: job, company: "", country: country, education: education,
+        skills: skills, description: "")
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        guard let name = aDecoder.decodeObject(forKey: Config.name) as? String else {
+            return nil
+        }
+        self.name = name
+        guard let job = aDecoder.decodeObject(forKey: Config.job) as? String else {
+            return nil
+        }
+        self.job = job
+        guard let country = aDecoder.decodeObject(forKey: Config.country) as? String else {
+            return nil
+        }
+        self.country = country
+        guard let education = aDecoder.decodeObject(forKey: Config.education) as? String else {
+            return nil
+        }
+        self.education = education
+        guard let skills = aDecoder.decodeObject(forKey: Config.skills) as? String else {
+            return nil
+        }
+        self.skills = skills
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(name, forKey: Config.name)
+        aCoder.encode(job, forKey: Config.job)
+        aCoder.encode(country, forKey: Config.country)
+        aCoder.encode(education, forKey: Config.education)
+        aCoder.encode(skills, forKey: Config.skills)
+    }
 }

@@ -20,6 +20,10 @@ class HomeViewController: BaseViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @IBAction func logOut(_ sender: UIButton) {
+        Utility.logOutUser(currentViewController: self)
+    }
 
 }
 
