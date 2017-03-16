@@ -39,6 +39,12 @@
 		E3220C311E7A3B99008AFA85 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C301E7A3B99008AFA85 /* Event.swift */; };
 		E3220C331E7A62F9008AFA85 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C321E7A62F9008AFA85 /* Events.swift */; };
 		E3220C351E7A8D0B008AFA85 /* EventDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */; };
+		E3220C3B1E7AE387008AFA85 /* EventImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C3A1E7AE387008AFA85 /* EventImageTableViewCell.swift */; };
+		E3220C3D1E7AE39D008AFA85 /* EventTimeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C3C1E7AE39D008AFA85 /* EventTimeTableViewCell.swift */; };
+		E3220C3F1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C3E1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift */; };
+		E3220C411E7AE3C6008AFA85 /* EventDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C401E7AE3C6008AFA85 /* EventDetailTableViewCell.swift */; };
+		E3220C431E7AE40B008AFA85 /* CommentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C421E7AE40B008AFA85 /* CommentsTableViewCell.swift */; };
+		E3220C451E7AF088008AFA85 /* EventHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C441E7AF088008AFA85 /* EventHeaderTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +82,12 @@
 		E3220C301E7A3B99008AFA85 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = SWSG/Event.swift; sourceTree = SOURCE_ROOT; };
 		E3220C321E7A62F9008AFA85 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailsTableViewController.swift; sourceTree = "<group>"; };
+		E3220C3A1E7AE387008AFA85 /* EventImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventImageTableViewCell.swift; sourceTree = "<group>"; };
+		E3220C3C1E7AE39D008AFA85 /* EventTimeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTimeTableViewCell.swift; sourceTree = "<group>"; };
+		E3220C3E1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventVenueTableViewCell.swift; sourceTree = "<group>"; };
+		E3220C401E7AE3C6008AFA85 /* EventDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailTableViewCell.swift; sourceTree = "<group>"; };
+		E3220C421E7AE40B008AFA85 /* CommentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsTableViewCell.swift; sourceTree = "<group>"; };
+		E3220C441E7AF088008AFA85 /* EventHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHeaderTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,11 +181,17 @@
 			isa = PBXGroup;
 			children = (
 				E3220C281E796BC0008AFA85 /* EventSystem.storyboard */,
+				E3220C421E7AE40B008AFA85 /* CommentsTableViewCell.swift */,
 				E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */,
-				E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */,
 				E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */,
+				E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */,
 				E3220C301E7A3B99008AFA85 /* Event.swift */,
 				E3220C321E7A62F9008AFA85 /* Events.swift */,
+				E3220C3A1E7AE387008AFA85 /* EventImageTableViewCell.swift */,
+				E3220C3C1E7AE39D008AFA85 /* EventTimeTableViewCell.swift */,
+				E3220C3E1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift */,
+				E3220C401E7AE3C6008AFA85 /* EventDetailTableViewCell.swift */,
+				E3220C441E7AF088008AFA85 /* EventHeaderTableViewCell.swift */,
 			);
 			name = EventSystem;
 			sourceTree = "<group>";
@@ -256,7 +274,11 @@
 				CC1F2B4A1E77D64B0096C271 /* Participant.swift in Sources */,
 				CC1AA6BE1E77C328004F5F95 /* InitialViewController.swift in Sources */,
 				3F12AFD31E711CBB00B26D67 /* SWSG.xcdatamodeld in Sources */,
+				E3220C3F1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift in Sources */,
+				E3220C3D1E7AE39D008AFA85 /* EventTimeTableViewCell.swift in Sources */,
 				3F12AFCD1E711CBB00B26D67 /* HomeViewController.swift in Sources */,
+				E3220C3B1E7AE387008AFA85 /* EventImageTableViewCell.swift in Sources */,
+				E3220C451E7AF088008AFA85 /* EventHeaderTableViewCell.swift in Sources */,
 				E3220C331E7A62F9008AFA85 /* Events.swift in Sources */,
 				E3220C311E7A3B99008AFA85 /* Event.swift in Sources */,
 				CC1AA6C31E77C328004F5F95 /* Utility.swift in Sources */,
@@ -264,6 +286,7 @@
 				3FED301A1E76FC9A00C007AD /* MenuCell.swift in Sources */,
 				CC1F2B4C1E77D6560096C271 /* Profile.swift in Sources */,
 				E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */,
+				E3220C431E7AE40B008AFA85 /* CommentsTableViewCell.swift in Sources */,
 				CC1F2B501E77D66F0096C271 /* Team.swift in Sources */,
 				CC1F2B461E77D5DC0096C271 /* Storage.swift in Sources */,
 				CC1AA6A71E77C2A1004F5F95 /* UISubclasses.swift in Sources */,
@@ -279,6 +302,7 @@
 				E3220C2B1E796C7B008AFA85 /* EventScheduleTableViewController.swift in Sources */,
 				CC1F2B4E1E77D6610096C271 /* User.swift in Sources */,
 				CC1F2B521E77D6750096C271 /* UserTypes.swift in Sources */,
+				E3220C411E7AE3C6008AFA85 /* EventDetailTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

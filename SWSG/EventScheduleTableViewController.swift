@@ -34,7 +34,11 @@ class EventScheduleTableViewController: UITableViewController {
                 return
             }
             let event = events.retrieveEventAt(index: indexPath.item)
-            Utility.showStoryboard(storyboard: Config.eventSystem, destinationViewController: "EventDetailsTableViewController", currentViewController: self)
+            if let destinationvc = self.storyboard?.instantiateViewController(withIdentifier: "EventDetailsTableViewController") as? EventDetailsTableViewController {
+                destinationvc.event = event
+                self.navigationController?.pushViewController(destinationvc, animated: true)
+            }
+            
         }
     }
     
@@ -95,7 +99,7 @@ class EventScheduleTableViewController: UITableViewController {
         return cell
     }
     
-
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
@@ -103,7 +107,7 @@ class EventScheduleTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
-
+    
     
     /*
      // Override to support conditional editing of the table view.
@@ -140,20 +144,15 @@ class EventScheduleTableViewController: UITableViewController {
      }
      */
     
+    /*
+    // MARK: - Navigation
     
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-       // let destinationvc = segue.destination
-     //   let tableCellSelected = sender as? LevelSelectionTableViewCell
-     //   if destinationvc is GamePlayViewController {
-       //     GamePlayViewController.currentLevel = tableCellSelected?.levelName.text
-        //}
-
-     }
-    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+        
+    }
+    */
     
 }

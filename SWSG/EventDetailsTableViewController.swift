@@ -10,6 +10,8 @@ import UIKit
 
 class EventDetailsTableViewController: UITableViewController {
     
+    var event : Event?
+    
     @IBOutlet weak var eventDetailsTableView: UITableView! {
         didSet{
             let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventScheduleTableViewController.hideNavBarTapHandler))
@@ -46,23 +48,73 @@ class EventDetailsTableViewController: UITableViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        if section == 0 {
+            return 5
+        } else {
+            return 0
+        }
     }
     
-    /*
-     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-     let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-     
-     // Configure the cell...
-     
-     return cell
-     }
-     */
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if indexPath.section == 0 {
+            switch indexPath.item {
+            case 0:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "EventImage", for: indexPath)
+                return cell
+            case 1:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "EventTime", for: indexPath) as! EventTimeTableViewCell
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "HH:mm"
+                cell.timeLabel.text = timeFormatter.string(from: event!.date_time)
+                return cell
+            case 2:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "EventVenue", for: indexPath) as! EventVenueTableViewCell
+                cell.venueLabel.text = event?.venue
+                return cell
+            case 3:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "EventDetail", for: indexPath) as! EventDetailTableViewCell
+                cell.detailsLabel.text = event?.details
+                return cell
+            default:
+                let cell = UITableViewCell()
+                return cell
+            }
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Comments", for: indexPath) as! CommentsTableViewCell
+            return cell
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 44
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "EventHeader") as! EventHeaderTableViewCell
+            cell.eventHeaderLabel.text = event?.name
+            return cell.contentView
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CommentsHeader")
+            return cell?.contentView
+        }
+    }
     
     /*
      // Override to support conditional editing of the table view.

@@ -10,7 +10,7 @@ import UIKit
 
 class Events {
     
-    var events = [Event(image: nil, name: "Check-In Registration", date_time: Date(), venue: "Outside Meeting Room 1", description: "Please register and collect your breakfast outside Meeting Room 1", details: "blah blah blah"),
+    var events = [Event(image: nil, name: "Check-In Registration", date_time: Date(), venue: "Outside Meeting Room 1", description: "Please register and collect your breakfast outside Meeting Room 1", details: "Kindly get all your members to register Outside Meeting Room 1 to collect your daily pass and Wi-Fi password. \nPlease bring a photo ID for identification, duplicates are not accepted. Each member has to be present at the registration"),
                   Event(image: nil, name: "Morning Keynote", date_time: Date(), venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah")]
     var count: Int {
         get {
