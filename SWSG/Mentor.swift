@@ -11,9 +11,11 @@ import Foundation
 class Mentor {
     var profile: Profile
     var days = [ConsultationDate]()
+    var field: Field
     
-    init(profile: Profile) {
+    init(profile: Profile, field: Field) {
         self.profile = profile
+        self.field = field
     }
     
     func addSlots(on date: Date) {
