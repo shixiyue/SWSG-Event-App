@@ -67,7 +67,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8dV-U2-x2F" id="sLn-pq-VRL">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4v1-tu-R6S">
@@ -142,6 +142,9 @@
                     <connections>
                         <outlet property="btnCloseMenuOverlay" destination="EvM-aC-InN" id="TrY-DE-rC3"/>
                         <outlet property="menuList" destination="KMr-1i-dyd" id="lpN-4b-BMJ"/>
+                        <outlet property="nameLbl" destination="BNq-63-hic" id="XJw-f1-PyA"/>
+                        <outlet property="profileImg" destination="uNh-EI-bl9" id="aDE-0b-qQ7"/>
+                        <outlet property="teamLbl" destination="AHr-vh-QoN" id="sfK-7u-Uht"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="06Q-xu-MMU" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -19,16 +19,16 @@ class Mentor {
     func addSlots(on date: Date) {
         var day = ConsultationDate(on: date)
         
-        var slotTime = Date.dateTime(forDate: date, forTime: Constants.consultationStartTime)
-        let endTime = Date.dateTime(forDate: date, forTime: Constants.consultationEndTime)
+        var slotTime = Date.dateTime(forDate: date, forTime: Config.consultationStartTime)
+        let endTime = Date.dateTime(forDate: date, forTime: Config.consultationEndTime)
         
         while slotTime <= endTime {
-            let slot = ConsultationSlot(start: slotTime, duration: Constants.duration,
+            let slot = ConsultationSlot(start: slotTime, duration: Config.duration,
                                         status: .vacant)
             
             day.slots.append(slot)
             
-            slotTime = slotTime.add(minutes: Constants.duration)
+            slotTime = slotTime.add(minutes: Config.duration)
         }
         
         days.append(day)

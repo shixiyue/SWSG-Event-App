@@ -50,4 +50,15 @@ struct Config {
     static let done = "Done"
     
     static let passwordMinLength = 6
+    
+    // Parameters for Mentor Booking:
+    static var consultationStartTime: Date {
+        return Date.time(from: "11:00")
+    }
+    
+    static var consultationEndTime: Date {
+        return Date.time(from: "17:00")
+    }
+    
+    static var duration = 60
 }

@@ -13,5 +13,4 @@ class MentorCell: UICollectionViewCell {
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var positionLbl: UILabel!
     @IBOutlet weak var companyLbl: UILabel!
-    
 }

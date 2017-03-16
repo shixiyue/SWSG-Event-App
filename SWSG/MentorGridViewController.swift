@@ -68,6 +68,7 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
         let profile = mentors[index].profile
         
         cell.iconIV.image = profile.image
+        cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
         cell.nameLbl.text = profile.name
         cell.positionLbl.text = profile.job
         cell.companyLbl.text = profile.company

@@ -19,7 +19,6 @@
 		3F97954D1E7A8DBF004BC26C /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F97952C1E7A8DBF004BC26C /* InitialViewController.swift */; };
 		3F97954E1E7A8DBF004BC26C /* LoginSignup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F97952D1E7A8DBF004BC26C /* LoginSignup.storyboard */; };
 		3F97954F1E7A8DBF004BC26C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F97952E1E7A8DBF004BC26C /* LoginViewController.swift */; };
-		3F9795501E7A8DBF004BC26C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F97952F1E7A8DBF004BC26C /* Main.storyboard */; };
 		3F9795591E7A8DBF004BC26C /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9795381E7A8DBF004BC26C /* Participant.swift */; };
 		3F97955B1E7A8DBF004BC26C /* SignUpTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F97953A1E7A8DBF004BC26C /* SignUpTableViewController.swift */; };
 		3F97955C1E7A8DBF004BC26C /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F97953B1E7A8DBF004BC26C /* SignUpViewController.swift */; };
@@ -28,11 +27,11 @@
 		3F9795611E7A8DBF004BC26C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9795401E7A8DBF004BC26C /* User.swift */; };
 		3F9795621E7A8DBF004BC26C /* UserTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9795411E7A8DBF004BC26C /* UserTypes.swift */; };
 		3F9795631E7A8DBF004BC26C /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9795421E7A8DBF004BC26C /* Utility.swift */; };
+		3F9795691E7A932D004BC26C /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9795681E7A932D004BC26C /* System.swift */; };
 		3FC314601E77DB90009B21AB /* ConsultationDayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3145F1E77DB90009B21AB /* ConsultationDayCell.swift */; };
 		3FC314621E77DBAD009B21AB /* ConsultationSlotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC314611E77DBAD009B21AB /* ConsultationSlotCell.swift */; };
 		3FC314641E77DD22009B21AB /* ConsultationSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC314631E77DD21009B21AB /* ConsultationSlot.swift */; };
 		3FC314661E77DD7D009B21AB /* ConsultationSlotStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC314651E77DD7D009B21AB /* ConsultationSlotStatus.swift */; };
-		3FC314681E77E1E3009B21AB /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC314671E77E1E2009B21AB /* Constants.swift */; };
 		3FC3146A1E77EB84009B21AB /* MentorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC314691E77EB84009B21AB /* MentorViewController.swift */; };
 		3FC3146C1E7A5017009B21AB /* ConsultationDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3146B1E7A5017009B21AB /* ConsultationDate.swift */; };
 		3FED30161E76FA0A00C007AD /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30151E76FA0A00C007AD /* MenuViewController.swift */; };
@@ -62,7 +61,6 @@
 		3F97952C1E7A8DBF004BC26C /* InitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		3F97952D1E7A8DBF004BC26C /* LoginSignup.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LoginSignup.storyboard; sourceTree = "<group>"; };
 		3F97952E1E7A8DBF004BC26C /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		3F97952F1E7A8DBF004BC26C /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		3F9795381E7A8DBF004BC26C /* Participant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Participant.swift; sourceTree = "<group>"; };
 		3F97953A1E7A8DBF004BC26C /* SignUpTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpTableViewController.swift; sourceTree = "<group>"; };
 		3F97953B1E7A8DBF004BC26C /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
@@ -71,11 +69,11 @@
 		3F9795401E7A8DBF004BC26C /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		3F9795411E7A8DBF004BC26C /* UserTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTypes.swift; sourceTree = "<group>"; };
 		3F9795421E7A8DBF004BC26C /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		3F9795681E7A932D004BC26C /* System.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = System.swift; sourceTree = "<group>"; };
 		3FC3145F1E77DB90009B21AB /* ConsultationDayCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationDayCell.swift; sourceTree = "<group>"; };
 		3FC314611E77DBAD009B21AB /* ConsultationSlotCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationSlotCell.swift; sourceTree = "<group>"; };
 		3FC314631E77DD21009B21AB /* ConsultationSlot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationSlot.swift; sourceTree = "<group>"; };
 		3FC314651E77DD7D009B21AB /* ConsultationSlotStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationSlotStatus.swift; sourceTree = "<group>"; };
-		3FC314671E77E1E2009B21AB /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3FC314691E77EB84009B21AB /* MentorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorViewController.swift; sourceTree = "<group>"; };
 		3FC3146B1E7A5017009B21AB /* ConsultationDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationDate.swift; sourceTree = "<group>"; };
 		3FED30151E76FA0A00C007AD /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
@@ -123,8 +121,6 @@
 				3F12AFCA1E711CBB00B26D67 /* AppDelegate.swift */,
 				3FED301E1E779A7300C007AD /* Main.storyboard */,
 				3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */,
-				3F97952C1E7A8DBF004BC26C /* InitialViewController.swift */,
-				3F97952F1E7A8DBF004BC26C /* Main.storyboard */,
 				3F9795641E7A8E48004BC26C /* Login & Sign Up */,
 				3F97953F1E7A8DBF004BC26C /* UISubclasses.swift */,
 				3FED301D1E779A2100C007AD /* Menu */,
@@ -142,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				3F97952D1E7A8DBF004BC26C /* LoginSignup.storyboard */,
+				3F97952C1E7A8DBF004BC26C /* InitialViewController.swift */,
 				3F97952E1E7A8DBF004BC26C /* LoginViewController.swift */,
 				3F97953A1E7A8DBF004BC26C /* SignUpTableViewController.swift */,
 				3F97953B1E7A8DBF004BC26C /* SignUpViewController.swift */,
@@ -154,8 +151,8 @@
 			children = (
 				3F9795231E7A8DBF004BC26C /* Config.swift */,
 				3F97952A1E7A8DBF004BC26C /* Extensions.swift */,
+				3F9795681E7A932D004BC26C /* System.swift */,
 				3F9795421E7A8DBF004BC26C /* Utility.swift */,
-				3FC314671E77E1E2009B21AB /* Constants.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -278,7 +275,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F9795501E7A8DBF004BC26C /* Main.storyboard in Resources */,
 				3F12AFD81E711CBB00B26D67 /* LaunchScreen.storyboard in Resources */,
 				3F12AFD51E711CBB00B26D67 /* Assets.xcassets in Resources */,
 				3FED30211E77A15300C007AD /* Mentor.storyboard in Resources */,
@@ -311,11 +307,11 @@
 				3F9795611E7A8DBF004BC26C /* User.swift in Sources */,
 				3FC3146A1E77EB84009B21AB /* MentorViewController.swift in Sources */,
 				3FC314601E77DB90009B21AB /* ConsultationDayCell.swift in Sources */,
-				3FC314681E77E1E3009B21AB /* Constants.swift in Sources */,
 				3F9795601E7A8DBF004BC26C /* UISubclasses.swift in Sources */,
 				3F97955B1E7A8DBF004BC26C /* SignUpTableViewController.swift in Sources */,
 				3FC3146C1E7A5017009B21AB /* ConsultationDate.swift in Sources */,
 				3FED301A1E76FC9A00C007AD /* MenuCell.swift in Sources */,
+				3F9795691E7A932D004BC26C /* System.swift in Sources */,
 				3F9795591E7A8DBF004BC26C /* Participant.swift in Sources */,
 				3FED30181E76FBCE00C007AD /* MenuItems.swift in Sources */,
 				3F9795441E7A8DBF004BC26C /* Config.swift in Sources */,

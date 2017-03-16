@@ -10,6 +10,13 @@ import UIKit
 
 struct Utility {
     
+    static func roundUIImageView(for image: UIImageView) -> UIImageView {
+        image.layer.cornerRadius = image.frame.size.width / 2
+        image.clipsToBounds = true
+        
+        return image
+    }
+    
     static let countries = NSLocale.isoCountryCodes.map { (code: String) -> String in
         let id = NSLocale.localeIdentifier(fromComponents: [NSLocale.Key.countryCode.rawValue: code])
         let currentLocaleID = NSLocale.current.identifier

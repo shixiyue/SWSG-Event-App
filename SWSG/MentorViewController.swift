@@ -23,8 +23,7 @@ class MentorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
-        
+        profileImg = Utility.roundUIImageView(for: profileImg)
         consultationDayList.delegate = self
         consultationDayList.dataSource = self
         
@@ -41,7 +40,7 @@ class MentorViewController: UIViewController {
         nameLbl.text = profile.name
         positionLbl.text = profile.job
         companyLbl.text = profile.company
-        descriptionTB.text = profile.description
+        descriptionTB.text = profile.desc
     }
     
     func bookSlot(on dayIndex: Int, at index: Int) {
@@ -50,7 +49,7 @@ class MentorViewController: UIViewController {
         }
         
         mentor.days[dayIndex].slots[index].status = .booked
-        mentor.days[dayIndex].slots[index].team = Participant.team
+        mentor.days[dayIndex].slots[index].team = System.activeUser.team
     }
     
     @IBAction func backButtonPressed(_ sender: UIBarButtonItem) {
