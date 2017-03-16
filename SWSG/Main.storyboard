@@ -25,7 +25,7 @@
             </objects>
             <point key="canvasLocation" x="-1735" y="-467"/>
         </scene>
-        <!--Home View Controller-->
+        <!--Home-->
         <scene sceneID="gRS-gk-KOB">
             <objects>
                 <viewController storyboardIdentifier="HomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wIc-qv-RD6" customClass="HomeViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
@@ -38,7 +38,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="rOe-MP-MyG"/>
+                    <navigationItem key="navigationItem" title="Home" id="rOe-MP-MyG"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JnS-PT-F90" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

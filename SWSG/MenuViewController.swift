@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol SlideMenuDelegate {
-    func slideMenuItemSelectedAtIndex(_ index : Int32)
-}
-
 class MenuViewController: UIViewController {
     @IBOutlet weak var menuList: UITableView!
     @IBOutlet var btnCloseMenuOverlay : UIButton!
@@ -28,13 +24,17 @@ class MenuViewController: UIViewController {
         btnMenu.tag = 0
         
         if (self.delegate != nil) {
-            var index = Int32(button.tag)
+            var index = button.tag
             if(button == self.btnCloseMenuOverlay){
                 index = -1
             }
             delegate?.slideMenuItemSelectedAtIndex(index)
         }
         
+        closeMenu()
+    }
+    
+    func closeMenu() {
         UIView.animate(withDuration: 0.3, animations: { () -> Void in
             self.view.frame = CGRect(x: -UIScreen.main.bounds.size.width, y: 0, width: UIScreen.main.bounds.size.width,height: UIScreen.main.bounds.size.height)
             self.view.layoutIfNeeded()
@@ -66,5 +66,10 @@ extension MenuViewController: UITableViewDelegate, UITableViewDataSource {
         cell.name.text = item
         
         return cell
+    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.slideMenuItemSelectedAtIndex(indexPath.item)
+        closeMenu()
     }
 }
