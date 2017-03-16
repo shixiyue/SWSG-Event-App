@@ -33,6 +33,11 @@
 		CC1F2B4E1E77D6610096C271 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1F2B4D1E77D6610096C271 /* User.swift */; };
 		CC1F2B501E77D66F0096C271 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1F2B4F1E77D66F0096C271 /* Team.swift */; };
 		CC1F2B521E77D6750096C271 /* UserTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1F2B511E77D6750096C271 /* UserTypes.swift */; };
+		E3220C291E796BC0008AFA85 /* EventSystem.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3220C281E796BC0008AFA85 /* EventSystem.storyboard */; };
+		E3220C2B1E796C7B008AFA85 /* EventScheduleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */; };
+		E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */; };
+		E3220C2F1E7A3013008AFA85 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2E1E7A3013008AFA85 /* Event.swift */; };
+		E3220C311E7A3B99008AFA85 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C301E7A3B99008AFA85 /* Events.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +69,11 @@
 		CC1F2B4D1E77D6610096C271 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = "../2017-final-group10/SWSG/User.swift"; sourceTree = "<group>"; };
 		CC1F2B4F1E77D66F0096C271 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Team.swift; path = "../2017-final-group10/SWSG/Team.swift"; sourceTree = "<group>"; };
 		CC1F2B511E77D6750096C271 /* UserTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserTypes.swift; path = "../2017-final-group10/SWSG/UserTypes.swift"; sourceTree = "<group>"; };
+		E3220C281E796BC0008AFA85 /* EventSystem.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = EventSystem.storyboard; sourceTree = "<group>"; };
+		E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleTableViewController.swift; sourceTree = "<group>"; };
+		E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleTableViewCell.swift; sourceTree = "<group>"; };
+		E3220C2E1E7A3013008AFA85 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = "../2017-final-group10/SWSG/Event.swift"; sourceTree = "<group>"; };
+		E3220C301E7A3B99008AFA85 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Events.swift; path = SWSG/Events.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,19 +106,20 @@
 		3F12AFC91E711CBB00B26D67 /* SWSG */ = {
 			isa = PBXGroup;
 			children = (
-				CC1AA6A61E77C2A1004F5F95 /* UISubclasses.swift */,
-				CC1F2B451E77D5DC0096C271 /* Storage.swift */,
-				CC1AA6AE1E77C2CC004F5F95 /* Model */,
-				3F12AFCA1E711CBB00B26D67 /* AppDelegate.swift */,
-				3FED301E1E779A7300C007AD /* Main.storyboard */,
-				3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */,
-				3FED301D1E779A2100C007AD /* Menu */,
 				CC3F4EDC1E77C5A8008E3F34 /* LogInSignUp */,
-				CC1AA6BA1E77C328004F5F95 /* Utility.swift */,
+				3FED301D1E779A2100C007AD /* Menu */,
+				E3220C271E796AD1008AFA85 /* EventSystem */,
+				CC1AA6AE1E77C2CC004F5F95 /* Model */,
+				3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */,
+				CC1AA6A61E77C2A1004F5F95 /* UISubclasses.swift */,
 				CC1AA6BB1E77C328004F5F95 /* Extensions.swift */,
+				CC1AA6BA1E77C328004F5F95 /* Utility.swift */,
+				CC1F2B451E77D5DC0096C271 /* Storage.swift */,
 				CC1AA6BC1E77C328004F5F95 /* Config.swift */,
 				3F12AFD41E711CBB00B26D67 /* Assets.xcassets */,
+				3FED301E1E779A7300C007AD /* Main.storyboard */,
 				3F12AFD61E711CBB00B26D67 /* LaunchScreen.storyboard */,
+				3F12AFCA1E711CBB00B26D67 /* AppDelegate.swift */,
 				3F12AFD91E711CBB00B26D67 /* Info.plist */,
 				3F12AFD11E711CBB00B26D67 /* SWSG.xcdatamodeld */,
 			);
@@ -135,6 +146,8 @@
 				CC1F2B4F1E77D66F0096C271 /* Team.swift */,
 				CC1F2B4B1E77D6560096C271 /* Profile.swift */,
 				CC1F2B4D1E77D6610096C271 /* User.swift */,
+				E3220C2E1E7A3013008AFA85 /* Event.swift */,
+				E3220C301E7A3B99008AFA85 /* Events.swift */,
 			);
 			name = Model;
 			path = ../../SWSG;
@@ -150,6 +163,16 @@
 				CC1AA6BD1E77C328004F5F95 /* LoginViewController.swift */,
 			);
 			name = LogInSignUp;
+			sourceTree = "<group>";
+		};
+		E3220C271E796AD1008AFA85 /* EventSystem */ = {
+			isa = PBXGroup;
+			children = (
+				E3220C281E796BC0008AFA85 /* EventSystem.storyboard */,
+				E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */,
+				E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */,
+			);
+			name = EventSystem;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -213,6 +236,7 @@
 			files = (
 				CC1AA6C01E77C328004F5F95 /* LoginSignup.storyboard in Resources */,
 				3F12AFD81E711CBB00B26D67 /* LaunchScreen.storyboard in Resources */,
+				E3220C291E796BC0008AFA85 /* EventSystem.storyboard in Resources */,
 				3F12AFD51E711CBB00B26D67 /* Assets.xcassets in Resources */,
 				3F12AFD01E711CBB00B26D67 /* Menu.storyboard in Resources */,
 				3FED301F1E779A7300C007AD /* Main.storyboard in Resources */,
@@ -230,10 +254,12 @@
 				CC1AA6BE1E77C328004F5F95 /* InitialViewController.swift in Sources */,
 				3F12AFD31E711CBB00B26D67 /* SWSG.xcdatamodeld in Sources */,
 				3F12AFCD1E711CBB00B26D67 /* HomeViewController.swift in Sources */,
+				E3220C311E7A3B99008AFA85 /* Events.swift in Sources */,
 				CC1AA6C31E77C328004F5F95 /* Utility.swift in Sources */,
 				CC1AA6C21E77C328004F5F95 /* SignUpViewController.swift in Sources */,
 				3FED301A1E76FC9A00C007AD /* MenuCell.swift in Sources */,
 				CC1F2B4C1E77D6560096C271 /* Profile.swift in Sources */,
+				E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */,
 				CC1F2B501E77D66F0096C271 /* Team.swift in Sources */,
 				CC1F2B461E77D5DC0096C271 /* Storage.swift in Sources */,
 				CC1AA6A71E77C2A1004F5F95 /* UISubclasses.swift in Sources */,
@@ -241,10 +267,12 @@
 				3FED30181E76FBCE00C007AD /* MenuItems.swift in Sources */,
 				3F12AFCB1E711CBB00B26D67 /* AppDelegate.swift in Sources */,
 				CC1AA6C41E77C328004F5F95 /* Extensions.swift in Sources */,
+				E3220C2F1E7A3013008AFA85 /* Event.swift in Sources */,
 				CC1AA6C11E77C328004F5F95 /* SignUpTableViewController.swift in Sources */,
 				CC1AA6C51E77C328004F5F95 /* Config.swift in Sources */,
 				3FED301C1E77930200C007AD /* BaseViewController.swift in Sources */,
 				3FED30161E76FA0A00C007AD /* MenuViewController.swift in Sources */,
+				E3220C2B1E796C7B008AFA85 /* EventScheduleTableViewController.swift in Sources */,
 				CC1F2B4E1E77D6610096C271 /* User.swift in Sources */,
 				CC1F2B521E77D6750096C271 /* UserTypes.swift in Sources */,
 			);
