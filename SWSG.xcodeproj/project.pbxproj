@@ -62,6 +62,9 @@
 		E3220C491E7B98CA008AFA85 /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C481E7B98CA008AFA85 /* MenuCell.swift */; };
 		E3220C4D1E7B9916008AFA85 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C4C1E7B9916008AFA85 /* Storage.swift */; };
 		E3220C4F1E7B99CF008AFA85 /* UISubclasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C4E1E7B99CF008AFA85 /* UISubclasses.swift */; };
+		E3220C511E7BA903008AFA85 /* CommentsInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C501E7BA903008AFA85 /* CommentsInputTableViewCell.swift */; };
+		E3220C531E7BAAC5008AFA85 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C521E7BAAC5008AFA85 /* Comment.swift */; };
+		E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C541E7BABA5008AFA85 /* Comments.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -117,6 +120,9 @@
 		E3220C481E7B98CA008AFA85 /* MenuCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
 		E3220C4C1E7B9916008AFA85 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Storage.swift; path = ../Storage.swift; sourceTree = "<group>"; };
 		E3220C4E1E7B99CF008AFA85 /* UISubclasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UISubclasses.swift; sourceTree = "<group>"; };
+		E3220C501E7BA903008AFA85 /* CommentsInputTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsInputTableViewCell.swift; sourceTree = "<group>"; };
+		E3220C521E7BAAC5008AFA85 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		E3220C541E7BABA5008AFA85 /* Comments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comments.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,17 +257,20 @@
 			isa = PBXGroup;
 			children = (
 				E3220C281E796BC0008AFA85 /* EventSystem.storyboard */,
-				E3220C421E7AE40B008AFA85 /* CommentsTableViewCell.swift */,
 				E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */,
 				E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */,
 				E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */,
-				E3220C301E7A3B99008AFA85 /* Event.swift */,
-				E3220C321E7A62F9008AFA85 /* Events.swift */,
 				E3220C3A1E7AE387008AFA85 /* EventImageTableViewCell.swift */,
 				E3220C3C1E7AE39D008AFA85 /* EventTimeTableViewCell.swift */,
 				E3220C3E1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift */,
 				E3220C401E7AE3C6008AFA85 /* EventDetailTableViewCell.swift */,
 				E3220C441E7AF088008AFA85 /* EventHeaderTableViewCell.swift */,
+				E3220C421E7AE40B008AFA85 /* CommentsTableViewCell.swift */,
+				E3220C501E7BA903008AFA85 /* CommentsInputTableViewCell.swift */,
+				E3220C321E7A62F9008AFA85 /* Events.swift */,
+				E3220C541E7BABA5008AFA85 /* Comments.swift */,
+				E3220C301E7A3B99008AFA85 /* Event.swift */,
+				E3220C521E7BAAC5008AFA85 /* Comment.swift */,
 			);
 			name = EventSystem;
 			sourceTree = "<group>";
@@ -350,6 +359,7 @@
 				3F97954D1E7A8DBF004BC26C /* InitialViewController.swift in Sources */,
 				3F9795631E7A8DBF004BC26C /* Utility.swift in Sources */,
 				3F12AFD31E711CBB00B26D67 /* SWSG.xcdatamodeld in Sources */,
+				E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */,
 				E3220C3F1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift in Sources */,
 				E3220C3D1E7AE39D008AFA85 /* EventTimeTableViewCell.swift in Sources */,
 				3F12AFCD1E711CBB00B26D67 /* HomeViewController.swift in Sources */,
@@ -377,6 +387,7 @@
 				E3220C471E7B9776008AFA85 /* UserTypes.swift in Sources */,
 				3F9795691E7A932D004BC26C /* System.swift in Sources */,
 				3F9795591E7A8DBF004BC26C /* Participant.swift in Sources */,
+				E3220C531E7BAAC5008AFA85 /* Comment.swift in Sources */,
 				E3220C4F1E7B99CF008AFA85 /* UISubclasses.swift in Sources */,
 				3FED30181E76FBCE00C007AD /* MenuItems.swift in Sources */,
 				3F9795441E7A8DBF004BC26C /* Config.swift in Sources */,
@@ -389,6 +400,7 @@
 				E3220C4D1E7B9916008AFA85 /* Storage.swift in Sources */,
 				E3220C2B1E796C7B008AFA85 /* EventScheduleTableViewController.swift in Sources */,
 				CC1F2B4E1E77D6610096C271 /* User.swift in Sources */,
+				E3220C511E7BA903008AFA85 /* CommentsInputTableViewCell.swift in Sources */,
 				E3220C411E7AE3C6008AFA85 /* EventDetailTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

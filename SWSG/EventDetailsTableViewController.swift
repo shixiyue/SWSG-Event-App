@@ -11,6 +11,8 @@ import UIKit
 class EventDetailsTableViewController: UITableViewController {
     
     var event : Event?
+
+    
     
     @IBOutlet weak var eventDetailsTableView: UITableView! {
         didSet{
@@ -24,14 +26,17 @@ class EventDetailsTableViewController: UITableViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+         NotificationCenter.default.addObserver(self, selector: #selector(EventDetailsTableViewController.update), name: Notification.Name(rawValue: "comments"), object: nil)
+       // CommentsInputTableViewCell.delegate = self
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
-    
+    func update() {
+        tableView.reloadData()
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -43,6 +48,8 @@ class EventDetailsTableViewController: UITableViewController {
             self.navigationController?.setNavigationBarHidden(self.navigationItem.hidesBackButton, animated: true)
         }
     }
+    
+   
     
     // MARK: - Table view data source
     
@@ -56,7 +63,7 @@ class EventDetailsTableViewController: UITableViewController {
         if section == 0 {
             return 5
         } else {
-            return 0
+            return Comments.comments.count+1
         }
     }
     
@@ -87,7 +94,12 @@ class EventDetailsTableViewController: UITableViewController {
                 return cell
             }
         } else {
+            if indexPath.row == Comments.comments.count {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "CommentsInput", for: indexPath) as! CommentsInputTableViewCell
+                return cell
+            }
             let cell = tableView.dequeueReusableCell(withIdentifier: "Comments", for: indexPath) as! CommentsTableViewCell
+            cell.commentsLabel.text = Comments.comments[indexPath.row].words
             return cell
         }
     }

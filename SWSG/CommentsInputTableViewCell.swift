@@ -1,16 +1,21 @@
 //
-//  CommentsTableViewCell.swift
+//  CommentsInputTableViewCell.swift
 //  SWSG
 //
-//  Created by Li Xiaowei on 3/16/17.
+//  Created by Li Xiaowei on 3/17/17.
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
 import UIKit
 
-class CommentsTableViewCell: UITableViewCell {
-
-    @IBOutlet weak var commentsLabel: UILabel!
+class CommentsInputTableViewCell: UITableViewCell {
+    
+    @IBOutlet weak var commentInputField: UITextField!
+   
+    @IBAction func onAddCommentButtonClick(_ sender: Any) {
+        Comments.comments.append(Comment(words: commentInputField.text!))
+        commentInputField.text = ""
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -24,3 +29,4 @@ class CommentsTableViewCell: UITableViewCell {
     }
 
 }
+

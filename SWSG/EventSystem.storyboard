@@ -235,7 +235,23 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SQy-oC-6po" id="ekw-C2-9xU">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THy-3H-WAN">
+                                            <rect key="frame" x="30" y="21.5" width="315" height="0.0"/>
+                                            <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="THy-3H-WAN" firstAttribute="centerY" secondItem="ekw-C2-9xU" secondAttribute="centerY" id="NF5-i9-YOx"/>
+                                        <constraint firstItem="THy-3H-WAN" firstAttribute="leading" secondItem="ekw-C2-9xU" secondAttribute="leading" constant="30" id="dyS-SQ-Ywy"/>
+                                        <constraint firstItem="THy-3H-WAN" firstAttribute="trailing" secondItem="ekw-C2-9xU" secondAttribute="trailing" constant="-30" id="oYt-A6-lsf"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="commentsLabel" destination="THy-3H-WAN" id="gNe-4c-FKH"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EventHeader" id="kJq-vz-uCd" customClass="EventHeaderTableViewCell" customModule="SWSG" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="248" width="375" height="44"/>
@@ -279,6 +295,42 @@
                                         <constraint firstItem="d6k-8X-9Fv" firstAttribute="centerY" secondItem="NnA-ro-yML" secondAttribute="centerY" id="mVR-sU-e8o"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CommentsInput" id="Zbb-Ww-njO" customClass="CommentsInputTableViewCell" customModule="SWSG" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="336" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zbb-Ww-njO" id="5oB-K1-eqk">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BIq-gG-1k3">
+                                            <rect key="frame" x="10" y="6" width="315" height="30"/>
+                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v7a-jo-4TD">
+                                            <rect key="frame" x="325" y="3" width="40" height="36"/>
+                                            <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
+                                            <state key="normal" title=" Add">
+                                                <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="onAddCommentButtonClick:" destination="Zbb-Ww-njO" eventType="touchUpInside" id="PvB-Dl-e2j"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="BIq-gG-1k3" firstAttribute="leading" secondItem="5oB-K1-eqk" secondAttribute="leading" constant="10" id="ZrT-hS-4Ne"/>
+                                        <constraint firstItem="BIq-gG-1k3" firstAttribute="trailing" secondItem="5oB-K1-eqk" secondAttribute="trailing" constant="-50" id="hci-Ny-zIO"/>
+                                        <constraint firstItem="v7a-jo-4TD" firstAttribute="leading" secondItem="BIq-gG-1k3" secondAttribute="trailing" id="lck-tW-sXv"/>
+                                        <constraint firstItem="BIq-gG-1k3" firstAttribute="centerY" secondItem="5oB-K1-eqk" secondAttribute="centerY" id="tKl-wQ-PDn"/>
+                                        <constraint firstItem="v7a-jo-4TD" firstAttribute="centerY" secondItem="5oB-K1-eqk" secondAttribute="centerY" id="weS-aw-7Ce"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="commentInputField" destination="BIq-gG-1k3" id="Lyr-YF-Rtc"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
