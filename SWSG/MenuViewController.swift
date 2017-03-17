@@ -20,7 +20,7 @@ class MenuViewController: UIViewController {
     }
     @IBOutlet var btnCloseMenuOverlay : UIButton!
     
-    @IBOutlet weak var profileImg: UIImageView!
+    @IBOutlet var profileImgButton: UIButton!
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var teamLbl: UILabel!
     
@@ -31,13 +31,11 @@ class MenuViewController: UIViewController {
         menuList.delegate = self
         menuList.dataSource = self
         
-        profileImg = Utility.roundUIImageView(for: profileImg)
-        
         guard let user = System.activeUser else {
             Utility.logOutUser(currentViewController: self)
             return
         }
-        profileImg.image = user.profile.image
+        profileImgButton.setImage(user.profile.image, for: .normal)
         nameLbl.text = user.profile.name
         
         if let team = user.team {
@@ -45,6 +43,12 @@ class MenuViewController: UIViewController {
         } else {
             teamLbl.text = "No Team yet"
         }
+    }
+    
+    
+    @IBAction func onProfileImageClick(_ sender: UIButton) {
+        print(true)
+        Utility.showStoryboard(storyboard: Config.profileScreen, destinationViewController: Config.profileViewController, currentViewController: self)
     }
     
     @IBAction func onCloseMenuClick(_ button:UIButton!){
@@ -106,6 +110,7 @@ extension MenuViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
         delegate?.slideMenuItemSelectedAtIndex(indexPath.item)
         closeMenu()
     }

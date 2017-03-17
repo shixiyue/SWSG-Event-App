@@ -46,6 +46,8 @@ struct Config {
     static let main = "Main"
     static let eventSystem = "EventSystem"
     static let navigationController = "NavigationController"
+    static let profileScreen = "Profile"
+    static let profileViewController = "ProfileViewController"
     
     // Parameters for information message:
     static let done = "Done"
