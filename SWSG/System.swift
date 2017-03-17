@@ -10,15 +10,6 @@ import UIKit
 
 struct System {
     
-    public static var activeUser: Participant {
-        let image = UIImage(named: "trump")
-        let profile = Profile(name: "Mr Tan Hwee Huat", image: image!, job: "Asset Manager",
-                              company: "UOB Pte. Ltd.", country: "Singapore",
-                              education: "National University of Singapore",
-                              skills: "Financial Planning", description: "Awesome guy")
-        let participant = Participant(profile: profile, password: "", email: "", team: nil)
-        
-        return participant
-    }
+    static var activeUser: User?
     
 }

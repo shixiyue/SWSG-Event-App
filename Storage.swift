@@ -6,7 +6,7 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 /// `Storage` represents the storage of SWSG App. It will comunicate with the backend.
 struct Storage {
@@ -32,10 +32,12 @@ struct Storage {
         guard let data = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments), let userProfile = data as? Dictionary<String, String> else {
             return nil
         }
-        guard let name = userProfile[Config.name], let job = userProfile[Config.job], let country =  userProfile[Config.country], let education = userProfile[Config.education], let skills = userProfile[Config.skills] else {
+        guard let name = userProfile[Config.name], let job = userProfile[Config.job], let company = userProfile[Config.company], let country =  userProfile[Config.country], let education = userProfile[Config.education], let skills = userProfile[Config.skills], let desc = userProfile[Config.desc] else {
             return nil
         }
-        let profile = Profile(name: name, job: job, country: country, education: education, skills: skills)
+        //TODO: Settle image
+        let image = UIImage(named: "Profile")!
+        let profile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         guard let email = userProfile[Config.email], let password = userProfile[Config.password] else {
             return nil
         }

@@ -32,11 +32,6 @@ class Profile: NSObject, NSCoding {
         self.desc = description
     }
     
-    convenience init(name: String, job: String, country: String, education: String, skills: String) {
-        self.init(name: name, image: UIImage(), job: job, company: "", country: country, education: education,
-        skills: skills, description: "")
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         guard let name = aDecoder.decodeObject(forKey: Config.name) as? String else {
             return nil
@@ -74,9 +69,12 @@ class Profile: NSObject, NSCoding {
     
     func encode(with aCoder: NSCoder) {
         aCoder.encode(name, forKey: Config.name)
+        aCoder.encode(image, forKey: Config.image)
         aCoder.encode(job, forKey: Config.job)
+        aCoder.encode(company, forKey: Config.company)
         aCoder.encode(country, forKey: Config.country)
         aCoder.encode(education, forKey: Config.education)
         aCoder.encode(skills, forKey: Config.skills)
+        aCoder.encode(desc, forKey: Config.desc)
     }
 }

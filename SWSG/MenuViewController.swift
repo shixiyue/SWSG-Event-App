@@ -33,7 +33,10 @@ class MenuViewController: UIViewController {
         
         profileImg = Utility.roundUIImageView(for: profileImg)
         
-        let user = System.activeUser
+        guard let user = System.activeUser else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
         profileImg.image = user.profile.image
         nameLbl.text = user.profile.name
         
