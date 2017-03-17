@@ -99,9 +99,6 @@
 		3FED30221E77A2D400C007AD /* MentorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorCell.swift; sourceTree = "<group>"; };
 		3FED30241E77A37300C007AD /* MentorGridViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorGridViewController.swift; sourceTree = "<group>"; };
 		3FED30281E77A5CB00C007AD /* Mentor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mentor.swift; sourceTree = "<group>"; };
-		CC1AA6BA1E77C328004F5F95 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
-		CC1AA6BB1E77C328004F5F95 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		CC1AA6BC1E77C328004F5F95 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		CC1F2B4B1E77D6560096C271 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Profile.swift; path = "../2017-final-group10/SWSG/Profile.swift"; sourceTree = "<group>"; };
 		CC1F2B4D1E77D6610096C271 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = "../2017-final-group10/SWSG/User.swift"; sourceTree = "<group>"; };
 		E3220C281E796BC0008AFA85 /* EventSystem.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = EventSystem.storyboard; sourceTree = "<group>"; };
@@ -153,21 +150,18 @@
 			isa = PBXGroup;
 			children = (
 				E3220C271E796AD1008AFA85 /* EventSystem */,
-				CC1AA6BB1E77C328004F5F95 /* Extensions.swift */,
-				CC1AA6BA1E77C328004F5F95 /* Utility.swift */,
-				CC1AA6BC1E77C328004F5F95 /* Config.swift */,
-				3FED301E1E779A7300C007AD /* Main.storyboard */,
-				3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */,
 				3F9795641E7A8E48004BC26C /* Login & Sign Up */,
 				3FED301D1E779A2100C007AD /* Menu */,
-				3F12AFD41E711CBB00B26D67 /* Assets.xcassets */,
 				3FED302B1E77A5FA00C007AD /* Mentor */,
 				3FED302A1E77A5F300C007AD /* Model */,
+				3FED301E1E779A7300C007AD /* Main.storyboard */,
 				3F12AFD61E711CBB00B26D67 /* LaunchScreen.storyboard */,
 				3F12AFCA1E711CBB00B26D67 /* AppDelegate.swift */,
+				3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */,
+				E3220C4E1E7B99CF008AFA85 /* UISubclasses.swift */,
 				3F12AFD91E711CBB00B26D67 /* Info.plist */,
 				3F12AFD11E711CBB00B26D67 /* SWSG.xcdatamodeld */,
-				E3220C4E1E7B99CF008AFA85 /* UISubclasses.swift */,
+				3F12AFD41E711CBB00B26D67 /* Assets.xcassets */,
 			);
 			path = SWSG;
 			sourceTree = "<group>";
@@ -232,10 +226,10 @@
 		3FED302A1E77A5F300C007AD /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				E3220C4C1E7B9916008AFA85 /* Storage.swift */,
-				3F9795661E7A9005004BC26C /* Mentor */,
-				3F9795671E7A9010004BC26C /* Users */,
 				3F9795651E7A8FFE004BC26C /* Utilities */,
+				3F9795671E7A9010004BC26C /* Users */,
+				3F9795661E7A9005004BC26C /* Mentor */,
+				E3220C4C1E7B9916008AFA85 /* Storage.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
