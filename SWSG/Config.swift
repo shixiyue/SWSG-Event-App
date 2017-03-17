@@ -44,6 +44,7 @@ struct Config {
     static let initialScreen = "InitialScreen"
     static let signUpTable = "signUpTable"
     static let main = "Main"
+    static let eventSystem = "EventSystem"
     static let navigationController = "NavigationController"
     
     // Parameters for information message:

@@ -9,7 +9,15 @@
 import UIKit
 
 class MenuViewController: UIViewController {
-    @IBOutlet weak var menuList: UITableView!
+    @IBOutlet weak var menuList: UITableView! {
+        didSet{
+            let tapGesture = UITapGestureRecognizer(target:self,action:#selector(MenuViewController.menuItemTapHandler))
+            tapGesture.numberOfTapsRequired = 1
+            menuList.addGestureRecognizer(tapGesture)
+            menuList.isUserInteractionEnabled = true
+            
+        }
+    }
     @IBOutlet var btnCloseMenuOverlay : UIButton!
     
     @IBOutlet weak var profileImg: UIImageView!
@@ -59,6 +67,16 @@ class MenuViewController: UIViewController {
             self.view.removeFromSuperview()
             self.removeFromParentViewController()
         })
+    }
+    
+    func menuItemTapHandler(recognizer: UITapGestureRecognizer) {
+        if recognizer.state == .ended{
+            let point = recognizer.location(in: menuList)
+            guard let indexPath = menuList.indexPathForRow(at: point) else {
+                return
+            }
+            delegate?.slideMenuItemSelectedAtIndex(indexPath.item)
+        }
     }
 }
 

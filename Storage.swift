@@ -51,5 +51,5 @@ struct Storage {
         let documentDirectory = urls[0]
         return documentDirectory.appendingPathComponent(fileName + ".json")
     }
-
+    
 }

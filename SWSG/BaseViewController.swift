@@ -33,9 +33,10 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             
             break
         case 1:
-            print("Schedule\n", terminator: "")
+
+            print("EventScheduleVC\n", terminator: "")
             
-            //self.openViewControllerBasedOnIdentifier("PlayVC")
+            Utility.showStoryboard(storyboard: Config.eventSystem, destinationViewController: "EventScheduleTableViewController", currentViewController: self)
             
             break
         case 2:
