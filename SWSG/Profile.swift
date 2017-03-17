@@ -19,7 +19,7 @@ class Profile: NSObject, NSCoding {
     public private (set) var education: String
     public private (set) var skills: String
     public private (set) var desc: String
-
+    
     init(name: String, image: UIImage, job: String, company: String, country: String,
          education: String, skills: String, description: String) {
         self.name = name
@@ -34,7 +34,7 @@ class Profile: NSObject, NSCoding {
     
     convenience init(name: String, job: String, country: String, education: String, skills: String) {
         self.init(name: name, image: UIImage(), job: job, company: "", country: country, education: education,
-        skills: skills, description: "")
+                  skills: skills, description: "")
     }
     
     required init?(coder aDecoder: NSCoder) {

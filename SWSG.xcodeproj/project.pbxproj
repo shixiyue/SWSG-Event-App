@@ -65,6 +65,8 @@
 		E3220C511E7BA903008AFA85 /* CommentsInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C501E7BA903008AFA85 /* CommentsInputTableViewCell.swift */; };
 		E3220C531E7BAAC5008AFA85 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C521E7BAAC5008AFA85 /* Comment.swift */; };
 		E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C541E7BABA5008AFA85 /* Comments.swift */; };
+
+		E3220C591E7C1DDE008AFA85 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C581E7C1DDE008AFA85 /* Profile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -123,6 +125,8 @@
 		E3220C501E7BA903008AFA85 /* CommentsInputTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsInputTableViewCell.swift; sourceTree = "<group>"; };
 		E3220C521E7BAAC5008AFA85 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		E3220C541E7BABA5008AFA85 /* Comments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comments.swift; sourceTree = "<group>"; };
+		E3220C561E7C1DC0008AFA85 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		E3220C581E7C1DDE008AFA85 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +217,8 @@
 				3F97951E1E7A6A58004BC26C /* Team.swift */,
 				3F9795381E7A8DBF004BC26C /* Participant.swift */,
 				E3220C461E7B9776008AFA85 /* UserTypes.swift */,
+				E3220C561E7C1DC0008AFA85 /* User.swift */,
+				E3220C581E7C1DDE008AFA85 /* Profile.swift */,
 			);
 			name = Users;
 			sourceTree = "<group>";
@@ -351,6 +357,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3220C571E7C1DC0008AFA85 /* User.swift in Sources */,
 				3FED30231E77A2D400C007AD /* MentorCell.swift in Sources */,
 				3FED30271E77A57600C007AD /* (null) in Sources */,
 				3F97951F1E7A6A58004BC26C /* Team.swift in Sources */,
