@@ -8,6 +8,10 @@
 //
 import UIKit
 
+protocol SlideMenuDelegate {
+    func slideMenuItemSelectedAtIndex(_ index : Int)
+}
+
 class BaseViewController: UIViewController, SlideMenuDelegate {
     
     override func viewDidLoad() {
@@ -20,20 +24,28 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    func slideMenuItemSelectedAtIndex(_ index: Int32) {
-        let topViewController : UIViewController = self.navigationController!.topViewController!
-        print("View Controller is : \(topViewController) \n", terminator: "")
+    func slideMenuItemSelectedAtIndex(_ index: Int) {
         switch(index){
         case 0:
             print("Home\n", terminator: "")
             
-            self.openViewControllerBasedOnIdentifier("Home")
+            self.open(viewController: "HomeViewController", from: "Main")
             
             break
         case 1:
+
             print("EventScheduleVC\n", terminator: "")
             
             Utility.showStoryboard(storyboard: Config.eventSystem, destinationViewController: "EventScheduleTableViewController", currentViewController: self)
+//            print("Schedule\n", terminator: "")
+            
+            //self.openViewControllerBasedOnIdentifier("PlayVC")
+            
+            break
+        case 2:
+            print("Mentor\n", terminator: "")
+            
+            self.open(viewController: "MentorViewController", from: "Mentor")
             
             break
         default:
@@ -41,8 +53,9 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         }
     }
     
-    func openViewControllerBasedOnIdentifier(_ strIdentifier:String){
-        let destViewController : UIViewController = self.storyboard!.instantiateViewController(withIdentifier: strIdentifier)
+    func open(viewController: String, from storyboard: String){
+        let storyboard = UIStoryboard(name: storyboard, bundle: nil)
+        let destViewController : UIViewController = storyboard.instantiateViewController(withIdentifier: viewController)
         
         let topViewController : UIViewController = self.navigationController!.topViewController!
         

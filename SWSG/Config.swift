@@ -19,10 +19,13 @@ struct Config {
     static let password = "password"
     static let team = "team"
     static let name = "name"
+    static let image = "image"
     static let job = "job"
+    static let company = "company"
     static let country = "country"
     static let education = "education"
     static let skills = "skills"
+    static let desc = "desc"
     static let isParticipant = "isParticipant"
     static let isSpeaker = "isSpeaker"
     static let isMentor = "isMentor"
@@ -48,4 +51,15 @@ struct Config {
     static let done = "Done"
     
     static let passwordMinLength = 6
+    
+    // Parameters for Mentor Booking:
+    static var consultationStartTime: Date {
+        return Date.time(from: "11:00")
+    }
+    
+    static var consultationEndTime: Date {
+        return Date.time(from: "17:00")
+    }
+    
+    static var duration = 60
 }

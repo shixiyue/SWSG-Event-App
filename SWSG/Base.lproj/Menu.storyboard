@@ -55,7 +55,7 @@
                                     <action selector="onCloseMenuClick:" destination="qwD-iu-tud" eventType="touchUpInside" id="zV9-Zi-dUX"/>
                                 </connections>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="KMr-1i-dyd">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="KMr-1i-dyd">
                                 <rect key="frame" x="0.0" y="186" width="375" height="481"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -142,6 +142,9 @@
                     <connections>
                         <outlet property="btnCloseMenuOverlay" destination="EvM-aC-InN" id="TrY-DE-rC3"/>
                         <outlet property="menuList" destination="KMr-1i-dyd" id="lpN-4b-BMJ"/>
+                        <outlet property="nameLbl" destination="BNq-63-hic" id="XJw-f1-PyA"/>
+                        <outlet property="profileImg" destination="uNh-EI-bl9" id="aDE-0b-qQ7"/>
+                        <outlet property="teamLbl" destination="AHr-vh-QoN" id="sfK-7u-Uht"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="06Q-xu-MMU" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -2,7 +2,6 @@
 //  Team.swift
 //  SWSG
 //
-//  Created by shixiyue on 11/3/17.
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
@@ -24,5 +23,4 @@ class Team {
         self.lookingFor = lookingFor
         self.isPrivate = isPrivate
     }
-    
 }
