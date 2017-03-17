@@ -46,7 +46,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
 
     @IBAction func back(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: false, completion: nil)
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
