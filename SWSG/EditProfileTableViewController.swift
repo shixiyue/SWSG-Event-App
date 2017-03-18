@@ -178,10 +178,11 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
     }
     
     @objc private func update(sender: UIButton) {
-        guard let image = profileImage.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.text else {
+        guard let image = profileImage.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text, var desc = descTextView.text else {
             return
         }
-        let desc = descTextView.text ?? " "
+        skills = skills.trimTrailingWhiteSpace().isEmpty ? " " : skills.trimTrailingWhiteSpace()
+        desc = desc.trimTrailingWhiteSpace().isEmpty ? " " : desc.trimTrailingWhiteSpace()
         user.profile.updateProfile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         System.activeUser = user
         let success = Storage.saveUser(data: user.toDictionary(), fileName: user.email)
