@@ -67,6 +67,8 @@
 		E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C541E7BABA5008AFA85 /* Comments.swift */; };
 		E3220C651E7D3822008AFA85 /* TeamRegistration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */; };
 		E3220C671E7D385B008AFA85 /* TeamRegistrationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */; };
+		E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */; };
+		E3220C6B1E7D3D25008AFA85 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6A1E7D3D25008AFA85 /* Teams.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -129,6 +131,8 @@
 		E3220C581E7C1DDE008AFA85 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TeamRegistration.storyboard; sourceTree = "<group>"; };
 		E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRegistrationTableViewController.swift; sourceTree = "<group>"; };
+		E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamItemTableViewCell.swift; sourceTree = "<group>"; };
+		E3220C6A1E7D3D25008AFA85 /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,7 +292,9 @@
 			isa = PBXGroup;
 			children = (
 				E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */,
+				E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */,
 				E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */,
+				E3220C6A1E7D3D25008AFA85 /* Teams.swift */,
 			);
 			name = TeamRegistration;
 			sourceTree = "<group>";
@@ -388,6 +394,7 @@
 				E3220C331E7A62F9008AFA85 /* Events.swift in Sources */,
 				E3220C311E7A3B99008AFA85 /* Event.swift in Sources */,
 				CC1AA6C21E77C328004F5F95 /* (null) in Sources */,
+				E3220C6B1E7D3D25008AFA85 /* Teams.swift in Sources */,
 				3FED301A1E76FC9A00C007AD /* (null) in Sources */,
 				CC1F2B4C1E77D6560096C271 /* Profile.swift in Sources */,
 				E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */,
@@ -403,6 +410,7 @@
 				3FC3146A1E77EB84009B21AB /* MentorViewController.swift in Sources */,
 				3FC314601E77DB90009B21AB /* ConsultationDayCell.swift in Sources */,
 				3F97955B1E7A8DBF004BC26C /* SignUpTableViewController.swift in Sources */,
+				E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */,
 				3FC3146C1E7A5017009B21AB /* ConsultationDate.swift in Sources */,
 				E3220C471E7B9776008AFA85 /* UserTypes.swift in Sources */,
 				3F9795691E7A932D004BC26C /* System.swift in Sources */,

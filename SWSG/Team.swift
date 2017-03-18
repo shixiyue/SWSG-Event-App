@@ -23,4 +23,8 @@ class Team {
         self.lookingFor = lookingFor
         self.isPrivate = isPrivate
     }
+    
+    func addMember(user: User) {
+        members.append(user)
+    }
 }
