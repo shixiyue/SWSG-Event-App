@@ -18,11 +18,12 @@ class MenuViewController: UIViewController {
             
         }
     }
-    @IBOutlet var btnCloseMenuOverlay : UIButton!
+    @IBOutlet private var btnCloseMenuOverlay : UIButton!
+    @IBOutlet private var profileOverlay: UIButton!
     
-    @IBOutlet var profileImgButton: UIButton!
-    @IBOutlet weak var nameLbl: UILabel!
-    @IBOutlet weak var teamLbl: UILabel!
+    @IBOutlet private var profileImgButton: UIButton!
+    @IBOutlet private weak var nameLbl: UILabel!
+    @IBOutlet private weak var teamLbl: UILabel!
     
     var btnMenu : UIButton!
     var delegate : SlideMenuDelegate?
@@ -30,6 +31,7 @@ class MenuViewController: UIViewController {
     override func viewDidLoad() {
         menuList.delegate = self
         menuList.dataSource = self
+        menuList.tableFooterView = UIView(frame: CGRect.zero)
         setUpUserInfo()
     }
     
@@ -53,7 +55,7 @@ class MenuViewController: UIViewController {
     }
 
     
-    @IBAction func onProfileImageClick(_ sender: UIButton) {
+    @IBAction func onProfileClick(_ sender: UIButton) {
         print(true)
         Utility.showStoryboard(storyboard: Config.profileScreen, destinationViewController: Config.profileViewController, currentViewController: self)
     }

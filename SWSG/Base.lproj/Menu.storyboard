@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -118,8 +119,11 @@
                                     <constraint firstAttribute="width" constant="100" id="cux-6Q-RwO"/>
                                 </constraints>
                                 <state key="normal" image="Profile"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4qO-cC-G5J">
+                                <rect key="frame" x="16" y="20" width="343" height="128"/>
                                 <connections>
-                                    <action selector="onProfileImageClick:" destination="qwD-iu-tud" eventType="touchUpInside" id="75L-rP-53e"/>
+                                    <action selector="onProfileClick:" destination="qwD-iu-tud" eventType="touchUpInside" id="qrY-oU-FvT"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -127,14 +131,19 @@
                         <constraints>
                             <constraint firstItem="BNq-63-hic" firstAttribute="leading" secondItem="yAJ-Te-e1f" secondAttribute="leading" id="1Z1-vM-QoI"/>
                             <constraint firstItem="AHr-vh-QoN" firstAttribute="top" secondItem="BNq-63-hic" secondAttribute="bottom" constant="8" symbolic="YES" id="344-CE-7XL"/>
+                            <constraint firstItem="4qO-cC-G5J" firstAttribute="trailing" secondItem="yAJ-Te-e1f" secondAttribute="trailingMargin" id="7I4-7N-ADB"/>
+                            <constraint firstItem="4qO-cC-G5J" firstAttribute="leading" secondItem="yAJ-Te-e1f" secondAttribute="leadingMargin" id="Xi3-dX-e1k"/>
                             <constraint firstItem="BNq-63-hic" firstAttribute="centerX" secondItem="yAJ-Te-e1f" secondAttribute="centerX" id="a9h-km-woF"/>
+                            <constraint firstItem="4qO-cC-G5J" firstAttribute="centerX" secondItem="yAJ-Te-e1f" secondAttribute="centerX" id="ahg-k7-NMR"/>
                             <constraint firstItem="KMr-1i-dyd" firstAttribute="top" secondItem="AHr-vh-QoN" secondAttribute="bottom" constant="8" id="b30-pQ-fQA"/>
                             <constraint firstAttribute="trailing" secondItem="BNq-63-hic" secondAttribute="trailing" id="b4z-WQ-ldO"/>
                             <constraint firstItem="KMr-1i-dyd" firstAttribute="leading" secondItem="yAJ-Te-e1f" secondAttribute="leading" id="b6H-7K-JmQ"/>
                             <constraint firstItem="AHr-vh-QoN" firstAttribute="trailing" secondItem="KMr-1i-dyd" secondAttribute="trailing" id="b9p-tF-xIB"/>
+                            <constraint firstItem="4qO-cC-G5J" firstAttribute="top" secondItem="F0K-qS-1jJ" secondAttribute="bottom" id="hnd-gX-tXs"/>
                             <constraint firstItem="AHr-vh-QoN" firstAttribute="leading" secondItem="BNq-63-hic" secondAttribute="leading" id="krT-6F-Jhv"/>
                             <constraint firstItem="BNq-63-hic" firstAttribute="top" secondItem="C0J-3h-Ntj" secondAttribute="bottom" constant="8" id="lEq-s1-L1d"/>
                             <constraint firstAttribute="trailing" secondItem="KMr-1i-dyd" secondAttribute="trailing" id="men-WK-ai7"/>
+                            <constraint firstItem="BNq-63-hic" firstAttribute="top" secondItem="4qO-cC-G5J" secondAttribute="bottom" constant="-20" id="mxJ-Sr-Yma"/>
                             <constraint firstItem="AHr-vh-QoN" firstAttribute="leading" secondItem="KMr-1i-dyd" secondAttribute="leading" id="nFy-lF-aAq"/>
                             <constraint firstItem="C0J-3h-Ntj" firstAttribute="centerX" secondItem="KMr-1i-dyd" secondAttribute="centerX" id="nm3-HW-aMH"/>
                             <constraint firstItem="C0J-3h-Ntj" firstAttribute="top" secondItem="F0K-qS-1jJ" secondAttribute="bottom" id="pci-vC-x2L"/>
@@ -147,6 +156,7 @@
                         <outlet property="menuList" destination="KMr-1i-dyd" id="lpN-4b-BMJ"/>
                         <outlet property="nameLbl" destination="BNq-63-hic" id="XJw-f1-PyA"/>
                         <outlet property="profileImgButton" destination="C0J-3h-Ntj" id="CWa-15-do2"/>
+                        <outlet property="profileOverlay" destination="4qO-cC-G5J" id="CV3-Vd-BKw"/>
                         <outlet property="teamLbl" destination="AHr-vh-QoN" id="sfK-7u-Uht"/>
                     </connections>
                 </viewController>
