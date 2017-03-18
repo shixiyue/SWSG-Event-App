@@ -11,8 +11,6 @@ import UIKit
 class EventDetailsTableViewController: UITableViewController {
     
     var event : Event?
-
-    
     
     @IBOutlet weak var eventDetailsTableView: UITableView! {
         didSet{
@@ -27,6 +25,9 @@ class EventDetailsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
          NotificationCenter.default.addObserver(self, selector: #selector(EventDetailsTableViewController.update), name: Notification.Name(rawValue: "comments"), object: nil)
+        if let comments = Storage.readComments(fileName: Config.commentsFileName) {
+            Comments.comments = comments
+        }
        // CommentsInputTableViewCell.delegate = self
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -100,6 +101,7 @@ class EventDetailsTableViewController: UITableViewController {
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: "Comments", for: indexPath) as! CommentsTableViewCell
             cell.commentsLabel.text = Comments.comments[indexPath.row].words
+            cell.usernameLabel.text = Comments.comments[indexPath.row].username
             return cell
         }
     }

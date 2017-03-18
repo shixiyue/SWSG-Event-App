@@ -35,10 +35,10 @@ struct Utility {
     static func showStoryboard(storyboard: String, destinationViewController: String, currentViewController: UIViewController) {
         let storyboard = UIStoryboard(name: storyboard, bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: destinationViewController) as UIViewController
-      //  currentViewController.present(controller, animated: true, completion: nil)
+        currentViewController.present(controller, animated: true, completion: nil)
         controller.navigationItem.hidesBackButton = currentViewController.navigationItem.hidesBackButton
         controller.navigationController?.setNavigationBarHidden(controller.navigationItem.hidesBackButton, animated: false)
-        currentViewController.navigationController?.pushViewController(controller, animated: true)
+        //currentViewController.navigationController?.pushViewController(controller, animated: true)
     }
     
     static func logOutUser(currentViewController: UIViewController) {
@@ -50,6 +50,7 @@ struct Utility {
         let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: user)
         UserDefaults.standard.set(encodedData, forKey: Config.user)
         showStoryboard(storyboard: Config.main, destinationViewController: Config.navigationController, currentViewController: currentViewController)
+        Config.currentLogInUser = user
     }
     
     static func getFailAlertController(message: String) -> UIAlertController {

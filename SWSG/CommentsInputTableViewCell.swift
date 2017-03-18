@@ -13,7 +13,9 @@ class CommentsInputTableViewCell: UITableViewCell {
     @IBOutlet weak var commentInputField: UITextField!
    
     @IBAction func onAddCommentButtonClick(_ sender: Any) {
-        Comments.comments.append(Comment(words: commentInputField.text!))
+        print(commentInputField.text)
+        print(Config.currentLogInUser)
+        Comments.comments.append(Comment(words: commentInputField.text!,username: Config.currentLogInUser!.profile.name))
         commentInputField.text = ""
     }
     

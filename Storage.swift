@@ -52,4 +52,40 @@ struct Storage {
         return documentDirectory.appendingPathComponent(fileName + ".json")
     }
     
+    /// save comments into a json file with the `fileName` specified
+    static func saveComments(data: [Comment], fileName: String) -> Bool {
+        do {
+            var arr = [[String: String]]()
+            for i in data {
+                var dic = [String: String]()
+                dic.updateValue(i.username, forKey: "username")
+                dic.updateValue(i.words, forKey: "words")
+                arr.append(dic)
+            }
+            let jsonData = try JSONSerialization.data(withJSONObject: arr, options: JSONSerialization.WritingOptions())
+            try jsonData.write(to: getFileURL(fileName: fileName))
+            return true
+        } catch _ {
+            return false
+        }
+    }
+    
+    /// read comments from the `fileName`
+    static func readComments(fileName: String) -> [Comment]? {
+        guard let jsonData = try? Data(contentsOf: getFileURL(fileName: fileName)) else {
+            return nil
+        }
+        guard let data = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments), let comments = data as? [[String:String]] else {
+            return nil
+        }
+        var arr = [Comment]()
+        for i in comments {
+            let username = i["username"]
+            let words = i["words"]
+            arr.append(Comment(words: words!,username: username!))
+        }
+        return arr
+    }
+
+    
 }

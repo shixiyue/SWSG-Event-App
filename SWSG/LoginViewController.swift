@@ -52,6 +52,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             return
         }
         Utility.logInUser(user: user, currentViewController: self)
+        Config.currentLogInUser = user
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
