@@ -8,25 +8,23 @@
 
 import UIKit
 
-/// `SignUpTableViewController` represents the controller for signup table.
-class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
+/// `EditProfileTableViewController` represents the controller for signup table.
+// TODO: Is it possible to share the view controller?
+class EditProfileTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
     
-    var signUpButton: RoundCornerButton!
+    var doneButton: RoundCornerButton!
     
     private let countryPickerView = UIPickerView()
     private let skillsPlaceholder = "Skills"
     private let descPlaceholder = "Description"
-    private let passwordInvalid = "Password must be greater than 6 characters."
-    private let emailInvalid = "Please enter a valid email address."
-    private let signUpProblem = "There was a problem signing up."
+    private let updateProblem = "There was a problem updating profile."
     
-    @IBOutlet private var signUpTableView: UITableView!
-
+    private var user: User!
+    
+    @IBOutlet private var profileTableView: UITableView!
     @IBOutlet private var profileImage: UIImageView!
     // TODO: Figure out how to allow to upload a new image and change profile picture
     @IBOutlet private var nameTextField: UITextField!
-    @IBOutlet private var emailTextField: UITextField!
-    @IBOutlet private var passwordTextField: UITextField!
     @IBOutlet private var countryTextField: UITextField!
     @IBOutlet private var jobTextField: UITextField!
     @IBOutlet private var companyTextField: UITextField!
@@ -38,29 +36,42 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpSignUpTableView()
+        setUpUser()
+        setUpProfileTableView()
         setUpButton()
         setUpTextFields()
         setUpTextViews()
         hideKeyboardWhenTappedAround()
     }
     
-    private func setUpSignUpTableView() {
-        signUpTableView.tableFooterView = UIView(frame: CGRect.zero)
-        signUpTableView.allowsSelection = false
+    private func setUpUser() {
+        guard let user = System.activeUser else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        self.user = user
+    }
+    
+    private func setUpProfileTableView() {
+        profileTableView.tableFooterView = UIView(frame: CGRect.zero)
+        profileTableView.allowsSelection = false
     }
     
     private func setUpButton() {
-        signUpButton.setDisable()
-        signUpButton.addTarget(self, action: #selector(signUp), for: .touchUpInside)
+        doneButton.addTarget(self, action: #selector(update), for: .touchUpInside)
     }
     
     private func setUpTextFields() {
-        textFields = [nameTextField, emailTextField, passwordTextField, countryTextField, jobTextField, companyTextField, educationTextField]
+        textFields = [nameTextField, countryTextField, jobTextField, companyTextField, educationTextField]
         for (index, textField) in textFields.enumerated() {
             textField.delegate = self
             textField.tag = index
         }
+        nameTextField.text = user.profile.name
+        countryTextField.text = user.profile.country
+        jobTextField.text = user.profile.job
+        companyTextField.text = user.profile.company
+        educationTextField.text = user.profile.education
         setUpCountryTextField()
     }
     
@@ -68,10 +79,9 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
         let textViews: [UITextView] = [skillsTextView, descTextView]
         for textView in textViews {
             textView.delegate = self
-            textView.textColor = UIColor.lightGray
         }
-        skillsTextView.setPlaceholder(skillsPlaceholder)
-        descTextView.setPlaceholder(descPlaceholder)
+        skillsTextView.text = user.profile.skills
+        descTextView.text = user.profile.desc
     }
     
     private func setUpCountryTextField() {
@@ -107,11 +117,10 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        guard textView.textColor == UIColor.lightGray else {
+        guard textView.textColor == UIColor.lightGray, let textView = textView as? GrayBorderTextView else {
             return
         }
-        textView.text = nil
-        textView.textColor = UIColor.black
+        textView.removePlaceholder()
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -122,7 +131,6 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
             return
         }
         textView.setPlaceholder()
-        textView.textColor = UIColor.lightGray
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -165,34 +173,23 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
     
     private func updateButtonState() {
         let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || skillsTextView.text.isEmpty
-        signUpButton.isEnabled = !isAnyEmpty
-        signUpButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
+        doneButton.isEnabled = !isAnyEmpty
+        doneButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
     
-    @objc private func signUp(sender: UIButton) {
-        guard let image = profileImage.image, let name = nameTextField.text, let email = emailTextField.text, let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text, var desc = descTextView.text else {
+    @objc private func update(sender: UIButton) {
+        guard let image = profileImage.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text, var desc = descTextView.text else {
             return
         }
         skills = skills.trimTrailingWhiteSpace().isEmpty ? " " : skills.trimTrailingWhiteSpace()
         desc = desc.trimTrailingWhiteSpace().isEmpty ? " " : desc.trimTrailingWhiteSpace()
-        guard password.characters.count >= Config.passwordMinLength else {
-            self.present(Utility.getFailAlertController(message: passwordInvalid), animated: true, completion: nil)
-            return
-        }
-        guard Utility.isValidEmail(testStr: email) else {
-            self.present(Utility.getFailAlertController(message: emailInvalid), animated: true, completion: nil)
-            return
-        }
-        let profile = Profile(name: name, image: image, job: job, company: company, country: country,
-                              education: education, skills: skills, description: desc)
-        let user = Participant(profile: profile, password: password, email: email, team: nil)
-        let success = Storage.saveUser(data: user.toDictionary(), fileName: email)
+        user.profile.updateProfile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
+        System.activeUser = user
+        let success = Storage.saveUser(data: user.toDictionary(), fileName: user.email)
         guard success else {
-            self.present(Utility.getFailAlertController(message: signUpProblem), animated: true, completion: nil)
+            self.present(Utility.getFailAlertController(message: updateProblem), animated: true, completion: nil)
             return
         }
-
-        Utility.logInUser(user: user, currentViewController: self)
+        dismiss(animated: false, completion: nil)
     }
-    
 }

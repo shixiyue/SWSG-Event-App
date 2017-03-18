@@ -97,3 +97,11 @@ extension Date {
         return formatter.string(from: self)
     }
 }
+
+extension String {
+    
+    func trimTrailingWhiteSpace() -> String {
+        return self.replacingOccurrences(of: "\\s+$", with: "", options: .regularExpression)
+    }
+    
+}

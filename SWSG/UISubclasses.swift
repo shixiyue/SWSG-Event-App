@@ -10,11 +10,28 @@ import UIKit
 
 class GrayBorderTextView: UITextView {
     
+    private var placeholder: String = ""
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         layer.borderColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
         layer.borderWidth = 1.0
         layer.cornerRadius = 5.0
+    }
+    
+    func setPlaceholder(_ placeholder: String) {
+        self.placeholder = placeholder
+        setPlaceholder()
+    }
+    
+    func setPlaceholder() {
+        textColor = UIColor.lightGray
+        text = placeholder
+    }
+    
+    func removePlaceholder() {
+        text = nil
+        textColor = UIColor.black
     }
     
 }

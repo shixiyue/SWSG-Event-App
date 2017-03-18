@@ -36,7 +36,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
 
             print("EventScheduleVC\n", terminator: "")
             
-            Utility.showStoryboard(storyboard: Config.eventSystem, destinationViewController: "EventScheduleTableViewController", currentViewController: self)
+            Utility.showStoryboardByNavigation(storyboard: Config.eventSystem, destinationViewController: "EventScheduleTableViewController", currentViewController: self)
             
             break
         case 2:
@@ -45,6 +45,10 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             self.open(viewController: "MentorViewController", from: "Mentor")
             
             break
+        case 5:
+            print("Settings\n", terminator: "")
+            
+            self.open(viewController: "SettingsViewController", from: "Settings")
         default:
             print("default\n", terminator: "")
         }
