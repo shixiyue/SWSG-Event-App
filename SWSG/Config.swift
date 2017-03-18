@@ -59,10 +59,20 @@ struct Config {
     static let main = "Main"
     static let eventSystem = "EventSystem"
     static let navigationController = "NavigationController"
+
     static let teamRegistration = "TeamRegistration"
+
+    static let profileScreen = "Profile"
+    static let profileViewController = "ProfileViewController"
+    static let editProfileTable = "EditProfileTable"
+    
+    // Parameters for tableView:
+    static let profileCell = "profileCell"
+
     
     // Parameters for information message:
     static let done = "Done"
+    static let noTeamLabel = "No Team yet"
     
     static let passwordMinLength = 6
     

@@ -42,8 +42,16 @@
 		3FED30251E77A37300C007AD /* MentorGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30241E77A37300C007AD /* MentorGridViewController.swift */; };
 		3FED30271E77A57600C007AD /* (null) in Sources */ = {isa = PBXBuildFile; };
 		3FED30291E77A5CB00C007AD /* Mentor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30281E77A5CB00C007AD /* Mentor.swift */; };
+		CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */; };
+		CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC0032941E7CF68500CF190E /* Settings.storyboard */; };
 		CC1AA6C21E77C328004F5F95 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		CC1AA6C61E77C328004F5F95 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		CC1CF8A41E7C03DA002224BC /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC1CF8A21E7C03DA002224BC /* Profile.storyboard */; };
+		CC1CF8A81E7C09CD002224BC /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1CF8A71E7C09CD002224BC /* ProfileViewController.swift */; };
+		CC1CF8AA1E7C137A002224BC /* ProfileItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1CF8A91E7C137A002224BC /* ProfileItems.swift */; };
+		CC1CF8AC1E7C178A002224BC /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1CF8AB1E7C178A002224BC /* ProfileTableViewCell.swift */; };
+		CC1CF8AE1E7C1ED6002224BC /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1CF8AD1E7C1ED6002224BC /* EditProfileViewController.swift */; };
+		CC1CF8B01E7C2009002224BC /* EditProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1CF8AF1E7C2009002224BC /* EditProfileTableViewController.swift */; };
 		CC1F2B4C1E77D6560096C271 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1F2B4B1E77D6560096C271 /* Profile.swift */; };
 		CC1F2B4E1E77D6610096C271 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1F2B4D1E77D6610096C271 /* User.swift */; };
 		E3220C291E796BC0008AFA85 /* EventSystem.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3220C281E796BC0008AFA85 /* EventSystem.storyboard */; };
@@ -106,6 +114,14 @@
 		3FED30221E77A2D400C007AD /* MentorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorCell.swift; sourceTree = "<group>"; };
 		3FED30241E77A37300C007AD /* MentorGridViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorGridViewController.swift; sourceTree = "<group>"; };
 		3FED30281E77A5CB00C007AD /* Mentor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mentor.swift; sourceTree = "<group>"; };
+		CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		CC0032941E7CF68500CF190E /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
+		CC1CF8A31E7C03DA002224BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Profile.storyboard; sourceTree = "<group>"; };
+		CC1CF8A71E7C09CD002224BC /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		CC1CF8A91E7C137A002224BC /* ProfileItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileItems.swift; sourceTree = "<group>"; };
+		CC1CF8AB1E7C178A002224BC /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
+		CC1CF8AD1E7C1ED6002224BC /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		CC1CF8AF1E7C2009002224BC /* EditProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileTableViewController.swift; sourceTree = "<group>"; };
 		CC1F2B4B1E77D6560096C271 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Profile.swift; path = "../2017-final-group10/SWSG/Profile.swift"; sourceTree = "<group>"; };
 		CC1F2B4D1E77D6610096C271 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = "../2017-final-group10/SWSG/User.swift"; sourceTree = "<group>"; };
 		E3220C281E796BC0008AFA85 /* EventSystem.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = EventSystem.storyboard; sourceTree = "<group>"; };
@@ -168,6 +184,8 @@
 				E3220C631E7D380A008AFA85 /* TeamRegistration */,
 				E3220C271E796AD1008AFA85 /* EventSystem */,
 				3F9795641E7A8E48004BC26C /* Login & Sign Up */,
+				CC1CF8A11E7C028D002224BC /* Profile */,
+				CC0032931E7CF66D00CF190E /* Settings */,
 				3FED301D1E779A2100C007AD /* Menu */,
 				3FED302B1E77A5FA00C007AD /* Mentor */,
 				3FED302A1E77A5F300C007AD /* Model */,
@@ -266,6 +284,28 @@
 			name = Mentor;
 			sourceTree = "<group>";
 		};
+		CC0032931E7CF66D00CF190E /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				CC0032941E7CF68500CF190E /* Settings.storyboard */,
+				CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		CC1CF8A11E7C028D002224BC /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				CC1CF8A91E7C137A002224BC /* ProfileItems.swift */,
+				CC1CF8A71E7C09CD002224BC /* ProfileViewController.swift */,
+				CC1CF8A21E7C03DA002224BC /* Profile.storyboard */,
+				CC1CF8AF1E7C2009002224BC /* EditProfileTableViewController.swift */,
+				CC1CF8AD1E7C1ED6002224BC /* EditProfileViewController.swift */,
+				CC1CF8AB1E7C178A002224BC /* ProfileTableViewCell.swift */,
+			);
+			name = Profile;
+			sourceTree = "<group>";
+		};
 		E3220C271E796AD1008AFA85 /* EventSystem */ = {
 			isa = PBXGroup;
 			children = (
@@ -360,10 +400,12 @@
 			files = (
 				3F12AFD81E711CBB00B26D67 /* LaunchScreen.storyboard in Resources */,
 				E3220C291E796BC0008AFA85 /* EventSystem.storyboard in Resources */,
+				CC1CF8A41E7C03DA002224BC /* Profile.storyboard in Resources */,
 				3F12AFD51E711CBB00B26D67 /* Assets.xcassets in Resources */,
 				3FED30211E77A15300C007AD /* Mentor.storyboard in Resources */,
 				E3220C651E7D3822008AFA85 /* TeamRegistration.storyboard in Resources */,
 				3F12AFD01E711CBB00B26D67 /* Menu.storyboard in Resources */,
+				CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */,
 				3F97954E1E7A8DBF004BC26C /* LoginSignup.storyboard in Resources */,
 				3FED301F1E779A7300C007AD /* Main.storyboard in Resources */,
 			);
@@ -379,6 +421,7 @@
 				3FED30231E77A2D400C007AD /* MentorCell.swift in Sources */,
 				3FED30271E77A57600C007AD /* (null) in Sources */,
 				3F97951F1E7A6A58004BC26C /* Team.swift in Sources */,
+				CC1CF8AC1E7C178A002224BC /* ProfileTableViewCell.swift in Sources */,
 				3F97955C1E7A8DBF004BC26C /* SignUpViewController.swift in Sources */,
 				E3220C491E7B98CA008AFA85 /* MenuCell.swift in Sources */,
 				3F97954D1E7A8DBF004BC26C /* InitialViewController.swift in Sources */,
@@ -386,6 +429,7 @@
 				3F12AFD31E711CBB00B26D67 /* SWSG.xcdatamodeld in Sources */,
 				E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */,
 				E3220C3F1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift in Sources */,
+				CC1CF8A81E7C09CD002224BC /* ProfileViewController.swift in Sources */,
 				E3220C3D1E7AE39D008AFA85 /* EventTimeTableViewCell.swift in Sources */,
 				3F12AFCD1E711CBB00B26D67 /* HomeViewController.swift in Sources */,
 				E3220C3B1E7AE387008AFA85 /* EventImageTableViewCell.swift in Sources */,
@@ -405,10 +449,13 @@
 				3F97956B1E7A98AC004BC26C /* Field.swift in Sources */,
 				3FED30251E77A37300C007AD /* MentorGridViewController.swift in Sources */,
 				3F97954F1E7A8DBF004BC26C /* LoginViewController.swift in Sources */,
+				CC1CF8B01E7C2009002224BC /* EditProfileTableViewController.swift in Sources */,
 				3FC314621E77DBAD009B21AB /* ConsultationSlotCell.swift in Sources */,
 				3F9795611E7A8DBF004BC26C /* (null) in Sources */,
 				3FC3146A1E77EB84009B21AB /* MentorViewController.swift in Sources */,
 				3FC314601E77DB90009B21AB /* ConsultationDayCell.swift in Sources */,
+				CC1CF8AE1E7C1ED6002224BC /* EditProfileViewController.swift in Sources */,
+				CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */,
 				3F97955B1E7A8DBF004BC26C /* SignUpTableViewController.swift in Sources */,
 				E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */,
 				3FC3146C1E7A5017009B21AB /* ConsultationDate.swift in Sources */,
@@ -423,6 +470,7 @@
 				3FED30291E77A5CB00C007AD /* Mentor.swift in Sources */,
 				3FC314661E77DD7D009B21AB /* ConsultationSlotStatus.swift in Sources */,
 				3FED301C1E77930200C007AD /* BaseViewController.swift in Sources */,
+				CC1CF8AA1E7C137A002224BC /* ProfileItems.swift in Sources */,
 				3FC314641E77DD22009B21AB /* ConsultationSlot.swift in Sources */,
 				3FED30161E76FA0A00C007AD /* MenuViewController.swift in Sources */,
 				E3220C4D1E7B9916008AFA85 /* Storage.swift in Sources */,
@@ -450,6 +498,14 @@
 				3F12AFD71E711CBB00B26D67 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		CC1CF8A21E7C03DA002224BC /* Profile.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CC1CF8A31E7C03DA002224BC /* Base */,
+			);
+			name = Profile.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -551,6 +607,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SWSG/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nus.cs3217.swsg.SWSG;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -563,6 +620,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SWSG/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nus.cs3217.swsg.SWSG;
 				PRODUCT_NAME = "$(TARGET_NAME)";

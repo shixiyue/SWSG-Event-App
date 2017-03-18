@@ -35,20 +35,26 @@ struct Utility {
     static func showStoryboard(storyboard: String, destinationViewController: String, currentViewController: UIViewController) {
         let storyboard = UIStoryboard(name: storyboard, bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: destinationViewController) as UIViewController
-        currentViewController.present(controller, animated: true, completion: nil)
+
+        currentViewController.present(controller, animated: false, completion: nil)
+    }
+    
+    static func showStoryboardByNavigation(storyboard: String, destinationViewController: String, currentViewController: UIViewController) {
+        let storyboard = UIStoryboard(name: storyboard, bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: destinationViewController) as UIViewController
         controller.navigationItem.hidesBackButton = currentViewController.navigationItem.hidesBackButton
-        controller.navigationController?.setNavigationBarHidden(controller.navigationItem.hidesBackButton, animated: false)
+    controller.navigationController?.setNavigationBarHidden(controller.navigationItem.hidesBackButton, animated: false)
         //currentViewController.navigationController?.pushViewController(controller, animated: true)
     }
     
     static func logOutUser(currentViewController: UIViewController) {
         UserDefaults.standard.removeObject(forKey: Config.user)
+        System.activeUser = nil
         showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
     }
     
     static func logInUser(user: User, currentViewController: UIViewController) {
-        let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: user)
-        UserDefaults.standard.set(encodedData, forKey: Config.user)
+        System.activeUser = user
         showStoryboard(storyboard: Config.main, destinationViewController: Config.navigationController, currentViewController: currentViewController)
     }
     
@@ -57,5 +63,12 @@ struct Utility {
         alertController.addAction(UIAlertAction(title: "OK", style: .default))
         return alertController
     }
+    
+    static func getSuccessAlertController() -> UIAlertController {
+        let alertController = UIAlertController(title: "Success", message: nil, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        return alertController
+    }
+
     
 }

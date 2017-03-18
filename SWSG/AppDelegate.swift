@@ -16,9 +16,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         setNavigationBar()
-        if UserDefaults.standard.object(forKey: "user") == nil {
+        guard let userData = UserDefaults.standard.data(forKey: Config.user), let user = NSKeyedUnarchiver.unarchiveObject(with: userData) as? User else {
             showLogInSignUpScreen()
+            return true
         }
+        System.activeUser = user
         return true
     }
     

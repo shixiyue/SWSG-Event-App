@@ -32,4 +32,9 @@ extension User {
         return true
     }
     
+    //TODO: Add type and team
+    func toDictionary() -> [String: Any] {
+        return [Config.email: email, Config.password: password, Config.profile: profile.toDictionary()]
+    }
+    
 }
