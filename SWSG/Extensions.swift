@@ -100,8 +100,21 @@ extension Date {
 
 extension String {
     
+    func trim() -> String {
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
     func trimTrailingWhiteSpace() -> String {
         return self.replacingOccurrences(of: "\\s+$", with: "", options: .regularExpression)
+    }
+    
+    func containsWhiteSpace() -> Bool {
+        let range = self.rangeOfCharacter(from: .whitespacesAndNewlines)
+        if let _ = range {
+            return true
+        } else {
+            return false
+        }
     }
     
 }

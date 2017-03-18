@@ -170,12 +170,12 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
     }
     
     @objc private func signUp(sender: UIButton) {
-        guard let image = profileImage.image, let name = nameTextField.text, let email = emailTextField.text, let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text, var desc = descTextView.text else {
+        guard let image = profileImage.image, let name = nameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text?.trimTrailingWhiteSpace(), var desc = descTextView.text?.trimTrailingWhiteSpace() else {
             return
         }
-        skills = skills.trimTrailingWhiteSpace().isEmpty ? " " : skills.trimTrailingWhiteSpace()
-        desc = desc.trimTrailingWhiteSpace().isEmpty ? " " : desc.trimTrailingWhiteSpace()
-        guard password.characters.count >= Config.passwordMinLength else {
+        skills = skills.trimTrailingWhiteSpace().isEmpty ? " " : skills
+        desc = desc.trimTrailingWhiteSpace().isEmpty ? " " : desc
+        guard Utility.isValidPassword(testStr: password) else {
             self.present(Utility.getFailAlertController(message: passwordInvalid), animated: true, completion: nil)
             return
         }

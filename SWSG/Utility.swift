@@ -31,6 +31,10 @@ struct Utility {
         return emailTest.evaluate(with: testStr)
     }
     
+    static func isValidPassword(testStr: String) -> Bool {
+        return !testStr.containsWhiteSpace() && testStr.characters.count >= Config.passwordMinLength
+    }
+    
     /// Jumps to another storyboard
     static func showStoryboard(storyboard: String, destinationViewController: String, currentViewController: UIViewController) {
         let storyboard = UIStoryboard(name: storyboard, bundle: nil)

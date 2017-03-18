@@ -54,6 +54,7 @@
 		CC1CF8B01E7C2009002224BC /* EditProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1CF8AF1E7C2009002224BC /* EditProfileTableViewController.swift */; };
 		CC1F2B4C1E77D6560096C271 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1F2B4B1E77D6560096C271 /* Profile.swift */; };
 		CC1F2B4E1E77D6610096C271 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1F2B4D1E77D6610096C271 /* User.swift */; };
+		CCDCCD7B1E7D6E7600931AC0 /* UtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDCCD7A1E7D6E7600931AC0 /* UtilityTests.swift */; };
 		E3220C291E796BC0008AFA85 /* EventSystem.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3220C281E796BC0008AFA85 /* EventSystem.storyboard */; };
 		E3220C2B1E796C7B008AFA85 /* EventScheduleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */; };
 		E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */; };
@@ -73,9 +74,17 @@
 		E3220C511E7BA903008AFA85 /* CommentsInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C501E7BA903008AFA85 /* CommentsInputTableViewCell.swift */; };
 		E3220C531E7BAAC5008AFA85 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C521E7BAAC5008AFA85 /* Comment.swift */; };
 		E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C541E7BABA5008AFA85 /* Comments.swift */; };
-
-		E3220C591E7C1DDE008AFA85 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C581E7C1DDE008AFA85 /* Profile.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CCDCCD7D1E7D6E7600931AC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3F12AFBF1E711CBA00B26D67 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3F12AFC61E711CBA00B26D67;
+			remoteInfo = SWSG;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		3F12AFC71E711CBB00B26D67 /* SWSG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SWSG.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,6 +131,9 @@
 		CC1CF8AF1E7C2009002224BC /* EditProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileTableViewController.swift; sourceTree = "<group>"; };
 		CC1F2B4B1E77D6560096C271 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Profile.swift; path = "../2017-final-group10/SWSG/Profile.swift"; sourceTree = "<group>"; };
 		CC1F2B4D1E77D6610096C271 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = "../2017-final-group10/SWSG/User.swift"; sourceTree = "<group>"; };
+		CCDCCD781E7D6E7600931AC0 /* SWSGTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SWSGTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CCDCCD7A1E7D6E7600931AC0 /* UtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityTests.swift; sourceTree = "<group>"; };
+		CCDCCD7C1E7D6E7600931AC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3220C281E796BC0008AFA85 /* EventSystem.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = EventSystem.storyboard; sourceTree = "<group>"; };
 		E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleTableViewController.swift; sourceTree = "<group>"; };
 		E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleTableViewCell.swift; sourceTree = "<group>"; };
@@ -153,6 +165,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CCDCCD751E7D6E7600931AC0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -160,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				3F12AFC91E711CBB00B26D67 /* SWSG */,
+				CCDCCD791E7D6E7600931AC0 /* SWSGTests */,
 				3F12AFC81E711CBB00B26D67 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -168,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				3F12AFC71E711CBB00B26D67 /* SWSG.app */,
+				CCDCCD781E7D6E7600931AC0 /* SWSGTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -299,6 +320,15 @@
 			name = Profile;
 			sourceTree = "<group>";
 		};
+		CCDCCD791E7D6E7600931AC0 /* SWSGTests */ = {
+			isa = PBXGroup;
+			children = (
+				CCDCCD7A1E7D6E7600931AC0 /* UtilityTests.swift */,
+				CCDCCD7C1E7D6E7600931AC0 /* Info.plist */,
+			);
+			path = SWSGTests;
+			sourceTree = "<group>";
+		};
 		E3220C271E796AD1008AFA85 /* EventSystem */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,6 +371,24 @@
 			productReference = 3F12AFC71E711CBB00B26D67 /* SWSG.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CCDCCD771E7D6E7600931AC0 /* SWSGTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CCDCCD811E7D6E7600931AC0 /* Build configuration list for PBXNativeTarget "SWSGTests" */;
+			buildPhases = (
+				CCDCCD741E7D6E7600931AC0 /* Sources */,
+				CCDCCD751E7D6E7600931AC0 /* Frameworks */,
+				CCDCCD761E7D6E7600931AC0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CCDCCD7E1E7D6E7600931AC0 /* PBXTargetDependency */,
+			);
+			name = SWSGTests;
+			productName = SWSGTests;
+			productReference = CCDCCD781E7D6E7600931AC0 /* SWSGTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -354,6 +402,11 @@
 					3F12AFC61E711CBA00B26D67 = {
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
+					};
+					CCDCCD771E7D6E7600931AC0 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 3F12AFC61E711CBA00B26D67;
 					};
 				};
 			};
@@ -371,6 +424,7 @@
 			projectRoot = "";
 			targets = (
 				3F12AFC61E711CBA00B26D67 /* SWSG */,
+				CCDCCD771E7D6E7600931AC0 /* SWSGTests */,
 			);
 		};
 /* End PBXProject section */
@@ -392,6 +446,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CCDCCD761E7D6E7600931AC0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -399,7 +460,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3220C571E7C1DC0008AFA85 /* User.swift in Sources */,
 				3FED30231E77A2D400C007AD /* MentorCell.swift in Sources */,
 				3FED30271E77A57600C007AD /* (null) in Sources */,
 				3F97951F1E7A6A58004BC26C /* Team.swift in Sources */,
@@ -460,7 +520,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CCDCCD741E7D6E7600931AC0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CCDCCD7B1E7D6E7600931AC0 /* UtilityTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CCDCCD7E1E7D6E7600931AC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3F12AFC61E711CBA00B26D67 /* SWSG */;
+			targetProxy = CCDCCD7D1E7D6E7600931AC0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		3F12AFCE1E711CBB00B26D67 /* Menu.storyboard */ = {
@@ -607,6 +683,32 @@
 			};
 			name = Release;
 		};
+		CCDCCD7F1E7D6E7600931AC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = SWSGTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = nus.cs3217.swsg.SWSGTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SWSG.app/SWSG";
+			};
+			name = Debug;
+		};
+		CCDCCD801E7D6E7600931AC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = SWSGTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = nus.cs3217.swsg.SWSGTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SWSG.app/SWSG";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -627,6 +729,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		CCDCCD811E7D6E7600931AC0 /* Build configuration list for PBXNativeTarget "SWSGTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CCDCCD7F1E7D6E7600931AC0 /* Debug */,
+				CCDCCD801E7D6E7600931AC0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 

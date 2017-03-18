@@ -101,7 +101,7 @@ class SettingsTableViewController: UITableViewController {
             self.present(Utility.getFailAlertController(message: wrongPassword), animated: true, completion: nil)
             return
         }
-        guard newPassword.characters.count >= Config.passwordMinLength else {
+        guard Utility.isValidPassword(testStr: newPassword) else {
             self.present(Utility.getFailAlertController(message: passwordInvalid), animated: true, completion: nil)
             return
         }
