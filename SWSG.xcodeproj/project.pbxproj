@@ -65,8 +65,8 @@
 		E3220C511E7BA903008AFA85 /* CommentsInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C501E7BA903008AFA85 /* CommentsInputTableViewCell.swift */; };
 		E3220C531E7BAAC5008AFA85 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C521E7BAAC5008AFA85 /* Comment.swift */; };
 		E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C541E7BABA5008AFA85 /* Comments.swift */; };
-
-		E3220C591E7C1DDE008AFA85 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C581E7C1DDE008AFA85 /* Profile.swift */; };
+		E3220C651E7D3822008AFA85 /* TeamRegistration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */; };
+		E3220C671E7D385B008AFA85 /* TeamRegistrationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -127,6 +127,8 @@
 		E3220C541E7BABA5008AFA85 /* Comments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comments.swift; sourceTree = "<group>"; };
 		E3220C561E7C1DC0008AFA85 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E3220C581E7C1DDE008AFA85 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TeamRegistration.storyboard; sourceTree = "<group>"; };
+		E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRegistrationTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 		3F12AFC91E711CBB00B26D67 /* SWSG */ = {
 			isa = PBXGroup;
 			children = (
+				E3220C631E7D380A008AFA85 /* TeamRegistration */,
 				E3220C271E796AD1008AFA85 /* EventSystem */,
 				3F9795641E7A8E48004BC26C /* Login & Sign Up */,
 				3FED301D1E779A2100C007AD /* Menu */,
@@ -281,6 +284,15 @@
 			name = EventSystem;
 			sourceTree = "<group>";
 		};
+		E3220C631E7D380A008AFA85 /* TeamRegistration */ = {
+			isa = PBXGroup;
+			children = (
+				E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */,
+				E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */,
+			);
+			name = TeamRegistration;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -344,6 +356,7 @@
 				E3220C291E796BC0008AFA85 /* EventSystem.storyboard in Resources */,
 				3F12AFD51E711CBB00B26D67 /* Assets.xcassets in Resources */,
 				3FED30211E77A15300C007AD /* Mentor.storyboard in Resources */,
+				E3220C651E7D3822008AFA85 /* TeamRegistration.storyboard in Resources */,
 				3F12AFD01E711CBB00B26D67 /* Menu.storyboard in Resources */,
 				3F97954E1E7A8DBF004BC26C /* LoginSignup.storyboard in Resources */,
 				3FED301F1E779A7300C007AD /* Main.storyboard in Resources */,
@@ -357,7 +370,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3220C571E7C1DC0008AFA85 /* User.swift in Sources */,
 				3FED30231E77A2D400C007AD /* MentorCell.swift in Sources */,
 				3FED30271E77A57600C007AD /* (null) in Sources */,
 				3F97951F1E7A6A58004BC26C /* Team.swift in Sources */,
@@ -371,6 +383,7 @@
 				E3220C3D1E7AE39D008AFA85 /* EventTimeTableViewCell.swift in Sources */,
 				3F12AFCD1E711CBB00B26D67 /* HomeViewController.swift in Sources */,
 				E3220C3B1E7AE387008AFA85 /* EventImageTableViewCell.swift in Sources */,
+				E3220C671E7D385B008AFA85 /* TeamRegistrationTableViewController.swift in Sources */,
 				E3220C451E7AF088008AFA85 /* EventHeaderTableViewCell.swift in Sources */,
 				E3220C331E7A62F9008AFA85 /* Events.swift in Sources */,
 				E3220C311E7A3B99008AFA85 /* Event.swift in Sources */,

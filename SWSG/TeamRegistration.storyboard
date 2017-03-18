@@ -10,32 +10,35 @@
     </dependencies>
     <scenes>
         <!--Team Registration Table View Controller-->
-        <scene sceneID="HEP-PA-tJ4">
+        <scene sceneID="zAd-fY-SzN">
             <objects>
-                <tableViewController storyboardIdentifier="teamRegistration" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3eo-FE-pDe" customClass="TeamRegistrationTableViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="4Qy-X1-ODk">
+                <tableViewController storyboardIdentifier="TeamRegistrationTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="5n1-Fg-XOc" customClass="TeamRegistrationTableViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="jbS-ec-fSK">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Ntp-7i-AR2">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="UCa-yr-DQj">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ntp-7i-AR2" id="lyu-TK-7Mp">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UCa-yr-DQj" id="BOf-Ln-UdI">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="3eo-FE-pDe" id="Zrs-CW-rgT"/>
-                            <outlet property="delegate" destination="3eo-FE-pDe" id="N60-xB-EIp"/>
+                            <outlet property="dataSource" destination="5n1-Fg-XOc" id="x4U-vu-wy8"/>
+                            <outlet property="delegate" destination="5n1-Fg-XOc" id="LYB-el-ZmM"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="teamRegistrationTableView" destination="jbS-ec-fSK" id="9Vh-gr-hYu"/>
+                    </connections>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Orf-iw-hFL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qVg-I2-Btp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="82" y="-134"/>
+            <point key="canvasLocation" x="34" y="199"/>
         </scene>
     </scenes>
 </document>

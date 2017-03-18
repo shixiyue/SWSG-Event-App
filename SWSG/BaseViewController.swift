@@ -44,6 +44,10 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             self.open(viewController: "MentorViewController", from: "Mentor")
             
             break
+        case 3:
+            print("Teams\n",terminator: "")
+            self.open(viewController: "TeamRegistrationTableViewController", from: Config.teamRegistration)
+            break
         default:
             print("default\n", terminator: "")
         }

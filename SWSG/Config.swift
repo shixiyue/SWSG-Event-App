@@ -59,6 +59,7 @@ struct Config {
     static let main = "Main"
     static let eventSystem = "EventSystem"
     static let navigationController = "NavigationController"
+    static let teamRegistration = "TeamRegistration"
     
     // Parameters for information message:
     static let done = "Done"
