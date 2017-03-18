@@ -87,7 +87,7 @@ struct Storage {
     }
     
     /// save comments into a json file with the `fileName` specified
-    static func saveComments(data: [String:[Comment]], fileName: String) -> Bool {
+    static func saveComments(data: [String:[Comment]], fileName: String) {
         do {
             var localData = [String: [[String:String]]]()
             for event in data.keys {
@@ -102,9 +102,9 @@ struct Storage {
             }
             let jsonData = try JSONSerialization.data(withJSONObject: localData, options: JSONSerialization.WritingOptions())
             try jsonData.write(to: getFileURL(fileName: fileName))
-            return true
+            print("comments saved successfully")
         } catch _ {
-            return false
+            print("comment saved failed")
         }
     }
     
