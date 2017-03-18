@@ -35,7 +35,7 @@ class EventScheduleTableViewController: UITableViewController {
             }
             let event = events.retrieveEventAt(index: indexPath.item)
             if let destinationvc = self.storyboard?.instantiateViewController(withIdentifier: "EventDetailsTableViewController") as? EventDetailsTableViewController {
-                destinationvc.event = event
+                EventDetailsTableViewController.event = event
                 self.navigationController?.pushViewController(destinationvc, animated: true)
             }
             

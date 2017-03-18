@@ -13,7 +13,14 @@ class CommentsInputTableViewCell: UITableViewCell {
     @IBOutlet weak var commentInputField: UITextField!
    
     @IBAction func onAddCommentButtonClick(_ sender: Any) {
-        Comments.comments.append(Comment(words: commentInputField.text!))
+        var comment = Comments.comments[EventDetailsTableViewController.event!.name]
+        if comment != nil {
+            comment!.append(Comment(words: commentInputField.text!,username: System.activeUser!.profile.name))
+            
+        } else {
+            comment = [Comment(words: commentInputField.text!,username: System.activeUser!.profile.name)]
+        }
+        Comments.comments.updateValue(comment!, forKey: EventDetailsTableViewController.event!.name)
         commentInputField.text = ""
     }
     

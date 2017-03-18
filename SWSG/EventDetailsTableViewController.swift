@@ -10,9 +10,7 @@ import UIKit
 
 class EventDetailsTableViewController: UITableViewController {
     
-    var event : Event?
-
-    
+    public static var event : Event?
     
     @IBOutlet weak var eventDetailsTableView: UITableView! {
         didSet{
@@ -21,12 +19,13 @@ class EventDetailsTableViewController: UITableViewController {
             eventDetailsTableView.addGestureRecognizer(hideNavBarTapGesture)
             eventDetailsTableView.isUserInteractionEnabled = true
         }
-        
-        
     }
     override func viewDidLoad() {
         super.viewDidLoad()
          NotificationCenter.default.addObserver(self, selector: #selector(EventDetailsTableViewController.update), name: Notification.Name(rawValue: "comments"), object: nil)
+        if let comments = Storage.readComments(fileName: Config.commentsFileName) {
+            Comments.comments = comments
+        }
        // CommentsInputTableViewCell.delegate = self
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -63,7 +62,10 @@ class EventDetailsTableViewController: UITableViewController {
         if section == 0 {
             return 5
         } else {
-            return Comments.comments.count+1
+            if let size = Comments.comments[EventDetailsTableViewController.event!.name]?.count {
+                return size + 1
+            }
+            return 1
         }
     }
     
@@ -79,27 +81,28 @@ class EventDetailsTableViewController: UITableViewController {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "EventTime", for: indexPath) as! EventTimeTableViewCell
                 let timeFormatter = DateFormatter()
                 timeFormatter.dateFormat = "HH:mm"
-                cell.timeLabel.text = timeFormatter.string(from: event!.date_time)
+                cell.timeLabel.text = timeFormatter.string(from: EventDetailsTableViewController.event!.date_time)
                 return cell
             case 2:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "EventVenue", for: indexPath) as! EventVenueTableViewCell
-                cell.venueLabel.text = event?.venue
+                cell.venueLabel.text = EventDetailsTableViewController.event?.venue
                 return cell
             case 3:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "EventDetail", for: indexPath) as! EventDetailTableViewCell
-                cell.detailsLabel.text = event?.details
+                cell.detailsLabel.text = EventDetailsTableViewController.event?.details
                 return cell
             default:
                 let cell = UITableViewCell()
                 return cell
             }
         } else {
-            if indexPath.row == Comments.comments.count {
+            if indexPath.row == Comments.comments[EventDetailsTableViewController.event!.name]?.count || (indexPath.row == 0 && Comments.comments[EventDetailsTableViewController.event!.name]?.count == nil) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "CommentsInput", for: indexPath) as! CommentsInputTableViewCell
                 return cell
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: "Comments", for: indexPath) as! CommentsTableViewCell
-            cell.commentsLabel.text = Comments.comments[indexPath.row].words
+            cell.commentsLabel.text = Comments.comments[EventDetailsTableViewController.event!.name]?[indexPath.row].words
+            cell.usernameLabel.text = Comments.comments[EventDetailsTableViewController.event!.name]?[indexPath.row].username
             return cell
         }
     }
@@ -120,7 +123,7 @@ class EventDetailsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "EventHeader") as! EventHeaderTableViewCell
-            cell.eventHeaderLabel.text = event?.name
+            cell.eventHeaderLabel.text = EventDetailsTableViewController.event?.name
             return cell.contentView
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "CommentsHeader")

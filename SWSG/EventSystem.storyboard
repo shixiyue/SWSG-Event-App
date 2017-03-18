@@ -237,20 +237,32 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THy-3H-WAN">
-                                            <rect key="frame" x="30" y="21.5" width="315" height="0.0"/>
-                                            <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
+                                            <rect key="frame" x="60" y="21.5" width="305" height="0.0"/>
+                                            <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="15"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iaV-XZ-LqZ">
+                                            <rect key="frame" x="60" y="0.0" width="0.0" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="gT1-iu-sfV"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="17"/>
+                                            <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="THy-3H-WAN" firstAttribute="centerY" secondItem="ekw-C2-9xU" secondAttribute="centerY" id="NF5-i9-YOx"/>
-                                        <constraint firstItem="THy-3H-WAN" firstAttribute="leading" secondItem="ekw-C2-9xU" secondAttribute="leading" constant="30" id="dyS-SQ-Ywy"/>
-                                        <constraint firstItem="THy-3H-WAN" firstAttribute="trailing" secondItem="ekw-C2-9xU" secondAttribute="trailing" constant="-30" id="oYt-A6-lsf"/>
+                                        <constraint firstItem="THy-3H-WAN" firstAttribute="top" secondItem="iaV-XZ-LqZ" secondAttribute="bottom" constant="1.5" id="4Zi-4g-kVw"/>
+                                        <constraint firstItem="iaV-XZ-LqZ" firstAttribute="top" secondItem="ekw-C2-9xU" secondAttribute="top" id="8os-07-CvO"/>
+                                        <constraint firstItem="THy-3H-WAN" firstAttribute="leading" secondItem="ekw-C2-9xU" secondAttribute="leading" constant="60" id="dyS-SQ-Ywy"/>
+                                        <constraint firstItem="iaV-XZ-LqZ" firstAttribute="leading" secondItem="ekw-C2-9xU" secondAttribute="leading" constant="60" id="hWl-wz-FCM"/>
+                                        <constraint firstItem="THy-3H-WAN" firstAttribute="trailing" secondItem="ekw-C2-9xU" secondAttribute="trailing" constant="-10" id="oYt-A6-lsf"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="commentsLabel" destination="THy-3H-WAN" id="gNe-4c-FKH"/>
+                                    <outlet property="usernameLabel" destination="iaV-XZ-LqZ" id="JEg-Nr-5sK"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EventHeader" id="kJq-vz-uCd" customClass="EventHeaderTableViewCell" customModule="SWSG" customModuleProvider="target">
@@ -307,7 +319,7 @@
                                             <rect key="frame" x="10" y="6" width="315" height="30"/>
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
+                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                         </textField>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v7a-jo-4TD">
                                             <rect key="frame" x="325" y="3" width="40" height="36"/>
