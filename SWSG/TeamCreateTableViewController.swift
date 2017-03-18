@@ -13,6 +13,9 @@ class TeamCreateTableViewController: UITableViewController {
     @IBOutlet weak var teamName: UITextField!
     @IBOutlet weak var skills: UITextField!
     @IBOutlet weak var lookingFor: UITextField!
+    
+    private let teamCreateErrorMsg = "Sorry, only participants of SWSG can create a team!"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -23,10 +26,14 @@ class TeamCreateTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     @IBAction func onDoneButtonClick(_ sender: Any) {
+        guard let participant = System.activeUser as? Participant else {
+            self.present(Utility.getFailAlertController(message: teamCreateErrorMsg), animated: true, completion: nil)
+            return
+        }
         let team_name = teamName.text!
         let info = skills.text!
         let lookingFor = self.lookingFor.text
-        let team = Team(members: [System.activeUser!], name: team_name, info: info, lookingFor: lookingFor, isPrivate: false)
+        let team = Team(members: [participant], name: team_name, info: info, lookingFor: lookingFor, isPrivate: false)
         Teams.teams.append(team)
         dismiss(animated: true, completion: nil)
     }

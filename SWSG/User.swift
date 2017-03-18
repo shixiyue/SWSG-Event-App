@@ -19,8 +19,6 @@ protocol User: NSCoding {
     
     var email: String { get }
     
-    var team: Team? { get }
-    
     func setPassword(newPassword: String) -> Bool
     
 }

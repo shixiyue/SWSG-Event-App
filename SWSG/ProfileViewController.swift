@@ -10,10 +10,10 @@ import UIKit
 
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet var profileImgButton: UIButton!
-    @IBOutlet var nameLbl: UILabel!
-    @IBOutlet var teamLbl: UILabel!
-    @IBOutlet var profileList: UITableView!
+    @IBOutlet private var profileImgButton: UIButton!
+    @IBOutlet private var nameLbl: UILabel!
+    @IBOutlet private var teamLbl: UILabel!
+    @IBOutlet private var profileList: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +40,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         profileImgButton.setImage(user.profile.image, for: .normal)
         nameLbl.text = user.profile.name
-        if let team = user.team {
+        
+        guard let participant = user as? Participant else {
+            teamLbl.text = nil
+            return
+        }
+        if let team = participant.team {
             teamLbl.text = team.name
         } else {
             teamLbl.text = Config.noTeamLabel

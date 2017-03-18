@@ -47,14 +47,18 @@ class MenuViewController: UIViewController {
         
         profileImgButton.setImage(user.profile.image, for: .normal)
         nameLbl.text = user.profile.name
-        if let team = user.team {
+        
+        guard let participant = user as? Participant else {
+            teamLbl.text = nil
+            return
+        }
+        if let team = participant.team {
             teamLbl.text = team.name
         } else {
             teamLbl.text = Config.noTeamLabel
         }
     }
 
-    
     @IBAction func onProfileClick(_ sender: UIButton) {
         print(true)
         Utility.showStoryboard(storyboard: Config.profileScreen, destinationViewController: Config.profileViewController, currentViewController: self)

@@ -18,6 +18,8 @@ class MentorViewController: UIViewController {
     @IBOutlet weak var consultationDayList: UITableView!
     @IBOutlet weak var relatedMentorCollection: UICollectionView!
     
+    private let mentorBookingErrorMsg = "Sorry, only participants of SWSG can book a slot!"
+    
     public var mentor: Mentor?
     
     override func viewDidLoad() {
@@ -49,8 +51,8 @@ class MentorViewController: UIViewController {
         }
         
         mentor.days[dayIndex].slots[index].status = .booked
-        guard let activeUser = System.activeUser else {
-            Utility.logOutUser(currentViewController: self)
+        guard let activeUser = System.activeUser as? Participant else {
+            self.present(Utility.getFailAlertController(message: mentorBookingErrorMsg), animated: true, completion: nil)
             return
         }
         mentor.days[dayIndex].slots[index].team = activeUser.team
