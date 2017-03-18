@@ -78,6 +78,7 @@
 		E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */; };
 		E3220C6B1E7D3D25008AFA85 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6A1E7D3D25008AFA85 /* Teams.swift */; };
 		E3220C6D1E7D6B40008AFA85 /* TeamCreateTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */; };
+		E3220C6F1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6E1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -151,6 +152,7 @@
 		E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamItemTableViewCell.swift; sourceTree = "<group>"; };
 		E3220C6A1E7D3D25008AFA85 /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
 		E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCreateTableViewController.swift; sourceTree = "<group>"; };
+		E3220C6E1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -334,6 +336,7 @@
 			isa = PBXGroup;
 			children = (
 				E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */,
+				E3220C6E1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift */,
 				E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */,
 				E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */,
 				E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */,
@@ -445,6 +448,7 @@
 				3FED301A1E76FC9A00C007AD /* (null) in Sources */,
 				CC1F2B4C1E77D6560096C271 /* Profile.swift in Sources */,
 				E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */,
+				E3220C6F1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift in Sources */,
 				E3220C431E7AE40B008AFA85 /* CommentsTableViewCell.swift in Sources */,
 				CC1AA6C61E77C328004F5F95 /* (null) in Sources */,
 				E3220C351E7A8D0B008AFA85 /* EventDetailsTableViewController.swift in Sources */,
