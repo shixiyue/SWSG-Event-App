@@ -77,6 +77,7 @@
 		E3220C671E7D385B008AFA85 /* TeamRegistrationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */; };
 		E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */; };
 		E3220C6B1E7D3D25008AFA85 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6A1E7D3D25008AFA85 /* Teams.swift */; };
+		E3220C6D1E7D6B40008AFA85 /* TeamCreateTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -149,6 +150,7 @@
 		E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRegistrationTableViewController.swift; sourceTree = "<group>"; };
 		E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamItemTableViewCell.swift; sourceTree = "<group>"; };
 		E3220C6A1E7D3D25008AFA85 /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
+		E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCreateTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -332,8 +334,9 @@
 			isa = PBXGroup;
 			children = (
 				E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */,
-				E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */,
+				E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */,
 				E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */,
+				E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */,
 				E3220C6A1E7D3D25008AFA85 /* Teams.swift */,
 			);
 			name = TeamRegistration;
@@ -477,6 +480,7 @@
 				E3220C2B1E796C7B008AFA85 /* EventScheduleTableViewController.swift in Sources */,
 				CC1F2B4E1E77D6610096C271 /* User.swift in Sources */,
 				E3220C511E7BA903008AFA85 /* CommentsInputTableViewCell.swift in Sources */,
+				E3220C6D1E7D6B40008AFA85 /* TeamCreateTableViewController.swift in Sources */,
 				E3220C411E7AE3C6008AFA85 /* EventDetailTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

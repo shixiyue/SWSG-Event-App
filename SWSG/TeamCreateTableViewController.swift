@@ -1,5 +1,5 @@
 //
-//  TeamRegistrationTableViewController.swift
+//  TeamCreateTableViewController.swift
 //  SWSG
 //
 //  Created by Li Xiaowei on 3/18/17.
@@ -8,35 +8,27 @@
 
 import UIKit
 
-class TeamRegistrationTableViewController: UITableViewController {
+class TeamCreateTableViewController: UITableViewController {
 
-    @IBOutlet weak var teamRegistrationTableView: UITableView! {
-        didSet{
-            let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(TeamRegistrationTableViewController.hideNavBarTapHandler))
-            hideNavBarTapGesture.numberOfTapsRequired = 2
-            teamRegistrationTableView.addGestureRecognizer(hideNavBarTapGesture)
-            teamRegistrationTableView.isUserInteractionEnabled = true
-        }
-    }
-    func hideNavBarTapHandler(recognizer: UIGestureRecognizer) {
-        if recognizer.state == .ended {
-            self.navigationItem.hidesBackButton = !self.navigationItem.hidesBackButton
-            self.navigationController?.setNavigationBarHidden(self.navigationItem.hidesBackButton, animated: true)
-        }
-    }
-
+    @IBOutlet weak var teamName: UITextField!
+    @IBOutlet weak var skills: UITextField!
+    @IBOutlet weak var lookingFor: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "teams"), object: nil)
+
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
-    
-    func update() {
-        teamRegistrationTableView.reloadData()
+    @IBAction func onDoneButtonClick(_ sender: Any) {
+        let team_name = teamName.text!
+        let info = skills.text!
+        let lookingFor = self.lookingFor.text
+        let team = Team(members: [System.activeUser!], name: team_name, info: info, lookingFor: lookingFor, isPrivate: false)
+        Teams.teams.append(team)
+        dismiss(animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -53,28 +45,18 @@ class TeamRegistrationTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return Teams.teams.count
+        return 6
     }
 
-    
+    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "teamItemCell", for: indexPath) as! TeamItemTableViewCell
-        cell.teamName.text = Teams.teams[indexPath.row].name
-        cell.teamSkills.text = Teams.teams[indexPath.row].info
-        cell.teamIsLookingFor.text = Teams.teams[indexPath.row].lookingFor
+        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+
+        // Configure the cell...
 
         return cell
     }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    
+    */
 
     /*
     // Override to support conditional editing of the table view.

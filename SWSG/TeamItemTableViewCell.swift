@@ -10,6 +10,10 @@ import UIKit
 
 class TeamItemTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var teamName: UILabel!
+    @IBOutlet weak var teamSkills: UILabel!
+   
+    @IBOutlet weak var teamIsLookingFor: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
