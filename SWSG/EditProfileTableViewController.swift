@@ -8,7 +8,8 @@
 
 import UIKit
 
-/// `profileTableViewController` represents the controller for signup table.
+/// `EditProfileTableViewController` represents the controller for signup table.
+// TODO: Is it possible to share the view controller?
 class EditProfileTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
     
     var doneButton: RoundCornerButton!
@@ -17,13 +18,13 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
     private let skillsPlaceholder = "Skills"
     private let descPlaceholder = "Description"
     private let updateProblem = "There was a problem updating profile."
+    
     private var user: User!
     
     @IBOutlet private var profileTableView: UITableView!
-
     @IBOutlet private var profileImage: UIImageView!
     // TODO: Figure out how to allow to upload a new image and change profile picture
-    @IBOutlet var nameTextField: UITextField!
+    @IBOutlet private var nameTextField: UITextField!
     @IBOutlet private var countryTextField: UITextField!
     @IBOutlet private var jobTextField: UITextField!
     @IBOutlet private var companyTextField: UITextField!
@@ -35,25 +36,29 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let user = System.activeUser else {
-            Utility.logOutUser(currentViewController: self)
-            return
-        }
-        self.user = user
-        setUpprofileTableView()
+        setUpUser()
+        setUpProfileTableView()
         setUpButton()
         setUpTextFields()
         setUpTextViews()
         hideKeyboardWhenTappedAround()
     }
     
-    private func setUpprofileTableView() {
+    private func setUpUser() {
+        guard let user = System.activeUser else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        self.user = user
+    }
+    
+    private func setUpProfileTableView() {
         profileTableView.tableFooterView = UIView(frame: CGRect.zero)
         profileTableView.allowsSelection = false
     }
     
     private func setUpButton() {
-        doneButton.addTarget(self, action: #selector(signUp), for: .touchUpInside)
+        doneButton.addTarget(self, action: #selector(update), for: .touchUpInside)
     }
     
     private func setUpTextFields() {
@@ -172,11 +177,11 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
         doneButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
     
-    @objc private func signUp(sender: UIButton) {
+    @objc private func update(sender: UIButton) {
         guard let image = profileImage.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.text else {
             return
         }
-        let desc = descTextView.text ?? ""
+        let desc = descTextView.text ?? " "
         user.profile.updateProfile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         System.activeUser = user
         let success = Storage.saveUser(data: user.toDictionary(), fileName: user.email)

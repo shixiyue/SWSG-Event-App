@@ -42,6 +42,8 @@
 		3FED30251E77A37300C007AD /* MentorGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30241E77A37300C007AD /* MentorGridViewController.swift */; };
 		3FED30271E77A57600C007AD /* (null) in Sources */ = {isa = PBXBuildFile; };
 		3FED30291E77A5CB00C007AD /* Mentor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30281E77A5CB00C007AD /* Mentor.swift */; };
+		CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */; };
+		CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC0032941E7CF68500CF190E /* Settings.storyboard */; };
 		CC1AA6C21E77C328004F5F95 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		CC1AA6C61E77C328004F5F95 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		CC1CF8A41E7C03DA002224BC /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC1CF8A21E7C03DA002224BC /* Profile.storyboard */; };
@@ -108,6 +110,8 @@
 		3FED30221E77A2D400C007AD /* MentorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorCell.swift; sourceTree = "<group>"; };
 		3FED30241E77A37300C007AD /* MentorGridViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorGridViewController.swift; sourceTree = "<group>"; };
 		3FED30281E77A5CB00C007AD /* Mentor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mentor.swift; sourceTree = "<group>"; };
+		CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		CC0032941E7CF68500CF190E /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		CC1CF8A31E7C03DA002224BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Profile.storyboard; sourceTree = "<group>"; };
 		CC1CF8A71E7C09CD002224BC /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		CC1CF8A91E7C137A002224BC /* ProfileItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileItems.swift; sourceTree = "<group>"; };
@@ -170,6 +174,7 @@
 				E3220C271E796AD1008AFA85 /* EventSystem */,
 				3F9795641E7A8E48004BC26C /* Login & Sign Up */,
 				CC1CF8A11E7C028D002224BC /* Profile */,
+				CC0032931E7CF66D00CF190E /* Settings */,
 				3FED301D1E779A2100C007AD /* Menu */,
 				3FED302B1E77A5FA00C007AD /* Mentor */,
 				3FED302A1E77A5F300C007AD /* Model */,
@@ -264,6 +269,15 @@
 				3FED30241E77A37300C007AD /* MentorGridViewController.swift */,
 			);
 			name = Mentor;
+			sourceTree = "<group>";
+		};
+		CC0032931E7CF66D00CF190E /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				CC0032941E7CF68500CF190E /* Settings.storyboard */,
+				CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */,
+			);
+			name = Settings;
 			sourceTree = "<group>";
 		};
 		CC1CF8A11E7C028D002224BC /* Profile */ = {
@@ -366,6 +380,7 @@
 				3F12AFD51E711CBB00B26D67 /* Assets.xcassets in Resources */,
 				3FED30211E77A15300C007AD /* Mentor.storyboard in Resources */,
 				3F12AFD01E711CBB00B26D67 /* Menu.storyboard in Resources */,
+				CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */,
 				3F97954E1E7A8DBF004BC26C /* LoginSignup.storyboard in Resources */,
 				3FED301F1E779A7300C007AD /* Main.storyboard in Resources */,
 			);
@@ -413,6 +428,7 @@
 				3FC3146A1E77EB84009B21AB /* MentorViewController.swift in Sources */,
 				3FC314601E77DB90009B21AB /* ConsultationDayCell.swift in Sources */,
 				CC1CF8AE1E7C1ED6002224BC /* EditProfileViewController.swift in Sources */,
+				CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */,
 				3F97955B1E7A8DBF004BC26C /* SignUpTableViewController.swift in Sources */,
 				3FC3146C1E7A5017009B21AB /* ConsultationDate.swift in Sources */,
 				E3220C471E7B9776008AFA85 /* UserTypes.swift in Sources */,

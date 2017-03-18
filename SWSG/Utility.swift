@@ -53,8 +53,6 @@ struct Utility {
     }
     
     static func logInUser(user: User, currentViewController: UIViewController) {
-        let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: user)
-        UserDefaults.standard.set(encodedData, forKey: Config.user)
         System.activeUser = user
         showStoryboard(storyboard: Config.main, destinationViewController: Config.navigationController, currentViewController: currentViewController)
     }
@@ -64,5 +62,12 @@ struct Utility {
         alertController.addAction(UIAlertAction(title: "OK", style: .default))
         return alertController
     }
+    
+    static func getSuccessAlertController() -> UIAlertController {
+        let alertController = UIAlertController(title: "Success", message: nil, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        return alertController
+    }
+
     
 }

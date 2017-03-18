@@ -10,13 +10,14 @@ import UIKit
 
 class EditProfileViewController: UIViewController {
 
-    @IBOutlet var doneButton: RoundCornerButton!
+    @IBOutlet private var doneButton: RoundCornerButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "EditProfileTable", let editProfileViewController = segue.destination as? EditProfileTableViewController else {
+        guard segue.identifier == Config.editProfileTable, let editProfileViewController = segue.destination as? EditProfileTableViewController else {
             return
         }
         editProfileViewController.doneButton = doneButton

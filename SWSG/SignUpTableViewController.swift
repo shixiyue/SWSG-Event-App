@@ -173,7 +173,7 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
         guard let image = profileImage.image, let name = nameTextField.text, let email = emailTextField.text, let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.text else {
             return
         }
-        let desc = descTextView.text ?? ""
+        let desc = descTextView.text ?? " "
         guard password.characters.count >= Config.passwordMinLength else {
             self.present(Utility.getFailAlertController(message: passwordInvalid), animated: true, completion: nil)
             return

@@ -30,21 +30,28 @@ class MenuViewController: UIViewController {
     override func viewDidLoad() {
         menuList.delegate = self
         menuList.dataSource = self
-        
+        setUpUserInfo()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        setUpUserInfo()
+    }
+    
+    private func setUpUserInfo() {
         guard let user = System.activeUser else {
             Utility.logOutUser(currentViewController: self)
             return
         }
+        
         profileImgButton.setImage(user.profile.image, for: .normal)
         nameLbl.text = user.profile.name
-        
         if let team = user.team {
             teamLbl.text = team.name
         } else {
-            teamLbl.text = "No Team yet"
+            teamLbl.text = Config.noTeamLabel
         }
     }
-    
+
     
     @IBAction func onProfileImageClick(_ sender: UIButton) {
         print(true)
@@ -81,7 +88,6 @@ class MenuViewController: UIViewController {
             let point = recognizer.location(in: menuList)
             guard let indexPath = menuList.indexPathForRow(at: point) else {
                 return
-                
             }
             delegate?.slideMenuItemSelectedAtIndex(indexPath.item)
         }

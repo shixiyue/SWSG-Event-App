@@ -45,6 +45,10 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             self.open(viewController: "MentorViewController", from: "Mentor")
             
             break
+        case 5:
+            print("Settings\n", terminator: "")
+            
+            self.open(viewController: "SettingsViewController", from: "Settings")
         default:
             print("default\n", terminator: "")
         }

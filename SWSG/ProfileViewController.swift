@@ -11,42 +11,40 @@ import UIKit
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var profileImgButton: UIButton!
-    @IBOutlet weak var nameLbl: UILabel!
-    @IBOutlet weak var teamLbl: UILabel!
+    @IBOutlet var nameLbl: UILabel!
+    @IBOutlet var teamLbl: UILabel!
     @IBOutlet var profileList: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        profileList.tableFooterView = UIView(frame: CGRect.zero)
-        profileList.allowsSelection = false
-        
-        guard let user = System.activeUser else {
-            Utility.logOutUser(currentViewController: self)
-            return
-        }
-        profileImgButton.setImage(user.profile.image, for: .normal)
-        nameLbl.text = user.profile.name
-        
-        if let team = user.team {
-            teamLbl.text = team.name
-        } else {
-            teamLbl.text = "No Team yet"
-        }
-
+    
+        setUpProfileList()
+        setUpUserInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         profileList.reloadData()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        setUpUserInfo()
     }
     
-    @IBAction func editProfile(_ sender: UIButton) {
-        print(true)
+    private func setUpProfileList() {
+        profileList.tableFooterView = UIView(frame: CGRect.zero)
+        profileList.allowsSelection = false
+    }
+    
+    private func setUpUserInfo() {
+        guard let user = System.activeUser else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
+        profileImgButton.setImage(user.profile.image, for: .normal)
+        nameLbl.text = user.profile.name
+        if let team = user.team {
+            teamLbl.text = team.name
+        } else {
+            teamLbl.text = Config.noTeamLabel
+        }
     }
 
     @IBAction func back(_ sender: UIButton) {
@@ -65,11 +63,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         return UITableViewAutomaticDimension
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = indexPath.item
         let (field, content) = ProfileItems.items[index]
         
-        guard let cell = profileList.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as? ProfileTableViewCell else {
+        guard let cell = profileList.dequeueReusableCell(withIdentifier: Config.profileCell, for: indexPath) as? ProfileTableViewCell else {
             return ProfileTableViewCell()
         }
         
