@@ -10,7 +10,16 @@ import UIKit
 
 struct Config {
     
-    static var currentLogInUser : User?
+    static var currentLogInUser : String {
+        set {
+            self.currentLogInUser = newValue
+        }
+        get {
+            return Storage.readCurrentUserFromLocal()!
+        }
+    }
+    
+    
     static let defaultCountry = "Singapore"
     
     // Keys for encode/decode:
@@ -69,4 +78,5 @@ struct Config {
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"
+    static let localUser = "localUser"
 }

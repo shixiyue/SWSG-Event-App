@@ -50,7 +50,6 @@ struct Utility {
         let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: user)
         UserDefaults.standard.set(encodedData, forKey: Config.user)
         showStoryboard(storyboard: Config.main, destinationViewController: Config.navigationController, currentViewController: currentViewController)
-        Config.currentLogInUser = user
     }
     
     static func getFailAlertController(message: String) -> UIAlertController {
