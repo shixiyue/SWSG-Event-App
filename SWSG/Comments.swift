@@ -11,11 +11,11 @@ import UIKit
 
 class Comments {
 
-    static var comments = [Comment]() {
+    public static var comments = [String: [Comment]]() {
         didSet {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "comments"), object: self)
+            Storage.saveComments(data: comments, fileName: Config.commentsFileName)
         }
     }
- 
     
 }
