@@ -35,6 +35,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
 
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        profileList.reloadData()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

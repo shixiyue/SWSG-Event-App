@@ -25,7 +25,13 @@ class GrayBorderTextView: UITextView {
     }
     
     func setPlaceholder() {
+        textColor = UIColor.lightGray
         text = placeholder
+    }
+    
+    func removePlaceholder() {
+        text = nil
+        textColor = UIColor.black
     }
     
 }

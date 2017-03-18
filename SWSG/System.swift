@@ -1,15 +1,15 @@
-//
-//  System.swift
-//  SWSG
-//
-//  Created by Jeremy Jee on 16/3/17.
-//  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
-//
-
-import UIKit
+import Foundation
 
 struct System {
     
-    static var activeUser: User?
+    static var activeUser: User? {
+        didSet {
+            guard let user = activeUser else {
+                return
+            }
+            let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: user)
+            UserDefaults.standard.set(encodedData, forKey: Config.user)
+        }
+    }
     
 }

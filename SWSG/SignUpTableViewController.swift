@@ -182,16 +182,15 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
             self.present(Utility.getFailAlertController(message: emailInvalid), animated: true, completion: nil)
             return
         }
-        // TODO: Figure out how to save image
-        let userProfile = [Config.name: name, Config.email: email, Config.password: password, Config.country: country, Config.job: job, Config.company: company, Config.education: education, Config.skills: skills, Config.desc: desc]
-        let success = Storage.saveUser(data: userProfile, fileName: email)
+        let profile = Profile(name: name, image: image, job: job, company: company, country: country,
+                              education: education, skills: skills, description: desc)
+        let user = Participant(profile: profile, password: password, email: email, team: nil)
+        let success = Storage.saveUser(data: user.toDictionary(), fileName: email)
         guard success else {
             self.present(Utility.getFailAlertController(message: signUpProblem), animated: true, completion: nil)
             return
         }
-        let profile = Profile(name: name, image: image, job: job, company: company, country: country,
-        education: education, skills: skills, description: desc)
-        let user = Participant(profile: profile, password: password, email: email, team: nil)
+
         Utility.logInUser(user: user, currentViewController: self)
     }
     

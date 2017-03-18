@@ -81,6 +81,7 @@ class MenuViewController: UIViewController {
             let point = recognizer.location(in: menuList)
             guard let indexPath = menuList.indexPathForRow(at: point) else {
                 return
+                
             }
             delegate?.slideMenuItemSelectedAtIndex(indexPath.item)
         }

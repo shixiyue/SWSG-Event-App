@@ -77,4 +77,21 @@ class Profile: NSObject, NSCoding {
         aCoder.encode(skills, forKey: Config.skills)
         aCoder.encode(desc, forKey: Config.desc)
     }
+    
+    func updateProfile(name: String, image: UIImage, job: String, company: String, country: String,
+                       education: String, skills: String, description: String) {
+        self.name = name
+        self.image = image
+        self.job = job
+        self.company = company
+        self.country = country
+        self.education = education
+        self.skills = skills
+        self.desc = description
+    }
+    
+    // TODO: Add image
+    func toDictionary() -> [String: String] {
+        return [Config.name: name, Config.country: country, Config.job: job, Config.company: company, Config.education: education, Config.skills: skills, Config.desc: desc]
+    }
 }

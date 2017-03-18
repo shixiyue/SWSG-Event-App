@@ -35,7 +35,7 @@ struct Utility {
     static func showStoryboard(storyboard: String, destinationViewController: String, currentViewController: UIViewController) {
         let storyboard = UIStoryboard(name: storyboard, bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: destinationViewController) as UIViewController
-        currentViewController.present(controller, animated: true, completion: nil)
+        currentViewController.present(controller, animated: false, completion: nil)
     }
     
     static func showStoryboardByNavigation(storyboard: String, destinationViewController: String, currentViewController: UIViewController) {
