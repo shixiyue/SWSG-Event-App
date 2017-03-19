@@ -184,7 +184,7 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
         skills = skills.trimTrailingWhiteSpace().isEmpty ? " " : skills.trimTrailingWhiteSpace()
         desc = desc.trimTrailingWhiteSpace().isEmpty ? " " : desc.trimTrailingWhiteSpace()
         user.profile.updateProfile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-        System.activeUser = user
+        System.updateActiveUser()
         let success = Storage.saveUser(data: user.toDictionary(), fileName: user.email)
         guard success else {
             self.present(Utility.getFailAlertController(message: updateProblem), animated: true, completion: nil)

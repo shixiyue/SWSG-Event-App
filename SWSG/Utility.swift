@@ -53,7 +53,6 @@ struct Utility {
     }
     
     static func logOutUser(currentViewController: UIViewController) {
-        UserDefaults.standard.removeObject(forKey: Config.user)
         System.activeUser = nil
         showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
     }

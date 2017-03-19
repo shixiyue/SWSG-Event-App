@@ -107,7 +107,7 @@ class SettingsTableViewController: UITableViewController {
         }
         let _ = user.setPassword(newPassword: newPassword)
         let _ = Storage.saveUser(data: user.toDictionary(), fileName: user.email)
-        System.activeUser = user
+        System.updateActiveUser()
         self.present(Utility.getSuccessAlertController(), animated: true, completion: nil)
     }
 
