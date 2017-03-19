@@ -33,10 +33,11 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             
             break
         case 1:
-            print("Schedule\n", terminator: "")
+
+            print("EventScheduleVC\n", terminator: "")
             
-            //self.openViewControllerBasedOnIdentifier("PlayVC")
-            
+            self.open(viewController: "EventScheduleTableViewController",from: Config.eventSystem)
+
             break
         case 2:
             print("Mentor\n", terminator: "")
@@ -44,6 +45,10 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             self.open(viewController: "MentorViewController", from: "Mentor")
             
             break
+        case 5:
+            print("Settings\n", terminator: "")
+            
+            self.open(viewController: "SettingsViewController", from: "Settings")
         default:
             print("default\n", terminator: "")
         }

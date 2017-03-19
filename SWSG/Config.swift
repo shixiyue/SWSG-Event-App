@@ -10,6 +10,16 @@ import UIKit
 
 struct Config {
     
+    static var currentLogInUser : String {
+        set {
+            self.currentLogInUser = newValue
+        }
+        get {
+            return Storage.readCurrentUserFromLocal()!
+        }
+    }
+    
+    
     static let defaultCountry = "Singapore"
     
     // Keys for encode/decode:
@@ -31,6 +41,9 @@ struct Config {
     static let isMentor = "isMentor"
     static let isOrganizer = "isOrganizer"
     static let isAdmin = "isAdmin"
+    static let comment = "comment"
+    static let comments = "comments"
+    static let words = "words"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -44,10 +57,18 @@ struct Config {
     static let initialScreen = "InitialScreen"
     static let signUpTable = "signUpTable"
     static let main = "Main"
+    static let eventSystem = "EventSystem"
     static let navigationController = "NavigationController"
+    static let profileScreen = "Profile"
+    static let profileViewController = "ProfileViewController"
+    static let editProfileTable = "EditProfileTable"
+    
+    // Parameters for tableView:
+    static let profileCell = "profileCell"
     
     // Parameters for information message:
     static let done = "Done"
+    static let noTeamLabel = "No Team yet"
     
     static let passwordMinLength = 6
     
@@ -61,4 +82,8 @@ struct Config {
     }
     
     static var duration = 60
+    
+    //Parameters for storage
+    static let commentsFileName = "commentsFileName"
+    static let localUser = "localUser"
 }

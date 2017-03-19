@@ -52,6 +52,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             return
         }
         Utility.logInUser(user: user, currentViewController: self)
+        Storage.saveCurrentUserToLocal(user: user)
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {

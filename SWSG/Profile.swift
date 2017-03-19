@@ -30,11 +30,9 @@ class Profile: NSObject, NSCoding {
         self.education = education
         self.skills = skills
         self.desc = description
-    }
-    
-    convenience init(name: String, job: String, country: String, education: String, skills: String) {
-        self.init(name: name, image: UIImage(), job: job, company: "", country: country, education: education,
-        skills: skills, description: "")
+        
+        super.init()
+        _checkRep()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -70,13 +68,44 @@ class Profile: NSObject, NSCoding {
             return nil
         }
         self.desc = desc
+        
+        super.init()
+        _checkRep()
     }
     
     func encode(with aCoder: NSCoder) {
         aCoder.encode(name, forKey: Config.name)
+        aCoder.encode(image, forKey: Config.image)
         aCoder.encode(job, forKey: Config.job)
+        aCoder.encode(company, forKey: Config.company)
         aCoder.encode(country, forKey: Config.country)
         aCoder.encode(education, forKey: Config.education)
         aCoder.encode(skills, forKey: Config.skills)
+        aCoder.encode(desc, forKey: Config.desc)
+    }
+    
+    func updateProfile(name: String, image: UIImage, job: String, company: String, country: String,
+                       education: String, skills: String, description: String) {
+        _checkRep()
+        
+        self.name = name
+        self.image = image
+        self.job = job
+        self.company = company
+        self.country = country
+        self.education = education
+        self.skills = skills
+        self.desc = description
+        
+        _checkRep()
+    }
+    
+    // TODO: Add image
+    func toDictionary() -> [String: String] {
+        return [Config.name: name, Config.country: country, Config.job: job, Config.company: company, Config.education: education, Config.skills: skills, Config.desc: desc]
+    }
+    
+    private func _checkRep() {
+        assert(!(name.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty) && image.cgImage != nil)
     }
 }

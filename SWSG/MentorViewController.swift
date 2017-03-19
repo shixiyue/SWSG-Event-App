@@ -63,7 +63,11 @@ class MentorViewController: UIViewController {
         }
         
         mentor.days[dayIndex].slots[index].status = .booked
-        mentor.days[dayIndex].slots[index].team = System.activeUser.team
+        guard let activeUser = System.activeUser else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        mentor.days[dayIndex].slots[index].team = activeUser.team
     }
     
     @IBAction func backButtonPressed(_ sender: UIBarButtonItem) {

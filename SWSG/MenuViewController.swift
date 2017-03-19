@@ -9,12 +9,21 @@
 import UIKit
 
 class MenuViewController: UIViewController {
-    @IBOutlet weak var menuList: UITableView!
-    @IBOutlet var btnCloseMenuOverlay : UIButton!
+    @IBOutlet weak var menuList: UITableView! {
+        didSet{
+            let tapGesture = UITapGestureRecognizer(target:self,action:#selector(MenuViewController.menuItemTapHandler))
+            tapGesture.numberOfTapsRequired = 1
+            menuList.addGestureRecognizer(tapGesture)
+            menuList.isUserInteractionEnabled = true
+            
+        }
+    }
+    @IBOutlet private var btnCloseMenuOverlay : UIButton!
+    @IBOutlet private var profileOverlay: UIButton!
     
-    @IBOutlet weak var profileImg: UIImageView!
-    @IBOutlet weak var nameLbl: UILabel!
-    @IBOutlet weak var teamLbl: UILabel!
+    @IBOutlet private var profileImgButton: UIButton!
+    @IBOutlet private weak var nameLbl: UILabel!
+    @IBOutlet private weak var teamLbl: UILabel!
     
     var btnMenu : UIButton!
     var delegate : SlideMenuDelegate?
@@ -22,18 +31,33 @@ class MenuViewController: UIViewController {
     override func viewDidLoad() {
         menuList.delegate = self
         menuList.dataSource = self
+        menuList.tableFooterView = UIView(frame: CGRect.zero)
+        setUpUserInfo()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        setUpUserInfo()
+    }
+    
+    private func setUpUserInfo() {
+        guard let user = System.activeUser else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
         
-        profileImg = Utility.roundUIImageView(for: profileImg)
-        
-        let user = System.activeUser
-        profileImg.image = user.profile.image
+        profileImgButton.setImage(user.profile.image, for: .normal)
         nameLbl.text = user.profile.name
-        
         if let team = user.team {
             teamLbl.text = team.name
         } else {
-            teamLbl.text = "No Team yet"
+            teamLbl.text = Config.noTeamLabel
         }
+    }
+
+    
+    @IBAction func onProfileClick(_ sender: UIButton) {
+        print(true)
+        Utility.showStoryboard(storyboard: Config.profileScreen, destinationViewController: Config.profileViewController, currentViewController: self)
     }
     
     @IBAction func onCloseMenuClick(_ button:UIButton!){
@@ -60,6 +84,16 @@ class MenuViewController: UIViewController {
             self.removeFromParentViewController()
         })
     }
+    
+    func menuItemTapHandler(recognizer: UITapGestureRecognizer) {
+        if recognizer.state == .ended{
+            let point = recognizer.location(in: menuList)
+            guard let indexPath = menuList.indexPathForRow(at: point) else {
+                return
+            }
+            delegate?.slideMenuItemSelectedAtIndex(indexPath.item)
+        }
+    }
 }
 
 extension MenuViewController: UITableViewDelegate, UITableViewDataSource {
@@ -85,6 +119,7 @@ extension MenuViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
         delegate?.slideMenuItemSelectedAtIndex(indexPath.item)
         closeMenu()
     }
