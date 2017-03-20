@@ -52,6 +52,15 @@ class RoundCornerButton: UIButton {
     
 }
 
+class RoundButton: UIButton {
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        layer.cornerRadius = frame.size.width / 2
+        clipsToBounds = true
+    }
+}
+
 class CropAreaView: UIView {
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {

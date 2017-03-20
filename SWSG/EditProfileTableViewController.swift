@@ -10,7 +10,7 @@ import UIKit
 
 /// `EditProfileTableViewController` represents the controller for signup table.
 // TODO: Is it possible to share the view controller?
-class EditProfileTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
+class EditProfileTableViewController: ImagePickerViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
     
     var doneButton: RoundCornerButton!
     
@@ -22,7 +22,7 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
     private var user: User!
     
     @IBOutlet private var profileTableView: UITableView!
-    @IBOutlet private var profileImage: UIImageView!
+    @IBOutlet private var profileImageButton: UIButton!
     // TODO: Figure out how to allow to upload a new image and change profile picture
     @IBOutlet private var nameTextField: UITextField!
     @IBOutlet private var countryTextField: UITextField!
@@ -39,6 +39,7 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
         setUpUser()
         setUpProfileTableView()
         setUpButton()
+        setUpProfileImage()
         setUpTextFields()
         setUpTextViews()
         hideKeyboardWhenTappedAround()
@@ -59,6 +60,11 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
     
     private func setUpButton() {
         doneButton.addTarget(self, action: #selector(update), for: .touchUpInside)
+    }
+    
+    private func setUpProfileImage() {
+        profileImageButton.setImage(user.profile.image, for: .normal)
+        profileImageButton.addTarget(self, action: #selector(showProfileImageOptions), for: .touchUpInside)
     }
     
     private func setUpTextFields() {
@@ -116,23 +122,6 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
         jobTextField.becomeFirstResponder()
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        guard textView.textColor == UIColor.lightGray, let textView = textView as? GrayBorderTextView else {
-            return
-        }
-        textView.removePlaceholder()
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        guard let textView = textView as? GrayBorderTextView else {
-            return
-        }
-        guard textView.text.isEmpty else {
-            return
-        }
-        textView.setPlaceholder()
-    }
-    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -178,18 +167,27 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
     }
     
     @objc private func update(sender: UIButton) {
-        guard let image = profileImage.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text, var desc = descTextView.text else {
+        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text, var desc = descTextView.text else {
             return
         }
         skills = skills.trimTrailingWhiteSpace().isEmpty ? " " : skills.trimTrailingWhiteSpace()
         desc = desc.trimTrailingWhiteSpace().isEmpty ? " " : desc.trimTrailingWhiteSpace()
         user.profile.updateProfile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         System.updateActiveUser()
-        let success = Storage.saveUser(data: user.toDictionary(), fileName: user.email)
+        let success = Storage.saveUser(user: user)
         guard success else {
             self.present(Utility.getFailAlertController(message: updateProblem), animated: true, completion: nil)
             return
         }
         dismiss(animated: false, completion: nil)
     }
+    
+    override func updateImage(_ notification: NSNotification) {
+        guard let image = notification.userInfo?[Config.image] as? UIImage else {
+            return
+        }
+        profileImageButton.setImage(image, for: .normal)
+        NotificationCenter.default.removeObserver(self)
+    }
+    
 }
