@@ -47,6 +47,8 @@
 		3FED30291E77A5CB00C007AD /* Mentor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30281E77A5CB00C007AD /* Mentor.swift */; };
 		CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */; };
 		CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC0032941E7CF68500CF190E /* Settings.storyboard */; };
+		CC168B2C1E7E8C5800F8725A /* ImageCropper.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC168B2B1E7E8C5800F8725A /* ImageCropper.storyboard */; };
+		CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */; };
 		CC1AA6C21E77C328004F5F95 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		CC1AA6C61E77C328004F5F95 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		CC1CF8A41E7C03DA002224BC /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC1CF8A21E7C03DA002224BC /* Profile.storyboard */; };
@@ -126,6 +128,8 @@
 		3FED30281E77A5CB00C007AD /* Mentor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mentor.swift; sourceTree = "<group>"; };
 		CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		CC0032941E7CF68500CF190E /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
+		CC168B2B1E7E8C5800F8725A /* ImageCropper.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ImageCropper.storyboard; sourceTree = "<group>"; };
+		CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCropperViewController.swift; sourceTree = "<group>"; };
 		CC1CF8A31E7C03DA002224BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Profile.storyboard; sourceTree = "<group>"; };
 		CC1CF8A71E7C09CD002224BC /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		CC1CF8A91E7C137A002224BC /* ProfileItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileItems.swift; sourceTree = "<group>"; };
@@ -205,7 +209,6 @@
 				3F12AFD61E711CBB00B26D67 /* LaunchScreen.storyboard */,
 				3F12AFCA1E711CBB00B26D67 /* AppDelegate.swift */,
 				3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */,
-				E3220C4E1E7B99CF008AFA85 /* UISubclasses.swift */,
 				3F12AFD91E711CBB00B26D67 /* Info.plist */,
 				3F12AFD11E711CBB00B26D67 /* SWSG.xcdatamodeld */,
 				3F12AFD41E711CBB00B26D67 /* Assets.xcassets */,
@@ -279,6 +282,8 @@
 				3F9795651E7A8FFE004BC26C /* Utilities */,
 				3F9795671E7A9010004BC26C /* Users */,
 				3F9795661E7A9005004BC26C /* Mentor */,
+				CC168B2F1E7FBF4C00F8725A /* UI Supporting */,
+				E3220C4C1E7B9916008AFA85 /* Storage.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -303,6 +308,16 @@
 				CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */,
 			);
 			name = Settings;
+			sourceTree = "<group>";
+		};
+		CC168B2F1E7FBF4C00F8725A /* UI Supporting */ = {
+			isa = PBXGroup;
+			children = (
+				E3220C4E1E7B99CF008AFA85 /* UISubclasses.swift */,
+				CC168B2B1E7E8C5800F8725A /* ImageCropper.storyboard */,
+				CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */,
+			);
+			name = "UI Supporting";
 			sourceTree = "<group>";
 		};
 		CC1CF8A11E7C028D002224BC /* Profile */ = {
@@ -438,6 +453,7 @@
 				3F12AFD51E711CBB00B26D67 /* Assets.xcassets in Resources */,
 				3FED30211E77A15300C007AD /* Mentor.storyboard in Resources */,
 				3F12AFD01E711CBB00B26D67 /* Menu.storyboard in Resources */,
+				CC168B2C1E7E8C5800F8725A /* ImageCropper.storyboard in Resources */,
 				CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */,
 				3F97954E1E7A8DBF004BC26C /* LoginSignup.storyboard in Resources */,
 				3FED301F1E779A7300C007AD /* Main.storyboard in Resources */,
@@ -464,6 +480,7 @@
 				CC1CF8AC1E7C178A002224BC /* ProfileTableViewCell.swift in Sources */,
 				3F97955C1E7A8DBF004BC26C /* SignUpViewController.swift in Sources */,
 				E3220C491E7B98CA008AFA85 /* MenuCell.swift in Sources */,
+				CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */,
 				3F97954D1E7A8DBF004BC26C /* InitialViewController.swift in Sources */,
 				3F9795631E7A8DBF004BC26C /* Utility.swift in Sources */,
 				3F12AFD31E711CBB00B26D67 /* SWSG.xcdatamodeld in Sources */,

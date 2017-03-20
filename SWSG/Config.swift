@@ -51,6 +51,7 @@ struct Config {
     static let themeColor = UIColor(red: 232.0/255.0, green: 43.0/255.0, blue: 49.0/255.0, alpha: CGFloat(1))
     static let disableAlpha: CGFloat = 0.5
     static let enableAlpha: CGFloat = 1
+    static let maximumZoomScale: CGFloat = 10.0
     
     // Parameters for Storyboard:
     static let logInSignUp = "LoginSignup"

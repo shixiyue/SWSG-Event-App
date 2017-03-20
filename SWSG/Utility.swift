@@ -17,6 +17,11 @@ struct Utility {
         return image
     }
     
+    static func roundUIButton(for button: UIButton) {
+        button.layer.cornerRadius = button.frame.size.width / 2
+        button.clipsToBounds = true
+    }
+    
     static let countries = NSLocale.isoCountryCodes.map { (code: String) -> String in
         let id = NSLocale.localeIdentifier(fromComponents: [NSLocale.Key.countryCode.rawValue: code])
         let currentLocaleID = NSLocale.current.identifier
@@ -32,7 +37,7 @@ struct Utility {
     }
     
     static func isValidPassword(testStr: String) -> Bool {
-        return !testStr.containsWhiteSpace() && testStr.characters.count >= Config.passwordMinLength
+        return testStr.characters.count >= Config.passwordMinLength
     }
     
     /// Jumps to another storyboard

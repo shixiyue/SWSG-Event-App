@@ -9,11 +9,12 @@
 import UIKit
 
 /// `SignUpTableViewController` represents the controller for signup table.
-class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
+class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var signUpButton: RoundCornerButton!
     
     private let countryPickerView = UIPickerView()
+    private let imagePicker = UIImagePickerController()
     private let skillsPlaceholder = "Skills"
     private let descPlaceholder = "Description"
     private let passwordInvalid = "Password must be greater than 6 characters."
@@ -22,8 +23,7 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
     
     @IBOutlet private var signUpTableView: UITableView!
 
-    @IBOutlet private var profileImage: UIImageView!
-    // TODO: Figure out how to allow to upload a new image and change profile picture
+    @IBOutlet private var profileImageButton: UIButton!
     @IBOutlet private var nameTextField: UITextField!
     @IBOutlet private var emailTextField: UITextField!
     @IBOutlet private var passwordTextField: UITextField!
@@ -38,8 +38,10 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        Utility.roundUIButton(for: profileImageButton)
         setUpSignUpTableView()
         setUpButton()
+        setUpProfileImage()
         setUpTextFields()
         setUpTextViews()
         hideKeyboardWhenTappedAround()
@@ -53,6 +55,11 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
     private func setUpButton() {
         signUpButton.setDisable()
         signUpButton.addTarget(self, action: #selector(signUp), for: .touchUpInside)
+    }
+    
+    private func setUpProfileImage() {
+        imagePicker.delegate = self
+        profileImageButton.imageView?.contentMode = .scaleAspectFit
     }
     
     private func setUpTextFields() {
@@ -141,6 +148,44 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
         countryTextField.text = Utility.countries[row]
     }
     
+    @IBAction func changeProfileImage(_ sender: UIButton) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        let takePhotoAction = UIAlertAction(title: "Take a photo", style: .default) { action in
+            self.takePhoto()
+        }
+        alertController.addAction(takePhotoAction)
+        
+        let selectPhotoAction = UIAlertAction(title: "Select a photo", style: .default) { action in
+            self.selectPhoto()
+        }
+        alertController.addAction(selectPhotoAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    private func takePhoto() {
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            present(Utility.getFailAlertController(message: "Sorry, this device has no camera"), animated: true, completion: nil)
+            return
+        }
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = .camera
+        imagePicker.cameraCaptureMode = .photo
+        imagePicker.modalPresentationStyle = .fullScreen
+        present(imagePicker,animated: true, completion: nil)
+    }
+    
+    private func selectPhoto() {
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         let nextTag = textField.tag + 1;
         if nextTag < textFields.count {
@@ -170,7 +215,7 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
     }
     
     @objc private func signUp(sender: UIButton) {
-        guard let image = profileImage.image, let name = nameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text?.trimTrailingWhiteSpace(), var desc = descTextView.text?.trimTrailingWhiteSpace() else {
+        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text?.trimTrailingWhiteSpace(), var desc = descTextView.text?.trimTrailingWhiteSpace() else {
             return
         }
         skills = skills.trimTrailingWhiteSpace().isEmpty ? " " : skills
@@ -193,6 +238,36 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
         }
 
         Utility.logInUser(user: user, currentViewController: self)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        guard let chosenImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        dismiss(animated: true, completion: nil)
+        jumpToCropImage(imageToCrop: chosenImage)
+    }
+    
+    private func jumpToCropImage(imageToCrop: UIImage) {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showSpinningWheel(_:)), name: NSNotification.Name(rawValue: Config.image), object: nil)
+        
+        let storyboard = UIStoryboard(name: "ImageCropper", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "ImageCropperViewController") as! ImageCropperViewController
+        controller.imageToCrop = imageToCrop
+        present(controller, animated: false, completion: nil)
+    }
+    
+    // handle notification
+    func showSpinningWheel(_ notification: NSNotification) {
+        
+        if let image = notification.userInfo?[Config.image] as? UIImage {
+            profileImageButton.setImage(image, for: .normal)
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
 }
