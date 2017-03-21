@@ -15,10 +15,10 @@ class CommentsInputTableViewCell: UITableViewCell {
     @IBAction func onAddCommentButtonClick(_ sender: Any) {
         var comment = Comments.comments[EventDetailsTableViewController.event!.name]
         if comment != nil {
-            comment!.append(Comment(words: commentInputField.text!,username: System.activeUser!.profile.name))
+            comment!.append(Comment(words: commentInputField.content,username: System.activeUser!.profile.name))
             
         } else {
-            comment = [Comment(words: commentInputField.text!,username: System.activeUser!.profile.name)]
+            comment = [Comment(words: commentInputField.content,username: System.activeUser!.profile.name)]
         }
         Comments.comments.updateValue(comment!, forKey: EventDetailsTableViewController.event!.name)
         commentInputField.text = ""

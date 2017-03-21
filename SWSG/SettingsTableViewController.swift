@@ -9,11 +9,15 @@
 import UIKit
 
 class SettingsTableViewController: UITableViewController {
-
-    @IBOutlet private var settingsTable: UITableView!
     
     private let wrongPassword = "Current password is wrong."
     private let passwordInvalid = "Password must be greater than 6 characters."
+    private enum SettingsItems: Int {
+        case changePassword = 0
+        case logOut = 1
+    }
+    
+    @IBOutlet private var settingsTable: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,13 +33,15 @@ class SettingsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let row = indexPath.row
+        guard let row = SettingsItems(rawValue: indexPath.row) else {
+            return
+        }
+        
         switch(row) {
-        case 0:
+        case .changePassword:
             showChangePassword()
-        case 1:
+        case .logOut:
             Utility.logOutUser(currentViewController: self)
-        default: break
         }
     }
     

@@ -9,8 +9,7 @@
 import UIKit
 
 /// `EditProfileTableViewController` represents the controller for signup table.
-// TODO: Is it possible to share the view controller?
-class EditProfileTableViewController: ImagePickerViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
+class EditProfileTableViewController: ImagePickerViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
     var doneButton: RoundCornerButton!
     
@@ -23,16 +22,16 @@ class EditProfileTableViewController: ImagePickerViewController, UITextViewDeleg
     
     @IBOutlet private var profileTableView: UITableView!
     @IBOutlet private var profileImageButton: UIButton!
-    // TODO: Figure out how to allow to upload a new image and change profile picture
+    @IBOutlet var changeImageButton: UIButton!
     @IBOutlet private var nameTextField: UITextField!
     @IBOutlet private var countryTextField: UITextField!
     @IBOutlet private var jobTextField: UITextField!
     @IBOutlet private var companyTextField: UITextField!
     @IBOutlet private var educationTextField: UITextField!
-    @IBOutlet private var skillsTextView: GrayBorderTextView!
+    @IBOutlet fileprivate var skillsTextView: GrayBorderTextView!
     @IBOutlet private var descTextView: GrayBorderTextView!
     
-    private var textFields: [UITextField]!
+    fileprivate var textFields: [UITextField]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,6 +64,7 @@ class EditProfileTableViewController: ImagePickerViewController, UITextViewDeleg
     private func setUpProfileImage() {
         profileImageButton.setImage(user.profile.image, for: .normal)
         profileImageButton.addTarget(self, action: #selector(showProfileImageOptions), for: .touchUpInside)
+        changeImageButton.addTarget(self, action: #selector(showProfileImageOptions), for: .touchUpInside)
         alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImageButton.bounds.maxY)
     }
     
@@ -139,6 +139,32 @@ class EditProfileTableViewController: ImagePickerViewController, UITextViewDeleg
         countryTextField.text = Utility.countries[row]
     }
     
+    @objc private func update(sender: UIButton) {
+        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
+            return
+        }
+        user.profile.updateProfile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
+        System.updateActiveUser()
+        let success = Storage.saveUser(user: user)
+        guard success else {
+            self.present(Utility.getFailAlertController(message: updateProblem), animated: true, completion: nil)
+            return
+        }
+        dismiss(animated: false, completion: nil)
+    }
+    
+    override func updateImage(_ notification: NSNotification) {
+        guard let image = notification.userInfo?[Config.image] as? UIImage else {
+            return
+        }
+        profileImageButton.setImage(image, for: .normal)
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+}
+
+extension EditProfileTableViewController: UITextViewDelegate, UITextFieldDelegate {
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         let nextTag = textField.tag + 1;
         if nextTag < textFields.count {
@@ -165,30 +191,6 @@ class EditProfileTableViewController: ImagePickerViewController, UITextViewDeleg
         let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || skillsTextView.text.isEmpty
         doneButton.isEnabled = !isAnyEmpty
         doneButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
-    }
-    
-    @objc private func update(sender: UIButton) {
-        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text, var desc = descTextView.text else {
-            return
-        }
-        skills = skills.trimTrailingWhiteSpace().isEmpty ? " " : skills.trimTrailingWhiteSpace()
-        desc = desc.trimTrailingWhiteSpace().isEmpty ? " " : desc.trimTrailingWhiteSpace()
-        user.profile.updateProfile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-        System.updateActiveUser()
-        let success = Storage.saveUser(user: user)
-        guard success else {
-            self.present(Utility.getFailAlertController(message: updateProblem), animated: true, completion: nil)
-            return
-        }
-        dismiss(animated: false, completion: nil)
-    }
-    
-    override func updateImage(_ notification: NSNotification) {
-        guard let image = notification.userInfo?[Config.image] as? UIImage else {
-            return
-        }
-        profileImageButton.setImage(image, for: .normal)
-        NotificationCenter.default.removeObserver(self)
     }
     
 }

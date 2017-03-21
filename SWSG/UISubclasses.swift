@@ -10,6 +10,21 @@ import UIKit
 
 class GrayBorderTextView: UITextView {
     
+    var isEmpty: Bool {
+        get {
+            return textColor == UIColor.lightGray || text.isEmpty
+        }
+    }
+    
+    var content: String! {
+        get {
+            guard !isEmpty, let content = text?.trimTrailingWhiteSpace(), !content.isEmpty else {
+                return Config.defaultContent
+            }
+            return content
+        }
+    }
+    
     private var placeholder: String = ""
     
     required init?(coder aDecoder: NSCoder) {

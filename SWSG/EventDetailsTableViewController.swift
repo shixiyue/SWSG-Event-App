@@ -141,6 +141,10 @@ class EventDetailsTableViewController: UITableViewController {
         }
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
 }
 
 extension EventDetailsTableViewController: UITextViewDelegate {

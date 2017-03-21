@@ -9,7 +9,7 @@
 import UIKit
 
 /// `SignUpTableViewController` represents the controller for signup table.
-class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
+class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
     var signUpButton: RoundCornerButton!
     
@@ -20,7 +20,7 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
     private let emailInvalid = "Please enter a valid email address."
     private let signUpProblem = "There was a problem signing up."
     
-    @IBOutlet private var signUpTableView: UITableView!
+    @IBOutlet fileprivate var signUpTableView: UITableView!
 
     @IBOutlet private var profileImageButton: UIButton!
     @IBOutlet private var nameTextField: UITextField!
@@ -30,13 +30,13 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
     @IBOutlet private var jobTextField: UITextField!
     @IBOutlet private var companyTextField: UITextField!
     @IBOutlet private var educationTextField: UITextField!
-    @IBOutlet private var skillsTextView: GrayBorderTextView!
-    @IBOutlet private var descTextView: GrayBorderTextView!
+    @IBOutlet fileprivate var skillsTextView: GrayBorderTextView!
+    @IBOutlet fileprivate var descTextView: GrayBorderTextView!
     
-    @IBOutlet private var skillsTextViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private var descTextViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet fileprivate var skillsTextViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet fileprivate var descTextViewHeightConstraint: NSLayoutConstraint!
     
-    private var textFields: [UITextField]!
+    fileprivate var textFields: [UITextField]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,14 +45,6 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
         setUpTextFields()
         setUpTextViews()
         hideKeyboardWhenTappedAround()
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
     }
     
     private func setUpSignUpTableView() {
@@ -115,29 +107,6 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
         jobTextField.becomeFirstResponder()
     }
     
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        
-        guard let textView = textView as? GrayBorderTextView, let currentText = textView.text else {
-            return false
-        }
-        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
-        
-        if updatedText.isEmpty {
-            textView.setPlaceholder()
-            return false
-        } else if textView.textColor == UIColor.lightGray && !text.isEmpty {
-            textView.removePlaceholder()
-        }
-        return true
-    }
-    
-    func textViewDidChangeSelection(_ textView: UITextView) {
-        guard view.window != nil, textView.textColor == UIColor.lightGray else {
-            return
-        }
-        textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
-    }
-
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -159,57 +128,10 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
         showProfileImageOptions()
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        let nextTag = textField.tag + 1;
-        if nextTag < textFields.count {
-            textFields[nextTag].becomeFirstResponder()
-        } else {
-            skillsTextView.becomeFirstResponder()
-        }
-        return false
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        updateButtonState()
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
-        updateButtonState()
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        updateButtonState()
-        updateTextViewHeight(textView)
-    }
-    
-    private func updateButtonState() {
-        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || skillsTextView.text.isEmpty
-        signUpButton.isEnabled = !isAnyEmpty
-        signUpButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
-    }
-    
-    private func updateTextViewHeight(_ textView: UITextView) {
-        var constraint: NSLayoutConstraint = skillsTextViewHeightConstraint
-        if textView == descTextView  {
-            constraint = descTextViewHeightConstraint
-        }
-        let size = textView.sizeThatFits(CGSize(width: textView.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
-        
-        guard size.height != constraint.constant, size.height > Config.minimumProfileTextFieldHeight else {
-            return
-        }
-        constraint.constant = size.height
-        textView.setContentOffset(CGPoint(), animated: false)
-        signUpTableView.beginUpdates()
-        signUpTableView.endUpdates()
-    }
-    
     @objc private func signUp(sender: UIButton) {
-        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text?.trimTrailingWhiteSpace(), var desc = descTextView.text?.trimTrailingWhiteSpace() else {
+        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
             return
         }
-        skills = skills.trimTrailingWhiteSpace().isEmpty ? " " : skills
-        desc = desc.trimTrailingWhiteSpace().isEmpty ? " " : desc
         guard Utility.isValidPassword(testStr: password) else {
             self.present(Utility.getFailAlertController(message: passwordInvalid), animated: true, completion: nil)
             return
@@ -236,6 +158,88 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
         }
         profileImageButton.setImage(image, for: .normal)
         NotificationCenter.default.removeObserver(self)
+    }
+    
+}
+
+extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let nextTag = textField.tag + 1;
+        if nextTag < textFields.count {
+            textFields[nextTag].becomeFirstResponder()
+        } else {
+            skillsTextView.becomeFirstResponder()
+        }
+        return false
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        updateButtonState()
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
+        updateButtonState()
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        updateButtonState()
+        updateTextViewHeight(textView)
+    }
+    
+    private func updateButtonState() {
+        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || skillsTextView.isEmpty
+        signUpButton.isEnabled = !isAnyEmpty
+        signUpButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
+    }
+    
+    private func updateTextViewHeight(_ textView: UITextView) {
+        var constraint: NSLayoutConstraint = skillsTextViewHeightConstraint
+        if textView == descTextView  {
+            constraint = descTextViewHeightConstraint
+        }
+        let size = textView.sizeThatFits(CGSize(width: textView.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
+        
+        guard size.height != constraint.constant, size.height >= Config.minimumProfileTextFieldHeight else {
+            return
+        }
+        constraint.constant = size.height
+        textView.setContentOffset(CGPoint(), animated: false)
+        signUpTableView.beginUpdates()
+        signUpTableView.endUpdates()
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        guard let textView = textView as? GrayBorderTextView, let currentText = textView.text else {
+            return false
+        }
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        
+        if updatedText.isEmpty {
+            textView.setPlaceholder()
+            updateButtonState()
+            return false
+        } else if textView.textColor == UIColor.lightGray && !text.isEmpty {
+            textView.removePlaceholder()
+            updateButtonState()
+        }
+        return true
+    }
+    
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        guard view.window != nil, textView.textColor == UIColor.lightGray else {
+            return
+        }
+        textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
     }
     
 }

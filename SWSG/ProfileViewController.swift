@@ -8,20 +8,19 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     private let imagePicker = UIImagePickerController()
     
     @IBOutlet private var profileImgButton: UIButton!
     @IBOutlet private var nameLbl: UILabel!
     @IBOutlet private var teamLbl: UILabel!
-    @IBOutlet private var profileList: UITableView!
+    @IBOutlet fileprivate var profileList: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
     
         setUpProfileList()
-        setUpUserInfo()
         imagePicker.delegate = self
     }
     
@@ -54,31 +53,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     @IBAction func back(_ sender: UIButton) {
         dismiss(animated: false, completion: nil)
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ProfileItems.count
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let index = indexPath.item
-        let (field, content) = ProfileItems.items[index]
-        
-        guard let cell = profileList.dequeueReusableCell(withIdentifier: Config.profileCell, for: indexPath) as? ProfileTableViewCell else {
-            return ProfileTableViewCell()
-        }
-        
-        cell.field.text = field
-        cell.content.text = content
-        return cell
     }
     
     // Cannot get those methods by inheriting ImagePickerViewController, because ImageViewController is a UITableViewController, a requirement of SignUpTableViewController and EditProfileTableViewController (because Swift does not support multi-inheritance), but ProfileViewController cannot be a tableview controller.
@@ -134,8 +108,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func jumpToCropImage(imageToCrop: UIImage) {
         NotificationCenter.default.addObserver(self, selector: #selector(updateImage), name: NSNotification.Name(rawValue: Config.image), object: nil)
         
-        let storyboard = UIStoryboard(name: "ImageCropper", bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "ImageCropperViewController") as! ImageCropperViewController
+        let storyboard = UIStoryboard(name: Config.imageCropper, bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: Config.imageCropperViewController) as! ImageCropperViewController
         controller.imageToCrop = imageToCrop
         present(controller, animated: false, completion: nil)
     }
@@ -155,6 +129,37 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         user.profile.updateImage(image: image)
         System.updateActiveUser()
+        
+        NotificationCenter.default.removeObserver(self)
     }
 
+}
+
+extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return ProfileItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let index = indexPath.item
+        let (field, content) = ProfileItems.items[index]
+        
+        guard let cell = profileList.dequeueReusableCell(withIdentifier: Config.profileCell, for: indexPath) as? ProfileTableViewCell else {
+            return ProfileTableViewCell()
+        }
+        
+        cell.field.text = field
+        cell.content.text = content
+        return cell
+    }
+    
 }

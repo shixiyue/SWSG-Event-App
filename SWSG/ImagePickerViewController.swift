@@ -70,8 +70,8 @@ class ImagePickerViewController: UITableViewController, UIImagePickerControllerD
     private func jumpToCropImage(imageToCrop: UIImage) {
         NotificationCenter.default.addObserver(self, selector: #selector(updateImage), name: NSNotification.Name(rawValue: Config.image), object: nil)
         
-        let storyboard = UIStoryboard(name: "ImageCropper", bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "ImageCropperViewController") as! ImageCropperViewController
+        let storyboard = UIStoryboard(name: Config.imageCropper, bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: Config.imageCropperViewController) as! ImageCropperViewController
         controller.imageToCrop = imageToCrop
         present(controller, animated: false, completion: nil)
     }
