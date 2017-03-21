@@ -65,6 +65,7 @@ class EditProfileTableViewController: ImagePickerViewController, UITextViewDeleg
     private func setUpProfileImage() {
         profileImageButton.setImage(user.profile.image, for: .normal)
         profileImageButton.addTarget(self, action: #selector(showProfileImageOptions), for: .touchUpInside)
+        alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImageButton.bounds.maxY)
     }
     
     private func setUpTextFields() {

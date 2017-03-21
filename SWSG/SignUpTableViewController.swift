@@ -10,7 +10,7 @@ import UIKit
 
 /// `SignUpTableViewController` represents the controller for signup table.
 class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
-    
+
     var signUpButton: RoundCornerButton!
     
     private let countryPickerView = UIPickerView()
@@ -33,6 +33,9 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
     @IBOutlet private var skillsTextView: GrayBorderTextView!
     @IBOutlet private var descTextView: GrayBorderTextView!
     
+    @IBOutlet private var skillsTextViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var descTextViewHeightConstraint: NSLayoutConstraint!
+    
     private var textFields: [UITextField]!
 
     override func viewDidLoad() {
@@ -42,6 +45,14 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
         setUpTextFields()
         setUpTextViews()
         hideKeyboardWhenTappedAround()
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
     
     private func setUpSignUpTableView() {
@@ -67,7 +78,6 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
         let textViews: [UITextView] = [skillsTextView, descTextView]
         for textView in textViews {
             textView.delegate = self
-            textView.textColor = UIColor.lightGray
         }
         skillsTextView.setPlaceholder(skillsPlaceholder)
         descTextView.setPlaceholder(descPlaceholder)
@@ -105,25 +115,29 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
         jobTextField.becomeFirstResponder()
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        guard textView.textColor == UIColor.lightGray else {
-            return
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        guard let textView = textView as? GrayBorderTextView, let currentText = textView.text else {
+            return false
         }
-        textView.text = nil
-        textView.textColor = UIColor.black
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        
+        if updatedText.isEmpty {
+            textView.setPlaceholder()
+            return false
+        } else if textView.textColor == UIColor.lightGray && !text.isEmpty {
+            textView.removePlaceholder()
+        }
+        return true
     }
     
-    func textViewDidEndEditing(_ textView: UITextView) {
-        guard let textView = textView as? GrayBorderTextView else {
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        guard view.window != nil, textView.textColor == UIColor.lightGray else {
             return
         }
-        guard textView.text.isEmpty else {
-            return
-        }
-        textView.setPlaceholder()
-        textView.textColor = UIColor.lightGray
+        textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
     }
-    
+
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -141,6 +155,7 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
     }
     
     @IBAction func changeProfileImage(_ sender: UIButton) {
+        alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImageButton.bounds.maxY)
         showProfileImageOptions()
     }
     
@@ -164,12 +179,29 @@ class SignUpTableViewController: ImagePickerViewController, UITextViewDelegate, 
     
     func textViewDidChange(_ textView: UITextView) {
         updateButtonState()
+        updateTextViewHeight(textView)
     }
     
     private func updateButtonState() {
         let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || skillsTextView.text.isEmpty
         signUpButton.isEnabled = !isAnyEmpty
         signUpButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
+    }
+    
+    private func updateTextViewHeight(_ textView: UITextView) {
+        var constraint: NSLayoutConstraint = skillsTextViewHeightConstraint
+        if textView == descTextView  {
+            constraint = descTextViewHeightConstraint
+        }
+        let size = textView.sizeThatFits(CGSize(width: textView.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
+        
+        guard size.height != constraint.constant, size.height > Config.minimumProfileTextFieldHeight else {
+            return
+        }
+        constraint.constant = size.height
+        textView.setContentOffset(CGPoint(), animated: false)
+        signUpTableView.beginUpdates()
+        signUpTableView.endUpdates()
     }
     
     @objc private func signUp(sender: UIButton) {

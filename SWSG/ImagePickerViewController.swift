@@ -11,6 +11,7 @@ import UIKit
 class ImagePickerViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     private let imagePicker = UIImagePickerController()
+    var alertControllerPosition = CGPoint()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +32,9 @@ class ImagePickerViewController: UITableViewController, UIImagePickerControllerD
         alertController.addAction(cancelAction)
         alertController.addAction(takePhotoAction)
         alertController.addAction(selectPhotoAction)
+        
+        alertController.popoverPresentationController?.sourceView = view
+        alertController.popoverPresentationController?.sourceRect = CGRect(x: alertControllerPosition.x, y: alertControllerPosition.y, width: 1, height: 1)
         
         present(alertController, animated: true, completion: nil)
     }

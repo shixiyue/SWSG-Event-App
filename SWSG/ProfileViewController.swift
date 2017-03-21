@@ -56,7 +56,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         dismiss(animated: false, completion: nil)
     }
     
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return ProfileItems.count
     }
     
@@ -96,6 +96,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         alertController.addAction(cancelAction)
         alertController.addAction(takePhotoAction)
         alertController.addAction(selectPhotoAction)
+        
+        alertController.popoverPresentationController?.sourceView = view
+        alertController.popoverPresentationController?.sourceRect = CGRect(x: view.frame.width / 2, y: profileImgButton.bounds.maxY, width: 1, height: 1)
         
         present(alertController, animated: true, completion: nil)
     }

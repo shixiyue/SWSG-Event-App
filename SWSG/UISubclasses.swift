@@ -27,6 +27,7 @@ class GrayBorderTextView: UITextView {
     func setPlaceholder() {
         textColor = UIColor.lightGray
         text = placeholder
+        selectedTextRange = textRange(from: beginningOfDocument, to: beginningOfDocument)
     }
     
     func removePlaceholder() {
