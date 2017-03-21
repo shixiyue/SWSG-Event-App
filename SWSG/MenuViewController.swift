@@ -56,7 +56,6 @@ class MenuViewController: UIViewController {
 
     
     @IBAction func onProfileClick(_ sender: UIButton) {
-        print(true)
         Utility.showStoryboard(storyboard: Config.profileScreen, destinationViewController: Config.profileViewController, currentViewController: self)
     }
     

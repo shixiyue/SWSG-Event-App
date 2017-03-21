@@ -51,6 +51,8 @@ struct Config {
     static let themeColor = UIColor(red: 232.0/255.0, green: 43.0/255.0, blue: 49.0/255.0, alpha: CGFloat(1))
     static let disableAlpha: CGFloat = 0.5
     static let enableAlpha: CGFloat = 1
+    static let maximumZoomScale: CGFloat = 10
+    static let minimumProfileTextFieldHeight: CGFloat = 49.5
     
     // Parameters for Storyboard:
     static let logInSignUp = "LoginSignup"
@@ -62,6 +64,8 @@ struct Config {
     static let profileScreen = "Profile"
     static let profileViewController = "ProfileViewController"
     static let editProfileTable = "EditProfileTable"
+    static let imageCropper = "ImageCropper"
+    static let imageCropperViewController = "ImageCropperViewController"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
@@ -69,6 +73,7 @@ struct Config {
     // Parameters for information message:
     static let done = "Done"
     static let noTeamLabel = "No Team yet"
+    static let defaultContent = " "
     
     static let passwordMinLength = 6
     

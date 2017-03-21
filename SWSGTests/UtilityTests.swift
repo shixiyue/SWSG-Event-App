@@ -55,11 +55,9 @@ class UtilityTests: XCTestCase {
     func testPasswordValidation_invalidPassword_fail() {
         let password1 = ""
         let password2 = "12345"
-        let password3 = "hello world"
         
         XCTAssertFalse(Utility.isValidPassword(testStr: password1))
         XCTAssertFalse(Utility.isValidPassword(testStr: password2))
-        XCTAssertFalse(Utility.isValidPassword(testStr: password3))
     }
     
 }

@@ -10,6 +10,21 @@ import UIKit
 
 class GrayBorderTextView: UITextView {
     
+    var isEmpty: Bool {
+        get {
+            return textColor == UIColor.lightGray || text.isEmpty
+        }
+    }
+    
+    var content: String! {
+        get {
+            guard !isEmpty, let content = text?.trimTrailingWhiteSpace(), !content.isEmpty else {
+                return Config.defaultContent
+            }
+            return content
+        }
+    }
+    
     private var placeholder: String = ""
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,6 +42,7 @@ class GrayBorderTextView: UITextView {
     func setPlaceholder() {
         textColor = UIColor.lightGray
         text = placeholder
+        selectedTextRange = textRange(from: beginningOfDocument, to: beginningOfDocument)
     }
     
     func removePlaceholder() {
@@ -50,4 +66,20 @@ class RoundCornerButton: UIButton {
         alpha = Config.disableAlpha
     }
     
+}
+
+class RoundButton: UIButton {
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        layer.cornerRadius = frame.size.width / 2
+        clipsToBounds = true
+    }
+}
+
+class CropAreaView: UIView {
+
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        return false
+    }
 }

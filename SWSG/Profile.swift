@@ -100,7 +100,12 @@ class Profile: NSObject, NSCoding {
         _checkRep()
     }
     
-    // TODO: Add image
+    func updateImage(image: UIImage) {
+        _checkRep()
+        self.image = image
+        _checkRep()
+    }
+    
     func toDictionary() -> [String: String] {
         return [Config.name: name, Config.country: country, Config.job: job, Config.company: company, Config.education: education, Config.skills: skills, Config.desc: desc]
     }

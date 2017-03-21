@@ -32,7 +32,7 @@ struct Utility {
     }
     
     static func isValidPassword(testStr: String) -> Bool {
-        return !testStr.containsWhiteSpace() && testStr.characters.count >= Config.passwordMinLength
+        return testStr.characters.count >= Config.passwordMinLength
     }
     
     /// Jumps to another storyboard
@@ -53,7 +53,6 @@ struct Utility {
     }
     
     static func logOutUser(currentViewController: UIViewController) {
-        UserDefaults.standard.removeObject(forKey: Config.user)
         System.activeUser = nil
         showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
     }

@@ -118,3 +118,30 @@ extension String {
     }
     
 }
+
+/// Copy from https://medium.com/@aatish.rajkarnikar/how-to-make-a-custom-image-cropper-with-swift-3-c0ec8c9c7884#.g94umbx7o
+extension UIImageView{
+    
+    func imageFrame() -> CGRect{
+        let imageViewSize = frame.size
+        guard let imageSize = image?.size else{
+            return CGRect.zero
+        }
+        
+        let imageRatio = imageSize.width / imageSize.height
+        let imageViewRatio = imageViewSize.width / imageViewSize.height
+        
+        if imageRatio < imageViewRatio {
+            let scaleFactor = imageViewSize.height / imageSize.height
+            let width = imageSize.width * scaleFactor
+            let topLeftX = (imageViewSize.width - width) * 0.5
+            return CGRect(x: topLeftX, y: 0, width: width, height: imageViewSize.height)
+        } else {
+            let scalFactor = imageViewSize.width / imageSize.width
+            let height = imageSize.height * scalFactor
+            let topLeftY = (imageViewSize.height - height) * 0.5
+            return CGRect(x: 0, y: topLeftY, width: imageViewSize.width, height: height)
+        }
+    }
+    
+}
