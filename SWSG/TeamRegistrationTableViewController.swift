@@ -9,6 +9,8 @@
 import UIKit
 
 class TeamRegistrationTableViewController: UITableViewController {
+    
+    private let teams = Teams.sharedInstance()
 
     @IBOutlet weak var teamRegistrationTableView: UITableView! {
         didSet{
@@ -53,15 +55,16 @@ class TeamRegistrationTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return Teams.teams.count
+        return teams.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamItemCell", for: indexPath) as! TeamItemTableViewCell
-        cell.teamName.text = Teams.teams[indexPath.row].name
-        cell.teamSkills.text = Teams.teams[indexPath.row].info
-        cell.teamIsLookingFor.text = Teams.teams[indexPath.row].lookingFor
+        let team = teams.retrieveTeamAt(index: indexPath.row)
+        cell.teamName.text = team.name
+        cell.teamSkills.text = team.info
+        cell.teamIsLookingFor.text = team.lookingFor
 
         return cell
     }

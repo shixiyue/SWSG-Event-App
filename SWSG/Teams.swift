@@ -9,9 +9,31 @@
 import Foundation
 
 class Teams {
-    public static var teams = [Team]() {
+    private static var teamsInstance = Teams(teams: [Team]())
+    private var teams : [Team] {
         didSet {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "teams"), object: self)
+        }
+    }
+    
+    private init(teams: [Team]) {
+        self.teams = teams
+    }
+    
+    class func sharedInstance() -> Teams {
+        return teamsInstance
+    }
+    
+    public func addTeam(team: Team) {
+        teams.append(team)
+    }
+    
+    public func retrieveTeamAt(index: Int) -> Team {
+        return teams[index]
+    }
+    public var count: Int {
+        get {
+            return teams.count
         }
     }
 }

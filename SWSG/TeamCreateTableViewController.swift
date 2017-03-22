@@ -15,6 +15,7 @@ class TeamCreateTableViewController: UITableViewController {
     @IBOutlet weak var lookingFor: UITextField!
     
     private let teamCreateErrorMsg = "Sorry, only participants of SWSG can create a team!"
+    private let teams = Teams.sharedInstance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +35,7 @@ class TeamCreateTableViewController: UITableViewController {
         let info = skills.text!
         let lookingFor = self.lookingFor.text
         let team = Team(members: [participant], name: team_name, info: info, lookingFor: lookingFor, isPrivate: false)
-        Teams.teams.append(team)
+        teams.addTeam(team: team)
         dismiss(animated: true, completion: nil)
     }
 
