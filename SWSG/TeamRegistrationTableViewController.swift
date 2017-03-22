@@ -131,6 +131,7 @@ class TeamRegistrationTableViewController: UITableViewController {
         }
         if let index = tableView.indexPathForSelectedRow?.row {
             targetvc.team = teams.retrieveTeamAt(index: index)
+            targetvc.teamIndex = index
         }
     }
     

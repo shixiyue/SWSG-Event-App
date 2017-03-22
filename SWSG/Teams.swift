@@ -13,6 +13,7 @@ class Teams {
     private var teams : [Team] {
         didSet {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "teams"), object: self)
+            print("saving teams")
             Storage.saveTeams(data: teams, fileName: "Teams")
         }
     }
@@ -33,6 +34,11 @@ class Teams {
     public func retrieveTeamAt(index: Int) -> Team {
         return teams[index]
     }
+    
+    public func replaceTeamAt(index: Int, with team: Team) {
+        teams[index] = team
+    }
+    
     public var count: Int {
         get {
             return teams.count

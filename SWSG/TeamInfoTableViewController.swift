@@ -11,6 +11,8 @@ import UIKit
 class TeamInfoTableViewController: UITableViewController {
     
     var team : Team?
+    var teamIndex : Int?
+    private let teams = Teams.sharedInstance()
     
     @IBAction func onBackButtonClick(_ sender: Any) {
         dismiss(animated: true, completion: nil)
@@ -37,6 +39,12 @@ class TeamInfoTableViewController: UITableViewController {
         return 2
     }
     
+    @IBAction func onRqtToJoinButtonTapped(_ sender: Any) {
+        team?.addMember(member: System.activeUser as! Participant)
+        print("member added")
+        teams.replaceTeamAt(index: teamIndex!, with: team!)
+        tableView.reloadData()
+    }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if section == 0 {
