@@ -40,7 +40,7 @@ class Participant: NSObject, User {
             return nil
         }
         self.email = email
-        self.team = aDecoder.decodeObject(forKey: Config.team) as? Int
+        self.team = aDecoder.decodeInteger(forKey: Config.team)
          print("decode() in <Participant> team = \(team)")
         super.init()
         _checkRep()
