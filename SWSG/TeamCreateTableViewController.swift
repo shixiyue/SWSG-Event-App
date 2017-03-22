@@ -36,6 +36,7 @@ class TeamCreateTableViewController: UITableViewController {
         let lookingFor = self.lookingFor.text
         let team = Team(members: [participant], name: team_name, info: info, lookingFor: lookingFor, isPrivate: false)
         teams.addTeam(team: team)
+        participant.setTeamIndex(index: teams.count)
         dismiss(animated: true, completion: nil)
     }
 

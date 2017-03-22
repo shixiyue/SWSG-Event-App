@@ -69,7 +69,9 @@ class MentorViewController: UIViewController {
             self.present(Utility.getFailAlertController(message: mentorBookingErrorMsg), animated: true, completion: nil)
             return
         }
-        mentor.days[dayIndex].slots[index].team = activeUser.team
+        if let index = activeUser.team {
+        mentor.days[dayIndex].slots[index].team = Teams.sharedInstance().retrieveTeamAt(index: index )
+        }
     }
     
     @IBAction func backButtonPressed(_ sender: UIBarButtonItem) {

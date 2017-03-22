@@ -15,9 +15,9 @@ class Participant: NSObject, User {
     let email: String
     public private (set) var profile: Profile
     public internal (set) var password: String
-    weak public private (set) var team: Team?
+    public private (set) var team: Int?
     
-    init(profile: Profile, password: String, email: String, team: Team?) {
+    init(profile: Profile, password: String, email: String, team: Int?) {
         self.profile = profile
         self.password = password
         self.email = email
@@ -40,8 +40,8 @@ class Participant: NSObject, User {
             return nil
         }
         self.email = email
-        self.team = aDecoder.decodeObject(forKey: Config.team) as? Team
-        
+        self.team = aDecoder.decodeObject(forKey: Config.team) as? Int
+         print("decode() in <Participant> team = \(team)")
         super.init()
         _checkRep()
     }
@@ -55,6 +55,16 @@ class Participant: NSObject, User {
             return
         }
         aCoder.encode(team, forKey: Config.team)
+        print("encode() in <Participant> team = \(team)")
+    }
+    
+    func setTeamIndex(index: Int) {
+        team = index
+    }
+    
+    func toDictionary() -> [String : Any] {
+        print("team number in participant is \(team)")
+        return [Config.email: email, Config.password: password, Config.profile: profile.toDictionary(), Config.team: team as Any]
     }
     
 }

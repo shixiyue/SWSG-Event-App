@@ -25,6 +25,7 @@ class MenuViewController: UIViewController {
     @IBOutlet private weak var nameLbl: UILabel!
     @IBOutlet private weak var teamLbl: UILabel!
     
+    var teams = Teams.sharedInstance()
     var btnMenu : UIButton!
     var delegate : SlideMenuDelegate?
     
@@ -52,8 +53,9 @@ class MenuViewController: UIViewController {
             teamLbl.text = nil
             return
         }
+        print("participant team is \(participant.team)")
         if let team = participant.team {
-            teamLbl.text = team.name
+            teamLbl.text = teams.retrieveTeamAt(index: team).name
         } else {
             teamLbl.text = Config.noTeamLabel
         }

@@ -13,6 +13,7 @@ class TeamInfoTableViewController: UITableViewController {
     var team : Team?
     var teamIndex : Int?
     private let teams = Teams.sharedInstance()
+    private let joinTeamErrorMsg = "You can not join more than one team"
     
     @IBAction func onBackButtonClick(_ sender: Any) {
         dismiss(animated: true, completion: nil)
@@ -40,9 +41,21 @@ class TeamInfoTableViewController: UITableViewController {
     }
     
     @IBAction func onRqtToJoinButtonTapped(_ sender: Any) {
-        team?.addMember(member: System.activeUser as! Participant)
+        guard let participant = System.activeUser as? Participant else {
+            self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
+            return
+        }
+        if participant.team != nil {
+            self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
+            return
+        }
+        participant.setTeamIndex(index: teamIndex!)
+        System.activeUser = participant
+        print("\((System.activeUser as? Participant)?.team)")
+        team?.addMember(member: participant)
         print("member added")
         teams.replaceTeamAt(index: teamIndex!, with: team!)
+     
         tableView.reloadData()
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

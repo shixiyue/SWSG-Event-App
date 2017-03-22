@@ -14,7 +14,14 @@ struct Storage {
     /// Saves user data to a json file with the given filename.
     static func saveUser(user: User) -> Bool {
         do {
-            let data = user.toDictionary()
+            let data : [String: Any]
+            if let participant = user as? Participant {
+                data = participant.toDictionary()
+                print("in saveUser storage team is \(participant.team)")
+            } else {
+                print("not a participant")
+                data = user.toDictionary()
+            }
             let jsonData = try JSONSerialization.data(withJSONObject: data, options: JSONSerialization.WritingOptions())
             try jsonData.write(to: getFileURL(fileName: user.email))
             guard let pngImageData = UIImagePNGRepresentation(user.profile.image) else {
@@ -45,7 +52,9 @@ struct Storage {
             return nil
         }
         let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-        return Participant(profile: userProfile, password: password, email: email, team: nil)
+        let team_index = userInfo[Config.team] as? Int
+        print("team index is \(team_index)")
+        return Participant(profile: userProfile, password: password, email: email, team: team_index)
     }
     
     /// save the current user to the local device, so that device can recognize user when he/she posts a comment or chat message
@@ -180,7 +189,9 @@ struct Storage {
                         return nil
                     }
                     let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-                    let participant =  Participant(profile: userProfile, password: password, email: email, team: nil)
+                   // print("\(member["team"]!) in storage of saving member")
+                    let team_participant = member["team"] as? Int
+                    let participant =  Participant(profile: userProfile, password: password, email: email, team: team_participant)
                     members_retrieved.append(participant)
                 }
                 let team = Team(members: members_retrieved, name: teamName, info: info, lookingFor: lookingFor, isPrivate: isPrivate)

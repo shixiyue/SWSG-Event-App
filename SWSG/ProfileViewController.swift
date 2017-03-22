@@ -53,7 +53,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
             return
         }
         if let team = participant.team {
-            teamLbl.text = team.name
+            teamLbl.text = Teams.sharedInstance().retrieveTeamAt(index: team).name
         } else {
             teamLbl.text = Config.noTeamLabel
         }
