@@ -28,3 +28,21 @@ class Team {
         members.append(member)
     }
 }
+
+extension Team {
+    func toDictionary() -> [String: Any] {
+        var data = [String: Any]()
+        var member_data = [[String: Any]]()
+        for each_member in members {
+            let user_data = each_member.toDictionary()
+           // user_data.updateValue(each_member.team ?? [Participant](), forKey: "team")
+            member_data.append(user_data)
+        }
+        data.updateValue(member_data, forKey: "members")
+        data.updateValue(name, forKey: "teamName")
+        data.updateValue(info, forKey: "info")
+        data.updateValue(lookingFor ?? "", forKey: "lookingFor")
+        data.updateValue(isPrivate, forKey: "isPrivate")
+        return data
+    }
+}

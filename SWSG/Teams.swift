@@ -9,15 +9,17 @@
 import Foundation
 
 class Teams {
-    private static var teamsInstance = Teams(teams: [Team]())
+    private static var teamsInstance = Teams()
     private var teams : [Team] {
         didSet {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "teams"), object: self)
+            Storage.saveTeams(data: teams, fileName: "Teams")
         }
     }
     
-    private init(teams: [Team]) {
-        self.teams = teams
+    private init() {
+        print("reading from storage for teams")
+        self.teams = Storage.readTeams(fileName: "Teams") ?? [Team]()
     }
     
     class func sharedInstance() -> Teams {
@@ -36,4 +38,7 @@ class Teams {
             return teams.count
         }
     }
+    
 }
+
+

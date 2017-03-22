@@ -15,7 +15,7 @@ class Participant: NSObject, User {
     let email: String
     public private (set) var profile: Profile
     public internal (set) var password: String
-    public private (set) var team: Team?
+    weak public private (set) var team: Team?
     
     init(profile: Profile, password: String, email: String, team: Team?) {
         self.profile = profile
