@@ -114,14 +114,25 @@ class TeamRegistrationTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+    }
+
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        guard let destinationvc = segue.destination as? UINavigationController, let targetvc = destinationvc.topViewController as? TeamInfoTableViewController else {
+             return
+        }
+        if let index = tableView.indexPathForSelectedRow?.row {
+            targetvc.team = teams.retrieveTeamAt(index: index)
+        }
     }
-    */
+    
 
 }

@@ -83,7 +83,9 @@
 		E3220C6B1E7D3D25008AFA85 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6A1E7D3D25008AFA85 /* Teams.swift */; };
 		E3220C6D1E7D6B40008AFA85 /* TeamCreateTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */; };
 		E3220C6F1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6E1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift */; };
-
+		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
+		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
+		E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,16 +168,15 @@
 		E3220C501E7BA903008AFA85 /* CommentsInputTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsInputTableViewCell.swift; sourceTree = "<group>"; };
 		E3220C521E7BAAC5008AFA85 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		E3220C541E7BABA5008AFA85 /* Comments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comments.swift; sourceTree = "<group>"; };
-
-		E3220C561E7C1DC0008AFA85 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		E3220C581E7C1DDE008AFA85 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TeamRegistration.storyboard; sourceTree = "<group>"; };
 		E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRegistrationTableViewController.swift; sourceTree = "<group>"; };
 		E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamItemTableViewCell.swift; sourceTree = "<group>"; };
 		E3220C6A1E7D3D25008AFA85 /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
 		E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCreateTableViewController.swift; sourceTree = "<group>"; };
 		E3220C6E1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoTableViewController.swift; sourceTree = "<group>"; };
-
+		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
+		E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLookingForTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -388,6 +389,9 @@
 			isa = PBXGroup;
 			children = (
 				E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */,
+				E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */,
+				E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */,
+				E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */,
 				E3220C6E1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift */,
 				E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */,
 				E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */,
@@ -516,6 +520,7 @@
 				E3220C491E7B98CA008AFA85 /* MenuCell.swift in Sources */,
 				CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */,
 				3F97954D1E7A8DBF004BC26C /* InitialViewController.swift in Sources */,
+				E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */,
 				3F9795631E7A8DBF004BC26C /* Utility.swift in Sources */,
 				3F12AFD31E711CBB00B26D67 /* SWSG.xcdatamodeld in Sources */,
 				E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */,
@@ -531,6 +536,7 @@
 				E3220C311E7A3B99008AFA85 /* Event.swift in Sources */,
 				CC1AA6C21E77C328004F5F95 /* (null) in Sources */,
 				E3220C6B1E7D3D25008AFA85 /* Teams.swift in Sources */,
+				E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */,
 				3FED301A1E76FC9A00C007AD /* (null) in Sources */,
 				E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */,
 				E3220C6F1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift in Sources */,
@@ -553,6 +559,7 @@
 				E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */,
 				3FC3146C1E7A5017009B21AB /* ConsultationDate.swift in Sources */,
 				E3220C471E7B9776008AFA85 /* UserTypes.swift in Sources */,
+				E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */,
 				3F9795691E7A932D004BC26C /* System.swift in Sources */,
 				3F9795591E7A8DBF004BC26C /* Participant.swift in Sources */,
 				3FE72F061E7E3BF5007FD55C /* Storage.swift in Sources */,
