@@ -9,8 +9,8 @@
 import UIKit
 
 /// `SignUpTableViewController` represents the controller for signup table.
-class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
-    
+class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+
     var signUpButton: RoundCornerButton!
     
     private let countryPickerView = UIPickerView()
@@ -20,10 +20,9 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
     private let emailInvalid = "Please enter a valid email address."
     private let signUpProblem = "There was a problem signing up."
     
-    @IBOutlet private var signUpTableView: UITableView!
+    @IBOutlet fileprivate var signUpTableView: UITableView!
 
-    @IBOutlet private var profileImage: UIImageView!
-    // TODO: Figure out how to allow to upload a new image and change profile picture
+    @IBOutlet private var profileImageButton: UIButton!
     @IBOutlet private var nameTextField: UITextField!
     @IBOutlet private var emailTextField: UITextField!
     @IBOutlet private var passwordTextField: UITextField!
@@ -31,10 +30,13 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
     @IBOutlet private var jobTextField: UITextField!
     @IBOutlet private var companyTextField: UITextField!
     @IBOutlet private var educationTextField: UITextField!
-    @IBOutlet private var skillsTextView: GrayBorderTextView!
-    @IBOutlet private var descTextView: GrayBorderTextView!
+    @IBOutlet fileprivate var skillsTextView: GrayBorderTextView!
+    @IBOutlet fileprivate var descTextView: GrayBorderTextView!
     
-    private var textFields: [UITextField]!
+    @IBOutlet fileprivate var skillsTextViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet fileprivate var descTextViewHeightConstraint: NSLayoutConstraint!
+    
+    fileprivate var textFields: [UITextField]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,7 +70,6 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
         let textViews: [UITextView] = [skillsTextView, descTextView]
         for textView in textViews {
             textView.delegate = self
-            textView.textColor = UIColor.lightGray
         }
         skillsTextView.setPlaceholder(skillsPlaceholder)
         descTextView.setPlaceholder(descPlaceholder)
@@ -106,25 +107,6 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
         jobTextField.becomeFirstResponder()
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        guard textView.textColor == UIColor.lightGray else {
-            return
-        }
-        textView.text = nil
-        textView.textColor = UIColor.black
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        guard let textView = textView as? GrayBorderTextView else {
-            return
-        }
-        guard textView.text.isEmpty else {
-            return
-        }
-        textView.setPlaceholder()
-        textView.textColor = UIColor.lightGray
-    }
-    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -139,6 +121,55 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         countryTextField.text = Utility.countries[row]
+    }
+    
+    @IBAction func changeProfileImage(_ sender: UIButton) {
+        alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImageButton.bounds.maxY)
+        showProfileImageOptions()
+    }
+    
+    @objc private func signUp(sender: UIButton) {
+        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
+            return
+        }
+        guard Utility.isValidPassword(testStr: password) else {
+            self.present(Utility.getFailAlertController(message: passwordInvalid), animated: true, completion: nil)
+            return
+        }
+        guard Utility.isValidEmail(testStr: email) else {
+            self.present(Utility.getFailAlertController(message: emailInvalid), animated: true, completion: nil)
+            return
+        }
+        let profile = Profile(name: name, image: image, job: job, company: company, country: country,
+                              education: education, skills: skills, description: desc)
+        let user = Participant(profile: profile, password: password, email: email, team: nil)
+        let success = Storage.saveUser(user: user)
+        guard success else {
+            self.present(Utility.getFailAlertController(message: signUpProblem), animated: true, completion: nil)
+            return
+        }
+
+        Utility.logInUser(user: user, currentViewController: self)
+    }
+    
+    override func updateImage(_ notification: NSNotification) {
+        guard let image = notification.userInfo?[Config.image] as? UIImage else {
+            return
+        }
+        profileImageButton.setImage(image, for: .normal)
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+}
+
+extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -161,38 +192,54 @@ class SignUpTableViewController: UITableViewController, UITextViewDelegate, UIPi
     
     func textViewDidChange(_ textView: UITextView) {
         updateButtonState()
+        updateTextViewHeight(textView)
     }
     
     private func updateButtonState() {
-        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || skillsTextView.text.isEmpty
+        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || skillsTextView.isEmpty
         signUpButton.isEnabled = !isAnyEmpty
         signUpButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
     
-    @objc private func signUp(sender: UIButton) {
-        guard let image = profileImage.image, let name = nameTextField.text, let email = emailTextField.text, let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text, var desc = descTextView.text else {
+    private func updateTextViewHeight(_ textView: UITextView) {
+        var constraint: NSLayoutConstraint = skillsTextViewHeightConstraint
+        if textView == descTextView  {
+            constraint = descTextViewHeightConstraint
+        }
+        let size = textView.sizeThatFits(CGSize(width: textView.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
+        
+        guard size.height != constraint.constant, size.height >= Config.minimumProfileTextFieldHeight else {
             return
         }
-        skills = skills.trimTrailingWhiteSpace().isEmpty ? " " : skills.trimTrailingWhiteSpace()
-        desc = desc.trimTrailingWhiteSpace().isEmpty ? " " : desc.trimTrailingWhiteSpace()
-        guard password.characters.count >= Config.passwordMinLength else {
-            self.present(Utility.getFailAlertController(message: passwordInvalid), animated: true, completion: nil)
+        constraint.constant = size.height
+        textView.setContentOffset(CGPoint(), animated: false)
+        signUpTableView.beginUpdates()
+        signUpTableView.endUpdates()
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        guard let textView = textView as? GrayBorderTextView, let currentText = textView.text else {
+            return false
+        }
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        
+        if updatedText.isEmpty {
+            textView.setPlaceholder()
+            updateButtonState()
+            return false
+        } else if textView.textColor == UIColor.lightGray && !text.isEmpty {
+            textView.removePlaceholder()
+            updateButtonState()
+        }
+        return true
+    }
+    
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        guard view.window != nil, textView.textColor == UIColor.lightGray else {
             return
         }
-        guard Utility.isValidEmail(testStr: email) else {
-            self.present(Utility.getFailAlertController(message: emailInvalid), animated: true, completion: nil)
-            return
-        }
-        let profile = Profile(name: name, image: image, job: job, company: company, country: country,
-                              education: education, skills: skills, description: desc)
-        let user = Participant(profile: profile, password: password, email: email, team: nil)
-        let success = Storage.saveUser(data: user.toDictionary(), fileName: email)
-        guard success else {
-            self.present(Utility.getFailAlertController(message: signUpProblem), animated: true, completion: nil)
-            return
-        }
-
-        Utility.logInUser(user: user, currentViewController: self)
+        textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
     }
     
 }

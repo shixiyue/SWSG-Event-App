@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EventScheduleTableViewController: UITableViewController {
+class EventScheduleTableViewController: BaseViewController {
     var events = Events()
     
     @IBOutlet weak var eventsTableView: UITableView! {
@@ -42,8 +42,6 @@ class EventScheduleTableViewController: UITableViewController {
         }
     }
     
-    
-    
     func hideNavBarTapHandler(recognizer: UIGestureRecognizer) {
         if recognizer.state == .ended {
             self.navigationItem.hidesBackButton = !self.navigationItem.hidesBackButton
@@ -58,7 +56,8 @@ class EventScheduleTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableFooterView = UIView(frame: .zero)
+        addSlideMenuButton()
+        eventsTableView.tableFooterView = UIView(frame: .zero)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -70,21 +69,22 @@ class EventScheduleTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+}
+
     // MARK: - Table view data source
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
+extension EventScheduleTableViewController: UITableViewDelegate, UITableViewDataSource {
+    public func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return events.count
     }
     
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "EventCell", for: indexPath) as! EventScheduleTableViewCell
         if let event = events.retrieveEventAt(index: indexPath.item) {
             cell.eventName.text = event.name
@@ -100,11 +100,11 @@ class EventScheduleTableViewController: UITableViewController {
     }
     
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
     
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
     
@@ -119,7 +119,7 @@ class EventScheduleTableViewController: UITableViewController {
     
     
     // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)

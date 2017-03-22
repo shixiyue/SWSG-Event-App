@@ -36,7 +36,6 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
 
             print("EventScheduleVC\n", terminator: "")
             
-
             self.open(viewController: "EventScheduleTableViewController",from: Config.eventSystem)
 
             break

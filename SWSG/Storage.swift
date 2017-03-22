@@ -12,10 +12,15 @@ import UIKit
 struct Storage {
     
     /// Saves user data to a json file with the given filename.
-    static func saveUser(data: [String: Any], fileName: String) -> Bool {
+    static func saveUser(user: User) -> Bool {
         do {
+            let data = user.toDictionary()
             let jsonData = try JSONSerialization.data(withJSONObject: data, options: JSONSerialization.WritingOptions())
-            try jsonData.write(to: getFileURL(fileName: fileName))
+            try jsonData.write(to: getFileURL(fileName: user.email))
+            guard let pngImageData = UIImagePNGRepresentation(user.profile.image) else {
+                return false
+            }
+            try pngImageData.write(to: getLocalFileURL(fileName: "\(user.email).png"), options: .atomic)
             return true
         } catch _ {
             return false
@@ -32,15 +37,14 @@ struct Storage {
         guard let data = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments), let userInfo = data as? [String: Any] else {
             return nil
         }
-        guard let profile = userInfo[Config.profile] as? [String: String], let name = profile[Config.name], let country = profile[Config.country], let job = profile[Config.job], let company = profile[Config.company], let education = profile[Config.education], let skills = profile[Config.skills], let desc = profile[Config.desc] else {
+        guard let email = userInfo[Config.email] as? String, let password = userInfo[Config.password] as? String, let profile = userInfo[Config.profile] as? [String: String], let name = profile[Config.name], let country = profile[Config.country], let job = profile[Config.job], let company = profile[Config.company], let education = profile[Config.education], let skills = profile[Config.skills], let desc = profile[Config.desc] else {
             return nil
         }
-        //TODO: Settle image
-        let image = UIImage(named: "Profile")!
+        let imageFilePath = getLocalFileURL(fileName: "\(email).png").path
+        guard let image = UIImage(contentsOfFile: imageFilePath) else {
+            return nil
+        }
         let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-        guard let email = userInfo[Config.email] as? String, let password = userInfo[Config.password] as? String else {
-            return nil
-        }
         return Participant(profile: userProfile, password: password, email: email, team: nil)
     }
     

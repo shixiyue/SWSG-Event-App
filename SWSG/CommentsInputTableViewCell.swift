@@ -10,18 +10,24 @@ import UIKit
 
 class CommentsInputTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var commentInputField: UITextField!
+    @IBOutlet weak var commentInputField: GrayBorderTextView!
    
     @IBAction func onAddCommentButtonClick(_ sender: Any) {
         var comment = Comments.comments[EventDetailsTableViewController.event!.name]
         if comment != nil {
-            comment!.append(Comment(words: commentInputField.text!,username: Config.currentLogInUser))
+            comment!.append(Comment(words: commentInputField.content,username: System.activeUser!.profile.name))
             
         } else {
-            comment = [Comment(words: commentInputField.text!,username: Config.currentLogInUser)]
+            comment = [Comment(words: commentInputField.content,username: System.activeUser!.profile.name)]
         }
         Comments.comments.updateValue(comment!, forKey: EventDetailsTableViewController.event!.name)
         commentInputField.text = ""
+        var size = commentInputField.sizeThatFits(CGSize(width: commentInputField.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
+        guard size.height != commentInputField.frame.size.height else {
+            return
+        }
+        size.width = size.width > commentInputField.frame.size.width ? size.width : commentInputField.frame.size.width
+        commentInputField.frame.size = size
     }
     
     override func awakeFromNib() {
@@ -34,6 +40,6 @@ class CommentsInputTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
 }
 

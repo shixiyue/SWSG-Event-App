@@ -175,7 +175,7 @@
                                 <rect key="frame" x="16" y="540" width="343" height="119"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="JBs-oH-PQt">
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="JBs-oH-PQt">
                                     <size key="itemSize" width="119" height="119"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -217,6 +217,13 @@
                                             </subviews>
                                         </view>
                                         <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.5" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <outlet property="companyLbl" destination="YjF-CV-Yms" id="Ut8-SG-mmh"/>
+                                            <outlet property="iconIV" destination="xra-34-WjP" id="qsM-N8-9Hc"/>
+                                            <outlet property="nameLbl" destination="lCX-Hw-kbX" id="sU5-KY-31h"/>
+                                            <outlet property="positionLbl" destination="udM-6L-4SF" id="ltV-IB-CgB"/>
+                                            <segue destination="S0B-9p-C9T" kind="show" identifier="showRelatedMentor" id="ZgK-GL-xLo"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -351,4 +358,7 @@
     <resources>
         <image name="Profile" width="133" height="133"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="n2A-hE-rO3"/>
+    </inferredMetricsTieBreakers>
 </document>

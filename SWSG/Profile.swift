@@ -30,6 +30,9 @@ class Profile: NSObject, NSCoding {
         self.education = education
         self.skills = skills
         self.desc = description
+        
+        super.init()
+        _checkRep()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -65,6 +68,9 @@ class Profile: NSObject, NSCoding {
             return nil
         }
         self.desc = desc
+        
+        super.init()
+        _checkRep()
     }
     
     func encode(with aCoder: NSCoder) {
@@ -80,6 +86,8 @@ class Profile: NSObject, NSCoding {
     
     func updateProfile(name: String, image: UIImage, job: String, company: String, country: String,
                        education: String, skills: String, description: String) {
+        _checkRep()
+        
         self.name = name
         self.image = image
         self.job = job
@@ -88,10 +96,21 @@ class Profile: NSObject, NSCoding {
         self.education = education
         self.skills = skills
         self.desc = description
+        
+        _checkRep()
     }
     
-    // TODO: Add image
+    func updateImage(image: UIImage) {
+        _checkRep()
+        self.image = image
+        _checkRep()
+    }
+    
     func toDictionary() -> [String: String] {
         return [Config.name: name, Config.country: country, Config.job: job, Config.company: company, Config.education: education, Config.skills: skills, Config.desc: desc]
+    }
+    
+    private func _checkRep() {
+        assert(!(name.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty) && image.cgImage != nil)
     }
 }

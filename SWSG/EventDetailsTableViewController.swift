@@ -22,7 +22,10 @@ class EventDetailsTableViewController: UITableViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-         NotificationCenter.default.addObserver(self, selector: #selector(EventDetailsTableViewController.update), name: Notification.Name(rawValue: "comments"), object: nil)
+        setUpTable()
+        hideKeyboardWhenTappedAround()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(update), name: Notification.Name(rawValue: "comments"), object: nil)
         if let comments = Storage.readComments(fileName: Config.commentsFileName) {
             Comments.comments = comments
         }
@@ -33,9 +36,15 @@ class EventDetailsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
+    
+    private func setUpTable() {
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
+    }
+    
     func update() {
         tableView.reloadData()
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -47,8 +56,6 @@ class EventDetailsTableViewController: UITableViewController {
             self.navigationController?.setNavigationBarHidden(self.navigationItem.hidesBackButton, animated: true)
         }
     }
-    
-   
     
     // MARK: - Table view data source
     
@@ -98,6 +105,9 @@ class EventDetailsTableViewController: UITableViewController {
         } else {
             if indexPath.row == Comments.comments[EventDetailsTableViewController.event!.name]?.count || (indexPath.row == 0 && Comments.comments[EventDetailsTableViewController.event!.name]?.count == nil) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "CommentsInput", for: indexPath) as! CommentsInputTableViewCell
+                cell.commentInputField.delegate = self
+                cell.commentInputField.setPlaceholder("Add a Comment")
+                cell.selectionStyle = .none
                 return cell
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: "Comments", for: indexPath) as! CommentsTableViewCell
@@ -131,49 +141,47 @@ class EventDetailsTableViewController: UITableViewController {
         }
     }
     
-    /*
-     // Override to support conditional editing of the table view.
-     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the specified item to be editable.
-     return true
-     }
-     */
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
-    /*
-     // Override to support editing the table view.
-     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-     if editingStyle == .delete {
-     // Delete the row from the data source
-     tableView.deleteRows(at: [indexPath], with: .fade)
-     } else if editingStyle == .insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
+}
+
+extension EventDetailsTableViewController: UITextViewDelegate {
     
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
+    func textViewDidChange(_ textView: UITextView) {
+        textView.translatesAutoresizingMaskIntoConstraints = true
+        var size = textView.sizeThatFits(CGSize(width: textView.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
+        guard size.height != textView.frame.size.height else {
+            return
+        }
+        size.width = size.width > textView.frame.size.width ? size.width : textView.frame.size.width
+        textView.frame.size = size
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
     
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        guard let textView = textView as? GrayBorderTextView, let currentText = textView.text else {
+            return false
+        }
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        
+        if updatedText.isEmpty {
+            textView.setPlaceholder()
+            return false
+        } else if textView.textColor == UIColor.lightGray && !text.isEmpty {
+            textView.removePlaceholder()
+        }
+        return true
+    }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        guard view.window != nil, textView.textColor == UIColor.lightGray else {
+            return
+        }
+        textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+    }
     
 }

@@ -22,6 +22,9 @@ class Participant: NSObject, User {
         self.password = password
         self.email = email
         self.team = team
+        
+        super.init()
+        _checkRep()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -38,6 +41,9 @@ class Participant: NSObject, User {
         }
         self.email = email
         self.team = aDecoder.decodeObject(forKey: Config.team) as? Team
+        
+        super.init()
+        _checkRep()
     }
     
     func encode(with aCoder: NSCoder) {

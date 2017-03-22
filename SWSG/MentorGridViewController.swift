@@ -11,7 +11,6 @@ import UIKit
 class MentorGridViewController: BaseViewController {
     @IBOutlet weak var mentorCollection: UICollectionView!
     
-    fileprivate var mentors = [Mentor]()
     fileprivate var insets: CGFloat!
     
     override func viewDidLoad() {
@@ -22,20 +21,6 @@ class MentorGridViewController: BaseViewController {
         
         mentorCollection.delegate = self
         mentorCollection.dataSource = self
-        
-        let image = UIImage(named: "Profile")
-        let profile = Profile(name: "Mr Tan Hwee Huat", image: image!, job: "Asset Manager",
-                              company: "UOB Pte. Ltd.", country: "Singapore",
-                              education: "National University of Singapore",
-                              skills: "Financial Planning", description: "Awesome guy")
-        
-        for _ in 0...4 {
-            let mentor = Mentor(profile: profile, field: .business)
-            mentor.addSlots(on: Date.date(from: "2017-07-21"))
-            mentor.addSlots(on: Date.date(from: "2017-07-22"))
-            mentor.addSlots(on: Date.date(from: "2017-07-23"))
-            mentors.append(mentor)
-        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -45,7 +30,7 @@ class MentorGridViewController: BaseViewController {
             
             if let indexPaths = mentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item
-                mentorVC.mentor = self.mentors[index]
+                mentorVC.mentor = System.mentors[index]
             }
         }
     }
@@ -54,7 +39,7 @@ class MentorGridViewController: BaseViewController {
 extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
-        return mentors.count
+        return System.mentors.count
     }
     
     public func collectionView(_ collectionView: UICollectionView,
@@ -65,7 +50,7 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
             return MentorCell()
         }
         let index = indexPath.item
-        let profile = mentors[index].profile
+        let profile = System.mentors[index].profile
         
         cell.iconIV.image = profile.image
         cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -236,14 +237,14 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THy-3H-WAN">
-                                            <rect key="frame" x="60" y="21.5" width="305" height="0.0"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THy-3H-WAN">
+                                            <rect key="frame" x="60" y="23.5" width="291" height="12"/>
                                             <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="15"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iaV-XZ-LqZ">
-                                            <rect key="frame" x="60" y="0.0" width="0.0" height="20"/>
+                                            <rect key="frame" x="60" y="2" width="291" height="20"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="gT1-iu-sfV"/>
                                             </constraints>
@@ -253,11 +254,13 @@
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="THy-3H-WAN" firstAttribute="top" secondItem="iaV-XZ-LqZ" secondAttribute="bottom" constant="1.5" id="4Zi-4g-kVw"/>
-                                        <constraint firstItem="iaV-XZ-LqZ" firstAttribute="top" secondItem="ekw-C2-9xU" secondAttribute="top" id="8os-07-CvO"/>
+                                        <constraint firstItem="iaV-XZ-LqZ" firstAttribute="top" secondItem="ekw-C2-9xU" secondAttribute="top" constant="2" id="8os-07-CvO"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="THy-3H-WAN" secondAttribute="trailing" constant="16" id="HYf-rG-GvQ"/>
                                         <constraint firstItem="THy-3H-WAN" firstAttribute="leading" secondItem="ekw-C2-9xU" secondAttribute="leading" constant="60" id="dyS-SQ-Ywy"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="THy-3H-WAN" secondAttribute="bottom" id="eE3-rs-xgX"/>
                                         <constraint firstItem="iaV-XZ-LqZ" firstAttribute="leading" secondItem="ekw-C2-9xU" secondAttribute="leading" constant="60" id="hWl-wz-FCM"/>
-                                        <constraint firstItem="THy-3H-WAN" firstAttribute="trailing" secondItem="ekw-C2-9xU" secondAttribute="trailing" constant="-10" id="oYt-A6-lsf"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="iaV-XZ-LqZ" secondAttribute="trailing" constant="16" id="hw5-rG-QoG"/>
+                                        <constraint firstItem="THy-3H-WAN" firstAttribute="top" secondItem="iaV-XZ-LqZ" secondAttribute="bottom" constant="1.5" id="kfW-fv-ayb"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -295,7 +298,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comments" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d6k-8X-9Fv">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comments" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d6k-8X-9Fv">
                                             <rect key="frame" x="30" y="10" width="90.5" height="24"/>
                                             <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
                                             <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -315,14 +318,8 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BIq-gG-1k3">
-                                            <rect key="frame" x="10" y="6" width="315" height="30"/>
-                                            <nil key="textColor"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
-                                        </textField>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v7a-jo-4TD">
-                                            <rect key="frame" x="325" y="3" width="40" height="36"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v7a-jo-4TD">
+                                            <rect key="frame" x="319" y="-0.5" width="40" height="36"/>
                                             <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
                                             <state key="normal" title=" Add">
                                                 <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -331,17 +328,24 @@
                                                 <action selector="onAddCommentButtonClick:" destination="Zbb-Ww-njO" eventType="touchUpInside" id="PvB-Dl-e2j"/>
                                             </connections>
                                         </button>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="SWi-I6-dAu" customClass="GrayBorderTextView" customModule="SWSG" customModuleProvider="target">
+                                            <rect key="frame" x="16" y="8" width="295" height="27.5"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        </textView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="BIq-gG-1k3" firstAttribute="leading" secondItem="5oB-K1-eqk" secondAttribute="leading" constant="10" id="ZrT-hS-4Ne"/>
-                                        <constraint firstItem="BIq-gG-1k3" firstAttribute="trailing" secondItem="5oB-K1-eqk" secondAttribute="trailing" constant="-50" id="hci-Ny-zIO"/>
-                                        <constraint firstItem="v7a-jo-4TD" firstAttribute="leading" secondItem="BIq-gG-1k3" secondAttribute="trailing" id="lck-tW-sXv"/>
-                                        <constraint firstItem="BIq-gG-1k3" firstAttribute="centerY" secondItem="5oB-K1-eqk" secondAttribute="centerY" id="tKl-wQ-PDn"/>
-                                        <constraint firstItem="v7a-jo-4TD" firstAttribute="centerY" secondItem="5oB-K1-eqk" secondAttribute="centerY" id="weS-aw-7Ce"/>
+                                        <constraint firstItem="SWi-I6-dAu" firstAttribute="top" secondItem="5oB-K1-eqk" secondAttribute="top" constant="8" id="4Bo-bv-vrv"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="SWi-I6-dAu" secondAttribute="bottom" id="Q8U-A2-6nJ"/>
+                                        <constraint firstItem="SWi-I6-dAu" firstAttribute="leading" secondItem="5oB-K1-eqk" secondAttribute="leading" constant="16" id="uLZ-hy-SyY"/>
+                                        <constraint firstItem="v7a-jo-4TD" firstAttribute="leading" secondItem="SWi-I6-dAu" secondAttribute="trailing" constant="8" id="v9h-YS-58H"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="v7a-jo-4TD" secondAttribute="trailing" constant="8" id="wJx-6r-p8D"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="v7a-jo-4TD" secondAttribute="bottom" id="wUY-mZ-JmE"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="commentInputField" destination="BIq-gG-1k3" id="Lyr-YF-Rtc"/>
+                                    <outlet property="commentInputField" destination="SWi-I6-dAu" id="9A3-1t-e3C"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

@@ -31,6 +31,10 @@ struct Utility {
         return emailTest.evaluate(with: testStr)
     }
     
+    static func isValidPassword(testStr: String) -> Bool {
+        return testStr.characters.count >= Config.passwordMinLength
+    }
+    
     /// Jumps to another storyboard
     static func showStoryboard(storyboard: String, destinationViewController: String, currentViewController: UIViewController) {
         let storyboard = UIStoryboard(name: storyboard, bundle: nil)
@@ -42,13 +46,15 @@ struct Utility {
     static func showStoryboardByNavigation(storyboard: String, destinationViewController: String, currentViewController: UIViewController) {
         let storyboard = UIStoryboard(name: storyboard, bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: destinationViewController) as UIViewController
+
+        currentViewController.present(controller, animated: true, completion: nil)
+
         controller.navigationItem.hidesBackButton = currentViewController.navigationItem.hidesBackButton
     controller.navigationController?.setNavigationBarHidden(controller.navigationItem.hidesBackButton, animated: false)
         //currentViewController.navigationController?.pushViewController(controller, animated: true)
     }
     
     static func logOutUser(currentViewController: UIViewController) {
-        UserDefaults.standard.removeObject(forKey: Config.user)
         System.activeUser = nil
         showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
     }

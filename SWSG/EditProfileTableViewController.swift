@@ -9,8 +9,7 @@
 import UIKit
 
 /// `EditProfileTableViewController` represents the controller for signup table.
-// TODO: Is it possible to share the view controller?
-class EditProfileTableViewController: UITableViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
+class EditProfileTableViewController: ImagePickerViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
     var doneButton: RoundCornerButton!
     
@@ -22,23 +21,24 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
     private var user: User!
     
     @IBOutlet private var profileTableView: UITableView!
-    @IBOutlet private var profileImage: UIImageView!
-    // TODO: Figure out how to allow to upload a new image and change profile picture
+    @IBOutlet private var profileImageButton: UIButton!
+    @IBOutlet var changeImageButton: UIButton!
     @IBOutlet private var nameTextField: UITextField!
     @IBOutlet private var countryTextField: UITextField!
     @IBOutlet private var jobTextField: UITextField!
     @IBOutlet private var companyTextField: UITextField!
     @IBOutlet private var educationTextField: UITextField!
-    @IBOutlet private var skillsTextView: GrayBorderTextView!
+    @IBOutlet fileprivate var skillsTextView: GrayBorderTextView!
     @IBOutlet private var descTextView: GrayBorderTextView!
     
-    private var textFields: [UITextField]!
+    fileprivate var textFields: [UITextField]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUser()
         setUpProfileTableView()
         setUpButton()
+        setUpProfileImage()
         setUpTextFields()
         setUpTextViews()
         hideKeyboardWhenTappedAround()
@@ -59,6 +59,13 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
     
     private func setUpButton() {
         doneButton.addTarget(self, action: #selector(update), for: .touchUpInside)
+    }
+    
+    private func setUpProfileImage() {
+        profileImageButton.setImage(user.profile.image, for: .normal)
+        profileImageButton.addTarget(self, action: #selector(showProfileImageOptions), for: .touchUpInside)
+        changeImageButton.addTarget(self, action: #selector(showProfileImageOptions), for: .touchUpInside)
+        alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImageButton.bounds.maxY)
     }
     
     private func setUpTextFields() {
@@ -116,23 +123,6 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
         jobTextField.becomeFirstResponder()
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        guard textView.textColor == UIColor.lightGray, let textView = textView as? GrayBorderTextView else {
-            return
-        }
-        textView.removePlaceholder()
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        guard let textView = textView as? GrayBorderTextView else {
-            return
-        }
-        guard textView.text.isEmpty else {
-            return
-        }
-        textView.setPlaceholder()
-    }
-    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -148,6 +138,32 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         countryTextField.text = Utility.countries[row]
     }
+    
+    @objc private func update(sender: UIButton) {
+        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
+            return
+        }
+        user.profile.updateProfile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
+        System.updateActiveUser()
+        let success = Storage.saveUser(user: user)
+        guard success else {
+            self.present(Utility.getFailAlertController(message: updateProblem), animated: true, completion: nil)
+            return
+        }
+        dismiss(animated: false, completion: nil)
+    }
+    
+    override func updateImage(_ notification: NSNotification) {
+        guard let image = notification.userInfo?[Config.image] as? UIImage else {
+            return
+        }
+        profileImageButton.setImage(image, for: .normal)
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+}
+
+extension EditProfileTableViewController: UITextViewDelegate, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         let nextTag = textField.tag + 1;
@@ -177,19 +193,4 @@ class EditProfileTableViewController: UITableViewController, UITextViewDelegate,
         doneButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
     
-    @objc private func update(sender: UIButton) {
-        guard let image = profileImage.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, var skills = skillsTextView.text, var desc = descTextView.text else {
-            return
-        }
-        skills = skills.trimTrailingWhiteSpace().isEmpty ? " " : skills.trimTrailingWhiteSpace()
-        desc = desc.trimTrailingWhiteSpace().isEmpty ? " " : desc.trimTrailingWhiteSpace()
-        user.profile.updateProfile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-        System.activeUser = user
-        let success = Storage.saveUser(data: user.toDictionary(), fileName: user.email)
-        guard success else {
-            self.present(Utility.getFailAlertController(message: updateProblem), animated: true, completion: nil)
-            return
-        }
-        dismiss(animated: false, completion: nil)
-    }
 }
