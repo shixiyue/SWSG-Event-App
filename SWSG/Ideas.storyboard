@@ -18,9 +18,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="ALL-6Y-JGX">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uw5-f4-PhW">
+                                    <rect key="frame" x="8" y="7" width="66.5" height="30"/>
+                                    <nil key="textColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </textField>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ghb-eF-Ekc">
+                                    <rect key="frame" x="337" y="-2" width="30" height="48"/>
+                                    <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="30"/>
+                                    <state key="normal" title="+">
+                                        <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <connections>
+                                        <segue destination="eak-on-crA" kind="custom" customClass="SegueFromRight" customModule="SWSG" customModuleProvider="target" id="A6J-3b-Kg1"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="ghb-eF-Ekc" firstAttribute="trailing" secondItem="ALL-6Y-JGX" secondAttribute="trailing" constant="-8" id="AzR-3y-I3a"/>
+                                <constraint firstItem="uw5-f4-PhW" firstAttribute="centerY" secondItem="ALL-6Y-JGX" secondAttribute="centerY" id="QyZ-l7-ywG"/>
+                                <constraint firstItem="uw5-f4-PhW" firstAttribute="leading" secondItem="ALL-6Y-JGX" secondAttribute="leading" constant="8" id="t0t-z5-HOU"/>
+                                <constraint firstItem="ghb-eF-Ekc" firstAttribute="centerY" secondItem="ALL-6Y-JGX" secondAttribute="centerY" id="tIr-mg-1jI"/>
+                            </constraints>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ideaItemCell" rowHeight="100" id="XKk-Xu-ks7" customClass="IdeaItemTableViewCell" customModule="SWSG" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="100"/>
+                                <rect key="frame" x="0.0" y="72" width="375" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XKk-Xu-ks7" id="y4P-mL-I4z">
                                     <rect key="frame" x="0.0" y="0.0" width="342" height="99"/>
@@ -65,6 +94,9 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="desc" destination="Txy-OI-rb1" id="PJW-be-TXg"/>
+                                    <outlet property="name" destination="XWp-of-Ztb" id="1T0-Sd-bP4"/>
+                                    <outlet property="team" destination="R2X-XT-pvF" id="ThY-S3-jg4"/>
                                     <segue destination="W16-Pf-BPL" kind="custom" customClass="SegueFromRight" customModule="SWSG" customModuleProvider="target" id="2Ol-IJ-nnm"/>
                                 </connections>
                             </tableViewCell>
@@ -77,7 +109,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZUI-NR-xxV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="88.799999999999997" y="73.313343328335833"/>
+            <point key="canvasLocation" x="-183" y="-385"/>
         </scene>
         <!--Idea Details Table View Controller-->
         <scene sceneID="8JR-T8-1o1">
@@ -102,7 +134,21 @@
                             <outlet property="delegate" destination="2FE-aN-N43" id="jgA-I5-hb0"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="26E-ay-vYZ"/>
+                    <navigationItem key="navigationItem" id="26E-ay-vYZ">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="YaF-Ax-J5l">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="JVs-cd-l7x">
+                                <rect key="frame" x="16" y="7" width="83" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
+                                <state key="normal" title="Back">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onBackButtonClick:" destination="2FE-aN-N43" eventType="touchUpInside" id="GQE-5K-VBJ"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F7v-rZ-v1y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -131,10 +177,25 @@
                             <outlet property="delegate" destination="ikf-Qu-1Jr" id="jcy-xv-zsU"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="Mr9-P7-LcW">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="1Os-9Y-YbK">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="t9P-ZO-oqW">
+                                <rect key="frame" x="16" y="7" width="83" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
+                                <state key="normal" title="Back">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onBackButtonClick:" destination="ikf-Qu-1Jr" eventType="touchUpInside" id="fbo-Tr-NUw"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L7C-5R-Cad" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2408.8000000000002" y="27.436281859070466"/>
+            <point key="canvasLocation" x="1812" y="-690.40479760119945"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ZPg-Cs-pjF">
@@ -153,6 +214,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1lG-iX-2Z6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="834.39999999999998" y="43.628185907046479"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="vrG-qe-JYv">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eak-on-crA" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cU5-pU-VbN">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="ikf-Qu-1Jr" kind="relationship" relationship="rootViewController" id="bAD-Td-dNB"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kR9-Cl-31s" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="872.79999999999995" y="-690.40479760119945"/>
         </scene>
     </scenes>
 </document>

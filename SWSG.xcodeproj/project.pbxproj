@@ -89,6 +89,8 @@
 		E348D56A1E840D8B00947B3F /* IdeaPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5691E840D8B00947B3F /* IdeaPostTableViewController.swift */; };
 		E348D56C1E840F1100947B3F /* IdeaItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D56B1E840F1100947B3F /* IdeaItemTableViewCell.swift */; };
 		E348D56E1E8415C500947B3F /* SegueFromRight.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D56D1E8415C500947B3F /* SegueFromRight.swift */; };
+		E348D5701E841E2900947B3F /* Idea.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D56F1E841E2900947B3F /* Idea.swift */; };
+		E348D5721E841E3000947B3F /* Ideas.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5711E841E3000947B3F /* Ideas.swift */; };
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
 		E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */; };
@@ -186,6 +188,8 @@
 		E348D5691E840D8B00947B3F /* IdeaPostTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaPostTableViewController.swift; sourceTree = "<group>"; };
 		E348D56B1E840F1100947B3F /* IdeaItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaItemTableViewCell.swift; sourceTree = "<group>"; };
 		E348D56D1E8415C500947B3F /* SegueFromRight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegueFromRight.swift; sourceTree = "<group>"; };
+		E348D56F1E841E2900947B3F /* Idea.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Idea.swift; sourceTree = "<group>"; };
+		E348D5711E841E3000947B3F /* Ideas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ideas.swift; sourceTree = "<group>"; };
 		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLookingForTableViewCell.swift; sourceTree = "<group>"; };
@@ -423,6 +427,8 @@
 				E348D5651E840D3500947B3F /* IdeasListTableViewController.swift */,
 				E348D5671E840D6100947B3F /* IdeaDetailsTableViewController.swift */,
 				E348D5691E840D8B00947B3F /* IdeaPostTableViewController.swift */,
+				E348D56F1E841E2900947B3F /* Idea.swift */,
+				E348D5711E841E3000947B3F /* Ideas.swift */,
 			);
 			name = IdeasVotingPlatform;
 			sourceTree = "<group>";
@@ -548,6 +554,7 @@
 				CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */,
 				3F97954D1E7A8DBF004BC26C /* InitialViewController.swift in Sources */,
 				E348D56A1E840D8B00947B3F /* IdeaPostTableViewController.swift in Sources */,
+				E348D5701E841E2900947B3F /* Idea.swift in Sources */,
 				E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */,
 				3F9795631E7A8DBF004BC26C /* Utility.swift in Sources */,
 				E348D5661E840D3500947B3F /* IdeasListTableViewController.swift in Sources */,
@@ -560,6 +567,7 @@
 				E3220C3B1E7AE387008AFA85 /* EventImageTableViewCell.swift in Sources */,
 				E3220C671E7D385B008AFA85 /* TeamRegistrationTableViewController.swift in Sources */,
 				E3220C451E7AF088008AFA85 /* EventHeaderTableViewCell.swift in Sources */,
+				E348D5721E841E3000947B3F /* Ideas.swift in Sources */,
 				E3220C331E7A62F9008AFA85 /* Events.swift in Sources */,
 				3F9482B21E7E3DDC00016259 /* Profile.swift in Sources */,
 				E3220C311E7A3B99008AFA85 /* Event.swift in Sources */,

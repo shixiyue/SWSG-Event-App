@@ -10,6 +10,9 @@ import UIKit
 
 class IdeaPostTableViewController: UITableViewController {
 
+    @IBAction func onBackButtonClick(_ sender: Any) {
+        Utility.onBackButtonClick(tableViewController: self)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 

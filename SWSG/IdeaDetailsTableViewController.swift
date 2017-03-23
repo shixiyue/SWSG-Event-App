@@ -20,6 +20,9 @@ class IdeaDetailsTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
+    @IBAction func onBackButtonClick(_ sender: Any) {
+        Utility.onBackButtonClick(tableViewController: self)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -27,6 +30,7 @@ class IdeaDetailsTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
+ 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 0

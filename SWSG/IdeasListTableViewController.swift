@@ -9,10 +9,12 @@
 import UIKit
 
 class IdeasListTableViewController: UITableViewController {
+    
+    private let ideas = Ideas.sharedInstance()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "ideas"), object: nil)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -34,14 +36,16 @@ class IdeasListTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 1
+        return ideas.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ideaItemCell", for: indexPath) as! IdeaItemTableViewCell
 
-        // Configure the cell...
+        cell.name.text = ideas.retrieveIdeaAt(index: indexPath.row).name
+        cell.desc.text = ideas.retrieveIdeaAt(index: indexPath.row).description
+        cell.team.text = ideas.retrieveIdeaAt(index: indexPath.row).team
 
         return cell
     }
