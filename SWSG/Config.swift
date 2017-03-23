@@ -23,6 +23,7 @@ struct Config {
     static let defaultCountry = "Singapore"
     static let joinTeam = "Request to Join"
     static let quitTeam = "Quit Team"
+    static let fullTeam = "Team is Full"
     
     // Keys for encode/decode:
     static let user = "user"
@@ -55,6 +56,7 @@ struct Config {
     static let enableAlpha: CGFloat = 1
     static let maximumZoomScale: CGFloat = 10
     static let minimumProfileTextFieldHeight: CGFloat = 49.5
+    static let maxTeamMember: Int = 4
     
     // Parameters for Storyboard:
     static let logInSignUp = "LoginSignup"
