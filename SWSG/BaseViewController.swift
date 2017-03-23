@@ -45,6 +45,10 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             self.open(viewController: "MentorViewController", from: "Mentor")
             
             break
+        case 4:
+            print("Chat\n", terminator: "")
+            
+            self.open(viewController: "ChatViewController", from: "Chat")
         case 5:
             print("Settings\n", terminator: "")
             

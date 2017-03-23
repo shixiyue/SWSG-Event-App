@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,11 +17,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         setNavigationBar()
+        FIRApp.configure()
         guard let userData = UserDefaults.standard.data(forKey: Config.user), let user = NSKeyedUnarchiver.unarchiveObject(with: userData) as? User else {
             showLogInSignUpScreen()
             return true
         }
         System.activeUser = user
+        
+        FIRAuth.auth()?.signIn(withEmail: user.email, password: user.password) { (user, error) in
+        }
+        
         return true
     }
     
