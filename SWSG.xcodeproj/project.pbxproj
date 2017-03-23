@@ -87,6 +87,8 @@
 		E348D5661E840D3500947B3F /* IdeasListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5651E840D3500947B3F /* IdeasListTableViewController.swift */; };
 		E348D5681E840D6100947B3F /* IdeaDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5671E840D6100947B3F /* IdeaDetailsTableViewController.swift */; };
 		E348D56A1E840D8B00947B3F /* IdeaPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5691E840D8B00947B3F /* IdeaPostTableViewController.swift */; };
+		E348D56C1E840F1100947B3F /* IdeaItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D56B1E840F1100947B3F /* IdeaItemTableViewCell.swift */; };
+		E348D56E1E8415C500947B3F /* SegueFromRight.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D56D1E8415C500947B3F /* SegueFromRight.swift */; };
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
 		E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */; };
@@ -182,6 +184,8 @@
 		E348D5651E840D3500947B3F /* IdeasListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeasListTableViewController.swift; sourceTree = "<group>"; };
 		E348D5671E840D6100947B3F /* IdeaDetailsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaDetailsTableViewController.swift; sourceTree = "<group>"; };
 		E348D5691E840D8B00947B3F /* IdeaPostTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaPostTableViewController.swift; sourceTree = "<group>"; };
+		E348D56B1E840F1100947B3F /* IdeaItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaItemTableViewCell.swift; sourceTree = "<group>"; };
+		E348D56D1E8415C500947B3F /* SegueFromRight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegueFromRight.swift; sourceTree = "<group>"; };
 		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLookingForTableViewCell.swift; sourceTree = "<group>"; };
@@ -414,6 +418,8 @@
 			isa = PBXGroup;
 			children = (
 				E348D5631E840CC700947B3F /* Ideas.storyboard */,
+				E348D56D1E8415C500947B3F /* SegueFromRight.swift */,
+				E348D56B1E840F1100947B3F /* IdeaItemTableViewCell.swift */,
 				E348D5651E840D3500947B3F /* IdeasListTableViewController.swift */,
 				E348D5671E840D6100947B3F /* IdeaDetailsTableViewController.swift */,
 				E348D5691E840D8B00947B3F /* IdeaPostTableViewController.swift */,
@@ -559,6 +565,8 @@
 				E3220C311E7A3B99008AFA85 /* Event.swift in Sources */,
 				CC1AA6C21E77C328004F5F95 /* (null) in Sources */,
 				E3220C6B1E7D3D25008AFA85 /* Teams.swift in Sources */,
+				E348D56E1E8415C500947B3F /* SegueFromRight.swift in Sources */,
+				E348D56C1E840F1100947B3F /* IdeaItemTableViewCell.swift in Sources */,
 				E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */,
 				3FED301A1E76FC9A00C007AD /* (null) in Sources */,
 				E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */,

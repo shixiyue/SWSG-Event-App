@@ -19,7 +19,7 @@ class TeamInfoTableViewController: UITableViewController {
     private let fullTeamErrorMsg = "Team is full"
     
     @IBAction func onBackButtonClick(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+       Utility.onBackButtonClick(tableViewController: self)
     }
     override func viewWillAppear(_ animated: Bool) {
         if let participant = System.activeUser as? Participant, let team = team {

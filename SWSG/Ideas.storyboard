@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,13 +19,54 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="XKk-Xu-ks7">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ideaItemCell" rowHeight="100" id="XKk-Xu-ks7" customClass="IdeaItemTableViewCell" customModule="SWSG" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XKk-Xu-ks7" id="y4P-mL-I4z">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="342" height="99"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HDR-Q4-jMo">
+                                            <rect key="frame" x="8" y="7" width="84" height="84"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="84" id="j2M-RY-e9D"/>
+                                                <constraint firstAttribute="height" constant="84" id="jpH-ab-2ay"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XWp-of-Ztb">
+                                            <rect key="frame" x="97" y="8" width="53.5" height="28"/>
+                                            <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="23"/>
+                                            <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="desc" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Txy-OI-rb1">
+                                            <rect key="frame" x="97" y="36" width="237" height="24"/>
+                                            <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="team" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R2X-XT-pvF">
+                                            <rect key="frame" x="97" y="60" width="42.5" height="24"/>
+                                            <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
+                                            <color key="textColor" red="1" green="0.0" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Txy-OI-rb1" firstAttribute="trailing" secondItem="y4P-mL-I4z" secondAttribute="trailingMargin" id="0VP-YM-qD1"/>
+                                        <constraint firstItem="R2X-XT-pvF" firstAttribute="top" secondItem="Txy-OI-rb1" secondAttribute="bottom" id="6YJ-DJ-U5m"/>
+                                        <constraint firstItem="Txy-OI-rb1" firstAttribute="leading" secondItem="HDR-Q4-jMo" secondAttribute="trailing" constant="5" id="DNZ-Lp-5vk"/>
+                                        <constraint firstItem="HDR-Q4-jMo" firstAttribute="centerY" secondItem="y4P-mL-I4z" secondAttribute="centerY" id="QMX-J3-qIP"/>
+                                        <constraint firstItem="R2X-XT-pvF" firstAttribute="leading" secondItem="HDR-Q4-jMo" secondAttribute="trailing" constant="5" id="Qdx-Mn-JQs"/>
+                                        <constraint firstItem="Txy-OI-rb1" firstAttribute="top" secondItem="XWp-of-Ztb" secondAttribute="bottom" id="Qmm-eU-Fep"/>
+                                        <constraint firstItem="XWp-of-Ztb" firstAttribute="leading" secondItem="HDR-Q4-jMo" secondAttribute="trailing" constant="5" id="QuG-z7-6BW"/>
+                                        <constraint firstItem="XWp-of-Ztb" firstAttribute="top" secondItem="y4P-mL-I4z" secondAttribute="topMargin" id="Sv5-Vt-Em8"/>
+                                        <constraint firstItem="HDR-Q4-jMo" firstAttribute="leading" secondItem="y4P-mL-I4z" secondAttribute="leadingMargin" id="Xo1-5L-zBF"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="W16-Pf-BPL" kind="custom" customClass="SegueFromRight" customModule="SWSG" customModuleProvider="target" id="2Ol-IJ-nnm"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -35,7 +77,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZUI-NR-xxV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="89" y="74"/>
+            <point key="canvasLocation" x="88.799999999999997" y="73.313343328335833"/>
         </scene>
         <!--Idea Details Table View Controller-->
         <scene sceneID="8JR-T8-1o1">
@@ -60,10 +102,11 @@
                             <outlet property="delegate" destination="2FE-aN-N43" id="jgA-I5-hb0"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="26E-ay-vYZ"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F7v-rZ-v1y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="835" y="44"/>
+            <point key="canvasLocation" x="1773.5999999999999" y="43.628185907046479"/>
         </scene>
         <!--Idea Post Table View Controller-->
         <scene sceneID="CJo-Sm-j0x">
@@ -91,7 +134,25 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L7C-5R-Cad" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1470" y="28"/>
+            <point key="canvasLocation" x="2408.8000000000002" y="27.436281859070466"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="ZPg-Cs-pjF">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="W16-Pf-BPL" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="mWm-YC-Dvd">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="2FE-aN-N43" kind="relationship" relationship="rootViewController" id="Mbk-Ir-oti"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1lG-iX-2Z6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="834.39999999999998" y="43.628185907046479"/>
         </scene>
     </scenes>
 </document>
