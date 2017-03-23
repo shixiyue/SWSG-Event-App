@@ -46,9 +46,11 @@ struct Utility {
     static func showStoryboardByNavigation(storyboard: String, destinationViewController: String, currentViewController: UIViewController) {
         let storyboard = UIStoryboard(name: storyboard, bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: destinationViewController) as UIViewController
+
         currentViewController.present(controller, animated: true, completion: nil)
+
         controller.navigationItem.hidesBackButton = currentViewController.navigationItem.hidesBackButton
-        controller.navigationController?.setNavigationBarHidden(controller.navigationItem.hidesBackButton, animated: false)
+    controller.navigationController?.setNavigationBarHidden(controller.navigationItem.hidesBackButton, animated: false)
         //currentViewController.navigationController?.pushViewController(controller, animated: true)
     }
     

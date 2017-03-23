@@ -10,12 +10,15 @@ import UIKit
 
 class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    private let imagePicker = UIImagePickerController()
-    
+
     @IBOutlet private var profileImgButton: UIButton!
     @IBOutlet private var nameLbl: UILabel!
     @IBOutlet private var teamLbl: UILabel!
-    @IBOutlet fileprivate var profileList: UITableView!
+    @IBOutlet var profileList: UITableView!
+
+    private let imagePicker = UIImagePickerController()
+
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,8 +47,13 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         profileImgButton.addTarget(self, action: #selector(showProfileImageOptions), for: .touchUpInside)
         
         nameLbl.text = user.profile.name
-        if let team = user.team {
-            teamLbl.text = team.name
+        
+        guard let participant = user as? Participant else {
+            teamLbl.text = nil
+            return
+        }
+        if let team = participant.team {
+            teamLbl.text = Teams.sharedInstance().retrieveTeamAt(index: team).name
         } else {
             teamLbl.text = Config.noTeamLabel
         }

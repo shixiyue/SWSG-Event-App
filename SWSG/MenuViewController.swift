@@ -25,6 +25,7 @@ class MenuViewController: UIViewController {
     @IBOutlet private weak var nameLbl: UILabel!
     @IBOutlet private weak var teamLbl: UILabel!
     
+    var teams = Teams.sharedInstance()
     var btnMenu : UIButton!
     var delegate : SlideMenuDelegate?
     
@@ -47,14 +48,19 @@ class MenuViewController: UIViewController {
         
         profileImgButton.setImage(user.profile.image, for: .normal)
         nameLbl.text = user.profile.name
-        if let team = user.team {
-            teamLbl.text = team.name
+        
+        guard let participant = user as? Participant else {
+            teamLbl.text = nil
+            return
+        }
+
+        if let team = participant.team {
+            teamLbl.text = teams.retrieveTeamAt(index: team).name
         } else {
             teamLbl.text = Config.noTeamLabel
         }
     }
 
-    
     @IBAction func onProfileClick(_ sender: UIButton) {
         Utility.showStoryboard(storyboard: Config.profileScreen, destinationViewController: Config.profileViewController, currentViewController: self)
     }

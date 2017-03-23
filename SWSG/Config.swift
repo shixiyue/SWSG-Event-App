@@ -21,6 +21,9 @@ struct Config {
     
     
     static let defaultCountry = "Singapore"
+    static let joinTeam = "Request to Join"
+    static let quitTeam = "Quit Team"
+    static let fullTeam = "Team is Full"
     
     // Keys for encode/decode:
     static let user = "user"
@@ -53,6 +56,7 @@ struct Config {
     static let enableAlpha: CGFloat = 1
     static let maximumZoomScale: CGFloat = 10
     static let minimumProfileTextFieldHeight: CGFloat = 49.5
+    static let maxTeamMember: Int = 4
     
     // Parameters for Storyboard:
     static let logInSignUp = "LoginSignup"
@@ -61,6 +65,10 @@ struct Config {
     static let main = "Main"
     static let eventSystem = "EventSystem"
     static let navigationController = "NavigationController"
+
+    static let teamRegistration = "TeamRegistration"
+    static let ideasVotingPlatform = "Ideas"
+
     static let profileScreen = "Profile"
     static let profileViewController = "ProfileViewController"
     static let editProfileTable = "EditProfileTable"
@@ -69,6 +77,7 @@ struct Config {
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
+
     
     // Parameters for information message:
     static let done = "Done"

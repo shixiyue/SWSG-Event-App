@@ -9,7 +9,7 @@
 import UIKit
 
 struct MenuItems {
-    static let items = ["Home", "Schedule", "Mentors", "Teams", "Chat", "Settings"]
+    static let items = ["Home", "Schedule", "Mentors", "Teams", "Chat", "Ideas","Settings"]
     
     static var count: Int {
         return items.count
