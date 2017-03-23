@@ -289,9 +289,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HKr-Vg-hCw">
-                                    <rect key="frame" x="122" y="4" width="131" height="36"/>
+                                    <rect key="frame" x="172.5" y="4" width="30" height="36"/>
                                     <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
-                                    <state key="normal" title="Request to Join">
+                                    <state key="normal">
                                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
                                     <connections>
@@ -396,6 +396,9 @@
                             </button>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="buttonLbl" destination="HKr-Vg-hCw" id="mw8-tL-aI7"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FTz-Hv-Kqe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

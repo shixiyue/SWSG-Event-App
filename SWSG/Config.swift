@@ -21,6 +21,8 @@ struct Config {
     
     
     static let defaultCountry = "Singapore"
+    static let joinTeam = "Request to Join"
+    static let quitTeam = "Quit Team"
     
     // Keys for encode/decode:
     static let user = "user"

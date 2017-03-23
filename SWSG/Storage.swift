@@ -17,9 +17,7 @@ struct Storage {
             let data : [String: Any]
             if let participant = user as? Participant {
                 data = participant.toDictionary()
-                print("in saveUser storage team is \(participant.team)")
             } else {
-                print("not a participant")
                 data = user.toDictionary()
             }
             let jsonData = try JSONSerialization.data(withJSONObject: data, options: JSONSerialization.WritingOptions())
@@ -53,7 +51,7 @@ struct Storage {
         }
         let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         let team_index = userInfo[Config.team] as? Int
-        print("team index is \(team_index)")
+
         return Participant(profile: userProfile, password: password, email: email, team: team_index)
     }
     
@@ -189,7 +187,6 @@ struct Storage {
                         return nil
                     }
                     let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-                   // print("\(member["team"]!) in storage of saving member")
                     let team_participant = member["team"] as? Int
                     let participant =  Participant(profile: userProfile, password: password, email: email, team: team_participant)
                     members_retrieved.append(participant)

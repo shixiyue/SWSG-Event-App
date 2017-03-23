@@ -10,13 +10,24 @@ import UIKit
 
 class TeamInfoTableViewController: UITableViewController {
     
+    @IBOutlet weak var buttonLbl: UIButton!
     var team : Team?
     var teamIndex : Int?
     private let teams = Teams.sharedInstance()
     private let joinTeamErrorMsg = "You can not join more than one team"
+    private let quitTeamErrorMsg = "You do not belong to this team"
     
     @IBAction func onBackButtonClick(_ sender: Any) {
         dismiss(animated: true, completion: nil)
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        if let participant = System.activeUser as? Participant, let team = team {
+        if team.containsMember(member: participant) {
+            buttonLbl.setTitle(Config.quitTeam, for: .normal)
+        } else {
+            buttonLbl.setTitle(Config.joinTeam, for: .normal)
+            }
+        }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,17 +56,28 @@ class TeamInfoTableViewController: UITableViewController {
             self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
             return
         }
-        if participant.team != nil {
+        if (sender as! UIButton).currentTitle == Config.joinTeam {
+                if participant.team != nil {
             self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
             return
         }
         participant.setTeamIndex(index: teamIndex!)
         System.activeUser = participant
-        print("\((System.activeUser as? Participant)?.team)")
         team?.addMember(member: participant)
         print("member added")
         teams.replaceTeamAt(index: teamIndex!, with: team!)
-     
+            buttonLbl.setTitle(Config.quitTeam, for: .normal)
+        } else if (sender as! UIButton).currentTitle == Config.quitTeam {
+            if participant.team != teamIndex {
+                self.present(Utility.getFailAlertController(message: quitTeamErrorMsg), animated: true, completion: nil)
+                return
+            }
+            participant.setTeamIndex(index: nil)
+            System.activeUser = participant
+            team?.removeMember(member: participant)
+            print("member deleted")
+            buttonLbl.setTitle(Config.joinTeam, for: .normal)
+        }
         tableView.reloadData()
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

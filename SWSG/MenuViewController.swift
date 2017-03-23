@@ -53,7 +53,7 @@ class MenuViewController: UIViewController {
             teamLbl.text = nil
             return
         }
-        print("participant team is \(participant.team)")
+
         if let team = participant.team {
             teamLbl.text = teams.retrieveTeamAt(index: team).name
         } else {

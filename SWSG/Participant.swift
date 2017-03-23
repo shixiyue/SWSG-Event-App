@@ -41,7 +41,6 @@ class Participant: NSObject, User {
         }
         self.email = email
         self.team = aDecoder.decodeInteger(forKey: Config.team)
-         print("decode() in <Participant> team = \(team)")
         super.init()
         _checkRep()
     }
@@ -55,15 +54,13 @@ class Participant: NSObject, User {
             return
         }
         aCoder.encode(team, forKey: Config.team)
-        print("encode() in <Participant> team = \(team)")
     }
     
-    func setTeamIndex(index: Int) {
+    func setTeamIndex(index: Int?) {
         team = index
     }
     
     func toDictionary() -> [String : Any] {
-        print("team number in participant is \(team)")
         return [Config.email: email, Config.password: password, Config.profile: profile.toDictionary(), Config.team: team as Any]
     }
     

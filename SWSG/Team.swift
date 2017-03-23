@@ -27,6 +27,18 @@ class Team {
     func addMember(member: Participant) {
         members.append(member)
     }
+    
+    func removeMember(member: Participant) {
+        if containsMember(member: member) {
+            members.remove(at: members.index(where: {$0.email == member.email})!)
+        } else {
+            print("does not contain \(member.profile.name)")
+        }
+    }
+    
+    func containsMember(member: Participant) -> Bool {
+        return members.contains(where: {$0.email == member.email})
+    }
 }
 
 extension Team {
