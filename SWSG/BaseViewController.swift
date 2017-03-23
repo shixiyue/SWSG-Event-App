@@ -49,8 +49,12 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             print("Teams\n",terminator: "")
             self.open(viewController: "TeamRegistrationTableViewController", from: Config.teamRegistration)
             break
-
         case 5:
+            print("Ideas\n",terminator:"")
+            self.open(viewController: "ideaslist", from: Config.ideasVotingPlatform)
+            break
+
+        case 6:
             print("Settings\n", terminator: "")
             
             self.open(viewController: "SettingsViewController", from: "Settings")

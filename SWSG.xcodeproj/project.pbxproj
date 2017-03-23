@@ -83,6 +83,10 @@
 		E3220C6B1E7D3D25008AFA85 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6A1E7D3D25008AFA85 /* Teams.swift */; };
 		E3220C6D1E7D6B40008AFA85 /* TeamCreateTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */; };
 		E3220C6F1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C6E1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift */; };
+		E348D5641E840CC700947B3F /* Ideas.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E348D5631E840CC700947B3F /* Ideas.storyboard */; };
+		E348D5661E840D3500947B3F /* IdeasListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5651E840D3500947B3F /* IdeasListTableViewController.swift */; };
+		E348D5681E840D6100947B3F /* IdeaDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5671E840D6100947B3F /* IdeaDetailsTableViewController.swift */; };
+		E348D56A1E840D8B00947B3F /* IdeaPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5691E840D8B00947B3F /* IdeaPostTableViewController.swift */; };
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
 		E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */; };
@@ -174,6 +178,10 @@
 		E3220C6A1E7D3D25008AFA85 /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
 		E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCreateTableViewController.swift; sourceTree = "<group>"; };
 		E3220C6E1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamInfoTableViewController.swift; sourceTree = "<group>"; };
+		E348D5631E840CC700947B3F /* Ideas.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Ideas.storyboard; sourceTree = "<group>"; };
+		E348D5651E840D3500947B3F /* IdeasListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeasListTableViewController.swift; sourceTree = "<group>"; };
+		E348D5671E840D6100947B3F /* IdeaDetailsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaDetailsTableViewController.swift; sourceTree = "<group>"; };
+		E348D5691E840D8B00947B3F /* IdeaPostTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaPostTableViewController.swift; sourceTree = "<group>"; };
 		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLookingForTableViewCell.swift; sourceTree = "<group>"; };
@@ -218,6 +226,7 @@
 		3F12AFC91E711CBB00B26D67 /* SWSG */ = {
 			isa = PBXGroup;
 			children = (
+				E348D5621E840CB000947B3F /* IdeasVotingPlatform */,
 				E3220C631E7D380A008AFA85 /* TeamRegistration */,
 				E3220C271E796AD1008AFA85 /* EventSystem */,
 				3F9795641E7A8E48004BC26C /* Login & Sign Up */,
@@ -401,6 +410,17 @@
 			name = TeamRegistration;
 			sourceTree = "<group>";
 		};
+		E348D5621E840CB000947B3F /* IdeasVotingPlatform */ = {
+			isa = PBXGroup;
+			children = (
+				E348D5631E840CC700947B3F /* Ideas.storyboard */,
+				E348D5651E840D3500947B3F /* IdeasListTableViewController.swift */,
+				E348D5671E840D6100947B3F /* IdeaDetailsTableViewController.swift */,
+				E348D5691E840D8B00947B3F /* IdeaPostTableViewController.swift */,
+			);
+			name = IdeasVotingPlatform;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -489,6 +509,7 @@
 				CC1CF8A41E7C03DA002224BC /* Profile.storyboard in Resources */,
 				3F12AFD51E711CBB00B26D67 /* Assets.xcassets in Resources */,
 				3FED30211E77A15300C007AD /* Mentor.storyboard in Resources */,
+				E348D5641E840CC700947B3F /* Ideas.storyboard in Resources */,
 				E3220C651E7D3822008AFA85 /* TeamRegistration.storyboard in Resources */,
 				3F12AFD01E711CBB00B26D67 /* Menu.storyboard in Resources */,
 				CC168B2C1E7E8C5800F8725A /* ImageCropper.storyboard in Resources */,
@@ -520,8 +541,10 @@
 				E3220C491E7B98CA008AFA85 /* MenuCell.swift in Sources */,
 				CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */,
 				3F97954D1E7A8DBF004BC26C /* InitialViewController.swift in Sources */,
+				E348D56A1E840D8B00947B3F /* IdeaPostTableViewController.swift in Sources */,
 				E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */,
 				3F9795631E7A8DBF004BC26C /* Utility.swift in Sources */,
+				E348D5661E840D3500947B3F /* IdeasListTableViewController.swift in Sources */,
 				3F12AFD31E711CBB00B26D67 /* SWSG.xcdatamodeld in Sources */,
 				E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */,
 				E3220C3F1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift in Sources */,
@@ -557,6 +580,7 @@
 				CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */,
 				3F97955B1E7A8DBF004BC26C /* SignUpTableViewController.swift in Sources */,
 				E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */,
+				E348D5681E840D6100947B3F /* IdeaDetailsTableViewController.swift in Sources */,
 				3FC3146C1E7A5017009B21AB /* ConsultationDate.swift in Sources */,
 				E3220C471E7B9776008AFA85 /* UserTypes.swift in Sources */,
 				E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */,

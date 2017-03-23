@@ -67,6 +67,7 @@ struct Config {
     static let navigationController = "NavigationController"
 
     static let teamRegistration = "TeamRegistration"
+    static let ideasVotingPlatform = "Ideas"
 
     static let profileScreen = "Profile"
     static let profileViewController = "ProfileViewController"
