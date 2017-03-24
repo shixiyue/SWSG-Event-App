@@ -55,6 +55,7 @@ class MenuViewController: UIViewController {
         }
 
         if let team = participant.team {
+            print("Team no for user is \(team), total num of team is \(teams.count)")
             teamLbl.text = teams.retrieveTeamAt(index: team).name
         } else {
             teamLbl.text = Config.noTeamLabel
