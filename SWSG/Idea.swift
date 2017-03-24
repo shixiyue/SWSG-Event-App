@@ -19,5 +19,8 @@ class Idea {
         self.description = description
         self.team = team
     }
+    func toDictionary() -> [String: String] {
+        return ["ideaName": self.name, "ideaDescription": self.description, "ideaTeam": self.team]
+    }
     
 }

@@ -9,10 +9,12 @@
 import UIKit
 
 class IdeaDetailsTableViewController: UITableViewController {
+    
+    public static var idea: Idea?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "commentsForIdeas"), object: nil)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -33,23 +35,55 @@ class IdeaDetailsTableViewController: UITableViewController {
  
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        if section == 0 {
+            return 0;
+        } else {
+            if let idea = IdeaDetailsTableViewController.idea, let comments = Comments.commentsForIdeas[idea.name] {
+                return comments.count
+            }
+            return 0
+        }
     }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        if indexPath.section == 1 {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "comments", for: indexPath) as! CommentsTableViewCell
+        cell.commentsLabel.text = Comments.commentsForIdeas[IdeaDetailsTableViewController.idea!.name]?[indexPath.row].words
+        cell.usernameLabel.text = Comments.commentsForIdeas[IdeaDetailsTableViewController.idea!.name]?[indexPath.row].username
         return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "comments", for: indexPath) as! CommentsTableViewCell
+            return cell
+        }
     }
-    */
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height:20))
+        headerView.backgroundColor = UIColor.white
+        let headerLabel = UILabel()
+        headerLabel.frame = headerView.frame
+        headerLabel.textColor = UIColor.red
+        
+        if section == 0 {
+            headerLabel.text = "Idea"
+        } else {
+            headerLabel.text = "Comments"
+        }
+        headerView.addSubview(headerLabel)
+        
+        return headerView
+    }
+
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 20
+    }
+    
 
     /*
     // Override to support conditional editing of the table view.

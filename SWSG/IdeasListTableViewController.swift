@@ -14,12 +14,15 @@ class IdeasListTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "ideas"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(IdeasListTableViewController.update), name: Notification.Name(rawValue: "ideas"), object: nil)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    func update() {
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -48,6 +51,9 @@ class IdeasListTableViewController: UITableViewController {
         cell.team.text = ideas.retrieveIdeaAt(index: indexPath.row).team
 
         return cell
+    }
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
     }
     
 
