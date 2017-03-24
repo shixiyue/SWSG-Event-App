@@ -56,6 +56,7 @@ class TeamInfoTableViewController: UITableViewController {
     }
     
     @IBAction func onRqtToJoinButtonTapped(_ sender: Any) {
+        print("tapped")
         guard let participant = System.activeUser as? Participant else {
             self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
             return
@@ -65,12 +66,14 @@ class TeamInfoTableViewController: UITableViewController {
             return
         }
         if (sender as! UIButton).currentTitle == Config.joinTeam {
-            if participant.team != nil {
+            if participant.team != -1 {
                 self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
                 return
             }
+            print("in TeamInfoTableViewController, set team index to \(teamIndex!), current team is \(participant.team)")
             participant.setTeamIndex(index: teamIndex!)
             System.activeUser = participant
+        
             team?.addMember(member: participant)
             print("member added")
             teams.replaceTeamAt(index: teamIndex!, with: team!)
@@ -80,7 +83,7 @@ class TeamInfoTableViewController: UITableViewController {
                 self.present(Utility.getFailAlertController(message: quitTeamErrorMsg), animated: true, completion: nil)
                 return
             }
-            participant.setTeamIndex(index: nil)
+            participant.setTeamIndex(index: -1)
             System.activeUser = participant
             team?.removeMember(member: participant)
             print("member deleted")

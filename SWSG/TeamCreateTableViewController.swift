@@ -38,6 +38,7 @@ class TeamCreateTableViewController: UITableViewController {
         teams.addTeam(team: team)
         participant.setTeamIndex(index: teams.count-1)
         System.activeUser = participant
+        dismiss(animated: true, completion: nil)
         Utility.onBackButtonClick(tableViewController: self)
     }
 

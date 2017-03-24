@@ -21,10 +21,10 @@ class IdeaPostTableViewController: UITableViewController {
         Utility.onBackButtonClick(tableViewController: self)
     }
     @IBAction func onDoneButtonClick(_ sender: Any) {
-        if let user = System.activeUser as? Participant, let teamNo = user.team {
+        if let user = System.activeUser as? Participant {
             let name = ideaName.text!
             let description = desc.text!
-            let team = teams.retrieveTeamAt(index: teamNo).name
+            let team = teams.retrieveTeamAt(index: user.team).name
             print("\(team)")
             ideas.addIdea(idea: Idea(name: name, description: description, team: team))
         }

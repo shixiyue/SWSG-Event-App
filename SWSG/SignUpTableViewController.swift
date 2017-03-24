@@ -144,7 +144,7 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
         }
         let profile = Profile(name: name, image: image, job: job, company: company, country: country,
                               education: education, skills: skills, description: desc)
-        let user = Participant(profile: profile, password: password, email: email, team: nil)
+        let user = Participant(profile: profile, password: password, email: email, team: -1)
         let success = Storage.saveUser(user: user)
         
         guard success else {

@@ -50,7 +50,9 @@ struct Storage {
             return nil
         }
         let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-        let team_index = userInfo[Config.team] as? Int
+        guard let team_index = userInfo[Config.team] as? Int else {
+            return nil
+        }
 
         return Participant(profile: userProfile, password: password, email: email, team: team_index)
     }
@@ -187,7 +189,9 @@ struct Storage {
                         return nil
                     }
                     let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-                    let team_participant = member["team"] as? Int
+                    guard let team_participant = member["team"] as? Int else {
+                        return nil
+                    }
                     let participant =  Participant(profile: userProfile, password: password, email: email, team: team_participant)
                     members_retrieved.append(participant)
                 }
