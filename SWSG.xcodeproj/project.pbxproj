@@ -13,6 +13,14 @@
 		3F12AFD31E711CBB00B26D67 /* SWSG.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3F12AFD11E711CBB00B26D67 /* SWSG.xcdatamodeld */; };
 		3F12AFD51E711CBB00B26D67 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F12AFD41E711CBB00B26D67 /* Assets.xcassets */; };
 		3F12AFD81E711CBB00B26D67 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F12AFD61E711CBB00B26D67 /* LaunchScreen.storyboard */; };
+		3F408CC41E83BB8200E2B787 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F408CC31E83BB8200E2B787 /* GoogleService-Info.plist */; };
+		3F408CC71E83BEA000E2B787 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F408CC61E83BEA000E2B787 /* Chat.storyboard */; };
+		3F408CC91E83C06900E2B787 /* ChannelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F408CC81E83C06900E2B787 /* ChannelCell.swift */; };
+		3F408CCB1E83C12C00E2B787 /* ChannelListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F408CCA1E83C12C00E2B787 /* ChannelListViewController.swift */; };
+		3F408CCE1E83C1F100E2B787 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F408CCD1E83C1F100E2B787 /* Channel.swift */; };
+		3F408CD01E83C27E00E2B787 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F408CCF1E83C27E00E2B787 /* Message.swift */; };
+		3F408CD21E83E50D00E2B787 /* CreateChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F408CD11E83E50D00E2B787 /* CreateChannelViewController.swift */; };
+		3F408CD41E83FEDA00E2B787 /* ChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F408CD31E83FEDA00E2B787 /* ChannelViewController.swift */; };
 		3F9482B21E7E3DDC00016259 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9482B01E7E3DDC00016259 /* Profile.swift */; };
 		3F9482B31E7E3DDC00016259 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9482B11E7E3DDC00016259 /* User.swift */; };
 		3F97951F1E7A6A58004BC26C /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F97951E1E7A6A58004BC26C /* Team.swift */; };
@@ -77,6 +85,7 @@
 		E3220C511E7BA903008AFA85 /* CommentsInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C501E7BA903008AFA85 /* CommentsInputTableViewCell.swift */; };
 		E3220C531E7BAAC5008AFA85 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C521E7BAAC5008AFA85 /* Comment.swift */; };
 		E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C541E7BABA5008AFA85 /* Comments.swift */; };
+		F6A201AFB5F780A34A98A2B5 /* Pods_SWSG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59F3FFF17EC14230B8B89815 /* Pods_SWSG.framework */; };
 		E3220C651E7D3822008AFA85 /* TeamRegistration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */; };
 		E3220C671E7D385B008AFA85 /* TeamRegistrationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */; };
 		E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */; };
@@ -107,6 +116,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		189A0D84A7F17FCED8F8F256 /* Pods-SWSG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWSG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SWSG/Pods-SWSG.debug.xcconfig"; sourceTree = "<group>"; };
 		3F12AFC71E711CBB00B26D67 /* SWSG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SWSG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F12AFCA1E711CBB00B26D67 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +125,14 @@
 		3F12AFD41E711CBB00B26D67 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3F12AFD71E711CBB00B26D67 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3F12AFD91E711CBB00B26D67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3F408CC31E83BB8200E2B787 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3F408CC61E83BEA000E2B787 /* Chat.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
+		3F408CC81E83C06900E2B787 /* ChannelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCell.swift; sourceTree = "<group>"; };
+		3F408CCA1E83C12C00E2B787 /* ChannelListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelListViewController.swift; sourceTree = "<group>"; };
+		3F408CCD1E83C1F100E2B787 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		3F408CCF1E83C27E00E2B787 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		3F408CD11E83E50D00E2B787 /* CreateChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateChannelViewController.swift; sourceTree = "<group>"; };
+		3F408CD31E83FEDA00E2B787 /* ChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelViewController.swift; sourceTree = "<group>"; };
 		3F9482B01E7E3DDC00016259 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		3F9482B11E7E3DDC00016259 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		3F97951E1E7A6A58004BC26C /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
@@ -144,6 +162,8 @@
 		3FED30221E77A2D400C007AD /* MentorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorCell.swift; sourceTree = "<group>"; };
 		3FED30241E77A37300C007AD /* MentorGridViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorGridViewController.swift; sourceTree = "<group>"; };
 		3FED30281E77A5CB00C007AD /* Mentor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mentor.swift; sourceTree = "<group>"; };
+		56F6700FD6B033F3B13BC7E8 /* Pods-SWSG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWSG.release.xcconfig"; path = "Pods/Target Support Files/Pods-SWSG/Pods-SWSG.release.xcconfig"; sourceTree = "<group>"; };
+		59F3FFF17EC14230B8B89815 /* Pods_SWSG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SWSG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		CC0032941E7CF68500CF190E /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		CC168B2B1E7E8C5800F8725A /* ImageCropper.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ImageCropper.storyboard; sourceTree = "<group>"; };
@@ -200,6 +220,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6A201AFB5F780A34A98A2B5 /* Pods_SWSG.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,6 +240,8 @@
 				3F12AFC91E711CBB00B26D67 /* SWSG */,
 				CCDCCD791E7D6E7600931AC0 /* SWSGTests */,
 				3F12AFC81E711CBB00B26D67 /* Products */,
+				834C3C9D2A88AC8379E6483C /* Pods */,
+				5EF81FDA4C6D7AF3E3BF7418 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -243,16 +266,39 @@
 				3FED301D1E779A2100C007AD /* Menu */,
 				3FED302B1E77A5FA00C007AD /* Mentor */,
 				3FED302A1E77A5F300C007AD /* Model */,
+				3F408CC51E83BE6B00E2B787 /* Chat */,
 				CC168B2F1E7FBF4C00F8725A /* UI Supporting */,
 				3FED301E1E779A7300C007AD /* Main.storyboard */,
 				3F12AFD61E711CBB00B26D67 /* LaunchScreen.storyboard */,
 				3F12AFCA1E711CBB00B26D67 /* AppDelegate.swift */,
 				3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */,
+				3F408CC31E83BB8200E2B787 /* GoogleService-Info.plist */,
 				3F12AFD91E711CBB00B26D67 /* Info.plist */,
 				3F12AFD11E711CBB00B26D67 /* SWSG.xcdatamodeld */,
 				3F12AFD41E711CBB00B26D67 /* Assets.xcassets */,
 			);
 			path = SWSG;
+			sourceTree = "<group>";
+		};
+		3F408CC51E83BE6B00E2B787 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				3F408CC61E83BEA000E2B787 /* Chat.storyboard */,
+				3F408CC81E83C06900E2B787 /* ChannelCell.swift */,
+				3F408CCA1E83C12C00E2B787 /* ChannelListViewController.swift */,
+				3F408CD11E83E50D00E2B787 /* CreateChannelViewController.swift */,
+				3F408CD31E83FEDA00E2B787 /* ChannelViewController.swift */,
+			);
+			name = Chat;
+			sourceTree = "<group>";
+		};
+		3F408CCC1E83C1D900E2B787 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				3F408CCD1E83C1F100E2B787 /* Channel.swift */,
+				3F408CCF1E83C27E00E2B787 /* Message.swift */,
+			);
+			name = Chat;
 			sourceTree = "<group>";
 		};
 		3F9795641E7A8E48004BC26C /* Login & Sign Up */ = {
@@ -318,6 +364,7 @@
 		3FED302A1E77A5F300C007AD /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3F408CCC1E83C1D900E2B787 /* Chat */,
 				3F9795651E7A8FFE004BC26C /* Utilities */,
 				3F9795671E7A9010004BC26C /* Users */,
 				3F9795661E7A9005004BC26C /* Mentor */,
@@ -336,6 +383,23 @@
 				3FED30241E77A37300C007AD /* MentorGridViewController.swift */,
 			);
 			name = Mentor;
+			sourceTree = "<group>";
+		};
+		5EF81FDA4C6D7AF3E3BF7418 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				59F3FFF17EC14230B8B89815 /* Pods_SWSG.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		834C3C9D2A88AC8379E6483C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				189A0D84A7F17FCED8F8F256 /* Pods-SWSG.debug.xcconfig */,
+				56F6700FD6B033F3B13BC7E8 /* Pods-SWSG.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		CC0032931E7CF66D00CF190E /* Settings */ = {
@@ -440,9 +504,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3F12AFDC1E711CBB00B26D67 /* Build configuration list for PBXNativeTarget "SWSG" */;
 			buildPhases = (
+				28CC89FCAE7DD5B386E6F028 /* [CP] Check Pods Manifest.lock */,
 				3F12AFC31E711CBA00B26D67 /* Sources */,
 				3F12AFC41E711CBA00B26D67 /* Frameworks */,
 				3F12AFC51E711CBA00B26D67 /* Resources */,
+				7101D6D31FAC0531059113E8 /* [CP] Embed Pods Frameworks */,
+				3B4F425AD71602E3090F0C56 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -483,6 +550,7 @@
 				TargetAttributes = {
 					3F12AFC61E711CBA00B26D67 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = W76H98A34A;
 						ProvisioningStyle = Automatic;
 					};
 					CCDCCD771E7D6E7600931AC0 = {
@@ -524,8 +592,10 @@
 				E348D5641E840CC700947B3F /* Ideas.storyboard in Resources */,
 				E3220C651E7D3822008AFA85 /* TeamRegistration.storyboard in Resources */,
 				3F12AFD01E711CBB00B26D67 /* Menu.storyboard in Resources */,
+				3F408CC71E83BEA000E2B787 /* Chat.storyboard in Resources */,
 				CC168B2C1E7E8C5800F8725A /* ImageCropper.storyboard in Resources */,
 				CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */,
+				3F408CC41E83BB8200E2B787 /* GoogleService-Info.plist in Resources */,
 				3F97954E1E7A8DBF004BC26C /* LoginSignup.storyboard in Resources */,
 				3FED301F1E779A7300C007AD /* Main.storyboard in Resources */,
 			);
@@ -540,6 +610,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		28CC89FCAE7DD5B386E6F028 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		3B4F425AD71602E3090F0C56 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SWSG/Pods-SWSG-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7101D6D31FAC0531059113E8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SWSG/Pods-SWSG-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		3F12AFC31E711CBA00B26D67 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -551,6 +669,7 @@
 				CC1CF8AC1E7C178A002224BC /* ProfileTableViewCell.swift in Sources */,
 				3F97955C1E7A8DBF004BC26C /* SignUpViewController.swift in Sources */,
 				E3220C491E7B98CA008AFA85 /* MenuCell.swift in Sources */,
+				3F408CCB1E83C12C00E2B787 /* ChannelListViewController.swift in Sources */,
 				CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */,
 				3F97954D1E7A8DBF004BC26C /* InitialViewController.swift in Sources */,
 				E348D56A1E840D8B00947B3F /* IdeaPostTableViewController.swift in Sources */,
@@ -578,6 +697,7 @@
 				E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */,
 				3FED301A1E76FC9A00C007AD /* (null) in Sources */,
 				E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */,
+				3F408CD21E83E50D00E2B787 /* CreateChannelViewController.swift in Sources */,
 				E3220C6F1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift in Sources */,
 				E3220C431E7AE40B008AFA85 /* CommentsTableViewCell.swift in Sources */,
 				CC1AA6C61E77C328004F5F95 /* (null) in Sources */,
@@ -601,17 +721,20 @@
 				E3220C471E7B9776008AFA85 /* UserTypes.swift in Sources */,
 				E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */,
 				3F9795691E7A932D004BC26C /* System.swift in Sources */,
+				3F408CD41E83FEDA00E2B787 /* ChannelViewController.swift in Sources */,
 				3F9795591E7A8DBF004BC26C /* Participant.swift in Sources */,
 				3FE72F061E7E3BF5007FD55C /* Storage.swift in Sources */,
 				E3220C531E7BAAC5008AFA85 /* Comment.swift in Sources */,
 				E3220C4F1E7B99CF008AFA85 /* UISubclasses.swift in Sources */,
 				3FED30181E76FBCE00C007AD /* MenuItems.swift in Sources */,
+				3F408CD01E83C27E00E2B787 /* Message.swift in Sources */,
 				3F9795441E7A8DBF004BC26C /* Config.swift in Sources */,
 				3F12AFCB1E711CBB00B26D67 /* AppDelegate.swift in Sources */,
 				3FED30291E77A5CB00C007AD /* Mentor.swift in Sources */,
 				3FC314661E77DD7D009B21AB /* ConsultationSlotStatus.swift in Sources */,
 				3FED301C1E77930200C007AD /* BaseViewController.swift in Sources */,
 				CC1CF8AA1E7C137A002224BC /* ProfileItems.swift in Sources */,
+				3F408CC91E83C06900E2B787 /* ChannelCell.swift in Sources */,
 				3FC314641E77DD22009B21AB /* ConsultationSlot.swift in Sources */,
 				3FED30161E76FA0A00C007AD /* MenuViewController.swift in Sources */,
 				E3220C2B1E796C7B008AFA85 /* EventScheduleTableViewController.swift in Sources */,
@@ -619,6 +742,7 @@
 				E3220C6D1E7D6B40008AFA85 /* TeamCreateTableViewController.swift in Sources */,
 				E3220C411E7AE3C6008AFA85 /* EventDetailTableViewCell.swift in Sources */,
 				3F9482B31E7E3DDC00016259 /* User.swift in Sources */,
+				3F408CCE1E83C1F100E2B787 /* Channel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -761,29 +885,33 @@
 		};
 		3F12AFDD1E711CBB00B26D67 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 189A0D84A7F17FCED8F8F256 /* Pods-SWSG.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = W76H98A34A;
 				INFOPLIST_FILE = SWSG/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nus.cs3217.swsg.SWSG;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		3F12AFDE1E711CBB00B26D67 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56F6700FD6B033F3B13BC7E8 /* Pods-SWSG.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = W76H98A34A;
 				INFOPLIST_FILE = SWSG/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nus.cs3217.swsg.SWSG;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

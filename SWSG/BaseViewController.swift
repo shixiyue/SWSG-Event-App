@@ -28,36 +28,32 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         switch(index){
         case 0:
             print("Home\n", terminator: "")
-            
             self.open(viewController: "HomeViewController", from: "Main")
             
-            break
         case 1:
-
             print("EventScheduleVC\n", terminator: "")
-            
             self.open(viewController: "EventScheduleTableViewController",from: Config.eventSystem)
-
-            break
+            
         case 2:
             print("Mentor\n", terminator: "")
-            
             self.open(viewController: "MentorViewController", from: "Mentor")
             
-            break
         case 3:
             print("Teams\n",terminator: "")
             self.open(viewController: "TeamRegistrationTableViewController", from: Config.teamRegistration)
-            break
+            
+        case 4:
+            print("Chat\n", terminator: "")
+            self.open(viewController: "ChatViewController", from: "Chat")
+            
         case 5:
             print("Ideas\n",terminator:"")
             self.open(viewController: "ideaslist", from: Config.ideasVotingPlatform)
-            break
-
+            
         case 6:
             print("Settings\n", terminator: "")
-            
             self.open(viewController: "SettingsViewController", from: "Settings")
+            
         default:
             print("default\n", terminator: "")
         }

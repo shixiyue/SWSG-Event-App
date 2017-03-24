@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
 
 /// `SignUpTableViewController` represents the controller for signup table.
 class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSource, UIPickerViewDelegate {
@@ -144,12 +146,28 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
                               education: education, skills: skills, description: desc)
         let user = Participant(profile: profile, password: password, email: email, team: nil)
         let success = Storage.saveUser(user: user)
+        
         guard success else {
             self.present(Utility.getFailAlertController(message: signUpProblem), animated: true, completion: nil)
             return
         }
-
-        Utility.logInUser(user: user, currentViewController: self)
+        
+        /*
+         I added this for Firebase
+         */
+        
+        FIRAuth.auth()?.createUser(withEmail: emailTextField.text!, password: passwordTextField.text!) { (firUser, error) in
+            
+            if error == nil {
+                print("You have successfully signed up")
+                //Goes to the Setup page which lets the user take a photo for their profile picture and also chose a username
+                
+                Utility.logInUser(user: user, currentViewController: self)
+                
+            } else {
+                self.present(Utility.getFailAlertController(message: self.signUpProblem), animated: true, completion: nil)
+            }
+        }
     }
     
     override func updateImage(_ notification: NSNotification) {
