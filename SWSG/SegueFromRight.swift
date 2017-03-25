@@ -15,7 +15,10 @@ class SegueFromRight: UIStoryboardSegue
         let src = self.source
         let dst = self.destination
         
-        src.view.superview?.insertSubview(dst.view, aboveSubview: src.view)
+        let window = UIApplication.shared.keyWindow
+        window?.insertSubview(dst.view, belowSubview: src.view)
+        
+        //src.view.superview?.insertSubview(dst.view, aboveSubview: src.view)
         dst.view.transform = CGAffineTransform(translationX: src.view.frame.size.width, y: 0)
         
         UIView.animate(withDuration: 0.25,
