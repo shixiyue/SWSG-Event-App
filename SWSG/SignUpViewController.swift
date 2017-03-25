@@ -21,6 +21,10 @@ class SignUpViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        FirebaseClient.signUp(email: "vietthang207@gmail.com", password: "123456")
+        FirebaseClient.signIn(email: "vietthang207@gmail.com", password: "123456")
+        FirebaseClient.createNewUser(email: "vietthang207@gmail.com", password: "123456")
     }
 
 }
