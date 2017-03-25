@@ -85,7 +85,6 @@
 		E3220C511E7BA903008AFA85 /* CommentsInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C501E7BA903008AFA85 /* CommentsInputTableViewCell.swift */; };
 		E3220C531E7BAAC5008AFA85 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C521E7BAAC5008AFA85 /* Comment.swift */; };
 		E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C541E7BABA5008AFA85 /* Comments.swift */; };
-		F6A201AFB5F780A34A98A2B5 /* Pods_SWSG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59F3FFF17EC14230B8B89815 /* Pods_SWSG.framework */; };
 		E3220C651E7D3822008AFA85 /* TeamRegistration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */; };
 		E3220C671E7D385B008AFA85 /* TeamRegistrationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */; };
 		E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */; };
@@ -99,6 +98,7 @@
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
 		E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */; };
+		F6A201AFB5F780A34A98A2B5 /* Pods_SWSG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59F3FFF17EC14230B8B89815 /* Pods_SWSG.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

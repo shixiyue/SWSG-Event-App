@@ -239,15 +239,37 @@ final class ChannelViewController: JSQMessagesViewController {
     }
     
     override func didPressAccessoryButton(_ sender: UIButton) {
-        let picker = UIImagePickerController()
-        picker.delegate = self
+        let photoSheet = UIAlertController(title: "Send Photo", message: nil, preferredStyle: .actionSheet)
+        
         if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
-            picker.sourceType = UIImagePickerControllerSourceType.camera
-        } else {
-            picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+            let cameraAction = UIAlertAction(title: "Camera", style: .default, handler: {
+                _ in
+                let picker = UIImagePickerController()
+                picker.delegate = self
+                picker.sourceType = .camera
+                self.present(picker, animated: true, completion:nil)
+            })
+            photoSheet.addAction(cameraAction)
         }
         
-        present(picker, animated: true, completion:nil)
+        let libraryAction = UIAlertAction(title: "Photo Library", style: .default, handler: {
+            _ in
+            let picker = UIImagePickerController()
+            picker.delegate = self
+            picker.sourceType = .photoLibrary
+            self.present(picker, animated: true, completion:nil)
+        })
+        photoSheet.addAction(libraryAction)
+        
+        //Add a Cancel Action to the Popup
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        }
+        photoSheet.addAction(cancelAction)
+        
+        photoSheet.popoverPresentationController?.sourceView = self.view
+        
+        //Displays the Save Popup
+        self.present(photoSheet, animated: true, completion: nil)
     }
     
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
