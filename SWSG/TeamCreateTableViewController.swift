@@ -36,8 +36,10 @@ class TeamCreateTableViewController: UITableViewController {
         let lookingFor = self.lookingFor.text
         let team = Team(members: [participant], name: team_name, info: info, lookingFor: lookingFor, isPrivate: false)
         teams.addTeam(team: team)
-        participant.setTeamIndex(index: teams.count)
+        participant.setTeamIndex(index: teams.count-1)
+        System.activeUser = participant
         dismiss(animated: true, completion: nil)
+        Utility.onBackButtonClick(tableViewController: self)
     }
 
     override func didReceiveMemoryWarning() {

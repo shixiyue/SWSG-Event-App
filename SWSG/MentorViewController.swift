@@ -69,8 +69,8 @@ class MentorViewController: UIViewController {
             self.present(Utility.getFailAlertController(message: mentorBookingErrorMsg), animated: true, completion: nil)
             return
         }
-        if let index = activeUser.team {
-        mentor.days[dayIndex].slots[index].team = Teams.sharedInstance().retrieveTeamAt(index: index )
+        if activeUser.team != -1 {
+        mentor.days[dayIndex].slots[activeUser.team].team = Teams.sharedInstance().retrieveTeamAt(index: activeUser.team )
         }
     }
     

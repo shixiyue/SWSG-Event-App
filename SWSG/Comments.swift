@@ -17,5 +17,11 @@ class Comments {
             Storage.saveComments(data: comments, fileName: Config.commentsFileName)
         }
     }
+    public static var commentsForIdeas = [String: [Comment]]() {
+        didSet {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "commentsForIdeas"), object: self)
+            Storage.saveComments(data: comments, fileName: Config.commentsFileName)
+        }
+    }
     
 }

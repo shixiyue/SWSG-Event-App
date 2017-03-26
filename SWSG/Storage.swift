@@ -50,7 +50,9 @@ struct Storage {
             return nil
         }
         let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-        let team_index = userInfo[Config.team] as? Int
+        guard let team_index = userInfo[Config.team] as? Int else {
+            return nil
+        }
 
         return Participant(profile: userProfile, password: password, email: email, team: team_index)
     }
@@ -187,7 +189,9 @@ struct Storage {
                         return nil
                     }
                     let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-                    let team_participant = member["team"] as? Int
+                    guard let team_participant = member["team"] as? Int else {
+                        return nil
+                    }
                     let participant =  Participant(profile: userProfile, password: password, email: email, team: team_participant)
                     members_retrieved.append(participant)
                 }
@@ -197,6 +201,37 @@ struct Storage {
         }
         print("data retrieved successfully")
         return data_retrieved
+    }
+    
+    static func saveIdeas(data: [Idea], fileName: String) {
+        do {
+            var localData = [[String: String]]()
+            for i in data {
+                localData.append(i.toDictionary())
+            }
+            let jsonData = try JSONSerialization.data(withJSONObject: localData, options: JSONSerialization.WritingOptions())
+            try jsonData.write(to: getFileURL(fileName: fileName))
+            print("ideas saved successfully")
+        } catch _ {
+            print("ideas saved failed")
+        }
+
+    }
+    static func readIdeas(fileName: String) -> [Idea]? {
+        guard let jsonData = try? Data(contentsOf: getFileURL(fileName: fileName)) else {
+            return nil
+        }
+        guard let data = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments), let ideas = data as? [[String:String]] else {
+            return nil
+        }
+        
+        var localData = [Idea]()
+        for idea in ideas {
+           if let name = idea["ideaName"], let desc = idea["ideaDescription"], let teamNo = idea["ideaTeam"] {
+                 localData.append(Idea(name: name, description: desc, team: teamNo))
+            }
+        }
+        return localData
     }
 }
 

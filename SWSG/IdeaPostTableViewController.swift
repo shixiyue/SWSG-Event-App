@@ -9,7 +9,27 @@
 import UIKit
 
 class IdeaPostTableViewController: UITableViewController {
+    
+    @IBOutlet weak var ideaName: UITextField!
 
+    @IBOutlet weak var details: UITextField!
+    @IBOutlet weak var desc: UITextField!
+    private var ideas = Ideas.sharedInstance()
+    private var teams = Teams.sharedInstance()
+    
+    @IBAction func onBackButtonClick(_ sender: Any) {
+        Utility.onBackButtonClick(tableViewController: self)
+    }
+    @IBAction func onDoneButtonClick(_ sender: Any) {
+        if let user = System.activeUser as? Participant {
+            let name = ideaName.text!
+            let description = desc.text!
+            let team = teams.retrieveTeamAt(index: user.team).name
+            print("\(team)")
+            ideas.addIdea(idea: Idea(name: name, description: description, team: team))
+        }
+        Utility.onBackButtonClick(tableViewController: self)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,12 +49,12 @@ class IdeaPostTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return 6
     }
 
     /*

@@ -15,9 +15,9 @@ class Participant: NSObject, User {
     let email: String
     public private (set) var profile: Profile
     public internal (set) var password: String
-    public private (set) var team: Int?
+    public private (set) var team = -1
     
-    init(profile: Profile, password: String, email: String, team: Int?) {
+    init(profile: Profile, password: String, email: String, team: Int) {
         self.profile = profile
         self.password = password
         self.email = email
@@ -50,18 +50,18 @@ class Participant: NSObject, User {
         aCoder.encode(profile, forKey: Config.profile)
         aCoder.encode(password, forKey: Config.password)
         aCoder.encode(email, forKey: Config.email)
-        guard let team = team else {
-            return
-        }
+       // guard let team = team else {
+         //   return
+        //}
         aCoder.encode(team, forKey: Config.team)
     }
     
-    func setTeamIndex(index: Int?) {
+    func setTeamIndex(index: Int) {
         team = index
     }
     
     func toDictionary() -> [String : Any] {
-        return [Config.email: email, Config.password: password, Config.profile: profile.toDictionary(), Config.team: team as Any]
+        return [Config.email: email, Config.password: password, Config.profile: profile.toDictionary(), Config.team: team]
     }
     
 }
