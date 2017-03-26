@@ -8,44 +8,20 @@
 
 import UIKit
 
-class SettingsTableViewController: UITableViewController {
+class SettingsTableViewController: BaseViewController {
     
     private let wrongPassword = "Current password is wrong."
     private let passwordInvalid = "Password must be greater than 6 characters."
-    private enum SettingsItems: Int {
-        case changePassword = 0
-        case logOut = 1
-    }
     
     @IBOutlet private var settingsTable: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         settingsTable.tableFooterView = UIView(frame: CGRect.zero)
-    }
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        addSlideMenuButton()
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let row = SettingsItems(rawValue: indexPath.row) else {
-            return
-        }
-        
-        switch(row) {
-        case .changePassword:
-            showChangePassword()
-        case .logOut:
-            Utility.logOutUser(currentViewController: self)
-        }
-    }
-    
-    private func showChangePassword() {
+    fileprivate func showChangePassword() {
         let alertController = UIAlertController(title: "Change Password", message: nil, preferredStyle: UIAlertControllerStyle.alert)
         
         let updateAction = UIAlertAction(title: "OK", style: .default) { [weak alertController] _ in
@@ -115,6 +91,44 @@ class SettingsTableViewController: UITableViewController {
         let _ = Storage.saveUser(user: user)
         System.updateActiveUser()
         self.present(Utility.getSuccessAlertController(), animated: true, completion: nil)
+    }
+
+}
+
+extension SettingsTableViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    private enum SettingsItems: Int {
+        case changePassword = 0
+        case logOut = 1
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let row = SettingsItems(rawValue: indexPath.row) else {
+            return UITableViewCell()
+        }
+        
+        return tableView.dequeueReusableCell(withIdentifier: "\(row)", for: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let row = SettingsItems(rawValue: indexPath.row) else {
+            return
+        }
+        
+        switch(row) {
+        case .changePassword:
+            showChangePassword()
+        case .logOut:
+            Utility.logOutUser(currentViewController: self)
+        }
     }
 
 }
