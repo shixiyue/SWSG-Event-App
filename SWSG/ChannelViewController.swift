@@ -174,6 +174,17 @@ final class ChannelViewController: JSQMessagesViewController {
                 
                 // 5
                 self.finishReceivingMessage()
+            } else if let id = messageData["senderId"] as String!,
+                let photoURL = messageData["photoURL"] as String! { // 1
+                // 2
+                if let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId) {
+                    // 3
+                    self.addPhotoMessage(withId: id, key: snapshot.key, mediaItem: mediaItem)
+                    // 4
+                    if photoURL.hasPrefix("gs://") {
+                        self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
+                    }
+                }
             } else {
                 print("Error! Could not decode message data")
             }
@@ -239,7 +250,7 @@ final class ChannelViewController: JSQMessagesViewController {
     }
     
     override func didPressAccessoryButton(_ sender: UIButton) {
-        let photoSheet = UIAlertController(title: "Send Photo", message: nil, preferredStyle: .actionSheet)
+        let photoSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
             let cameraAction = UIAlertAction(title: "Camera", style: .default, handler: {
@@ -326,7 +337,7 @@ extension ChannelViewController: UIImagePickerControllerDelegate, UINavigationCo
                     
                     // 5
                     let path = "\(FIRAuth.auth()?.currentUser?.uid)/\(Int(Date.timeIntervalSinceReferenceDate * 1000))/\(photoReferenceUrl.lastPathComponent)"
-                    
+                
                     // 6
                     self.storageRef.child(path).putFile(imageFileURL!, metadata: nil) { (metadata, error) in
                         if let error = error {
