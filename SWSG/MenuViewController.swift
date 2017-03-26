@@ -25,7 +25,7 @@ class MenuViewController: UIViewController {
     @IBOutlet private weak var nameLbl: UILabel!
     @IBOutlet private weak var teamLbl: UILabel!
     
-    //var teams = Teams.sharedInstance()
+    var teams = Teams.sharedInstance()
     var btnMenu : UIButton!
     var delegate : SlideMenuDelegate?
     
