@@ -1,4 +1,5 @@
 # Uncomment the next line to define a global platform for your project
+source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '9.0'
 
  target 'SWSG' do
@@ -8,5 +9,7 @@ platform :ios, '9.0'
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'JSQMessagesViewController'
-
+  pod 'JTAppleCalendar', '~> 6.1'
+  
 end
+

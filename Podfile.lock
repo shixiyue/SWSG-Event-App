@@ -41,6 +41,7 @@ PODS:
   - JSQMessagesViewController (7.3.4):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
+  - JTAppleCalendar (6.1.5)
   - SwiftGifOrigin (1.6.1)
 
 DEPENDENCIES:
@@ -48,6 +49,7 @@ DEPENDENCIES:
   - Firebase/Database
   - Firebase/Storage
   - JSQMessagesViewController
+  - JTAppleCalendar (~> 6.1)
   - SwiftGifOrigin
 
 SPEC CHECKSUMS:
@@ -62,8 +64,9 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 6f8d8b28b7e345549ac471071608170b31cb4977
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  JTAppleCalendar: 7fe18d6b7c26b8095f714ff089d4c0cbd9d6a632
   SwiftGifOrigin: d6679d3ebe9df2e049a84bc52582635107b581f6
 
-PODFILE CHECKSUM: 1351c726e0aa812758df0119e0f060b52e9af9b6
+PODFILE CHECKSUM: 301aba2f45f0acd7de21d0679644b7f6457e3323
 
 COCOAPODS: 1.2.0
