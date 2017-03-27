@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 /// `Profile` represents the profile of a User.
 class Profile: NSObject, NSCoding {
@@ -33,6 +34,42 @@ class Profile: NSObject, NSCoding {
         
         super.init()
         _checkRep()
+    }
+    
+    init?(snapshot: FIRDataSnapshot) {
+        guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
+            return nil
+        }
+        guard let name = snapshotValue[Config.name] as? String else {
+            return nil
+        }
+        self.name = name
+        image = UIImage()
+        guard let job = snapshotValue[Config.job] as? String else {
+            return nil
+        }
+        self.job = job
+        guard let company = snapshotValue[Config.company] as? String else {
+            return nil
+        }
+        self.company = company
+        guard let country = snapshotValue[Config.country] as? String else {
+            return nil
+        }
+        self.country = country
+        guard let education = snapshotValue[Config.education] as? String else {
+            return nil
+        }
+        self.education = education
+        guard let skills = snapshotValue[Config.skills] as? String else {
+            return nil
+        }
+        self.skills = skills
+        guard let desc = snapshotValue[Config.desc] as? String else {
+            return nil
+        }
+        self.desc = desc
+        
     }
     
     required init?(coder aDecoder: NSCoder) {

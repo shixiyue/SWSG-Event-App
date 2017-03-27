@@ -12,25 +12,48 @@ import Firebase
 class FirebaseClient {
     
     typealias CreateUserCallback = (FirebaseError?) -> Void
+    typealias SignInCallback = (FirebaseError?) -> Void
     typealias GetProfileCallback = (Profile, FirebaseError?) -> Void
+    
+    private let profilesRef = FIRDatabase.database().reference(withPath: "profiles")
     
     public func createNewUserWithProfile(_ profile: Profile, email: String, password: String, completion: @escaping CreateUserCallback) {
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: {(user, err) in
             if err == nil {
-                let ref = FIRDatabase.database().reference(withPath: "profiles")
                 if let uid = user?.uid {
-                    let userRef = ref.child(uid)
+                    let userRef = self.profilesRef.child(uid)
                     userRef.setValue(profile.toDictionary() as Any)
                 }
-
             }
             completion(self.checkError(err))
         })
         
     }
     
-    public func getProfile(completion: GetProfileCallback) {
-        
+    public func signIn(email: String, password: String, completion: @escaping SignInCallback) {
+        FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: {(user, err) in
+            completion(self.checkError(err))
+        })
+    }
+    
+    public func getProfile(completion: @escaping GetProfileCallback) {
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        let userRef = profilesRef.child(uid)
+        // TODO: handle error
+        userRef.observeSingleEvent(of: .value, with: {(snapshot) in
+            completion(Profile(snapshot: snapshot)!, nil)
+
+        })
+    }
+    
+    public func updateProfile(newProfile: Profile) {
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        let userRef = profilesRef.child(uid)
+        userRef.setValue(newProfile.toDictionary() as Any)
     }
     
     private func checkError(_ err: Error?) -> FirebaseError? {
@@ -70,10 +93,6 @@ class FirebaseClient {
     
     public func createUser(email: String, password: String) {
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: nil)
-    }
-    
-    public func signIn(email: String, password: String) {
-        FIRAuth.auth()?.signIn(withEmail: email, password: password)
     }
     
 }
