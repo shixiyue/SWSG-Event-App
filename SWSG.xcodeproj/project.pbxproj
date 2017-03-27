@@ -121,6 +121,9 @@
 		E348D56E1E8415C500947B3F /* SegueFromRight.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D56D1E8415C500947B3F /* SegueFromRight.swift */; };
 		E348D5701E841E2900947B3F /* Idea.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D56F1E841E2900947B3F /* Idea.swift */; };
 		E348D5721E841E3000947B3F /* Ideas.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5711E841E3000947B3F /* Ideas.swift */; };
+		E348D5741E895CD700947B3F /* CalendarCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E348D5731E895CD700947B3F /* CalendarCellView.xib */; };
+		E348D5781E895D7C00947B3F /* CalendarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5771E895D7C00947B3F /* CalendarCell.swift */; };
+		E348D57A1E895E8300947B3F /* EventCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5791E895E8300947B3F /* EventCalendarViewController.swift */; };
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
 		E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */; };
@@ -254,6 +257,9 @@
 		E348D56D1E8415C500947B3F /* SegueFromRight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegueFromRight.swift; sourceTree = "<group>"; };
 		E348D56F1E841E2900947B3F /* Idea.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Idea.swift; sourceTree = "<group>"; };
 		E348D5711E841E3000947B3F /* Ideas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ideas.swift; sourceTree = "<group>"; };
+		E348D5731E895CD700947B3F /* CalendarCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalendarCellView.xib; sourceTree = "<group>"; };
+		E348D5771E895D7C00947B3F /* CalendarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarCell.swift; sourceTree = "<group>"; };
+		E348D5791E895E8300947B3F /* EventCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCalendarViewController.swift; sourceTree = "<group>"; };
 		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLookingForTableViewCell.swift; sourceTree = "<group>"; };
@@ -522,6 +528,9 @@
 			isa = PBXGroup;
 			children = (
 				E3220C281E796BC0008AFA85 /* EventSystem.storyboard */,
+				E348D5791E895E8300947B3F /* EventCalendarViewController.swift */,
+				E348D5771E895D7C00947B3F /* CalendarCell.swift */,
+				E348D5731E895CD700947B3F /* CalendarCellView.xib */,
 				E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */,
 				E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */,
 				E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */,
@@ -668,6 +677,7 @@
 				3F12AFD01E711CBB00B26D67 /* Menu.storyboard in Resources */,
 				3F408CC71E83BEA000E2B787 /* Chat.storyboard in Resources */,
 				CC168B2C1E7E8C5800F8725A /* ImageCropper.storyboard in Resources */,
+				E348D5741E895CD700947B3F /* CalendarCellView.xib in Resources */,
 				CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */,
 				3F408CC41E83BB8200E2B787 /* GoogleService-Info.plist in Resources */,
 				CC5F1C5B1E863044006A5322 /* Information.storyboard in Resources */,
@@ -739,6 +749,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FED30231E77A2D400C007AD /* MentorCell.swift in Sources */,
+				E348D5781E895D7C00947B3F /* CalendarCell.swift in Sources */,
 				3FED30271E77A57600C007AD /* (null) in Sources */,
 				3F97951F1E7A6A58004BC26C /* Team.swift in Sources */,
 				CC1CF8AC1E7C178A002224BC /* ProfileTableViewCell.swift in Sources */,
@@ -790,6 +801,7 @@
 				CC1AA6C61E77C328004F5F95 /* (null) in Sources */,
 				E3220C351E7A8D0B008AFA85 /* EventDetailsTableViewController.swift in Sources */,
 				CC95008D1E8639CB00EC871F /* PhotoContentViewController.swift in Sources */,
+				E348D57A1E895E8300947B3F /* EventCalendarViewController.swift in Sources */,
 				CC7A4B101E88A78C00BC8A4B /* SponsorsTableViewCell.swift in Sources */,
 				3F97954B1E7A8DBF004BC26C /* Extensions.swift in Sources */,
 				3F97956B1E7A98AC004BC26C /* Field.swift in Sources */,

@@ -54,15 +54,15 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Firebase: 85a581fb04e44f63ae9f4fbc8d6dabf4a4c18653
-  FirebaseAnalytics: d0717daef87bbbf8548e5067534b61a91223d037
+  FirebaseAnalytics: 0d1b7d81d5021155be37702a94ba1ec16d45365d
   FirebaseAuth: cc8a1824170adbd351edb7f994490a3fb5c18be6
-  FirebaseCore: 139b65e693ba91ecd7d0f0d5183398c802e38fce
-  FirebaseDatabase: fe37b87e5188a748d27efeadb5e2b280a37a08e3
+  FirebaseCore: 225d40532489835a034b8f4e2c9c87fbf4f615a2
+  FirebaseDatabase: 05c96d7b43a7368dc91c07791adb49683e1738d1
   FirebaseInstanceID: 2d0518b1378fe9d685ef40cbdd63d2fdc1125339
   FirebaseStorage: a5c55b23741a49a72af8f30f95b3bb5ddbeda12d
   GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
-  GTMSessionFetcher: 61ba0d20522c288cbf337c8dd77337bbb06b5961
-  JSQMessagesViewController: 22e0767a3a4f5cfe8f1e5e5fdcf83083e7bd55ab
+  GTMSessionFetcher: 6f8d8b28b7e345549ac471071608170b31cb4977
+  JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTAppleCalendar: 7fe18d6b7c26b8095f714ff089d4c0cbd9d6a632
   SwiftGifOrigin: d6679d3ebe9df2e049a84bc52582635107b581f6

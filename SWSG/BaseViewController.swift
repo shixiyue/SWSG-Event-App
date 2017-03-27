@@ -40,7 +40,8 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             self.open(viewController: "InformationViewController", from: "Information")
         case .schedule:
             print("EventScheduleVC\n", terminator: "")
-            self.open(viewController: "EventScheduleTableViewController",from: Config.eventSystem)
+           // self.open(viewController: "EventScheduleTableViewController",from: Config.eventSystem)
+            self.open(viewController: "EventCalendarViewController", from: Config.eventSystem)
         case .mentors:
             print("Mentor\n", terminator: "")
             self.open(viewController: "MentorViewController", from: "Mentor")
