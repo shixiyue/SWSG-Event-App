@@ -31,4 +31,28 @@ struct UserTypes {
         assert(isParticipant || isSpeaker || isMentor || isOrganizer || isAdmin)
     }
     
+    func toDictionary() -> [String: Bool] {
+        return [Config.isParticipant: isParticipant, Config.isSpeaker: isSpeaker, Config.isMentor: isMentor, Config.isOrganizer: isOrganizer, Config.isAdmin: isAdmin]
+    }
+    
+    func toString () -> String {
+        var string = ""
+        if isParticipant {
+            string += "Participant "
+        }
+        if isSpeaker {
+            string += "Speaker "
+        }
+        if isMentor {
+            string += "Mentor "
+        }
+        if isOrganizer {
+            string += "Organizer "
+        }
+        if isAdmin {
+            string += "Admin "
+        }
+        return string
+    }
+    
 }

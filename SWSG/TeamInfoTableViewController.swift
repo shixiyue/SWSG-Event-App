@@ -19,18 +19,19 @@ class TeamInfoTableViewController: UITableViewController {
     private let fullTeamErrorMsg = "Team is full"
     
     @IBAction func onBackButtonClick(_ sender: Any) {
-       Utility.onBackButtonClick(tableViewController: self)
+        Utility.onBackButtonClick(tableViewController: self)
     }
     override func viewWillAppear(_ animated: Bool) {
-        if let participant = System.activeUser as? Participant, let team = team {
-            if team.containsMember(member: participant) {
-                buttonLbl.setTitle(Config.quitTeam, for: .normal)
-            } else if team.members.count < Config.maxTeamMember {
-                print("\(team.members.count)")
-                buttonLbl.setTitle(Config.joinTeam, for: .normal)
-            } else {
-                buttonLbl.setTitle(Config.fullTeam, for: .normal)
-            }
+        guard let user = System.activeUser, user.type.isParticipant, let team = team else {
+            return
+        }
+        if team.containsMember(member: user) {
+            buttonLbl.setTitle(Config.quitTeam, for: .normal)
+        } else if team.members.count < Config.maxTeamMember {
+            print("\(team.members.count)")
+            buttonLbl.setTitle(Config.joinTeam, for: .normal)
+        } else {
+            buttonLbl.setTitle(Config.fullTeam, for: .normal)
         }
     }
     override func viewDidLoad() {
@@ -57,7 +58,7 @@ class TeamInfoTableViewController: UITableViewController {
     
     @IBAction func onRqtToJoinButtonTapped(_ sender: Any) {
         print("tapped")
-        guard let participant = System.activeUser as? Participant else {
+        guard let user = System.activeUser, user.type.isParticipant else {
             self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
             return
         }
@@ -66,26 +67,26 @@ class TeamInfoTableViewController: UITableViewController {
             return
         }
         if (sender as! UIButton).currentTitle == Config.joinTeam {
-            if participant.team != -1 {
+            if user.team != -1 {
                 self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
                 return
             }
-            print("in TeamInfoTableViewController, set team index to \(teamIndex!), current team is \(participant.team)")
-            participant.setTeamIndex(index: teamIndex!)
-            System.activeUser = participant
-        
-            team?.addMember(member: participant)
+            print("in TeamInfoTableViewController, set team index to \(teamIndex!), current team is \(user.team)")
+            user.setTeamIndex(index: teamIndex!)
+            System.activeUser = user
+            
+            team?.addMember(member: user)
             print("member added")
             teams.replaceTeamAt(index: teamIndex!, with: team!)
             buttonLbl.setTitle(Config.quitTeam, for: .normal)
         } else if (sender as! UIButton).currentTitle == Config.quitTeam {
-            if participant.team != teamIndex {
+            if user.team != teamIndex {
                 self.present(Utility.getFailAlertController(message: quitTeamErrorMsg), animated: true, completion: nil)
                 return
             }
-            participant.setTeamIndex(index: -1)
-            System.activeUser = participant
-            team?.removeMember(member: participant)
+            user.setTeamIndex(index: -1)
+            System.activeUser = user
+            team?.removeMember(member: user)
             print("member deleted")
             if team!.members.count < Config.maxTeamMember {
                 buttonLbl.setTitle(Config.joinTeam, for: .normal)
@@ -96,6 +97,7 @@ class TeamInfoTableViewController: UITableViewController {
         }
         tableView.reloadData()
     }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if section == 0 {
