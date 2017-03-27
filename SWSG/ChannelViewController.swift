@@ -413,7 +413,26 @@ extension ChannelViewController: UIImagePickerControllerDelegate, UINavigationCo
             if let key = sendPhotoMessage() {
                 // 4
                 asset?.requestContentEditingInput(with: nil, completionHandler: { (contentEditingInput, info) in
-                    let imageFileURL = contentEditingInput?.fullSizeImageURL
+                    let image = contentEditingInput?.displaySizeImage
+                    
+                    // 3
+                    let imageData = image?.jpeg(.low)
+                    // 4
+                    let imagePath = FIRAuth.auth()!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
+                    // 5
+                    let metadata = FIRStorageMetadata()
+                    metadata.contentType = "image/jpeg"
+                    // 6
+                    self.storageRef.child(imagePath).put(imageData!, metadata: metadata) { (metadata, error) in
+                        if let error = error {
+                            print("Error uploading photo: \(error)")
+                            return
+                        }
+                        // 7
+                        self.setImageURL(self.storageRef.child((metadata?.path)!).description, forPhotoMessageWithKey: key)
+                    }
+                    
+                    /*let imageFileURL = contentEditingInput?.fullSizeImageURL
                     
                     // 5
                     let path = "\(FIRAuth.auth()?.currentUser?.uid)/\(Int(Date.timeIntervalSinceReferenceDate * 1000))/\(photoReferenceUrl.lastPathComponent)"
@@ -426,7 +445,7 @@ extension ChannelViewController: UIImagePickerControllerDelegate, UINavigationCo
                         }
                         // 7
                         self.setImageURL(self.storageRef.child((metadata?.path)!).description, forPhotoMessageWithKey: key)
-                    }
+                    }*/
                 })
             }
         } else {
@@ -436,7 +455,7 @@ extension ChannelViewController: UIImagePickerControllerDelegate, UINavigationCo
             // 2
             if let key = sendPhotoMessage() {
                 // 3
-                let imageData = UIImageJPEGRepresentation(image, 1.0)
+                let imageData = image.jpeg(.low)
                 // 4
                 let imagePath = FIRAuth.auth()!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
                 // 5
