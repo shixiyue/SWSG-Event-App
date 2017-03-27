@@ -18,10 +18,8 @@ class CreateChannelViewController: UIViewController {
     @IBAction func saveBtnPressed(_ sender: Any) {
         if let name = nameTF?.text { // 1
             let newChannelRef = channelRef.childByAutoId() // 2
-            let channelItem = [ // 3
-                "name": name
-            ]
-            newChannelRef.setValue(channelItem) // 4
+            newChannelRef.child("name").setValue(name)
+            newChannelRef.child("members").childByAutoId().setValue(FIRAuth.auth()?.currentUser?.uid)
             dismiss(animated: true, completion: nil)
         }
     }

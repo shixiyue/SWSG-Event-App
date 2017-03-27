@@ -98,6 +98,9 @@ struct Config {
     
     static var duration = 60
     
+    // Parameters for Chat
+    static let hourInterval = TimeInterval(3600)
+    
     //Parameters for storage
     static let commentsFileName = "commentsFileName"
     static let localUser = "localUser"
