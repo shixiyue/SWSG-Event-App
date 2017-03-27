@@ -52,6 +52,10 @@ final class ChannelViewController: JSQMessagesViewController {
         super.viewDidLoad()
         self.senderId = FIRAuth.auth()?.currentUser?.uid
         
+        collectionView?.collectionViewLayout.incomingAvatarViewSize = CGSize(width: kJSQMessagesCollectionViewAvatarSizeDefault, height:kJSQMessagesCollectionViewAvatarSizeDefault )
+        
+        collectionView?.collectionViewLayout.outgoingAvatarViewSize = CGSize.zero
+        
         observeMessages()
     }
     
@@ -234,7 +238,34 @@ final class ChannelViewController: JSQMessagesViewController {
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource! {
-        return nil
+        let placeholder = UIImage(named: "Profile")
+        let avatar = JSQMessagesAvatarImage(placeholder: placeholder)
+        
+        return avatar
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
+        let message = messages[indexPath.item]
+        
+        if shouldShowNameLabel(index: indexPath.item) {
+            return NSAttributedString(string: message.senderDisplayName)
+        } else {
+            return nil
+        }
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
+        let message = messages[indexPath.item]
+        
+        if shouldShowDateLabel(index: indexPath.item) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "d/MM HH:mm"
+            let dateString = formatter.string(from: message.date)
+            
+            return NSAttributedString(string: dateString)
+        } else {
+            return nil
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -247,6 +278,24 @@ final class ChannelViewController: JSQMessagesViewController {
             cell.textView?.textColor = UIColor.black
         }
         return cell
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout, heightForMessageBubbleTopLabelAt indexPath: IndexPath) -> CGFloat {
+        
+        if shouldShowNameLabel(index: indexPath.item) {
+            return kJSQMessagesCollectionViewCellLabelHeightDefault
+        } else {
+            return 0.0
+        }
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAt indexPath: IndexPath!) -> CGFloat {
+        
+        if shouldShowDateLabel(index: indexPath.item) {
+            return kJSQMessagesCollectionViewCellLabelHeightDefault
+        } else {
+            return 0.0
+        }
     }
     
     override func didPressAccessoryButton(_ sender: UIButton) {
@@ -312,6 +361,37 @@ final class ChannelViewController: JSQMessagesViewController {
         if let refHandle = updatedMessageRefHandle {
             messageRef.removeObserver(withHandle: refHandle)
         }
+    }
+    
+    private func shouldShowNameLabel(index: Int) -> Bool {
+        let message = messages[index]
+        
+        if index > 0 {
+            let previousMessage = messages[index - 1]
+            
+            if previousMessage.senderId == message.senderId || message.senderId == senderId {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    private func shouldShowDateLabel(index: Int) -> Bool {
+        let message = messages[index]
+        
+        if index > 0 {
+            let previous = messages[index - 1]
+            
+            if message.date.lessThan(interval: Config.hourInterval, from: previous.date) {
+                return false
+            } else {
+                print(message.date)
+                print(previous.date)
+            }
+        }
+
+        return true
     }
 }
 

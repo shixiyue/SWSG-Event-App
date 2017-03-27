@@ -96,6 +96,12 @@ extension Date {
         
         return formatter.string(from: self)
     }
+    
+    func lessThan(interval: TimeInterval, from date: Date) -> Bool {
+        let difference = self.timeIntervalSince(date)
+        
+        return difference < interval
+    }
 }
 
 extension String {
