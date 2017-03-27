@@ -49,13 +49,12 @@ class MenuViewController: UIViewController {
         profileImgButton.setImage(user.profile.image, for: .normal)
         nameLbl.text = user.profile.name
         
-        guard let participant = user as? Participant else {
-            teamLbl.text = nil
+        guard user.type.isParticipant else {
+            teamLbl.text = user.type.toString()
             return
         }
-        if participant.team != -1 && teams.count != 0 {
-            print("Team no for user is \(participant.team), total num of team is \(teams.count)")
-            teamLbl.text = teams.retrieveTeamAt(index: participant.team).name
+        if user.team != -1 && teams.count != 0 {
+            teamLbl.text = teams.retrieveTeamAt(index: user.team).name
         } else {
             teamLbl.text = Config.noTeamLabel
         }

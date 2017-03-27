@@ -10,10 +10,12 @@ import UIKit
 
 class IdeaPostTableViewController: UITableViewController {
     
-    @IBOutlet weak var ideaName: UITextField!
+    private let ideaCreateErrorMsg = "Sorry, only participants of SWSG can create an idea!"
+    
+    @IBOutlet weak private var ideaName: UITextField!
 
-    @IBOutlet weak var details: UITextField!
-    @IBOutlet weak var desc: UITextField!
+    @IBOutlet weak private var details: UITextField!
+    @IBOutlet weak private var desc: UITextField!
     private var ideas = Ideas.sharedInstance()
     private var teams = Teams.sharedInstance()
     
@@ -21,13 +23,14 @@ class IdeaPostTableViewController: UITableViewController {
         Utility.onBackButtonClick(tableViewController: self)
     }
     @IBAction func onDoneButtonClick(_ sender: Any) {
-        if let user = System.activeUser as? Participant {
-            let name = ideaName.text!
-            let description = desc.text!
-            let team = teams.retrieveTeamAt(index: user.team).name
-            print("\(team)")
-            ideas.addIdea(idea: Idea(name: name, description: description, team: team))
+        guard let user = System.activeUser, user.type.isParticipant else {
+            self.present(Utility.getFailAlertController(message: ideaCreateErrorMsg), animated: true, completion: nil)
+            return
         }
+        let name = ideaName.text!
+        let description = desc.text!
+        let team = teams.retrieveTeamAt(index: user.team).name
+        ideas.addIdea(idea: Idea(name: name, description: description, team: team))
         Utility.onBackButtonClick(tableViewController: self)
     }
     override func viewDidLoad() {

@@ -142,9 +142,10 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
             self.present(Utility.getFailAlertController(message: emailInvalid), animated: true, completion: nil)
             return
         }
+        let type = Storage.retrieveUserType(email: email)
         let profile = Profile(name: name, image: image, job: job, company: company, country: country,
                               education: education, skills: skills, description: desc)
-        let user = Participant(profile: profile, password: password, email: email, team: -1)
+        let user = User(type: type, profile: profile, password: password, email: email, team: -1)
         let success = Storage.saveUser(user: user)
         
         guard success else {
@@ -165,6 +166,7 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
                 Utility.logInUser(user: user, currentViewController: self)
                 
             } else {
+                print(error)
                 self.present(Utility.getFailAlertController(message: self.signUpProblem), animated: true, completion: nil)
             }
         }

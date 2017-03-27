@@ -27,17 +27,17 @@ class TeamCreateTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     @IBAction func onDoneButtonClick(_ sender: Any) {
-        guard let participant = System.activeUser as? Participant else {
+        guard let user = System.activeUser, user.type.isParticipant else {
             self.present(Utility.getFailAlertController(message: teamCreateErrorMsg), animated: true, completion: nil)
             return
         }
         let team_name = teamName.text!
         let info = skills.text!
         let lookingFor = self.lookingFor.text
-        let team = Team(members: [participant], name: team_name, info: info, lookingFor: lookingFor, isPrivate: false)
+        let team = Team(members: [user], name: team_name, info: info, lookingFor: lookingFor, isPrivate: false)
         teams.addTeam(team: team)
-        participant.setTeamIndex(index: teams.count-1)
-        System.activeUser = participant
+        user.setTeamIndex(index: teams.count-1)
+        System.activeUser = user
         dismiss(animated: true, completion: nil)
         Utility.onBackButtonClick(tableViewController: self)
     }
