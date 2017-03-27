@@ -11,15 +11,37 @@ import UIKit
 /// `Storage` represents the storage of SWSG App. It will comunicate with the backend.
 struct Storage {
     
+    // Temporary
+    /// Need to check with database and get types that the user belongs to
+    static func retrieveUserType(email: String) -> UserTypes {
+        let isParticipant = checkParticipant(email: email)
+        let isSpeaker = false
+        let isMentor = false
+        let isOrganizer = checkOrganizer(email: email)
+        let isAdmin = checkAdmin(email: email)
+        return UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
+    }
+    
+    // Temporary hard-coded data:
+    static let admin = "admin@swsg.com"
+    
+    // Temporary
+    static func checkParticipant(email: String) -> Bool {
+        return email != admin
+    }
+    
+    static func checkOrganizer(email: String) -> Bool {
+        return email == admin
+    }
+    
+    static func checkAdmin(email: String) -> Bool {
+        return email == admin
+    }
+    
     /// Saves user data to a json file with the given filename.
     static func saveUser(user: User) -> Bool {
         do {
-            let data : [String: Any]
-            if let participant = user as? Participant {
-                data = participant.toDictionary()
-            } else {
-                data = user.toDictionary()
-            }
+            let data = user.toDictionary()
             let jsonData = try JSONSerialization.data(withJSONObject: data, options: JSONSerialization.WritingOptions())
             try jsonData.write(to: getFileURL(fileName: user.email))
             guard let pngImageData = UIImagePNGRepresentation(user.profile.image) else {
@@ -42,19 +64,20 @@ struct Storage {
         guard let data = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments), let userInfo = data as? [String: Any] else {
             return nil
         }
-        guard let email = userInfo[Config.email] as? String, let password = userInfo[Config.password] as? String, let profile = userInfo[Config.profile] as? [String: String], let name = profile[Config.name], let country = profile[Config.country], let job = profile[Config.job], let company = profile[Config.company], let education = profile[Config.education], let skills = profile[Config.skills], let desc = profile[Config.desc] else {
+        guard let email = userInfo[Config.email] as? String, let password = userInfo[Config.password] as? String, let profile = userInfo[Config.profile] as? [String: String], let name = profile[Config.name], let country = profile[Config.country], let job = profile[Config.job], let company = profile[Config.company], let education = profile[Config.education], let skills = profile[Config.skills], let desc = profile[Config.desc], let type = userInfo[Config.userType] as? [String: Bool], let isParticipant = type[Config.isParticipant], let isSpeaker = type[Config.isSpeaker], let isMentor = type[Config.isMentor], let isOrganizer = type[Config.isOrganizer], let isAdmin = type[Config.isAdmin] else {
             return nil
         }
         let imageFilePath = getLocalFileURL(fileName: "\(email).png").path
         guard let image = UIImage(contentsOfFile: imageFilePath) else {
             return nil
         }
+        let userType = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
         let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         guard let team_index = userInfo[Config.team] as? Int else {
             return nil
         }
 
-        return Participant(profile: userProfile, password: password, email: email, team: team_index)
+        return User(type: userType, profile: userProfile, password: password, email: email, team: team_index)
     }
     
     /// save the current user to the local device, so that device can recognize user when he/she posts a comment or chat message
@@ -171,14 +194,14 @@ struct Storage {
         }
         var data_retrieved = [Team]()
         for teams in teams_data {
-            var members_retrieved = [Participant]()
+            var members_retrieved = [User]()
             guard let teamName = teams["teamName"] as? String, let info = teams["info"] as? String,let lookingFor = teams["lookingFor"] as? String, let isPrivate = teams["isPrivate"] as? Bool else {
                 print("one of the attribute is nil")
                 return nil
             }
             if let members_data = teams["members"] as? [[String: Any]] {
                 for member in members_data {
-                    guard let email = member[Config.email] as? String, let password = member[Config.password] as? String, let profile = member[Config.profile] as? [String: String], let name = profile[Config.name], let country = profile[Config.country], let job = profile[Config.job], let company = profile[Config.company], let education = profile[Config.education], let skills = profile[Config.skills], let desc = profile[Config.desc] else {
+                    guard let email = member[Config.email] as? String, let password = member[Config.password] as? String, let profile = member[Config.profile] as? [String: String], let name = profile[Config.name], let country = profile[Config.country], let job = profile[Config.job], let company = profile[Config.company], let education = profile[Config.education], let skills = profile[Config.skills], let desc = profile[Config.desc], let type = member[Config.userType] as? [String: Bool], let isParticipant = type[Config.isParticipant], let isSpeaker = type[Config.isSpeaker], let isMentor = type[Config.isMentor], let isOrganizer = type[Config.isOrganizer], let isAdmin = type[Config.isAdmin] else {
                         print("one of user attribute is nil")
                
                         return nil
@@ -188,11 +211,12 @@ struct Storage {
                         print("user image is nil")
                         return nil
                     }
+                    let userType = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
                     let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
                     guard let team_participant = member["team"] as? Int else {
                         return nil
                     }
-                    let participant =  Participant(profile: userProfile, password: password, email: email, team: team_participant)
+                    let participant =  User(type: userType, profile: userProfile, password: password, email: email, team: team_participant)
                     members_retrieved.append(participant)
                 }
                 let team = Team(members: members_retrieved, name: teamName, info: info, lookingFor: lookingFor, isPrivate: isPrivate)
