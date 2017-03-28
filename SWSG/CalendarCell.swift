@@ -11,4 +11,5 @@ import JTAppleCalendar
 class CalendarCell: JTAppleDayCellView {
     @IBOutlet var dayLabel: UILabel!
     @IBOutlet var selectedView: UIView!
+    @IBOutlet var dot: UIView!
 }

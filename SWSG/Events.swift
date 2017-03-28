@@ -32,7 +32,6 @@ class Events {
     
     public func contains(date: Date) -> Bool {
         for event in events {
-            print("\(event.date_time.string(format: "yyyy MM dd")) and \(date.string(format: "yyyy MM dd"))")
             if event.date_time.string(format: "yyyy MM dd") == date.string(format: "yyyy MM dd") {
                 return true
             }

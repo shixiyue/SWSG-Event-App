@@ -15,6 +15,14 @@
             <rect key="frame" x="0.0" y="0.0" width="208" height="202"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ac4-ae-3Uj">
+                    <rect key="frame" x="99.5" y="192" width="10" height="10"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="10" id="huf-dm-0va" userLabel="width = 10"/>
+                        <constraint firstAttribute="height" constant="10" id="ksX-iM-KF1" userLabel="height = 10"/>
+                    </constraints>
+                </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eHc-N0-46X">
                     <rect key="frame" x="79" y="76" width="50" height="50"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -33,13 +41,16 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="eHc-N0-46X" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="COM-a3-0Gm"/>
+                <constraint firstItem="Ac4-ae-3Uj" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="HDV-xo-9Sm"/>
                 <constraint firstItem="eHc-N0-46X" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Oag-Gb-thp"/>
+                <constraint firstItem="Ac4-ae-3Uj" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="XvQ-ZH-qH5"/>
                 <constraint firstItem="eeQ-5Z-gm1" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="cfa-jL-y7A"/>
                 <constraint firstItem="eeQ-5Z-gm1" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="dsf-hn-dqG"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="dayLabel" destination="eeQ-5Z-gm1" id="GUF-Jn-VVQ"/>
+                <outlet property="dot" destination="Ac4-ae-3Uj" id="OqO-bB-UMA"/>
                 <outlet property="selectedView" destination="eHc-N0-46X" id="3dF-Mh-Cgb"/>
             </connections>
             <point key="canvasLocation" x="25" y="-661"/>

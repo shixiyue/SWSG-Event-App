@@ -14,9 +14,7 @@ class EventCalendarViewController: BaseViewController {
     // We cache our colors because we do not want to be creating
     // a new color every time a cell is displayed. We do not want a laggy
     // scrolling calendar.
-    
-    internal var cellSelected: CalendarCell?
-    internal var dateSelected: Date?
+
     internal var events = Events()
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
@@ -128,6 +126,13 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
         
         // Setup Cell text
         myCustomCell.dayLabel.text = cellState.text
+        myCustomCell.dot.layer.cornerRadius = 5
+        if events.contains(date: date) {
+            print("highlighted date is \(date)")
+            myCustomCell.dot.isHidden = false
+        } else {
+            myCustomCell.dot.isHidden = true
+        }
         
         handleCellTextColor(view: cell, cellState: cellState)
         handleCellSelection(view: cell, cellState: cellState)
@@ -136,13 +141,10 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {
         handleCellSelection(view: cell, cellState: cellState)
         handleCellTextColor(view: cell, cellState: cellState)
-        cellSelected = cell as? CalendarCell
-        dateSelected = date
-       // performSegue(withIdentifier: "calendarSegue", sender: self)
+
         let storyboard = UIStoryboard(name: Config.eventSystem, bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "EventScheduleTableViewController") as UIViewController
         if events.contains(date: date){
-            print("contains")
             self.navigationController?.pushViewController(controller, animated: true)
         }
 
