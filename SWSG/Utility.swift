@@ -64,6 +64,16 @@ struct Utility {
         tableViewController.dismiss(animated: false, completion: nil)
     }
     
+    static func onBackButtonClick(tableViewController: UIViewController) {
+        let transition: CATransition = CATransition()
+        transition.duration = 0.5
+        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        transition.type = kCATransitionReveal
+        transition.subtype = kCATransitionFromLeft
+        tableViewController.view.window!.layer.add(transition, forKey: nil)
+        tableViewController.dismiss(animated: false, completion: nil)
+    }
+    
     static func logOutUser(currentViewController: UIViewController) {
         System.activeUser = nil
         showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)

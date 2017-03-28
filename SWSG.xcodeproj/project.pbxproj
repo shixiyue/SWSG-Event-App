@@ -124,6 +124,8 @@
 		E348D5741E895CD700947B3F /* CalendarCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E348D5731E895CD700947B3F /* CalendarCellView.xib */; };
 		E348D5781E895D7C00947B3F /* CalendarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5771E895D7C00947B3F /* CalendarCell.swift */; };
 		E348D57A1E895E8300947B3F /* EventCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5791E895E8300947B3F /* EventCalendarViewController.swift */; };
+		E348D57E1E8A828900947B3F /* PinkSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */; };
+		E348D5801E8A830900947B3F /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */; };
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
 		E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */; };
@@ -260,6 +262,8 @@
 		E348D5731E895CD700947B3F /* CalendarCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalendarCellView.xib; sourceTree = "<group>"; };
 		E348D5771E895D7C00947B3F /* CalendarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarCell.swift; sourceTree = "<group>"; };
 		E348D5791E895E8300947B3F /* EventCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCalendarViewController.swift; sourceTree = "<group>"; };
+		E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PinkSectionHeaderView.xib; sourceTree = "<group>"; };
+		E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarHeaderView.swift; sourceTree = "<group>"; };
 		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLookingForTableViewCell.swift; sourceTree = "<group>"; };
@@ -529,6 +533,8 @@
 			children = (
 				E3220C281E796BC0008AFA85 /* EventSystem.storyboard */,
 				E348D5791E895E8300947B3F /* EventCalendarViewController.swift */,
+				E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */,
+				E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */,
 				E348D5771E895D7C00947B3F /* CalendarCell.swift */,
 				E348D5731E895CD700947B3F /* CalendarCellView.xib */,
 				E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */,
@@ -668,6 +674,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F12AFD81E711CBB00B26D67 /* LaunchScreen.storyboard in Resources */,
+				E348D57E1E8A828900947B3F /* PinkSectionHeaderView.xib in Resources */,
 				E3220C291E796BC0008AFA85 /* EventSystem.storyboard in Resources */,
 				CC1CF8A41E7C03DA002224BC /* Profile.storyboard in Resources */,
 				3F12AFD51E711CBB00B26D67 /* Assets.xcassets in Resources */,
@@ -757,6 +764,7 @@
 				E3220C491E7B98CA008AFA85 /* MenuCell.swift in Sources */,
 				3F408CCB1E83C12C00E2B787 /* ChannelListViewController.swift in Sources */,
 				CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */,
+				E348D5801E8A830900947B3F /* CalendarHeaderView.swift in Sources */,
 				3F97954D1E7A8DBF004BC26C /* InitialViewController.swift in Sources */,
 				E348D56A1E840D8B00947B3F /* IdeaPostTableViewController.swift in Sources */,
 				E348D5701E841E2900947B3F /* Idea.swift in Sources */,

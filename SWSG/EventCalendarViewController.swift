@@ -9,26 +9,43 @@
 import UIKit
 import JTAppleCalendar
 
-class EventCalendarViewController: UIViewController {
+class EventCalendarViewController: BaseViewController {
     
     // We cache our colors because we do not want to be creating
     // a new color every time a cell is displayed. We do not want a laggy
     // scrolling calendar.
     
-    let white = UIColor(colorWithHexValue: 0xECEAED)
-    let darkPurple = UIColor(colorWithHexValue: 0x3A284C)
-    let dimPurple = UIColor(colorWithHexValue: 0x574865)
+    internal var cellSelected: CalendarCell?
+    internal var dateSelected: Date?
+    internal var events = Events()
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        addSlideMenuButton()
         calendarView.dataSource = self
         calendarView.delegate = self
         calendarView.registerCellViewXib(file: "CalendarCellView") // Registering your cell is manditory
         calendarView.cellInset = CGPoint(x: 0, y: 0)
         calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
+        calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView"])
+ 
+        let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventCalendarViewController.hideNavBarTapHandler))
+        hideNavBarTapGesture.numberOfTapsRequired = 2
+        
+        view.addGestureRecognizer(hideNavBarTapGesture)
+        
+        view.isUserInteractionEnabled = true
         // Do any additional setup after loading the view.
+
+    }
+    
+    func hideNavBarTapHandler(recognizer: UIGestureRecognizer) {
+        if recognizer.state == .ended {
+            self.navigationItem.hidesBackButton = !self.navigationItem.hidesBackButton
+            self.navigationController?.setNavigationBarHidden(self.navigationItem.hidesBackButton, animated: true)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -44,12 +61,12 @@ class EventCalendarViewController: UIViewController {
         }
         
         if cellState.isSelected {
-            myCustomCell.dayLabel.textColor = darkPurple
+            myCustomCell.dayLabel.textColor = UIColor.white
         } else {
             if cellState.dateBelongsTo == .thisMonth {
-                myCustomCell.dayLabel.textColor = white
+                myCustomCell.dayLabel.textColor = UIColor.black
             } else {
-                myCustomCell.dayLabel.textColor = dimPurple
+                myCustomCell.dayLabel.textColor = UIColor.darkGray
             }
         }
     }
@@ -74,6 +91,15 @@ class EventCalendarViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        let cellTapped = cellSelected
+        if let dateSelected = dateSelected {
+        let dateTapped = Calendar.current.date(byAdding: .day, value: 1, to: dateSelected)
+            if events.contains(date: dateTapped!){
+                print("contains")
+                performSegue(withIdentifier: "calendarSegue", sender: self)
+            }
+        }
+        
     }
     */
 
@@ -84,7 +110,8 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy MM dd"
         
-        let startDate = formatter.date(from: "2017 03 27")! // You can use date generated from a formatter
+        let start = Date().string(format: formatter.dateFormat)// You can use date generated from a formatter
+        let startDate = formatter.date(from: start)!
         let endDate = formatter.date(from: "2019 03 27")!                              // You can also use dates created from this function
         let parameters = ConfigurationParameters(startDate: startDate,
                                                  endDate: endDate,
@@ -109,23 +136,36 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {
         handleCellSelection(view: cell, cellState: cellState)
         handleCellTextColor(view: cell, cellState: cellState)
+        cellSelected = cell as? CalendarCell
+        dateSelected = date
+       // performSegue(withIdentifier: "calendarSegue", sender: self)
+        let storyboard = UIStoryboard(name: Config.eventSystem, bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "EventScheduleTableViewController") as UIViewController
+        if events.contains(date: date){
+            print("contains")
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+
+      
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {
         handleCellSelection(view: cell, cellState: cellState)
         handleCellTextColor(view: cell, cellState: cellState)
     }
-
-}
-
-extension UIColor {
-    convenience init(colorWithHexValue value: Int, alpha:CGFloat = 1.0){
-        self.init(
-            red: CGFloat((value & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((value & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(value & 0x0000FF) / 255.0,
-            alpha: alpha
-        )
+    
+    // This sets the height of your header
+    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeFor range: (start: Date, end: Date), belongingTo month: Int) -> CGSize {
+        return CGSize(width: 200, height: 70)
     }
+    // This setups the display of your header
+    func calendar(_ calendar: JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, range: (start: Date, end: Date), identifier: String) {
+        let headerCell = (header as? CalendarHeaderView)
+        let month = Calendar.current.dateComponents([.month], from: range.start).month!
+        let monthName = DateFormatter().monthSymbols[(month-1) % 12]
+        let year = Calendar.current.component(.year, from: range.start)
+        headerCell?.title.text = monthName + " " + String(year)
+    }
+    
 }
 

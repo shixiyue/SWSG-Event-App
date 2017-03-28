@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EventScheduleTableViewController: BaseViewController {
+class EventScheduleTableViewController: UITableViewController {
     var events = Events()
     
     @IBOutlet weak var eventsTableView: UITableView! {
@@ -27,6 +27,9 @@ class EventScheduleTableViewController: BaseViewController {
         
     }
     
+    @IBAction func onBackButtonPressed(_ sender: Any) {
+        Utility.onBackButtonClick(tableViewController: self)
+    }
     func eventItemTapHandler(recognizer: UIGestureRecognizer) {
         if recognizer.state == .ended {
             let point = recognizer.location(in: eventsTableView)
@@ -38,7 +41,6 @@ class EventScheduleTableViewController: BaseViewController {
                 EventDetailsTableViewController.event = event
                 self.navigationController?.pushViewController(destinationvc, animated: true)
             }
-            
         }
     }
     
@@ -56,7 +58,6 @@ class EventScheduleTableViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addSlideMenuButton()
         eventsTableView.tableFooterView = UIView(frame: .zero)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -72,19 +73,19 @@ class EventScheduleTableViewController: BaseViewController {
 }
 
     // MARK: - Table view data source
-extension EventScheduleTableViewController: UITableViewDelegate, UITableViewDataSource {
-    public func numberOfSections(in tableView: UITableView) -> Int {
+extension EventScheduleTableViewController {
+    public override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return events.count
     }
     
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "EventCell", for: indexPath) as! EventScheduleTableViewCell
         if let event = events.retrieveEventAt(index: indexPath.item) {
             cell.eventName.text = event.name
@@ -100,11 +101,11 @@ extension EventScheduleTableViewController: UITableViewDelegate, UITableViewData
     }
     
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    public override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
     
-    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    public override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
     
@@ -119,7 +120,7 @@ extension EventScheduleTableViewController: UITableViewDelegate, UITableViewData
     
     
     // Override to support editing the table view.
-    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    public override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
@@ -151,7 +152,6 @@ extension EventScheduleTableViewController: UITableViewDelegate, UITableViewData
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        
     }
     */
     

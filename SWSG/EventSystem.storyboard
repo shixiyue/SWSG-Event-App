@@ -25,17 +25,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="crH-tg-Wlm" customClass="JTAppleCalendarView" customModule="JTAppleCalendar">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="291"/>
+                                <rect key="frame" x="0.0" y="50" width="375" height="341"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="crH-tg-Wlm" secondAttribute="height" multiplier="125:97" id="m7V-MC-HbQ"/>
+                                    <constraint firstAttribute="width" secondItem="crH-tg-Wlm" secondAttribute="height" multiplier="375:341" id="fnv-UK-UMY"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="crH-tg-Wlm" firstAttribute="leading" secondItem="Qs3-e2-5lC" secondAttribute="leading" id="BfN-Fo-YUz"/>
-                            <constraint firstItem="crH-tg-Wlm" firstAttribute="top" secondItem="Qs3-e2-5lC" secondAttribute="top" id="ebY-0b-Vj7"/>
+                            <constraint firstItem="crH-tg-Wlm" firstAttribute="top" secondItem="Qs3-e2-5lC" secondAttribute="top" constant="50" id="ebY-0b-Vj7"/>
                             <constraint firstItem="crH-tg-Wlm" firstAttribute="trailing" secondItem="Qs3-e2-5lC" secondAttribute="trailing" id="mTf-VD-7B4"/>
                         </constraints>
                     </view>
@@ -146,13 +146,14 @@
                             <outlet property="delegate" destination="qiP-89-0bs" id="TFg-IM-02H"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="1vR-aM-wDk"/>
                     <connections>
                         <outlet property="eventsTableView" destination="NqC-GW-mj0" id="2Et-Ad-gyO"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d7H-sE-ad2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-895.20000000000005" y="-320.68965517241384"/>
+            <point key="canvasLocation" x="44" y="-320.68965517241384"/>
         </scene>
         <!--Event Details Table View Controller-->
         <scene sceneID="1jA-9A-kQJ">
@@ -396,7 +397,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6bD-TH-doI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-26.399999999999999" y="-320.68965517241384"/>
+            <point key="canvasLocation" x="912.79999999999995" y="-320.68965517241384"/>
         </scene>
     </scenes>
 </document>
