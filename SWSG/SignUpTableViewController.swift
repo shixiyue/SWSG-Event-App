@@ -127,7 +127,7 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
     
     @IBAction func changeProfileImage(_ sender: UIButton) {
         alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImageButton.bounds.maxY)
-        showProfileImageOptions()
+        showImageOptions()
     }
     
     @objc private func signUp(sender: UIButton) {

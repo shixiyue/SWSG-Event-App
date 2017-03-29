@@ -17,14 +17,7 @@ class OrganizersViewController: PeopleViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpOrganizersTableView()
-    }
-    
-    private func setUpOrganizersTableView() {
-        organizersTableView.dataSource = self
-        organizersTableView.delegate = self
-        organizersTableView.tableFooterView = UIView(frame: CGRect.zero)
-        organizersTableView.allowsSelection = false
+        setUpTableView(organizersTableView)
     }
 
 }

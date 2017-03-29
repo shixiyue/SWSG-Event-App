@@ -10,7 +10,7 @@ import UIKit
 
 class SponsorsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    @IBOutlet var sponsorsTableView: UITableView!
+    @IBOutlet private var sponsorsTableView: UITableView!
     var sponsors: [(title: String, list: [(image: String, link: String)])]  { return SponsorsInfo.sponsors }
     
     override func viewDidLoad() {
@@ -32,12 +32,7 @@ class SponsorsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var count = 1
         for tuple in sponsors {
-            count += 1
-            var num = 0
-            for _ in tuple.list {
-                num += 1
-            }
-            count += Int(ceil(Double(num) / 3))
+            count += 1 + Int(ceil(Double(tuple.list.count) / 3))
         }
         return count
     }
@@ -71,31 +66,29 @@ class SponsorsViewController: UIViewController, UITableViewDataSource, UITableVi
             }
             count += 1
             titleIndex += 1
-            for sponsorIndex in stride(from: 0, through: tuple.list.count, by: 3) {
-                guard count == index else {
-                    count += 1
-                    continue
-                }
-                var sponsorIndex = sponsorIndex
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: "sponsorsCell", for: indexPath) as? SponsorsTableViewCell else {
-                    return UITableViewCell()
-                }
-                cell.firstImage.image = UIImage(named: tuple.list[sponsorIndex].image)
-                cell.firstLink = tuple.list[sponsorIndex].link
-                sponsorIndex += 1
-                if sponsorIndex >= tuple.list.count {
-                    return cell
-                }
-                cell.secondImage.image = UIImage(named: tuple.list[sponsorIndex].image)
-                cell.secondLink = tuple.list[sponsorIndex].link
-                sponsorIndex += 1
-                if sponsorIndex >= tuple.list.count {
-                    return cell
-                }
-                cell.thirdImage.image = UIImage(named: tuple.list[sponsorIndex].image)
-                cell.thirdLink = tuple.list[sponsorIndex].link
+            guard index < count + Int(ceil(Double(tuple.list.count) / 3)) else {
+                count += Int(ceil(Double(tuple.list.count) / 3))
+                continue
+            }
+            var sponsorIndex = (index - count) * 3
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "sponsorsCell", for: indexPath) as? SponsorsTableViewCell else {
+                return UITableViewCell()
+            }
+            cell.firstImage.image = UIImage(named: tuple.list[sponsorIndex].image)
+            cell.firstLink = tuple.list[sponsorIndex].link
+            sponsorIndex += 1
+            if sponsorIndex >= tuple.list.count {
                 return cell
             }
+            cell.secondImage.image = UIImage(named: tuple.list[sponsorIndex].image)
+            cell.secondLink = tuple.list[sponsorIndex].link
+            sponsorIndex += 1
+            if sponsorIndex >= tuple.list.count {
+                return cell
+            }
+            cell.thirdImage.image = UIImage(named: tuple.list[sponsorIndex].image)
+            cell.thirdLink = tuple.list[sponsorIndex].link
+            return cell
         }
         return UITableViewCell()
     }

@@ -17,14 +17,7 @@ class JudgesViewController: PeopleViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpJudgesTableView()
-    }
-    
-    private func setUpJudgesTableView() {
-        judgesTableView.dataSource = self
-        judgesTableView.delegate = self
-        judgesTableView.tableFooterView = UIView(frame: CGRect.zero)
-        judgesTableView.allowsSelection = false
+        setUpTableView(judgesTableView)
     }
 
 }

@@ -18,7 +18,7 @@ class ImagePickerViewController: UITableViewController, UIImagePickerControllerD
         imagePicker.delegate = self
     }
     
-    func showProfileImageOptions() {
+    func showImageOptions() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
@@ -64,6 +64,10 @@ class ImagePickerViewController: UITableViewController, UIImagePickerControllerD
             return
         }
         dismiss(animated: true, completion: nil)
+        handleImage(chosenImage: chosenImage)
+    }
+    
+    func handleImage(chosenImage: UIImage) {
         jumpToCropImage(imageToCrop: chosenImage)
     }
     
