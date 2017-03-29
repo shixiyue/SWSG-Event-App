@@ -10,13 +10,13 @@ import Foundation
 /// `Team` represents a team of SWSG.
 class Team {
     
-    public private (set) var members: [Participant]
+    public private (set) var members: [User]
     public private (set) var name: String
     public private (set) var info: String
     public private (set) var lookingFor: String?
     public private (set) var isPrivate: Bool
     
-    init(members: [Participant], name: String, info: String, lookingFor: String?, isPrivate: Bool) {
+    init(members: [User], name: String, info: String, lookingFor: String?, isPrivate: Bool) {
         self.members = members
         self.name = name
         self.info = info
@@ -24,11 +24,11 @@ class Team {
         self.isPrivate = isPrivate
     }
     
-    func addMember(member: Participant) {
+    func addMember(member: User) {
         members.append(member)
     }
     
-    func removeMember(member: Participant) {
+    func removeMember(member: User) {
         if containsMember(member: member) {
             members.remove(at: members.index(where: {$0.email == member.email})!)
         } else {
@@ -36,7 +36,7 @@ class Team {
         }
     }
     
-    func containsMember(member: Participant) -> Bool {
+    func containsMember(member: User) -> Bool {
         return members.contains(where: {$0.email == member.email})
     }
 }

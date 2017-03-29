@@ -14,6 +14,8 @@ protocol SlideMenuDelegate {
 
 class BaseViewController: UIViewController, SlideMenuDelegate {
     
+    private var btnShowMenu: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -25,37 +27,36 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
     }
     
     func slideMenuItemSelectedAtIndex(_ index: Int) {
-        switch(index){
-        case 0:
+        guard let item = MenuItems.MenuOrder(rawValue: index) else {
+            print("default\n", terminator: "")
+            return
+        }
+        switch(item){
+        case .home:
             print("Home\n", terminator: "")
             self.open(viewController: "HomeViewController", from: "Main")
-            
-        case 1:
+        case .information:
+            print("Information\n", terminator: "")
+            self.open(viewController: "InformationViewController", from: "Information")
+        case .schedule:
             print("EventScheduleVC\n", terminator: "")
-            self.open(viewController: "EventScheduleTableViewController",from: Config.eventSystem)
-            
-        case 2:
+           // self.open(viewController: "EventScheduleTableViewController",from: Config.eventSystem)
+            self.open(viewController: "EventCalendarViewController", from: Config.eventSystem)
+        case .mentors:
             print("Mentor\n", terminator: "")
             self.open(viewController: "MentorViewController", from: "Mentor")
-            
-        case 3:
+        case .teams:
             print("Teams\n",terminator: "")
             self.open(viewController: "TeamRegistrationTableViewController", from: Config.teamRegistration)
-            
-        case 4:
+        case .chat:
             print("Chat\n", terminator: "")
             self.open(viewController: "ChatViewController", from: "Chat")
-            
-        case 5:
+        case .ideas:
             print("Ideas\n",terminator:"")
             self.open(viewController: "ideaslist", from: Config.ideasVotingPlatform)
-            
-        case 6:
+        case .settings:
             print("Settings\n", terminator: "")
             self.open(viewController: "SettingsViewController", from: "Settings")
-            
-        default:
-            print("default\n", terminator: "")
         }
     }
     
@@ -67,13 +68,14 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         
         if (topViewController.restorationIdentifier! == destViewController.restorationIdentifier!){
             print("Same VC")
+            hideMenu()
         } else {
             self.navigationController!.pushViewController(destViewController, animated: true)
         }
     }
     
     func addSlideMenuButton(){
-        let btnShowMenu = UIButton(type: UIButtonType.system)
+        btnShowMenu = UIButton(type: UIButtonType.system)
         btnShowMenu.setImage(self.defaultMenuImage(), for: UIControlState())
         btnShowMenu.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         btnShowMenu.addTarget(self, action: #selector(BaseViewController.onSlideMenuButtonPressed(_:)), for: UIControlEvents.touchUpInside)
@@ -107,22 +109,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         if (sender.tag == 10)
         {
             // To Hide Menu If it already there
-            self.slideMenuItemSelectedAtIndex(-1);
-            
-            sender.tag = 0;
-            
-            let viewMenuBack : UIView = view.subviews.last!
-            
-            UIView.animate(withDuration: 0.3, animations: { () -> Void in
-                var frameMenu : CGRect = viewMenuBack.frame
-                frameMenu.origin.x = -1 * UIScreen.main.bounds.size.width
-                viewMenuBack.frame = frameMenu
-                viewMenuBack.layoutIfNeeded()
-                viewMenuBack.backgroundColor = UIColor.clear
-            }, completion: { (finished) -> Void in
-                viewMenuBack.removeFromSuperview()
-            })
-            
+            hideMenu()
             return
         }
         
@@ -145,4 +132,21 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             sender.isEnabled = true
         }, completion:nil)
     }
+    
+    private func hideMenu() {
+        btnShowMenu.tag = 0
+        
+        let viewMenuBack : UIView = view.subviews.last!
+        
+        UIView.animate(withDuration: 0.3, animations: { () -> Void in
+            var frameMenu : CGRect = viewMenuBack.frame
+            frameMenu.origin.x = -1 * UIScreen.main.bounds.size.width
+            viewMenuBack.frame = frameMenu
+            viewMenuBack.layoutIfNeeded()
+            viewMenuBack.backgroundColor = UIColor.clear
+        }, completion: { (finished) -> Void in
+            viewMenuBack.removeFromSuperview()
+        })
+    }
+
 }

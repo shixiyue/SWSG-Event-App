@@ -30,6 +30,15 @@ class Events {
         return events[index]
     }
     
+    public func contains(date: Date) -> Bool {
+        for event in events {
+            if event.date_time.string(format: "yyyy MM dd") == date.string(format: "yyyy MM dd") {
+                return true
+            }
+        }
+        return false
+    }
+    
     
 }
 

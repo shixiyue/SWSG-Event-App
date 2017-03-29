@@ -19,7 +19,7 @@ struct Config {
         }
     }
     
-    
+    static let noTeam = -1
     static let defaultCountry = "Singapore"
     static let joinTeam = "Request to Join"
     static let quitTeam = "Quit Team"
@@ -27,6 +27,7 @@ struct Config {
     
     // Keys for encode/decode:
     static let user = "user"
+    static let userType = "userType"
     static let profile = "profile"
     static let email = "email"
     static let password = "password"
@@ -96,6 +97,9 @@ struct Config {
     }
     
     static var duration = 60
+    
+    // Parameters for Chat
+    static let hourInterval = TimeInterval(3600)
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"

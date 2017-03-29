@@ -52,6 +52,10 @@ final class ChannelViewController: JSQMessagesViewController {
         super.viewDidLoad()
         self.senderId = FIRAuth.auth()?.currentUser?.uid
         
+        collectionView?.collectionViewLayout.incomingAvatarViewSize = CGSize(width: kJSQMessagesCollectionViewAvatarSizeDefault, height:kJSQMessagesCollectionViewAvatarSizeDefault )
+        
+        collectionView?.collectionViewLayout.outgoingAvatarViewSize = CGSize.zero
+        
         observeMessages()
     }
     
@@ -174,6 +178,17 @@ final class ChannelViewController: JSQMessagesViewController {
                 
                 // 5
                 self.finishReceivingMessage()
+            } else if let id = messageData["senderId"] as String!,
+                let photoURL = messageData["photoURL"] as String! { // 1
+                // 2
+                if let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId) {
+                    // 3
+                    self.addPhotoMessage(withId: id, key: snapshot.key, mediaItem: mediaItem)
+                    // 4
+                    if photoURL.hasPrefix("gs://") {
+                        self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
+                    }
+                }
             } else {
                 print("Error! Could not decode message data")
             }
@@ -223,7 +238,34 @@ final class ChannelViewController: JSQMessagesViewController {
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource! {
-        return nil
+        let placeholder = UIImage(named: "Profile")
+        let avatar = JSQMessagesAvatarImage(placeholder: placeholder)
+        
+        return avatar
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
+        let message = messages[indexPath.item]
+        
+        if shouldShowNameLabel(index: indexPath.item) {
+            return NSAttributedString(string: message.senderDisplayName)
+        } else {
+            return nil
+        }
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
+        let message = messages[indexPath.item]
+        
+        if shouldShowDateLabel(index: indexPath.item) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "d/MM HH:mm"
+            let dateString = formatter.string(from: message.date)
+            
+            return NSAttributedString(string: dateString)
+        } else {
+            return nil
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -238,16 +280,56 @@ final class ChannelViewController: JSQMessagesViewController {
         return cell
     }
     
-    override func didPressAccessoryButton(_ sender: UIButton) {
-        let picker = UIImagePickerController()
-        picker.delegate = self
-        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
-            picker.sourceType = UIImagePickerControllerSourceType.camera
+    override func collectionView(_ collectionView: JSQMessagesCollectionView, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout, heightForMessageBubbleTopLabelAt indexPath: IndexPath) -> CGFloat {
+        
+        if shouldShowNameLabel(index: indexPath.item) {
+            return kJSQMessagesCollectionViewCellLabelHeightDefault
         } else {
-            picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+            return 0.0
+        }
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAt indexPath: IndexPath!) -> CGFloat {
+        
+        if shouldShowDateLabel(index: indexPath.item) {
+            return kJSQMessagesCollectionViewCellLabelHeightDefault
+        } else {
+            return 0.0
+        }
+    }
+    
+    override func didPressAccessoryButton(_ sender: UIButton) {
+        let photoSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
+            let cameraAction = UIAlertAction(title: "Camera", style: .default, handler: {
+                _ in
+                let picker = UIImagePickerController()
+                picker.delegate = self
+                picker.sourceType = .camera
+                self.present(picker, animated: true, completion:nil)
+            })
+            photoSheet.addAction(cameraAction)
         }
         
-        present(picker, animated: true, completion:nil)
+        let libraryAction = UIAlertAction(title: "Photo Library", style: .default, handler: {
+            _ in
+            let picker = UIImagePickerController()
+            picker.delegate = self
+            picker.sourceType = .photoLibrary
+            self.present(picker, animated: true, completion:nil)
+        })
+        photoSheet.addAction(libraryAction)
+        
+        //Add a Cancel Action to the Popup
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        }
+        photoSheet.addAction(cancelAction)
+        
+        photoSheet.popoverPresentationController?.sourceView = self.view
+        
+        //Displays the Save Popup
+        self.present(photoSheet, animated: true, completion: nil)
     }
     
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
@@ -280,6 +362,37 @@ final class ChannelViewController: JSQMessagesViewController {
             messageRef.removeObserver(withHandle: refHandle)
         }
     }
+    
+    private func shouldShowNameLabel(index: Int) -> Bool {
+        let message = messages[index]
+        
+        if index > 0 {
+            let previousMessage = messages[index - 1]
+            
+            if previousMessage.senderId == message.senderId || message.senderId == senderId {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    private func shouldShowDateLabel(index: Int) -> Bool {
+        let message = messages[index]
+        
+        if index > 0 {
+            let previous = messages[index - 1]
+            
+            if message.date.lessThan(interval: Config.hourInterval, from: previous.date) {
+                return false
+            } else {
+                print(message.date)
+                print(previous.date)
+            }
+        }
+
+        return true
+    }
 }
 
 // MARK: Image Picker Delegate
@@ -300,11 +413,30 @@ extension ChannelViewController: UIImagePickerControllerDelegate, UINavigationCo
             if let key = sendPhotoMessage() {
                 // 4
                 asset?.requestContentEditingInput(with: nil, completionHandler: { (contentEditingInput, info) in
-                    let imageFileURL = contentEditingInput?.fullSizeImageURL
+                    let image = contentEditingInput?.displaySizeImage
+                    
+                    // 3
+                    let imageData = image?.jpeg(.low)
+                    // 4
+                    let imagePath = FIRAuth.auth()!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
+                    // 5
+                    let metadata = FIRStorageMetadata()
+                    metadata.contentType = "image/jpeg"
+                    // 6
+                    self.storageRef.child(imagePath).put(imageData!, metadata: metadata) { (metadata, error) in
+                        if let error = error {
+                            print("Error uploading photo: \(error)")
+                            return
+                        }
+                        // 7
+                        self.setImageURL(self.storageRef.child((metadata?.path)!).description, forPhotoMessageWithKey: key)
+                    }
+                    
+                    /*let imageFileURL = contentEditingInput?.fullSizeImageURL
                     
                     // 5
                     let path = "\(FIRAuth.auth()?.currentUser?.uid)/\(Int(Date.timeIntervalSinceReferenceDate * 1000))/\(photoReferenceUrl.lastPathComponent)"
-                    
+                
                     // 6
                     self.storageRef.child(path).putFile(imageFileURL!, metadata: nil) { (metadata, error) in
                         if let error = error {
@@ -313,7 +445,7 @@ extension ChannelViewController: UIImagePickerControllerDelegate, UINavigationCo
                         }
                         // 7
                         self.setImageURL(self.storageRef.child((metadata?.path)!).description, forPhotoMessageWithKey: key)
-                    }
+                    }*/
                 })
             }
         } else {
@@ -323,7 +455,7 @@ extension ChannelViewController: UIImagePickerControllerDelegate, UINavigationCo
             // 2
             if let key = sendPhotoMessage() {
                 // 3
-                let imageData = UIImageJPEGRepresentation(image, 1.0)
+                let imageData = image.jpeg(.low)
                 // 4
                 let imagePath = FIRAuth.auth()!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
                 // 5
