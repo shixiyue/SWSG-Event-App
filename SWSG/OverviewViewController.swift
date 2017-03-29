@@ -17,6 +17,9 @@ class OverviewViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpOverviewTableView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         overviewText.text = OverviewContent.description
         loadYoutube()
     }
@@ -35,7 +38,7 @@ class OverviewViewController: UITableViewController {
     }
     
     private func loadYoutube() {
-        guard let youtubeURL = URL(string: "https://www.youtube.com/embed/\(OverviewContent.videoID)") else {
+        guard let youtubeURL = URL(string: OverviewContent.videoLink) else {
             return
         }
         video.loadRequest(URLRequest(url: youtubeURL))

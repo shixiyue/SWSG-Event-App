@@ -10,7 +10,7 @@ import UIKit
 
 class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
-    private var pages: [UIViewController] = []
+    private var pages: [UIViewController]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +20,10 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
         }
         setUpPageViewController()
         setUpPageControl()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        setUpPageViewController()
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
@@ -48,6 +52,12 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
         delegate = self
         dataSource = self
         
+        guard OverviewContent.photos.count > 0 else {
+            view.isHidden = true
+            return
+        }
+        view.isHidden = false
+        pages = []
         for i in 0..<OverviewContent.photos.count {
             let pageContent = storyboard?.instantiateViewController(withIdentifier: "PhotoContentViewController") as! PhotoContentViewController
             pageContent.photoIndex = i

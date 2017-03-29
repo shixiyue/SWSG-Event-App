@@ -17,14 +17,7 @@ class SpeakersViewController: PeopleViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpSpeakersTableView()
-    }
-    
-    private func setUpSpeakersTableView() {
-        speakersTableView.dataSource = self
-        speakersTableView.delegate = self
-        speakersTableView.tableFooterView = UIView(frame: CGRect.zero)
-        speakersTableView.allowsSelection = false
+        setUpTableView(speakersTableView)
     }
 
 }

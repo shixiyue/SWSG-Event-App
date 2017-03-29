@@ -91,6 +91,11 @@
 		CC95008D1E8639CB00EC871F /* PhotoContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC95008C1E8639CB00EC871F /* PhotoContentViewController.swift */; };
 		CC95008F1E863CAF00EC871F /* OverviewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC95008E1E863CAF00EC871F /* OverviewContent.swift */; };
 		CCDCCD7B1E7D6E7600931AC0 /* UtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDCCD7A1E7D6E7600931AC0 /* UtilityTests.swift */; };
+		CCE7DDDA1E8A4E440044A863 /* EditOverviewTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDD91E8A4E440044A863 /* EditOverviewTableViewController.swift */; };
+		CCE7DDDC1E8B73A90044A863 /* DescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDDB1E8B73A90044A863 /* DescriptionTableViewCell.swift */; };
+		CCE7DDDE1E8B757E0044A863 /* PhotoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDDD1E8B757E0044A863 /* PhotoTableViewCell.swift */; };
+		CCE7DDE01E8B760C0044A863 /* VideoLinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDDF1E8B760C0044A863 /* VideoLinkTableViewCell.swift */; };
+		CCE7DDE21E8BF5030044A863 /* LPRTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDE11E8BF5030044A863 /* LPRTableView.swift */; };
 		E3220C291E796BC0008AFA85 /* EventSystem.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3220C281E796BC0008AFA85 /* EventSystem.storyboard */; };
 		E3220C2B1E796C7B008AFA85 /* EventScheduleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */; };
 		E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */; };
@@ -231,6 +236,11 @@
 		CCDCCD781E7D6E7600931AC0 /* SWSGTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SWSGTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCDCCD7A1E7D6E7600931AC0 /* UtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityTests.swift; sourceTree = "<group>"; };
 		CCDCCD7C1E7D6E7600931AC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CCE7DDD91E8A4E440044A863 /* EditOverviewTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditOverviewTableViewController.swift; sourceTree = "<group>"; };
+		CCE7DDDB1E8B73A90044A863 /* DescriptionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DescriptionTableViewCell.swift; sourceTree = "<group>"; };
+		CCE7DDDD1E8B757E0044A863 /* PhotoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoTableViewCell.swift; sourceTree = "<group>"; };
+		CCE7DDDF1E8B760C0044A863 /* VideoLinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoLinkTableViewCell.swift; sourceTree = "<group>"; };
+		CCE7DDE11E8BF5030044A863 /* LPRTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LPRTableView.swift; sourceTree = "<group>"; };
 		E3220C281E796BC0008AFA85 /* EventSystem.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = EventSystem.storyboard; sourceTree = "<group>"; };
 		E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleTableViewController.swift; sourceTree = "<group>"; };
 		E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleTableViewCell.swift; sourceTree = "<group>"; };
@@ -486,6 +496,7 @@
 				CC168B2B1E7E8C5800F8725A /* ImageCropper.storyboard */,
 				CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */,
 				CC6EE0E51E80013A003856AE /* ImagePickerViewController.swift */,
+				CCE7DDE11E8BF5030044A863 /* LPRTableView.swift */,
 			);
 			name = "UI Supporting";
 			sourceTree = "<group>";
@@ -511,6 +522,10 @@
 				CC7A4AF71E876F4F00BC8A4B /* PeopleTableViewCell.swift */,
 				CC7A4AF91E87700800BC8A4B /* InformationHeaderTableViewCell.swift */,
 				CC5F1C5A1E863044006A5322 /* Information.storyboard */,
+				CCE7DDD91E8A4E440044A863 /* EditOverviewTableViewController.swift */,
+				CCE7DDDB1E8B73A90044A863 /* DescriptionTableViewCell.swift */,
+				CCE7DDDD1E8B757E0044A863 /* PhotoTableViewCell.swift */,
+				CCE7DDDF1E8B760C0044A863 /* VideoLinkTableViewCell.swift */,
 				CC7A4B0F1E88A78C00BC8A4B /* SponsorsTableViewCell.swift */,
 				CC7A4B131E88B0D800BC8A4B /* SponsorsViewController.swift */,
 				CC7A4B151E88BB6600BC8A4B /* SponsorsInfo.swift */,
@@ -776,6 +791,7 @@
 				CC1CF8AC1E7C178A002224BC /* ProfileTableViewCell.swift in Sources */,
 				3F97955C1E7A8DBF004BC26C /* SignUpViewController.swift in Sources */,
 				E3220C491E7B98CA008AFA85 /* MenuCell.swift in Sources */,
+				CCE7DDDA1E8A4E440044A863 /* EditOverviewTableViewController.swift in Sources */,
 				3F408CCB1E83C12C00E2B787 /* ChannelListViewController.swift in Sources */,
 				CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */,
 				E348D5801E8A830900947B3F /* CalendarHeaderView.swift in Sources */,
@@ -784,8 +800,10 @@
 				E348D5701E841E2900947B3F /* Idea.swift in Sources */,
 				CC7A4B141E88B0D800BC8A4B /* SponsorsViewController.swift in Sources */,
 				CC7A4B161E88BB6600BC8A4B /* SponsorsInfo.swift in Sources */,
+				CCE7DDE21E8BF5030044A863 /* LPRTableView.swift in Sources */,
 				E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */,
 				3F9795631E7A8DBF004BC26C /* Utility.swift in Sources */,
+				CCE7DDDC1E8B73A90044A863 /* DescriptionTableViewCell.swift in Sources */,
 				E348D5661E840D3500947B3F /* IdeasListTableViewController.swift in Sources */,
 				CC95008B1E8639B400EC871F /* PhotoPageViewController.swift in Sources */,
 				3F12AFD31E711CBB00B26D67 /* SWSG.xcdatamodeld in Sources */,
@@ -840,6 +858,7 @@
 				3FC314601E77DB90009B21AB /* ConsultationDayCell.swift in Sources */,
 				CC1CF8AE1E7C1ED6002224BC /* EditProfileViewController.swift in Sources */,
 				CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */,
+				CCE7DDE01E8B760C0044A863 /* VideoLinkTableViewCell.swift in Sources */,
 				3F97955B1E7A8DBF004BC26C /* SignUpTableViewController.swift in Sources */,
 				E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */,
 				E348D5681E840D6100947B3F /* IdeaDetailsTableViewController.swift in Sources */,
@@ -860,6 +879,7 @@
 				3F9795441E7A8DBF004BC26C /* Config.swift in Sources */,
 				3F12AFCB1E711CBB00B26D67 /* AppDelegate.swift in Sources */,
 				3FED30291E77A5CB00C007AD /* Mentor.swift in Sources */,
+				CCE7DDDE1E8B757E0044A863 /* PhotoTableViewCell.swift in Sources */,
 				3FC314661E77DD7D009B21AB /* ConsultationSlotStatus.swift in Sources */,
 				CC7A4B121E88A85F00BC8A4B /* SponsorsTitleTableViewCell.swift in Sources */,
 				3FED301C1E77930200C007AD /* BaseViewController.swift in Sources */,

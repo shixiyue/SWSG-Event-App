@@ -15,7 +15,7 @@ class PhotoContentViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageView.image = UIImage(named: OverviewContent.photos[photoIndex])
+        imageView.image = OverviewContent.photos[photoIndex]
     }
 
 }

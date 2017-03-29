@@ -16,6 +16,13 @@ class PeopleViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+    func setUpTableView(_ tableView: UITableView) {
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
+        tableView.allowsSelection = false
+    }
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1

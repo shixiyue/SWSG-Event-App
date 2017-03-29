@@ -63,8 +63,8 @@ class EditProfileTableViewController: ImagePickerViewController, UIPickerViewDat
     
     private func setUpProfileImage() {
         profileImageButton.setImage(user.profile.image, for: .normal)
-        profileImageButton.addTarget(self, action: #selector(showProfileImageOptions), for: .touchUpInside)
-        changeImageButton.addTarget(self, action: #selector(showProfileImageOptions), for: .touchUpInside)
+        profileImageButton.addTarget(self, action: #selector(showImageOptions), for: .touchUpInside)
+        changeImageButton.addTarget(self, action: #selector(showImageOptions), for: .touchUpInside)
         alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImageButton.bounds.maxY)
     }
     
