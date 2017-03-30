@@ -11,25 +11,20 @@ import Foundation
 /// `User` represents a User of SWSG App.
 class User: NSObject, NSCoding {
     
-    let type: UserTypes
     let email: String
     public private (set) var profile: Profile
     public internal (set) var password: String
-    public private (set) var team = Config.noTeam
     
-    init(type: UserTypes, profile: Profile, password: String, email: String, team: Int) {
-        self.type = type
+    init(profile: Profile, password: String, email: String) {
         self.profile = profile
         self.password = password
         self.email = email
-        self.team = team
         
         super.init()
         _checkRep()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.type = aDecoder.decodeUserTyes()
         guard let profile = aDecoder.decodeObject(forKey: Config.profile) as? Profile else {
             return nil
         }
@@ -42,18 +37,15 @@ class User: NSObject, NSCoding {
             return nil
         }
         self.email = email
-        self.team = aDecoder.decodeInteger(forKey: Config.team)
         
         super.init()
         _checkRep()
     }
     
     func encode(with aCoder: NSCoder) {
-        aCoder.encodeUserTypes(type)
         aCoder.encode(profile, forKey: Config.profile)
         aCoder.encode(password, forKey: Config.password)
         aCoder.encode(email, forKey: Config.email)
-        aCoder.encode(team, forKey: Config.team)
     }
     
     func setPassword(newPassword: String) -> Bool {
@@ -64,23 +56,13 @@ class User: NSObject, NSCoding {
         return true
     }
     
-    func setTeamIndex(index: Int) {
-        guard type.isParticipant else {
-            return
-        }
-        team = index
-    }
-    
     func toDictionary() -> [String: Any] {
-        return [Config.userType: type.toDictionary(), Config.email: email, Config.password: password, Config.profile: profile.toDictionary(), Config.team: team]
+        return [Config.email: email, Config.password: password, Config.profile: profile.toDictionary()]
     }
     
     internal func _checkRep() {
         // Assumption: type, profile and team have met their representation invariants.
         assert (Utility.isValidEmail(testStr: email) && Utility.isValidPassword(testStr: password))
-        if !type.isParticipant {
-            assert(team == -1)
-        }
     }
     
 }

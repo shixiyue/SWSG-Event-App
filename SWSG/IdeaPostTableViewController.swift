@@ -23,13 +23,13 @@ class IdeaPostTableViewController: UITableViewController {
         Utility.onBackButtonClick(tableViewController: self)
     }
     @IBAction func onDoneButtonClick(_ sender: Any) {
-        guard let user = System.activeUser, user.type.isParticipant else {
+        guard let user = System.activeUser, user.profile.type.isParticipant else {
             self.present(Utility.getFailAlertController(message: ideaCreateErrorMsg), animated: true, completion: nil)
             return
         }
         let name = ideaName.text!
         let description = desc.text!
-        let team = teams.retrieveTeamAt(index: user.team).name
+        let team = teams.retrieveTeamAt(index: user.profile.team).name
         ideas.addIdea(idea: Idea(name: name, description: description, team: team))
         Utility.onBackButtonClick(tableViewController: self)
     }

@@ -72,12 +72,13 @@ struct Storage {
             return nil
         }
         let userType = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
-        let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         guard let team_index = userInfo[Config.team] as? Int else {
             return nil
         }
+        
+        let userProfile = Profile(type: userType, team: team_index, name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
 
-        return User(type: userType, profile: userProfile, password: password, email: email, team: team_index)
+        return User(profile: userProfile, password: password, email: email)
     }
     
     /// save the current user to the local device, so that device can recognize user when he/she posts a comment or chat message
@@ -212,11 +213,11 @@ struct Storage {
                         return nil
                     }
                     let userType = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
-                    let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
                     guard let team_participant = member["team"] as? Int else {
                         return nil
                     }
-                    let participant =  User(type: userType, profile: userProfile, password: password, email: email, team: team_participant)
+                    let userProfile = Profile(type: userType, team: team_participant, name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
+                    let participant =  User(profile: userProfile, password: password, email: email)
                     members_retrieved.append(participant)
                 }
                 let team = Team(members: members_retrieved, name: teamName, info: info, lookingFor: lookingFor, isPrivate: isPrivate)

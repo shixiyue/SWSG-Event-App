@@ -12,6 +12,9 @@ import Firebase
 /// `Profile` represents the profile of a User.
 class Profile: NSObject, NSCoding {
     
+    
+    public private (set) var type: UserTypes
+    public private (set) var team = Config.noTeam
     public private (set) var name: String
     public private (set) var image: UIImage
     public private (set) var job: String
@@ -21,8 +24,10 @@ class Profile: NSObject, NSCoding {
     public private (set) var skills: String
     public private (set) var desc: String
 
-    init(name: String, image: UIImage, job: String, company: String, country: String,
+    init(type: UserTypes, team: Int, name: String, image: UIImage, job: String, company: String, country: String,
          education: String, skills: String, description: String) {
+        self.type = type
+        self.team = team
         self.name = name
         self.image = image
         self.job = job
@@ -40,6 +45,14 @@ class Profile: NSObject, NSCoding {
         guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
             return nil
         }
+        guard let type = snapshotValue[Config.userType] as? UserTypes else {
+            return nil
+        }
+        self.type = type
+        guard let team = snapshotValue[Config.team] as? Int else {
+            return nil
+        }
+        self.team = team
         guard let name = snapshotValue[Config.name] as? String else {
             return nil
         }
@@ -73,6 +86,11 @@ class Profile: NSObject, NSCoding {
     }
     
     required init?(coder aDecoder: NSCoder) {
+        guard let type = aDecoder.decodeObject(forKey: Config.userType) as? UserTypes else {
+            return nil
+        }
+        self.type = type
+        self.team = aDecoder.decodeInteger(forKey: Config.team)
         guard let name = aDecoder.decodeObject(forKey: Config.name) as? String else {
             return nil
         }
@@ -143,11 +161,21 @@ class Profile: NSObject, NSCoding {
         _checkRep()
     }
     
-    func toDictionary() -> [String: String] {
-        return [Config.name: name, Config.country: country, Config.job: job, Config.company: company, Config.education: education, Config.skills: skills, Config.desc: desc]
+    func setTeamIndex(index: Int) {
+        guard type.isParticipant else {
+            return
+        }
+        team = index
+    }
+    
+    func toDictionary() -> [String: Any] {
+        return [Config.userType: type.toDictionary(), Config.team: team, Config.name: name, Config.country: country, Config.job: job, Config.company: company, Config.education: education, Config.skills: skills, Config.desc: desc]
     }
     
     private func _checkRep() {
         assert(!(name.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty) && image.cgImage != nil)
+        if !type.isParticipant {
+            assert(team == -1)
+        }
     }
 }

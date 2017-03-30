@@ -49,12 +49,12 @@ class MenuViewController: UIViewController {
         profileImgButton.setImage(user.profile.image, for: .normal)
         nameLbl.text = user.profile.name
         
-        guard user.type.isParticipant else {
-            teamLbl.text = user.type.toString()
+        guard user.profile.type.isParticipant else {
+            teamLbl.text = user.profile.type.toString()
             return
         }
-        if user.team != -1 && teams.count != 0 {
-            teamLbl.text = teams.retrieveTeamAt(index: user.team).name
+        if user.profile.team != -1 && teams.count != 0 {
+            teamLbl.text = teams.retrieveTeamAt(index: user.profile.team).name
         } else {
             teamLbl.text = Config.noTeamLabel
         }

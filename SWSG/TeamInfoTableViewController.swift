@@ -22,7 +22,7 @@ class TeamInfoTableViewController: UITableViewController {
         Utility.onBackButtonClick(tableViewController: self)
     }
     override func viewWillAppear(_ animated: Bool) {
-        guard let user = System.activeUser, user.type.isParticipant, let team = team else {
+        guard let user = System.activeUser, user.profile.type.isParticipant, let team = team else {
             return
         }
         if team.containsMember(member: user) {
@@ -58,7 +58,7 @@ class TeamInfoTableViewController: UITableViewController {
     
     @IBAction func onRqtToJoinButtonTapped(_ sender: Any) {
         print("tapped")
-        guard let user = System.activeUser, user.type.isParticipant else {
+        guard let user = System.activeUser, user.profile.type.isParticipant else {
             self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
             return
         }
@@ -67,12 +67,12 @@ class TeamInfoTableViewController: UITableViewController {
             return
         }
         if (sender as! UIButton).currentTitle == Config.joinTeam {
-            if user.team != -1 {
+            if user.profile.team != -1 {
                 self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
                 return
             }
-            print("in TeamInfoTableViewController, set team index to \(teamIndex!), current team is \(user.team)")
-            user.setTeamIndex(index: teamIndex!)
+            print("in TeamInfoTableViewController, set team index to \(teamIndex!), current team is \(user.profile.team)")
+            user.profile.setTeamIndex(index: teamIndex!)
             System.activeUser = user
             
             team?.addMember(member: user)
@@ -80,11 +80,11 @@ class TeamInfoTableViewController: UITableViewController {
             teams.replaceTeamAt(index: teamIndex!, with: team!)
             buttonLbl.setTitle(Config.quitTeam, for: .normal)
         } else if (sender as! UIButton).currentTitle == Config.quitTeam {
-            if user.team != teamIndex {
+            if user.profile.team != teamIndex {
                 self.present(Utility.getFailAlertController(message: quitTeamErrorMsg), animated: true, completion: nil)
                 return
             }
-            user.setTeamIndex(index: -1)
+            user.profile.setTeamIndex(index: -1)
             System.activeUser = user
             team?.removeMember(member: user)
             print("member deleted")
