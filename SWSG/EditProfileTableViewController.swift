@@ -9,7 +9,7 @@
 import UIKit
 
 /// `EditProfileTableViewController` represents the controller for signup table.
-class EditProfileTableViewController: ImagePickerViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class EditProfileTableViewController: ImagePickerTableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
     var doneButton: RoundCornerButton!
     

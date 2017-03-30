@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ImagePickerTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ImagePickerViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     private let imagePicker = UIImagePickerController()
     var alertControllerPosition = CGPoint()

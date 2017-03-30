@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EditOverviewTableViewController: ImagePickerViewController {
+class EditOverviewTableViewController: ImagePickerTableViewController {
     
     private let photoIndexOffset = 2
     private enum Rows: Int {
