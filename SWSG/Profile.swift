@@ -86,10 +86,7 @@ class Profile: NSObject, NSCoding {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        guard let type = aDecoder.decodeObject(forKey: Config.userType) as? UserTypes else {
-            return nil
-        }
-        self.type = type
+        self.type = aDecoder.decodeUserTyes()
         self.team = aDecoder.decodeInteger(forKey: Config.team)
         guard let name = aDecoder.decodeObject(forKey: Config.name) as? String else {
             return nil
@@ -129,6 +126,8 @@ class Profile: NSObject, NSCoding {
     }
     
     func encode(with aCoder: NSCoder) {
+        aCoder.encodeUserTypes(type)
+        aCoder.encode(team, forKey: Config.team)
         aCoder.encode(name, forKey: Config.name)
         aCoder.encode(image, forKey: Config.image)
         aCoder.encode(job, forKey: Config.job)
