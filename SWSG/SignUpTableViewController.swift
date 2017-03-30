@@ -143,9 +143,9 @@ class SignUpTableViewController: ImagePickerTableViewController, UIPickerViewDat
             return
         }
         let type = Storage.retrieveUserType(email: email)
-        let profile = Profile(name: name, image: image, job: job, company: company, country: country,
+        let profile = Profile(type: type, team: -1, name: name, image: image, job: job, company: company, country: country,
                               education: education, skills: skills, description: desc)
-        let user = User(type: type, profile: profile, password: password, email: email, team: -1)
+        let user = User(profile: profile, password: password, email: email)
         let success = Storage.saveUser(user: user)
         
         guard success else {
@@ -157,7 +157,8 @@ class SignUpTableViewController: ImagePickerTableViewController, UIPickerViewDat
          I added this for Firebase
          */
         
-        FIRAuth.auth()?.createUser(withEmail: emailTextField.text!, password: passwordTextField.text!) { (firUser, error) in
+        let client = FirebaseClient()
+        client.createNewUserWithProfile(profile, email: email, password: password, completion: { (error) in
             
             if error == nil {
                 print("You have successfully signed up")
@@ -170,6 +171,7 @@ class SignUpTableViewController: ImagePickerTableViewController, UIPickerViewDat
                 self.present(Utility.getFailAlertController(message: self.signUpProblem), animated: true, completion: nil)
             }
         }
+        )
     }
     
     override func updateImage(_ notification: NSNotification) {

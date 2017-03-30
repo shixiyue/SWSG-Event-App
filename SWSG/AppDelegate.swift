@@ -24,8 +24,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         System.activeUser = user
         
-        FIRAuth.auth()?.signIn(withEmail: user.email, password: user.password) { (user, error) in
-        }
+        let client = FirebaseClient()
+        client.signIn(email: user.email, password: user.password, completion: {
+            (error) in
+        })
         
         return true
     }

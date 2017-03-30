@@ -10,14 +10,15 @@ struct System {
             }
             let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: user)
             UserDefaults.standard.set(encodedData, forKey: Config.user)
-            Storage.saveUser(user: user)
+            let _ = Storage.saveUser(user: user)
         }
     }
     
     public static var mentors: [Mentor] {
         var mentors = [Mentor]()
         let image = UIImage(named: "Profile")
-        let profile = Profile(name: "Mr Tan Hwee Huat", image: image!, job: "Asset Manager",
+        let type = UserTypes(isParticipant: false, isSpeaker: false, isMentor: true, isOrganizer: false, isAdmin: false)
+        let profile = Profile(type: type, team: -1, name: "Mr Tan Hwee Huat", image: image!, job: "Asset Manager",
                               company: "UOB Pte. Ltd.", country: "Singapore",
                               education: "National University of Singapore",
                               skills: "Financial Planning", description: "Awesome guy")

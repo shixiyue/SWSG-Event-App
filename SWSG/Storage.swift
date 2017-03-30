@@ -64,7 +64,7 @@ struct Storage {
         guard let data = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments), let userInfo = data as? [String: Any] else {
             return nil
         }
-        guard let email = userInfo[Config.email] as? String, let password = userInfo[Config.password] as? String, let profile = userInfo[Config.profile] as? [String: String], let name = profile[Config.name], let country = profile[Config.country], let job = profile[Config.job], let company = profile[Config.company], let education = profile[Config.education], let skills = profile[Config.skills], let desc = profile[Config.desc], let type = userInfo[Config.userType] as? [String: Bool], let isParticipant = type[Config.isParticipant], let isSpeaker = type[Config.isSpeaker], let isMentor = type[Config.isMentor], let isOrganizer = type[Config.isOrganizer], let isAdmin = type[Config.isAdmin] else {
+        guard let email = userInfo[Config.email] as? String, let password = userInfo[Config.password] as? String, let profile = userInfo[Config.profile] as? [String: Any], let name = profile[Config.name] as? String, let country = profile[Config.country] as? String, let job = profile[Config.job] as? String, let company = profile[Config.company] as? String, let education = profile[Config.education] as? String, let skills = profile[Config.skills] as? String, let desc = profile[Config.desc] as? String, let type = profile[Config.userType] as? [String: Bool], let isParticipant = type[Config.isParticipant], let isSpeaker = type[Config.isSpeaker], let isMentor = type[Config.isMentor], let isOrganizer = type[Config.isOrganizer], let isAdmin = type[Config.isAdmin] else {
             return nil
         }
         let imageFilePath = getLocalFileURL(fileName: "\(email).png").path
@@ -72,12 +72,13 @@ struct Storage {
             return nil
         }
         let userType = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
-        let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-        guard let team_index = userInfo[Config.team] as? Int else {
+        guard let team_index = profile[Config.team] as? Int else {
             return nil
         }
+        
+        let userProfile = Profile(type: userType, team: team_index, name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
 
-        return User(type: userType, profile: userProfile, password: password, email: email, team: team_index)
+        return User(profile: userProfile, password: password, email: email)
     }
     
     /// save the current user to the local device, so that device can recognize user when he/she posts a comment or chat message
@@ -212,11 +213,11 @@ struct Storage {
                         return nil
                     }
                     let userType = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
-                    let userProfile = Profile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
                     guard let team_participant = member["team"] as? Int else {
                         return nil
                     }
-                    let participant =  User(type: userType, profile: userProfile, password: password, email: email, team: team_participant)
+                    let userProfile = Profile(type: userType, team: team_participant, name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
+                    let participant =  User(profile: userProfile, password: password, email: email)
                     members_retrieved.append(participant)
                 }
                 let team = Team(members: members_retrieved, name: teamName, info: info, lookingFor: lookingFor, isPrivate: isPrivate)

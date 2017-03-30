@@ -46,12 +46,12 @@ class ProfileViewController: ImagePickerViewController {
         
         nameLbl.text = user.profile.name
         
-        guard user.type.isParticipant else {
-            teamLbl.text = user.type.toString()
+        guard user.profile.type.isParticipant else {
+            teamLbl.text = user.profile.type.toString()
             return
         }
-        if user.team != -1 {
-            teamLbl.text = Teams.sharedInstance().retrieveTeamAt(index: user.team).name
+        if user.profile.team != -1 {
+            teamLbl.text = Teams.sharedInstance().retrieveTeamAt(index: user.profile.team).name
         } else {
             teamLbl.text = Config.noTeamLabel
         }

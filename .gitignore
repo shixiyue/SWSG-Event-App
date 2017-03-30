@@ -50,6 +50,7 @@ playground.xcworkspace
 # Pods/
 Podfile.lock
 Pods/*
+*.lock
 
 # Carthage
 #
