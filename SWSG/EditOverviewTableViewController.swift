@@ -16,9 +16,17 @@ class EditOverviewTableViewController: ImagePickerTableViewController {
     }
 
     @IBOutlet private var editOverviewTableView: UITableView!
-    private var descriptionTextView: UITextView!
-    private var (eventDescription, videoLink, photos) = (OverviewContent.description, OverviewContent.videoLink, OverviewContent.photos) // Need to fetch data from database
-    private var videoLinkTextField: UITextField!
+    private var descriptionTextView: UITextView = UITextView()
+    private var desc: String = ""
+    private var images: [UIImage] = []
+    private var videoId: String = ""
+    private var videoLinkTextField: UITextField = UITextField()
+    
+    func presetInfo(desc: String, images: [UIImage], videoId: String) {
+        self.desc = desc
+        self.images = images
+        self.videoId = videoId
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +38,7 @@ class EditOverviewTableViewController: ImagePickerTableViewController {
     }
     
     override func handleImage(chosenImage: UIImage) {
-        photos.append(chosenImage)
+        images.append(chosenImage)
         editOverviewTableView.reloadData()
     }
     
@@ -38,29 +46,31 @@ class EditOverviewTableViewController: ImagePickerTableViewController {
         guard let superview = sender.superview, let cell = superview.superview as? UITableViewCell, let indexPath = editOverviewTableView.indexPath(for: cell) else {
             return
         }
-        photos.remove(at: indexPath.row - photoIndexOffset)
+        images.remove(at: indexPath.row - photoIndexOffset)
         editOverviewTableView.reloadData()
     }
     
     @IBAction func update(_ sender: RoundCornerButton) {
-        guard let description = descriptionTextView.text, let videoLink = videoLinkTextField.text else {
+        guard let description = descriptionTextView.text, let videoId = videoLinkTextField.text else {
             return
         }
-        OverviewContent.update(description: description, photos: photos, videoLink: videoLink)
+        let infoDict: [String: Any] = ["description": description, "images": images, "videoId": videoId]
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "addIdea"), object: nil, userInfo: infoDict)
+        //OverviewContent.update(description: description, images: images, videoLink: videoLink)
         _ = navigationController?.popViewController(animated: true)
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let sourceIndex = sourceIndexPath.row - photoIndexOffset
         let destinationIndex = destinationIndexPath.row - photoIndexOffset
-        let source = photos[sourceIndex]
-        let destination = photos[destinationIndex]
-        photos[sourceIndex] = destination
-        photos[destinationIndex] = source
+        let source = images[sourceIndex]
+        let destination = images[destinationIndex]
+        images[sourceIndex] = destination
+        images[destinationIndex] = source
     }
     
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return indexPath.row >= photoIndexOffset && indexPath.row < photoIndexOffset + photos.count
+        return indexPath.row >= photoIndexOffset && indexPath.row < photoIndexOffset + images.count
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -68,7 +78,7 @@ class EditOverviewTableViewController: ImagePickerTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Rows.photo.rawValue + photos.count
+        return Rows.photo.rawValue + images.count
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -85,20 +95,26 @@ class EditOverviewTableViewController: ImagePickerTableViewController {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(Rows.description)", for: indexPath) as? DescriptionTableViewCell else {
                 return DescriptionTableViewCell()
             }
+            if !descriptionTextView.text.isEmpty {
+                desc = descriptionTextView.text
+            }
             descriptionTextView = cell.descriptionTextView
-            descriptionTextView.text = eventDescription
+            descriptionTextView.text = desc
             return cell
         case Rows.addPhoto.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: "\(Rows.addPhoto)", for: indexPath)
             return cell
-        case Rows.videoLink.rawValue + photos.count:
+        case Rows.videoLink.rawValue + images.count:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(Rows.videoLink)", for: indexPath) as? VideoLinkTableViewCell else {
                 return VideoLinkTableViewCell()
             }
+            if let text = videoLinkTextField.text, !text.isEmpty {
+                videoId = text
+            }
             videoLinkTextField = cell.videoLinkTextField
-            videoLinkTextField.text = videoLink
+            videoLinkTextField.text = videoId
             return cell
-        case Rows.done.rawValue + photos.count:
+        case Rows.done.rawValue + images.count:
             let cell = tableView.dequeueReusableCell(withIdentifier: "\(Rows.done)", for: indexPath)
             return cell
         default:
@@ -106,7 +122,7 @@ class EditOverviewTableViewController: ImagePickerTableViewController {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(Rows.photo)", for: indexPath) as? PhotoTableViewCell else {
                 return PhotoTableViewCell()
             }
-            cell.photoView.image = photos[index]
+            cell.photoView.image = images[index]
             return cell
         }
     }

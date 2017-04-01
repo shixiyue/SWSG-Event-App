@@ -11,11 +11,11 @@ import UIKit
 class PhotoContentViewController: UIViewController {
     
     @IBOutlet private var imageView: UIImageView!
-    var photoIndex: Int!
+    var image: UIImage!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageView.image = OverviewContent.photos[photoIndex]
+        imageView.image = image
     }
 
 }

@@ -7,7 +7,9 @@
 //
 
 import Foundation
+
 class Ideas {
+    
     private static var ideasInstance = Ideas()
     private var ideas : [Idea] {
         didSet {
@@ -32,10 +34,6 @@ class Ideas {
     
     public func retrieveIdeaAt(index: Int) -> Idea {
         return ideas[index]
-    }
-    
-    public func replaceTeamAt(index: Int, with idea: Idea) {
-        ideas[index] = idea
     }
     
     public var count: Int {

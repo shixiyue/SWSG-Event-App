@@ -56,6 +56,7 @@
 		C28B2EDA1E86665000F6DD67 /* FirebaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28B2ED91E86665000F6DD67 /* FirebaseError.swift */; };
 		CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */; };
 		CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC0032941E7CF68500CF190E /* Settings.storyboard */; };
+		CC14B15D1E8F621B000121C1 /* IdeaNameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC14B15C1E8F621B000121C1 /* IdeaNameTableViewCell.swift */; };
 		CC168B2C1E7E8C5800F8725A /* ImageCropper.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC168B2B1E7E8C5800F8725A /* ImageCropper.storyboard */; };
 		CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */; };
 		CC1AA6C21E77C328004F5F95 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -66,6 +67,7 @@
 		CC1CF8AC1E7C178A002224BC /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1CF8AB1E7C178A002224BC /* ProfileTableViewCell.swift */; };
 		CC1CF8AE1E7C1ED6002224BC /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1CF8AD1E7C1ED6002224BC /* EditProfileViewController.swift */; };
 		CC1CF8B01E7C2009002224BC /* EditProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1CF8AF1E7C2009002224BC /* EditProfileTableViewController.swift */; };
+		CC1F153A1E8F8C7000293488 /* DescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1F15391E8F8C7000293488 /* DescriptionTableViewCell.swift */; };
 		CC5F1C581E862704006A5322 /* InformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC5F1C571E862704006A5322 /* InformationViewController.swift */; };
 		CC5F1C5B1E863044006A5322 /* Information.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC5F1C5A1E863044006A5322 /* Information.storyboard */; };
 		CC5F1C5D1E8630F1006A5322 /* InformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC5F1C5C1E8630F1006A5322 /* InformationCell.swift */; };
@@ -93,7 +95,6 @@
 		CC95008F1E863CAF00EC871F /* OverviewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC95008E1E863CAF00EC871F /* OverviewContent.swift */; };
 		CCDCCD7B1E7D6E7600931AC0 /* UtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDCCD7A1E7D6E7600931AC0 /* UtilityTests.swift */; };
 		CCE7DDDA1E8A4E440044A863 /* EditOverviewTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDD91E8A4E440044A863 /* EditOverviewTableViewController.swift */; };
-		CCE7DDDC1E8B73A90044A863 /* DescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDDB1E8B73A90044A863 /* DescriptionTableViewCell.swift */; };
 		CCE7DDDE1E8B757E0044A863 /* PhotoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDDD1E8B757E0044A863 /* PhotoTableViewCell.swift */; };
 		CCE7DDE01E8B760C0044A863 /* VideoLinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDDF1E8B760C0044A863 /* VideoLinkTableViewCell.swift */; };
 		CCE7DDE21E8BF5030044A863 /* LPRTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDE11E8BF5030044A863 /* LPRTableView.swift */; };
@@ -202,6 +203,7 @@
 		C28B2ED91E86665000F6DD67 /* FirebaseError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseError.swift; sourceTree = "<group>"; };
 		CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		CC0032941E7CF68500CF190E /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
+		CC14B15C1E8F621B000121C1 /* IdeaNameTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaNameTableViewCell.swift; sourceTree = "<group>"; };
 		CC168B2B1E7E8C5800F8725A /* ImageCropper.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ImageCropper.storyboard; sourceTree = "<group>"; };
 		CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCropperViewController.swift; sourceTree = "<group>"; };
 		CC1CF8A31E7C03DA002224BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Profile.storyboard; sourceTree = "<group>"; };
@@ -210,6 +212,7 @@
 		CC1CF8AB1E7C178A002224BC /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
 		CC1CF8AD1E7C1ED6002224BC /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		CC1CF8AF1E7C2009002224BC /* EditProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileTableViewController.swift; sourceTree = "<group>"; };
+		CC1F15391E8F8C7000293488 /* DescriptionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DescriptionTableViewCell.swift; sourceTree = "<group>"; };
 		CC5F1C571E862704006A5322 /* InformationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
 		CC5F1C5A1E863044006A5322 /* Information.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Information.storyboard; sourceTree = "<group>"; };
 		CC5F1C5C1E8630F1006A5322 /* InformationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationCell.swift; sourceTree = "<group>"; };
@@ -239,7 +242,6 @@
 		CCDCCD7A1E7D6E7600931AC0 /* UtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityTests.swift; sourceTree = "<group>"; };
 		CCDCCD7C1E7D6E7600931AC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CCE7DDD91E8A4E440044A863 /* EditOverviewTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditOverviewTableViewController.swift; sourceTree = "<group>"; };
-		CCE7DDDB1E8B73A90044A863 /* DescriptionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DescriptionTableViewCell.swift; sourceTree = "<group>"; };
 		CCE7DDDD1E8B757E0044A863 /* PhotoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoTableViewCell.swift; sourceTree = "<group>"; };
 		CCE7DDDF1E8B760C0044A863 /* VideoLinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoLinkTableViewCell.swift; sourceTree = "<group>"; };
 		CCE7DDE11E8BF5030044A863 /* LPRTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LPRTableView.swift; sourceTree = "<group>"; };
@@ -526,7 +528,6 @@
 				CC7A4AF91E87700800BC8A4B /* InformationHeaderTableViewCell.swift */,
 				CC5F1C5A1E863044006A5322 /* Information.storyboard */,
 				CCE7DDD91E8A4E440044A863 /* EditOverviewTableViewController.swift */,
-				CCE7DDDB1E8B73A90044A863 /* DescriptionTableViewCell.swift */,
 				CCE7DDDD1E8B757E0044A863 /* PhotoTableViewCell.swift */,
 				CCE7DDDF1E8B760C0044A863 /* VideoLinkTableViewCell.swift */,
 				CC7A4B0F1E88A78C00BC8A4B /* SponsorsTableViewCell.swift */,
@@ -538,6 +539,7 @@
 				CC7A4B051E88847400BC8A4B /* OrganizersViewController.swift */,
 				CC7A4AFB1E87705E00BC8A4B /* SpeakersInfo.swift */,
 				CC9500881E86398F00EC871F /* OverviewViewController.swift */,
+				CC1F15391E8F8C7000293488 /* DescriptionTableViewCell.swift */,
 				CC95008E1E863CAF00EC871F /* OverviewContent.swift */,
 				CC95008A1E8639B400EC871F /* PhotoPageViewController.swift */,
 				CC95008C1E8639CB00EC871F /* PhotoContentViewController.swift */,
@@ -611,6 +613,7 @@
 				E348D56B1E840F1100947B3F /* IdeaItemTableViewCell.swift */,
 				E348D5651E840D3500947B3F /* IdeasListTableViewController.swift */,
 				E348D5671E840D6100947B3F /* IdeaDetailsTableViewController.swift */,
+				CC14B15C1E8F621B000121C1 /* IdeaNameTableViewCell.swift */,
 				E348D5691E840D8B00947B3F /* IdeaPostTableViewController.swift */,
 				E348D56F1E841E2900947B3F /* Idea.swift */,
 				E348D5711E841E3000947B3F /* Ideas.swift */,
@@ -799,6 +802,7 @@
 				CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */,
 				E348D5801E8A830900947B3F /* CalendarHeaderView.swift in Sources */,
 				3F97954D1E7A8DBF004BC26C /* InitialViewController.swift in Sources */,
+				CC1F153A1E8F8C7000293488 /* DescriptionTableViewCell.swift in Sources */,
 				E348D56A1E840D8B00947B3F /* IdeaPostTableViewController.swift in Sources */,
 				E348D5701E841E2900947B3F /* Idea.swift in Sources */,
 				CC7A4B141E88B0D800BC8A4B /* SponsorsViewController.swift in Sources */,
@@ -806,7 +810,7 @@
 				CCE7DDE21E8BF5030044A863 /* LPRTableView.swift in Sources */,
 				E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */,
 				3F9795631E7A8DBF004BC26C /* Utility.swift in Sources */,
-				CCE7DDDC1E8B73A90044A863 /* DescriptionTableViewCell.swift in Sources */,
+				CC14B15D1E8F621B000121C1 /* IdeaNameTableViewCell.swift in Sources */,
 				E348D5661E840D3500947B3F /* IdeasListTableViewController.swift in Sources */,
 				CC95008B1E8639B400EC871F /* PhotoPageViewController.swift in Sources */,
 				3F12AFD31E711CBB00B26D67 /* SWSG.xcdatamodeld in Sources */,

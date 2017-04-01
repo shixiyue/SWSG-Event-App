@@ -12,10 +12,12 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
     
     private var pages: [UIViewController]!
     
+    var images: [UIImage]!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard OverviewContent.photos.count > 0 else {
+        guard images.count > 0 else {
             return
         }
         setUpPageViewController()
@@ -41,7 +43,7 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
     }
     
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
-        return OverviewContent.photos.count
+        return images.count
     }
     
     func presentationIndex(for pageViewController: UIPageViewController) -> Int {
@@ -52,17 +54,18 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
         delegate = self
         dataSource = self
         
-        guard OverviewContent.photos.count > 0 else {
+        guard images.count > 0 else {
             view.isHidden = true
             return
         }
         view.isHidden = false
         pages = []
-        for i in 0..<OverviewContent.photos.count {
+        for i in 0..<images.count {
             let pageContent = storyboard?.instantiateViewController(withIdentifier: "PhotoContentViewController") as! PhotoContentViewController
-            pageContent.photoIndex = i
+            pageContent.image = images[i]
             pages.append(pageContent)
         }
+        print(pages.count)
         setViewControllers([pages[0]], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
     }
     

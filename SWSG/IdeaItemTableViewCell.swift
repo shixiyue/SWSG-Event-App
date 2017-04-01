@@ -13,6 +13,7 @@ class IdeaItemTableViewCell: UITableViewCell {
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var desc: UILabel!
     @IBOutlet weak var team: UILabel!
+    @IBOutlet var ideaImageView: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
