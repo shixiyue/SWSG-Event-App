@@ -48,6 +48,9 @@ struct Config {
     static let comment = "comment"
     static let comments = "comments"
     static let words = "words"
+    static let dateTime = "date_time"
+    static let details = "details"
+    static let venue = "venue"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -104,4 +107,6 @@ struct Config {
     //Parameters for storage
     static let commentsFileName = "commentsFileName"
     static let localUser = "localUser"
+    
+    static let dateTimeFormatDayString = "dd-MM-yyyy"
 }
