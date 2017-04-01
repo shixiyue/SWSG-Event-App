@@ -33,6 +33,7 @@ struct Config {
     static let password = "password"
     static let team = "team"
     static let name = "name"
+    static let username = "username"
     static let image = "image"
     static let job = "job"
     static let company = "company"

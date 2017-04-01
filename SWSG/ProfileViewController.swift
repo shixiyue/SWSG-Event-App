@@ -13,8 +13,9 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
 
     @IBOutlet private var profileImgButton: UIButton!
     @IBOutlet private var nameLbl: UILabel!
+    @IBOutlet private var usernameLbl: UILabel!
     @IBOutlet private var teamLbl: UILabel!
-    @IBOutlet var profileList: UITableView!
+    @IBOutlet fileprivate var profileList: UITableView!
 
     private let imagePicker = UIImagePickerController()
 
@@ -47,6 +48,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         profileImgButton.addTarget(self, action: #selector(showProfileImageOptions), for: .touchUpInside)
         
         nameLbl.text = user.profile.name
+        usernameLbl.text = "@\(user.profile.username)"
         
         guard user.profile.type.isParticipant else {
             teamLbl.text = user.profile.type.toString()

@@ -18,7 +18,7 @@ struct System {
         var mentors = [Mentor]()
         let image = UIImage(named: "Profile")
         let type = UserTypes(isParticipant: false, isSpeaker: false, isMentor: true, isOrganizer: false, isAdmin: false)
-        let profile = Profile(type: type, team: -1, name: "Mr Tan Hwee Huat", image: image!, job: "Asset Manager",
+        let profile = Profile(type: type, team: -1, name: "Mr Tan Hwee Huat", username: "HweeHuat", image: image!, job: "Asset Manager",
                               company: "UOB Pte. Ltd.", country: "Singapore",
                               education: "National University of Singapore",
                               skills: "Financial Planning", description: "Awesome guy")

@@ -26,6 +26,7 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
 
     @IBOutlet private var profileImageButton: UIButton!
     @IBOutlet private var nameTextField: UITextField!
+    @IBOutlet private var usernameTextField: UITextField!
     @IBOutlet private var emailTextField: UITextField!
     @IBOutlet private var passwordTextField: UITextField!
     @IBOutlet private var countryTextField: UITextField!
@@ -60,7 +61,7 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
     }
     
     private func setUpTextFields() {
-        textFields = [nameTextField, emailTextField, passwordTextField, countryTextField, jobTextField, companyTextField, educationTextField]
+        textFields = [nameTextField, usernameTextField, emailTextField, passwordTextField, countryTextField, jobTextField, companyTextField, educationTextField]
         for (index, textField) in textFields.enumerated() {
             textField.delegate = self
             textField.tag = index
@@ -131,7 +132,7 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
     }
     
     @objc private func signUp(sender: UIButton) {
-        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
+        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let username = usernameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
             return
         }
         guard Utility.isValidPassword(testStr: password) else {
@@ -143,7 +144,7 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
             return
         }
         let type = Storage.retrieveUserType(email: email)
-        let profile = Profile(type: type, team: -1, name: name, image: image, job: job, company: company, country: country,
+        let profile = Profile(type: type, team: Config.noTeam, name: name, username: username, image: image, job: job, company: company, country: country,
                               education: education, skills: skills, description: desc)
         let user = User(profile: profile, password: password, email: email)
         let success = Storage.saveUser(user: user)
@@ -167,7 +168,6 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
                 Utility.logInUser(user: user, currentViewController: self)
                 
             } else {
-                print(error)
                 self.present(Utility.getFailAlertController(message: self.signUpProblem), animated: true, completion: nil)
             }
         }
@@ -235,8 +235,10 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
         }
         constraint.constant = size.height
         textView.setContentOffset(CGPoint(), animated: false)
+        UIView.setAnimationsEnabled(false)
         signUpTableView.beginUpdates()
         signUpTableView.endUpdates()
+        UIView.setAnimationsEnabled(true)
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

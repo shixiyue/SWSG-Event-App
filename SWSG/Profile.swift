@@ -12,10 +12,10 @@ import Firebase
 /// `Profile` represents the profile of a User.
 class Profile: NSObject, NSCoding {
     
-    
     public private (set) var type: UserTypes
     public private (set) var team = Config.noTeam
     public private (set) var name: String
+    public private (set) var username: String
     public private (set) var image: UIImage
     public private (set) var job: String
     public private (set) var company: String
@@ -24,11 +24,12 @@ class Profile: NSObject, NSCoding {
     public private (set) var skills: String
     public private (set) var desc: String
 
-    init(type: UserTypes, team: Int, name: String, image: UIImage, job: String, company: String, country: String,
+    init(type: UserTypes, team: Int, name: String, username: String, image: UIImage, job: String, company: String, country: String,
          education: String, skills: String, description: String) {
         self.type = type
         self.team = team
         self.name = name
+        self.username = username
         self.image = image
         self.job = job
         self.company = company
@@ -57,6 +58,10 @@ class Profile: NSObject, NSCoding {
             return nil
         }
         self.name = name
+        guard let username = snapshotValue[Config.username] as? String else {
+            return nil
+        }
+        self.username = username
         image = UIImage()
         guard let job = snapshotValue[Config.job] as? String else {
             return nil
@@ -92,6 +97,10 @@ class Profile: NSObject, NSCoding {
             return nil
         }
         self.name = name
+        guard let username = aDecoder.decodeObject(forKey: Config.username) as? String else {
+            return nil
+        }
+        self.username = username
         guard let image = aDecoder.decodeObject(forKey: Config.image) as? UIImage else {
             return nil
         }
@@ -129,6 +138,7 @@ class Profile: NSObject, NSCoding {
         aCoder.encodeUserTypes(type)
         aCoder.encode(team, forKey: Config.team)
         aCoder.encode(name, forKey: Config.name)
+        aCoder.encode(username, forKey: Config.username)
         aCoder.encode(image, forKey: Config.image)
         aCoder.encode(job, forKey: Config.job)
         aCoder.encode(company, forKey: Config.company)
@@ -138,11 +148,12 @@ class Profile: NSObject, NSCoding {
         aCoder.encode(desc, forKey: Config.desc)
     }
     
-    func updateProfile(name: String, image: UIImage, job: String, company: String, country: String,
+    func updateProfile(name: String, username: String, image: UIImage, job: String, company: String, country: String,
                        education: String, skills: String, description: String) {
         _checkRep()
         
         self.name = name
+        self.username = username
         self.image = image
         self.job = job
         self.company = company
@@ -168,11 +179,11 @@ class Profile: NSObject, NSCoding {
     }
     
     func toDictionary() -> [String: Any] {
-        return [Config.userType: type.toDictionary(), Config.team: team, Config.name: name, Config.country: country, Config.job: job, Config.company: company, Config.education: education, Config.skills: skills, Config.desc: desc]
+        return [Config.userType: type.toDictionary(), Config.team: team, Config.name: name, Config.username: username, Config.country: country, Config.job: job, Config.company: company, Config.education: education, Config.skills: skills, Config.desc: desc]
     }
     
     private func _checkRep() {
-        assert(!(name.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty) && image.cgImage != nil)
+        assert(!(name.isEmpty || username.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty) && image.cgImage != nil)
         if !type.isParticipant {
             assert(team == -1)
         }

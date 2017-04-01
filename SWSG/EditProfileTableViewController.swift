@@ -143,7 +143,7 @@ class EditProfileTableViewController: ImagePickerViewController, UIPickerViewDat
         guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
             return
         }
-        user.profile.updateProfile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
+        user.profile.updateProfile(name: name, username: user.profile.username, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         System.updateActiveUser()
         let success = Storage.saveUser(user: user)
         guard success else {
