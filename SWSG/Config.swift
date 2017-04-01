@@ -10,15 +10,6 @@ import UIKit
 
 struct Config {
     
-    static var currentLogInUser : String {
-        set {
-            self.currentLogInUser = newValue
-        }
-        get {
-            return Storage.readCurrentUserFromLocal()!
-        }
-    }
-    
     static let noTeam = -1
     static let defaultCountry = "Singapore"
     static let joinTeam = "Request to Join"

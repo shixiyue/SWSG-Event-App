@@ -2,6 +2,8 @@ import UIKit
 
 struct System {
     
+    static var client = FirebaseClient()
+    
     static var activeUser: User? {
         didSet {
             guard let user = activeUser else {
@@ -10,7 +12,6 @@ struct System {
             }
             let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: user)
             UserDefaults.standard.set(encodedData, forKey: Config.user)
-            let _ = Storage.saveUser(user: user)
         }
     }
     

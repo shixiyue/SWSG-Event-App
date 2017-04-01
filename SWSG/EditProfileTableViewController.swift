@@ -145,11 +145,8 @@ class EditProfileTableViewController: ImagePickerViewController, UIPickerViewDat
         }
         user.profile.updateProfile(name: name, username: user.profile.username, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         System.updateActiveUser()
-        let success = Storage.saveUser(user: user)
-        guard success else {
-            self.present(Utility.getFailAlertController(message: updateProblem), animated: true, completion: nil)
-            return
-        }
+        // Error handling?
+        System.client.updateProfile(newProfile: user.profile)
         dismiss(animated: false, completion: nil)
     }
     

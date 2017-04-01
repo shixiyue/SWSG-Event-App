@@ -139,6 +139,8 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
         user.profile.updateImage(image: image)
         System.updateActiveUser()
+        // Error handling?
+        System.client.updateProfile(newProfile: user.profile)
         
         NotificationCenter.default.removeObserver(self)
     }

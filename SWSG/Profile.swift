@@ -46,10 +46,10 @@ class Profile: NSObject, NSCoding {
         guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
             return nil
         }
-        guard let type = snapshotValue[Config.userType] as? UserTypes else {
+        guard let userTypes = snapshotValue[Config.userType] as? [String: Bool], let isParticipant = userTypes[Config.isParticipant], let isSpeaker = userTypes[Config.isSpeaker], let isMentor = userTypes[Config.isMentor], let isOrganizer = userTypes[Config.isOrganizer], let isAdmin = userTypes[Config.isAdmin] else {
             return nil
         }
-        self.type = type
+        self.type = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
         guard let team = snapshotValue[Config.team] as? Int else {
             return nil
         }
@@ -183,7 +183,7 @@ class Profile: NSObject, NSCoding {
     }
     
     private func _checkRep() {
-        assert(!(name.isEmpty || username.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty) && image.cgImage != nil)
+        assert(!(name.isEmpty || username.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty) /*&& image.cgImage != nil*/)
         if !type.isParticipant {
             assert(team == -1)
         }
