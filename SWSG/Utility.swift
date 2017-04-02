@@ -82,10 +82,6 @@ struct Utility {
     
     static func logInUser(user: User, currentViewController: UIViewController) {
         System.activeUser = user
-        let client = FirebaseClient()
-        client.signIn(email: user.email, password: user.password, completion: {
-            (error) in
-        })
         showStoryboard(storyboard: Config.main, destinationViewController: Config.navigationController, currentViewController: currentViewController)
     }
     

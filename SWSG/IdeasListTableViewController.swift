@@ -30,6 +30,7 @@ class IdeasListTableViewController: BaseViewController {
         super.viewDidLoad()
         ideaListTableView.dataSource = self
         ideaListTableView.delegate = self
+        addSlideMenuButton()
     }
     
     override func viewWillAppear(_ animated: Bool) {

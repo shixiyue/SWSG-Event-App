@@ -12,8 +12,9 @@ class ProfileViewController: ImagePickerViewController {
 
     @IBOutlet private var profileImgButton: UIButton!
     @IBOutlet private var nameLbl: UILabel!
+    @IBOutlet private var usernameLbl: UILabel!
     @IBOutlet private var teamLbl: UILabel!
-    @IBOutlet var profileList: UITableView!
+    @IBOutlet fileprivate var profileList: UITableView!
 
     private let imagePicker = UIImagePickerController()
 
@@ -45,6 +46,7 @@ class ProfileViewController: ImagePickerViewController {
         alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImgButton.bounds.maxY)
         
         nameLbl.text = user.profile.name
+        usernameLbl.text = "@\(user.profile.username)"
         
         guard user.profile.type.isParticipant else {
             teamLbl.text = user.profile.type.toString()
@@ -72,6 +74,8 @@ class ProfileViewController: ImagePickerViewController {
         }
         user.profile.updateImage(image: image)
         System.updateActiveUser()
+        // Error handling?
+        System.client.updateProfile(newProfile: user.profile)
         
         NotificationCenter.default.removeObserver(self)
     }

@@ -23,6 +23,7 @@ class MenuViewController: UIViewController {
     
     @IBOutlet private var profileImgButton: UIButton!
     @IBOutlet private weak var nameLbl: UILabel!
+    @IBOutlet private weak var usernameLbl: UILabel!
     @IBOutlet private weak var teamLbl: UILabel!
     
     var teams = Teams.sharedInstance()
@@ -48,6 +49,7 @@ class MenuViewController: UIViewController {
         
         profileImgButton.setImage(user.profile.image, for: .normal)
         nameLbl.text = user.profile.name
+        usernameLbl.text = "@\(user.profile.username)"
         
         guard user.profile.type.isParticipant else {
             teamLbl.text = user.profile.type.toString()

@@ -17,9 +17,10 @@ class PeopleViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpTableView()
     }
     
-    func setUpTableView() {
+    private func setUpTableView() {
         peopleTableView.dataSource = self
         peopleTableView.delegate = self
         peopleTableView.tableFooterView = UIView(frame: CGRect.zero)

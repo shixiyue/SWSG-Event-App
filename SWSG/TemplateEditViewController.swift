@@ -31,6 +31,7 @@ class TemplateEditViewController: ImagePickerTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         editOverviewTableView.allowsSelection = false
+        hideKeyboardWhenTappedAround()
     }
 
     @IBAction func addPhoto(_ sender: UIButton) {

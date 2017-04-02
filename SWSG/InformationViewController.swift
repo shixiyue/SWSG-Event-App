@@ -32,12 +32,15 @@ class InformationViewController: BaseViewController {
         }
         switch identifier {
         case "Speakers":
+            print(1)
             peopleViewController.people = SpeakersInfo.speakers
             peopleViewController.header = "Speakers"
         case "Judges":
+            print(2)
             peopleViewController.people = JudgesInfo.judegs
             peopleViewController.header = "Judges"
         case "Organizing Team":
+            print(3)
             peopleViewController.people = OrganizersInfo.organizers
             peopleViewController.header = "Organizing Team"
         default:

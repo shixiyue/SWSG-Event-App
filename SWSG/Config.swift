@@ -10,15 +10,6 @@ import UIKit
 
 struct Config {
     
-    static var currentLogInUser : String {
-        set {
-            self.currentLogInUser = newValue
-        }
-        get {
-            return Storage.readCurrentUserFromLocal()!
-        }
-    }
-    
     static let noTeam = -1
     static let defaultCountry = "Singapore"
     static let joinTeam = "Request to Join"
@@ -33,6 +24,7 @@ struct Config {
     static let password = "password"
     static let team = "team"
     static let name = "name"
+    static let username = "username"
     static let image = "image"
     static let job = "job"
     static let company = "company"
@@ -48,6 +40,9 @@ struct Config {
     static let comment = "comment"
     static let comments = "comments"
     static let words = "words"
+    static let dateTime = "date_time"
+    static let details = "details"
+    static let venue = "venue"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -104,4 +99,6 @@ struct Config {
     //Parameters for storage
     static let commentsFileName = "commentsFileName"
     static let localUser = "localUser"
+    
+    static let dateTimeFormatDayString = "dd-MM-yyyy"
 }

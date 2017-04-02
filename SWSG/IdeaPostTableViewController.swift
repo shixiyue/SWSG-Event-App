@@ -39,6 +39,7 @@ class IdeaPostTableViewController: UIViewController {
         }
         teamName.text = "by Team \(teams.retrieveTeamAt(index: user.profile.team).name)"
         NotificationCenter.default.addObserver(self, selector: #selector(addIdea), name: Notification.Name(rawValue: "addIdea"), object: nil)
+        hideKeyboardWhenTappedAround()
     }
 
 }

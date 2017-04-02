@@ -9,10 +9,6 @@
 import UIKit
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
-    
-    private let emailInvalid = "Please enter a valid email address."
-    private let userInvalid = "The email does not match any account."
-    private let passwordInvalid = "The email and password do not match."
 
     @IBOutlet private var emailTextField: UITextField!
     @IBOutlet private var passwordTextField: UITextField!
@@ -39,20 +35,21 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         guard let email = emailTextField.text, let password = passwordTextField.text else {
             return
         }
-        guard Utility.isValidEmail(testStr: email) else {
-            self.present(Utility.getFailAlertController(message: emailInvalid), animated: true, completion: nil)
-            return
-        }
-        guard let user = Storage.readUser(email: email) else {
-            self.present(Utility.getFailAlertController(message: userInvalid), animated: true, completion: nil)
-            return
-        }
-        guard password == user.password else {
-            self.present(Utility.getFailAlertController(message: passwordInvalid), animated: true, completion: nil)
-            return
-        }
-        Utility.logInUser(user: user, currentViewController: self)
-        Storage.saveCurrentUserToLocal(user: user)
+        
+        System.client.signIn(email: email, password: password, completion: { (error) in
+            if let firebaseError = error {
+                self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+            } else {
+                System.client.getProfileOfCurrentUser(completion: { (profile, profileError) in
+                    if let firebaseError = profileError {
+                        self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+                    } else {
+                        let user = User(profile: profile, password: password, email: email)
+                        Utility.logInUser(user: user, currentViewController: self)
+                    }
+                })
+            }
+        })
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {

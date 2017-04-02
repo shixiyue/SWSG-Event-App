@@ -38,73 +38,6 @@ struct Storage {
         return email == admin
     }
     
-    /// Saves user data to a json file with the given filename.
-    static func saveUser(user: User) -> Bool {
-        do {
-            let data = user.toDictionary()
-            let jsonData = try JSONSerialization.data(withJSONObject: data, options: JSONSerialization.WritingOptions())
-            try jsonData.write(to: getFileURL(fileName: user.email))
-            guard let pngImageData = UIImagePNGRepresentation(user.profile.image) else {
-                return false
-            }
-            try pngImageData.write(to: getLocalFileURL(fileName: "\(user.email).png"), options: .atomic)
-            return true
-        } catch _ {
-            return false
-        }
-    }
-    
-    // TODO: Support different user types
-    // TODO: Support user with team <- Add encoding for team
-    /// Reads User from json file.
-    static func readUser(email: String) -> User? {
-        guard let jsonData = try? Data(contentsOf: getFileURL(fileName: email)) else {
-            return nil
-        }
-        guard let data = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments), let userInfo = data as? [String: Any] else {
-            return nil
-        }
-        guard let email = userInfo[Config.email] as? String, let password = userInfo[Config.password] as? String, let profile = userInfo[Config.profile] as? [String: Any], let name = profile[Config.name] as? String, let country = profile[Config.country] as? String, let job = profile[Config.job] as? String, let company = profile[Config.company] as? String, let education = profile[Config.education] as? String, let skills = profile[Config.skills] as? String, let desc = profile[Config.desc] as? String, let type = profile[Config.userType] as? [String: Bool], let isParticipant = type[Config.isParticipant], let isSpeaker = type[Config.isSpeaker], let isMentor = type[Config.isMentor], let isOrganizer = type[Config.isOrganizer], let isAdmin = type[Config.isAdmin] else {
-            return nil
-        }
-        let imageFilePath = getLocalFileURL(fileName: "\(email).png").path
-        guard let image = UIImage(contentsOfFile: imageFilePath) else {
-            return nil
-        }
-        let userType = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
-        guard let team_index = profile[Config.team] as? Int else {
-            return nil
-        }
-        
-        let userProfile = Profile(type: userType, team: team_index, name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-
-        return User(profile: userProfile, password: password, email: email)
-    }
-    
-    /// save the current user to the local device, so that device can recognize user when he/she posts a comment or chat message
-    static func saveCurrentUserToLocal(user: User) {
-        let dataToSave = NSMutableData()
-        let archiver = NSKeyedArchiver.init(forWritingWith: dataToSave)
-        archiver.encode(user.profile.name, forKey: Config.localUser)
-        archiver.finishEncoding()
-        
-        let isSuccessfulSave=dataToSave.write(to: getLocalFileURL(fileName: Config.localUser), atomically: true)
-        if isSuccessfulSave{
-            print("current username \(user.profile.name) saved successfully")
-        }
-    }
-    
-    /// read the current user from the local device, to facilitate the device recognize user when he/she posts a comment or chat message
-    static func readCurrentUserFromLocal() -> String? {
-        guard let retrievedData = NSData(contentsOfFile: getLocalFileURL(fileName: Config.localUser).path) else {
-            print("retrieve from local user failed")
-            return nil
-        }
-        let unarchiver = NSKeyedUnarchiver.init(forReadingWith: retrievedData as Data)
-        let username = unarchiver.decodeObject(forKey: Config.localUser) as? String
-        return username
-    }
-    
     /// Gets the file URL in JSON
     private static func getFileURL(fileName: String) -> URL {
         // Get the URL of the Documents Directory
@@ -204,21 +137,22 @@ struct Storage {
                 return data_retrieved
             }
                 for member in members_data {
-                    guard let email = member[Config.email] as? String, let password = member[Config.password] as? String, let profile = member[Config.profile] as? [String: Any], let name = profile[Config.name] as? String, let country = profile[Config.country] as? String, let job = profile[Config.job] as? String, let company = profile[Config.company] as? String, let education = profile[Config.education] as? String, let skills = profile[Config.skills] as? String, let desc = profile[Config.desc] as? String, let type = profile[Config.userType] as? [String: Bool], let isParticipant = type[Config.isParticipant], let isSpeaker = type[Config.isSpeaker], let isMentor = type[Config.isMentor], let isOrganizer = type[Config.isOrganizer], let isAdmin = type[Config.isAdmin] else {
+                    guard let email = member[Config.email] as? String, let password = member[Config.password] as? String, let profile = member[Config.profile] as? [String: Any], let name = profile[Config.name] as? String, let username = profile[Config.username] as? String, let country = profile[Config.country] as? String, let job = profile[Config.job] as? String, let company = profile[Config.company] as? String, let education = profile[Config.education] as? String, let skills = profile[Config.skills] as? String, let desc = profile[Config.desc] as? String, let type = profile[Config.userType] as? [String: Bool], let isParticipant = type[Config.isParticipant], let isSpeaker = type[Config.isSpeaker], let isMentor = type[Config.isMentor], let isOrganizer = type[Config.isOrganizer], let isAdmin = type[Config.isAdmin] else {
                         print("one of user attribute is nil")
                
                         return nil
                     }
                     let imageFilePath = getLocalFileURL(fileName: "\(email).png").path
-                    guard let image = UIImage(contentsOfFile: imageFilePath) else {
+                    /*guard let image = UIImage(contentsOfFile: imageFilePath) else {
                         print("user image is nil")
                         return nil
-                    }
+                    }*/
+                    let image = UIImage()
                     let userType = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
-                    guard let team_participant = member["team"] as? Int else {
+                    guard let team_participant = profile[Config.team] as? Int else {
                         return nil
                     }
-                    let userProfile = Profile(type: userType, team: team_participant, name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
+                    let userProfile = Profile(type: userType, team: team_participant, name: name, username: username, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
                     let participant =  User(profile: userProfile, password: password, email: email)
                     members_retrieved.append(participant)
                 }
