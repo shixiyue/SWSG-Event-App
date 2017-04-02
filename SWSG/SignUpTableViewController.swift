@@ -11,7 +11,7 @@ import Firebase
 import FirebaseAuth
 
 /// `SignUpTableViewController` represents the controller for signup table.
-class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class SignUpTableViewController: ImagePickerTableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
     var signUpButton: RoundCornerButton!
     

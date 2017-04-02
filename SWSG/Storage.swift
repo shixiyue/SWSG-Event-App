@@ -133,20 +133,23 @@ struct Storage {
                 print("one of the attribute is nil")
                 return nil
             }
-            if let members_data = teams["members"] as? [[String: Any]] {
+            guard let members_data = teams["members"] as? [[String: Any]] else {
+                return data_retrieved
+            }
                 for member in members_data {
-                    guard let email = member[Config.email] as? String, let password = member[Config.password] as? String, let profile = member[Config.profile] as? [String: String], let name = profile[Config.name], let username = profile[Config.username], let country = profile[Config.country], let job = profile[Config.job], let company = profile[Config.company], let education = profile[Config.education], let skills = profile[Config.skills], let desc = profile[Config.desc], let type = member[Config.userType] as? [String: Bool], let isParticipant = type[Config.isParticipant], let isSpeaker = type[Config.isSpeaker], let isMentor = type[Config.isMentor], let isOrganizer = type[Config.isOrganizer], let isAdmin = type[Config.isAdmin] else {
+                    guard let email = member[Config.email] as? String, let password = member[Config.password] as? String, let profile = member[Config.profile] as? [String: Any], let name = profile[Config.name] as? String, let username = profile[Config.username] as? String, let country = profile[Config.country] as? String, let job = profile[Config.job] as? String, let company = profile[Config.company] as? String, let education = profile[Config.education] as? String, let skills = profile[Config.skills] as? String, let desc = profile[Config.desc] as? String, let type = profile[Config.userType] as? [String: Bool], let isParticipant = type[Config.isParticipant], let isSpeaker = type[Config.isSpeaker], let isMentor = type[Config.isMentor], let isOrganizer = type[Config.isOrganizer], let isAdmin = type[Config.isAdmin] else {
                         print("one of user attribute is nil")
                
                         return nil
                     }
                     let imageFilePath = getLocalFileURL(fileName: "\(email).png").path
-                    guard let image = UIImage(contentsOfFile: imageFilePath) else {
+                    /*guard let image = UIImage(contentsOfFile: imageFilePath) else {
                         print("user image is nil")
                         return nil
-                    }
+                    }*/
+                    let image = UIImage()
                     let userType = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
-                    guard let team_participant = member["team"] as? Int else {
+                    guard let team_participant = profile[Config.team] as? Int else {
                         return nil
                     }
                     let userProfile = Profile(type: userType, team: team_participant, name: name, username: username, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
@@ -155,7 +158,6 @@ struct Storage {
                 }
                 let team = Team(members: members_retrieved, name: teamName, info: info, lookingFor: lookingFor, isPrivate: isPrivate)
                 data_retrieved.append(team)
-            }
         }
         print("data retrieved successfully")
         return data_retrieved
@@ -163,13 +165,12 @@ struct Storage {
     
     static func saveIdeas(data: [Idea], fileName: String) {
         do {
-            var localData = [[String: String]]()
+            var localData = [[String: Any]]()
             for i in data {
                 localData.append(i.toDictionary())
             }
             let jsonData = try JSONSerialization.data(withJSONObject: localData, options: JSONSerialization.WritingOptions())
             try jsonData.write(to: getFileURL(fileName: fileName))
-            print("ideas saved successfully")
         } catch _ {
             print("ideas saved failed")
         }
@@ -179,15 +180,24 @@ struct Storage {
         guard let jsonData = try? Data(contentsOf: getFileURL(fileName: fileName)) else {
             return nil
         }
-        guard let data = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments), let ideas = data as? [[String:String]] else {
+        guard let data = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments), let ideas = data as? [[String: Any]] else {
             return nil
         }
         
         var localData = [Idea]()
         for idea in ideas {
-           if let name = idea["ideaName"], let desc = idea["ideaDescription"], let teamNo = idea["ideaTeam"] {
-                 localData.append(Idea(name: name, description: desc, team: teamNo))
+           guard let name = idea[Config.ideaName] as? String, let team = idea[Config.ideaTeam] as? Int, let description = idea[Config.ideaDescription] as? String, let videoLink = idea[Config.ideaVideo] as? String, let upvotes = idea[Config.upvotes] as? [String], let downvotes = idea[Config.downvotes] as? [String] else {
+                continue
             }
+            var upvoteSet = Set<String>()
+            for upvoter in upvotes {
+                upvoteSet.insert(upvoter)
+            }
+            var downvoteSet = Set<String>()
+            for downvoter in downvotes {
+                downvoteSet.insert(downvoter)
+            }
+            localData.append(Idea(name: name, team: team, description: description, mainImage: UIImage(named: "default-idea-image")!, images: [], videoLink: videoLink, upvotes: upvoteSet, downvotes: downvoteSet))
         }
         return localData
     }

@@ -23,6 +23,10 @@ class Profile: NSObject, NSCoding {
     public private (set) var education: String
     public private (set) var skills: String
     public private (set) var desc: String
+    
+    var hasTeam: Bool {
+        return team != Config.noTeam
+    }
 
     init(type: UserTypes, team: Int, name: String, username: String, image: UIImage, job: String, company: String, country: String,
          education: String, skills: String, description: String) {

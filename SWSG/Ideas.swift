@@ -7,12 +7,14 @@
 //
 
 import Foundation
+
 class Ideas {
+    
+    var count: Int { return ideas.count }
+    
     private static var ideasInstance = Ideas()
     private var ideas : [Idea] {
         didSet {
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "ideas"), object: self)
-            print("saving ideas")
             Storage.saveIdeas(data: ideas, fileName: "Ideas")
         }
     }
@@ -26,22 +28,16 @@ class Ideas {
         return ideasInstance
     }
     
-    public func addIdea(idea: Idea) {
+    func addIdea(idea: Idea) {
         ideas.append(idea)
     }
     
-    public func retrieveIdeaAt(index: Int) -> Idea {
+    func retrieveIdeaAt(index: Int) -> Idea {
         return ideas[index]
     }
     
-    public func replaceTeamAt(index: Int, with idea: Idea) {
-        ideas[index] = idea
+    func save() {
+        Storage.saveIdeas(data: ideas, fileName: "Ideas")
     }
-    
-    public var count: Int {
-        get {
-            return ideas.count
-        }
-    }
-    
+   
 }

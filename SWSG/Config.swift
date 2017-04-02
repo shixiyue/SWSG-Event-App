@@ -43,6 +43,12 @@ struct Config {
     static let dateTime = "date_time"
     static let details = "details"
     static let venue = "venue"
+    static let ideaName = "ideaName"
+    static let ideaTeam = "ideaTeam"
+    static let ideaDescription = "ideaDescription"
+    static let ideaVideo = "ideaVideo"
+    static let upvotes = "upvotes"
+    static let downvotes = "downvotes"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -53,6 +59,10 @@ struct Config {
     static let maximumZoomScale: CGFloat = 10
     static let minimumProfileTextFieldHeight: CGFloat = 49.5
     static let maxTeamMember: Int = 4
+    static let upvoteDefault = UIImage(named: "upvote")
+    static let upvoteFilled = UIImage(named: "upvote-filled")
+    static let downvoteDefault = UIImage(named: "downvote")
+    static let downvoteFilled = UIImage(named: "downvote-filled")
     
     // Parameters for Storyboard:
     static let logInSignUp = "LoginSignup"
@@ -70,6 +80,7 @@ struct Config {
     static let editProfileTable = "EditProfileTable"
     static let imageCropper = "ImageCropper"
     static let imageCropperViewController = "ImageCropperViewController"
+    static let uiSupporting = "UISupporting"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"

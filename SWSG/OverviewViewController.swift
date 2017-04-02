@@ -2,47 +2,31 @@
 //  OverviewViewController.swift
 //  SWSG
 //
-//  Created by Shi Xiyue on 25/3/17.
+//  Created by Shi Xiyue on 2/4/17.
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
 import UIKit
 
-class OverviewViewController: UITableViewController {
-
-    @IBOutlet private var overviewTableView: UITableView!
-    @IBOutlet private var overviewText: UILabel!
-    @IBOutlet private var video: UIWebView!
+class OverviewViewController: UIViewController {
     
+    private var containerViewController: TemplateViewController!
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpOverviewTableView()
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "container", let containerViewController = segue.destination as? TemplateViewController else {
+            return
+        }
+        containerViewController.presetInfo(desc: OverviewContent.description, images: OverviewContent.images, videoLink: OverviewContent.videoLink, isScrollEnabled: true)
+        self.containerViewController = containerViewController
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        overviewText.text = OverviewContent.description
-        loadYoutube()
-    }
-
-    private func setUpOverviewTableView() {
-        overviewTableView.tableFooterView = UIView(frame: CGRect.zero)
-        overviewTableView.allowsSelection = false
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    private func loadYoutube() {
-        guard let youtubeURL = URL(string: OverviewContent.videoLink) else {
-            return
-        }
-        video.loadRequest(URLRequest(url: youtubeURL))
+        super.viewWillAppear(animated)
+        containerViewController.presetInfo(desc: OverviewContent.description, images: OverviewContent.images, videoLink: OverviewContent.videoLink, isScrollEnabled: true)
     }
 
 }
-
