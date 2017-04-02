@@ -9,6 +9,8 @@
 import UIKit
 
 class OverviewViewController: UIViewController {
+    
+    private var containerViewController: TemplateViewController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +20,12 @@ class OverviewViewController: UIViewController {
         guard segue.identifier == "container", let containerViewController = segue.destination as? TemplateViewController else {
             return
         }
+        containerViewController.presetInfo(desc: OverviewContent.description, images: OverviewContent.images, videoLink: OverviewContent.videoLink, isScrollEnabled: true)
+        self.containerViewController = containerViewController
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         containerViewController.presetInfo(desc: OverviewContent.description, images: OverviewContent.images, videoLink: OverviewContent.videoLink, isScrollEnabled: true)
     }
 

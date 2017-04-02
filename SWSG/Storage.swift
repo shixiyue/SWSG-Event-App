@@ -164,14 +164,13 @@ struct Storage {
     }
     
     static func saveIdeas(data: [Idea], fileName: String) {
-        do { /*
-            var localData = [[String: String]]()
+        do {
+            var localData = [[String: Any]]()
             for i in data {
                 localData.append(i.toDictionary())
             }
             let jsonData = try JSONSerialization.data(withJSONObject: localData, options: JSONSerialization.WritingOptions())
             try jsonData.write(to: getFileURL(fileName: fileName))
-            print("ideas saved successfully") */
         } catch _ {
             print("ideas saved failed")
         }
@@ -181,16 +180,25 @@ struct Storage {
         guard let jsonData = try? Data(contentsOf: getFileURL(fileName: fileName)) else {
             return nil
         }
-        guard let data = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments), let ideas = data as? [[String:String]] else {
+        guard let data = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments), let ideas = data as? [[String: Any]] else {
             return nil
         }
         
         var localData = [Idea]()
-        /*for idea in ideas {
-           if let name = idea["ideaName"], let desc = idea["ideaDescription"], let teamNo = idea["ideaTeam"] {
-                 localData.append(Idea(name: name, description: desc, team: teamNo))
+        for idea in ideas {
+           guard let name = idea[Config.ideaName] as? String, let team = idea[Config.ideaTeam] as? Int, let description = idea[Config.ideaDescription] as? String, let videoLink = idea[Config.ideaVideo] as? String, let upvotes = idea[Config.upvotes] as? [String], let downvotes = idea[Config.downvotes] as? [String] else {
+                continue
             }
-        }*/
+            var upvoteSet = Set<String>()
+            for upvoter in upvotes {
+                upvoteSet.insert(upvoter)
+            }
+            var downvoteSet = Set<String>()
+            for downvoter in downvotes {
+                downvoteSet.insert(downvoter)
+            }
+            localData.append(Idea(name: name, team: team, description: description, mainImage: UIImage(named: "default-idea-image")!, images: [], videoLink: videoLink, upvotes: upvoteSet, downvotes: downvoteSet))
+        }
         return localData
     }
 }

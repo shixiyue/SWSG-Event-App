@@ -19,20 +19,6 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     private var ideas = Ideas.sharedInstance()
     private var teams = Teams.sharedInstance()
     
-    func addIdea(_ notification: NSNotification) {
-        guard let name = ideaName.text, !name.isEmpty else {
-            present(Utility.getFailAlertController(message: "Idea name cannot be empty"), animated: true, completion: nil)
-            return
-        }
-        guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String, let image = mainImage.image(for: .normal), let user = System.activeUser else {
-            return
-        }
-        NotificationCenter.default.removeObserver(self)
-        
-        let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
-        ideas.addIdea(idea: Idea(name: name, team: user.profile.team, description: description, mainImage: image, images: images, videoLink: videoLink))
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let user = System.activeUser else {
@@ -74,7 +60,21 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         }
     }
     
-    @objc func reload(_ notification: NSNotification) {
+    @objc private func addIdea(_ notification: NSNotification) {
+        guard let name = ideaName.text, !name.isEmpty else {
+            present(Utility.getFailAlertController(message: "Idea name cannot be empty"), animated: true, completion: nil)
+            return
+        }
+        guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String, let image = mainImage.image(for: .normal), let user = System.activeUser else {
+            return
+        }
+        NotificationCenter.default.removeObserver(self)
+        
+        let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
+        ideas.addIdea(idea: Idea(name: name, team: user.profile.team, description: description, mainImage: image, images: images, videoLink: videoLink))
+    }
+    
+    @objc private func reload(_ notification: NSNotification) {
         guard let containerHeight = notification.userInfo?["height"] as? CGFloat else {
             return
         }

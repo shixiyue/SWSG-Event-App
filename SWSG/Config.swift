@@ -43,6 +43,12 @@ struct Config {
     static let dateTime = "date_time"
     static let details = "details"
     static let venue = "venue"
+    static let ideaName = "ideaName"
+    static let ideaTeam = "ideaTeam"
+    static let ideaDescription = "ideaDescription"
+    static let ideaVideo = "ideaVideo"
+    static let upvotes = "upvotes"
+    static let downvotes = "downvotes"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)

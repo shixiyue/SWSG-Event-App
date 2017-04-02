@@ -14,9 +14,9 @@ class IdeaItemTableViewCell: UITableViewCell {
     @IBOutlet private var desc: UILabel!
     @IBOutlet private var team: UILabel!
     @IBOutlet private var ideaImageView: UIImageView!
-    @IBOutlet var votes: UILabel!
-    @IBOutlet var upvoteButton: UIButton!
-    @IBOutlet var downvoteButton: UIButton!
+    @IBOutlet private var votes: UILabel!
+    @IBOutlet private var upvoteButton: UIButton!
+    @IBOutlet private var downvoteButton: UIButton!
     
     private var idea: Idea!
     
@@ -47,6 +47,5 @@ class IdeaItemTableViewCell: UITableViewCell {
         let downvoteImage = state.downvote ? Config.downvoteFilled : Config.downvoteDefault
         downvoteButton.setImage(downvoteImage, for: .normal)
     }
-    
     
 }

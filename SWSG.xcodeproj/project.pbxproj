@@ -504,8 +504,8 @@
 				E3220C4E1E7B99CF008AFA85 /* UISubclasses.swift */,
 				CC168B2B1E7E8C5800F8725A /* UISupporting.storyboard */,
 				CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */,
-				CC6EE0E51E80013A003856AE /* ImagePickerViewController.swift */,
 				CC8A4E111E8CB5C3005E2AC5 /* ImagePickerTableViewController.swift */,
+				CC6EE0E51E80013A003856AE /* ImagePickerViewController.swift */,
 				CCE7DDE11E8BF5030044A863 /* LPRTableView.swift */,
 			);
 			name = "UI Supporting";
@@ -540,8 +540,8 @@
 				CC95008E1E863CAF00EC871F /* OverviewContent.swift */,
 				CC6CB12C1E90F99B00C71793 /* OverviewViewController.swift */,
 				CC7A4AFD1E87807700BC8A4B /* PeopleViewController.swift */,
-				CC7A4B0B1E888C5D00BC8A4B /* FaqInfo.swift */,
 				CC7A4AFF1E879F3A00BC8A4B /* JudgesInfo.swift */,
+				CC7A4B0B1E888C5D00BC8A4B /* FaqInfo.swift */,
 				CC7A4B071E8884F300BC8A4B /* OrganizersInfo.swift */,
 				CC7A4B091E888C4200BC8A4B /* FaqViewController.swift */,
 				CC7A4B0D1E888E7E00BC8A4B /* FaqTableViewCell.swift */,

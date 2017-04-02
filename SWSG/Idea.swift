@@ -10,59 +10,64 @@ import UIKit
 
 class Idea {
     
+    var votes: Int { return upvotes.count - downvotes.count }
+    var teamName: String { return "by Team \(Teams.sharedInstance().retrieveTeamAt(index: team).name)" }
+    
     public private(set) var name: String
     public private(set) var team: Int
     public private(set) var description: String
     public private(set) var mainImage: UIImage
     public private(set) var images: [UIImage]
     public private(set) var videoLink: String
+  
+    private var upvotes: Set<String>
+    private var downvotes: Set<String>
     
-    var votes: Int {
-        get {
-            return upvotes.count - downvotes.count
-        }
+    convenience init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
+        self.init(name: name, team: team, description: description, mainImage: mainImage, images: images, videoLink: videoLink, upvotes: Set<String>(), downvotes: Set<String>())
     }
     
-    var teamName: String {
-        get {
-            return "by Team \(Teams.sharedInstance().retrieveTeamAt(index: team).name)"
-        }
-    }
-    
-    private var upvotes = Set<String>()
-    private var downvotes = Set<String>()
-    
-    init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
+    init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String, upvotes: Set<String>, downvotes: Set<String>) {
         self.name = name
         self.team = team
         self.description = description
         self.mainImage = mainImage
         self.images = images
         self.videoLink = videoLink
+        self.upvotes = upvotes
+        self.downvotes = downvotes
     }
     
     func upvote() {
         let uid = System.client.getUid()
-        if upvotes.contains(uid) {
+        guard !upvotes.contains(uid) else {
             upvotes.remove(uid)
-        } else {
-            upvotes.insert(uid)
-            if downvotes.contains(uid) {
-                downvotes.remove(uid)
-            }
+            updateStorage()
+            return
         }
+        upvotes.insert(uid)
+        if downvotes.contains(uid) {
+            downvotes.remove(uid)
+        }
+        updateStorage()
     }
     
     func downvote() {
         let uid = System.client.getUid()
-        if downvotes.contains(uid) {
+        guard !downvotes.contains(uid) else {
             downvotes.remove(uid)
-        } else {
-            downvotes.insert(uid)
-            if upvotes.contains(uid) {
-                upvotes.remove(uid)
-            }
+            updateStorage()
+            return
         }
+        downvotes.insert(uid)
+        if upvotes.contains(uid) {
+            upvotes.remove(uid)
+        }
+        updateStorage()
+    }
+    
+    private func updateStorage() {
+        Ideas.sharedInstance().save()
     }
     
     func getVotingState() -> (upvote: Bool, downvote: Bool) {
@@ -71,7 +76,11 @@ class Idea {
     }
     
     func toDictionary() -> [String: Any] {
-        return ["ideaName": self.name, "ideaTeam": self.team, "ideaDescription": self.description, "ideaVideo": self.videoLink, "votes": votes]
+        return [Config.ideaName: self.name, Config.ideaTeam: self.team, Config.ideaDescription: self.description, Config.ideaVideo: self.videoLink, Config.upvotes: Array(upvotes), Config.downvotes: Array(downvotes)]
+    }
+    
+    private func _checkRep() {
+        assert(upvotes.intersection(downvotes).isEmpty)
     }
 
 }

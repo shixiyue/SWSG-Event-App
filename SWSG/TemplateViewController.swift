@@ -18,6 +18,7 @@ class TemplateViewController: UITableViewController {
     private var images: [UIImage]!
     private var videoLink: String!
     private var isScrollEnabled: Bool!
+    private var photoPageViewController: PhotoPageViewController!
     
     func presetInfo(desc: String, images: [UIImage], videoLink: String, isScrollEnabled: Bool) {
         self.desc = desc
@@ -31,6 +32,7 @@ class TemplateViewController: UITableViewController {
             return
         }
         photoPageViewController.images = images
+        self.photoPageViewController = photoPageViewController
     }
     
     override func viewDidLoad() {
@@ -41,8 +43,11 @@ class TemplateViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        photoPageViewController.images = images
         overviewText.text = OverviewContent.description
         loadYoutube()
+        overviewTableView.reloadData()
     }
 
     private func setUpOverviewTableView() {

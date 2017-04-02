@@ -22,12 +22,16 @@ class TemplateEditViewController: ImagePickerTableViewController {
     private var videoId: String = ""
     private var videoLinkTextField: UITextField = UITextField()
     private var isScrollEnabled: Bool = false
+    private var isSetDescription = false
+    private var isSetVideoId = false
     
     func presetInfo(desc: String, images: [UIImage], videoId: String, isScrollEnabled: Bool) {
         self.desc = desc
         self.images = images
         self.videoId = videoId
         self.isScrollEnabled = isScrollEnabled
+        isSetDescription = false
+        isSetVideoId = false
     }
     
     override func viewDidLoad() {
@@ -103,9 +107,10 @@ class TemplateEditViewController: ImagePickerTableViewController {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(Rows.description)", for: indexPath) as? DescriptionTableViewCell else {
                 return DescriptionTableViewCell()
             }
-            if !descriptionTextView.text.isEmpty { // To design a better way
+            if isSetDescription {
                 desc = descriptionTextView.text
             }
+            isSetDescription = true
             descriptionTextView = cell.descriptionTextView
             descriptionTextView.text = desc
             return cell
@@ -116,9 +121,10 @@ class TemplateEditViewController: ImagePickerTableViewController {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(Rows.videoLink)", for: indexPath) as? VideoLinkTableViewCell else {
                 return VideoLinkTableViewCell()
             }
-            if let text = videoLinkTextField.text, !text.isEmpty {
+            if let text = videoLinkTextField.text, isSetVideoId {
                 videoId = text
             }
+            isSetVideoId = true
             videoLinkTextField = cell.videoLinkTextField
             videoLinkTextField.text = videoId
             return cell
