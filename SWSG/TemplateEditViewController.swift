@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EditOverviewTableViewController: ImagePickerTableViewController {
+class TemplateEditViewController: ImagePickerTableViewController {
     
     private let photoIndexOffset = 2
     private enum Rows: Int {
@@ -50,7 +50,7 @@ class EditOverviewTableViewController: ImagePickerTableViewController {
         editOverviewTableView.reloadData()
     }
     
-    @IBAction func update(_ sender: RoundCornerButton) {
+    @IBAction func update(_ sender: UIButton) {
         guard let description = descriptionTextView.text, let videoId = videoLinkTextField.text else {
             return
         }

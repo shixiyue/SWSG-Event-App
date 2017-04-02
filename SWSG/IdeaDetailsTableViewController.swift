@@ -19,7 +19,7 @@ class IdeaDetailsTableViewController: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "container", let containerViewController = segue.destination as? OverviewViewController else {
+        guard segue.identifier == "container", let containerViewController = segue.destination as? TemplateViewController else {
             return
         }
         containerViewController.presetInfo(desc: idea.description, images: idea.images, videoLink: idea.videoLink)

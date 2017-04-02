@@ -10,18 +10,20 @@ import UIKit
 
 class PeopleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    var people: [(name: String, title: String, intro: String, photo: String)] { return [] }
-    var header: String { return "" }
+    var people: [(name: String, title: String, intro: String, photo: String)]!
+    var header: String!
 
+    @IBOutlet var peopleTableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
-    func setUpTableView(_ tableView: UITableView) {
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.tableFooterView = UIView(frame: CGRect.zero)
-        tableView.allowsSelection = false
+    func setUpTableView() {
+        peopleTableView.dataSource = self
+        peopleTableView.delegate = self
+        peopleTableView.tableFooterView = UIView(frame: CGRect.zero)
+        peopleTableView.allowsSelection = false
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {

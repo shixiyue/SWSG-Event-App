@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OverviewViewController: UITableViewController {
+class TemplateViewController: UITableViewController {
 
     @IBOutlet private var overviewTableView: UITableView!
     @IBOutlet private var overviewText: UILabel!
