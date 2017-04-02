@@ -65,7 +65,6 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
             pageContent.image = images[i]
             pages.append(pageContent)
         }
-        print(pages.count)
         setViewControllers([pages[0]], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
     }
     

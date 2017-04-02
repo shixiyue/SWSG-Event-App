@@ -14,15 +14,16 @@ class TemplateViewController: UITableViewController {
     @IBOutlet private var overviewText: UILabel!
     @IBOutlet private var video: UIWebView!
     
-    private var desc: String = ""
-    private var images: [UIImage] = []
-    private var videoLink: String = ""
-    private var isForOverview = false
+    private var desc: String!
+    private var images: [UIImage]!
+    private var videoLink: String!
+    private var isScrollEnabled: Bool!
     
-    func presetInfo(desc: String, images: [UIImage], videoLink: String) {
+    func presetInfo(desc: String, images: [UIImage], videoLink: String, isScrollEnabled: Bool) {
         self.desc = desc
         self.images = images
         self.videoLink = videoLink
+        self.isScrollEnabled = isScrollEnabled
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -37,7 +38,6 @@ class TemplateViewController: UITableViewController {
         setUpOverviewTableView()
         overviewText.text = desc
         loadYoutube()
-        overviewTableView.isScrollEnabled = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,6 +48,7 @@ class TemplateViewController: UITableViewController {
     private func setUpOverviewTableView() {
         overviewTableView.tableFooterView = UIView(frame: CGRect.zero)
         overviewTableView.allowsSelection = false
+        overviewTableView.isScrollEnabled = isScrollEnabled
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -69,4 +70,3 @@ class TemplateViewController: UITableViewController {
     }
 
 }
-

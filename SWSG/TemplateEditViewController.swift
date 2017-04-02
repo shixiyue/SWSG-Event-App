@@ -21,18 +21,20 @@ class TemplateEditViewController: ImagePickerTableViewController {
     private var images: [UIImage] = []
     private var videoId: String = ""
     private var videoLinkTextField: UITextField = UITextField()
+    private var isScrollEnabled: Bool = false
     
-    func presetInfo(desc: String, images: [UIImage], videoId: String) {
+    func presetInfo(desc: String, images: [UIImage], videoId: String, isScrollEnabled: Bool) {
         self.desc = desc
         self.images = images
         self.videoId = videoId
+        self.isScrollEnabled = isScrollEnabled
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         editOverviewTableView.allowsSelection = false
         hideKeyboardWhenTappedAround()
-        editOverviewTableView.isScrollEnabled = false
+        editOverviewTableView.isScrollEnabled = self.isScrollEnabled
     }
     
     @IBAction func addPhoto(_ sender: UIButton) {
@@ -61,7 +63,7 @@ class TemplateEditViewController: ImagePickerTableViewController {
             return
         }
         let infoDict: [String: Any] = ["description": description, "images": images, "videoId": videoId]
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "addIdea"), object: nil, userInfo: infoDict)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "update"), object: nil, userInfo: infoDict)
         //OverviewContent.update(description: description, images: images, videoLink: videoLink)
         _ = navigationController?.popViewController(animated: true)
     }
@@ -101,7 +103,7 @@ class TemplateEditViewController: ImagePickerTableViewController {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(Rows.description)", for: indexPath) as? DescriptionTableViewCell else {
                 return DescriptionTableViewCell()
             }
-            if !descriptionTextView.text.isEmpty {
+            if !descriptionTextView.text.isEmpty { // To design a better way
                 desc = descriptionTextView.text
             }
             descriptionTextView = cell.descriptionTextView

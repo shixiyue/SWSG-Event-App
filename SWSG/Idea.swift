@@ -43,7 +43,6 @@ class Idea {
     
     func upvote() {
         let uid = System.client.getUid()
-        print(uid)
         if upvotes.contains(uid) {
             upvotes.remove(uid)
         } else {

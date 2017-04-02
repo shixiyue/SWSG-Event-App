@@ -31,7 +31,6 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
         ideas.addIdea(idea: Idea(name: name, team: user.profile.team, description: description, mainImage: image, images: images, videoLink: videoLink))
-        print(ideas)
     }
     
     override func viewDidLoad() {
@@ -40,7 +39,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
             return
         }
         teamName.text = "by Team \(teams.retrieveTeamAt(index: user.profile.team).name)"
-        NotificationCenter.default.addObserver(self, selector: #selector(addIdea), name: Notification.Name(rawValue: "addIdea"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(addIdea), name: Notification.Name(rawValue: "update"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
         hideKeyboardWhenTappedAround()
     }
@@ -77,10 +76,8 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     
     @objc func reload(_ notification: NSNotification) {
         guard let containerHeight = notification.userInfo?["height"] as? CGFloat else {
-            print(false)
             return
         }
-        print(true)
         self.containerHeight = containerHeight
         tableView.reloadData()
     }
