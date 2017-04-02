@@ -11,11 +11,23 @@ import UIKit
 class IdeaDetailsTableViewController: UITableViewController {
     
     var idea: Idea!
-    var containerHeight: CGFloat!
-
+    
+    @IBOutlet private var mainImage: UIImageView!
+    @IBOutlet private var ideaNameLabel: UILabel!
+    @IBOutlet private var teamNameLabel: UILabel!
+    @IBOutlet private var votes: UILabel!
+    @IBOutlet private var upvoteButton: UIButton!
+    @IBOutlet private var downvoteButton: UIButton!
+    
+    private var containerHeight: CGFloat!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "commentsForIdeas"), object: nil)
+        mainImage.image = idea.mainImage
+        ideaNameLabel.text = idea.name
+        teamNameLabel.text = idea.teamName
+        updateVotes()
+        //NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "commentsForIdeas"), object: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -35,6 +47,23 @@ class IdeaDetailsTableViewController: UITableViewController {
         }
     }
     
+    @IBAction func upvote(_ sender: UIButton) {
+        idea.upvote()
+        updateVotes()
+    }
     
+    @IBAction func downvote(_ sender: UIButton) {
+        idea.downvote()
+        updateVotes()
+    }
+    
+    private func updateVotes() {
+        votes.text = "\(idea.votes)"
+        let state = idea.getVotingState()
+        let upvoteImage = state.upvote ? Config.upvoteFilled : Config.upvoteDefault
+        upvoteButton.setImage(upvoteImage, for: .normal)
+        let downvoteImage = state.downvote ? Config.downvoteFilled : Config.downvoteDefault
+        downvoteButton.setImage(downvoteImage, for: .normal)
+    }
     
 }

@@ -65,10 +65,7 @@ extension IdeasListTableViewController: UITableViewDataSource, UITableViewDelega
         let cell = tableView.dequeueReusableCell(withIdentifier: "ideaItemCell", for: indexPath) as! IdeaItemTableViewCell
         
         let idea = ideas.retrieveIdeaAt(index: indexPath.row)
-        cell.name.text = idea.name
-        cell.desc.text = idea.description
-        cell.team.text = idea.team
-        cell.ideaImageView.image = idea.mainImage
+        cell.setIdea(idea)
         
         return cell
     }

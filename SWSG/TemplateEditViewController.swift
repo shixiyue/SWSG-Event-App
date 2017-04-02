@@ -32,8 +32,9 @@ class TemplateEditViewController: ImagePickerTableViewController {
         super.viewDidLoad()
         editOverviewTableView.allowsSelection = false
         hideKeyboardWhenTappedAround()
+        editOverviewTableView.isScrollEnabled = false
     }
-
+    
     @IBAction func addPhoto(_ sender: UIButton) {
         showImageOptions()
     }
@@ -41,6 +42,8 @@ class TemplateEditViewController: ImagePickerTableViewController {
     override func handleImage(chosenImage: UIImage) {
         images.append(chosenImage)
         editOverviewTableView.reloadData()
+        editOverviewTableView.layoutIfNeeded()
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil, userInfo: ["height": editOverviewTableView.contentSize.height])
     }
     
     @IBAction func deleteImage(_ sender: UIButton) {
@@ -49,6 +52,8 @@ class TemplateEditViewController: ImagePickerTableViewController {
         }
         images.remove(at: indexPath.row - photoIndexOffset)
         editOverviewTableView.reloadData()
+        editOverviewTableView.layoutIfNeeded()
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil, userInfo: ["height": editOverviewTableView.contentSize.height])
     }
     
     @IBAction func update(_ sender: UIButton) {

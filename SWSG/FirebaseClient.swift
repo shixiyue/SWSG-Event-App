@@ -90,6 +90,10 @@ class FirebaseClient {
         })
     }
     
+    func getUid() -> String {
+        return FIRAuth.auth()?.currentUser?.uid ?? ""
+    }
+    
     private func checkError(_ err: Error?) -> FirebaseError? {
         guard let nsError = err as? NSError else {
             return nil
