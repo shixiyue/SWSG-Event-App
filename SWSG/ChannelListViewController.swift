@@ -14,12 +14,17 @@ class ChannelListViewController: BaseViewController {
     
     // MARK: Properties
     fileprivate var channels: [Channel] = []
-    private lazy var channelRef: FIRDatabaseReference = FIRDatabase.database().reference().child("channels")
+    fileprivate var client = FirebaseClient()
+    
+    //MARK: Firebase References
+    private var channelRef: FIRDatabaseReference!
     private var channelRefHandle: FIRDatabaseHandle?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()
+        
+        channelRef = client.getChannelsRef()
         
         chatList.delegate = self
         chatList.dataSource = self
@@ -32,11 +37,42 @@ class ChannelListViewController: BaseViewController {
     private func observeChannels() {
         // Use the observe method to listen for new
         // channels being written to the Firebase DB
-        channelRefHandle = channelRef.observe(.childAdded, with: { (snapshot) -> Void in // 1
-            let channelData = snapshot.value as! Dictionary<String, AnyObject> // 2
+        channelRefHandle = channelRef.observe(.childAdded, with: { (snapshot) -> Void in
+            let channelData = snapshot.value as! Dictionary<String, AnyObject>
             let id = snapshot.key
-            if let name = channelData["name"] as! String!, name.characters.count > 0 { // 3
-                self.channels.append(Channel(id: id, name: name))
+            let channel: Channel?
+            if let name = channelData["name"] as? String, name.characters.count > 0 {
+                channel = Channel(id: id, name: name)
+                
+                /*let childChannelRef = self.channelRef.child(id)
+                let messageRef = childChannelRef!.child("messages")
+                let messageQuery = messageRef.queryLimited(toLast:1)
+                let newMessageRefHandle = messageQuery.observe(.childAdded, with: { (snapshot) -> Void in
+                    let messageData = snapshot.value as! Dictionary<String, String>
+                    
+                    if let id = messageData["senderId"] as String!, let name = messageData["senderName"] as String!, let text = messageData["text"] as String!, text.characters.count > 0 {
+                        channel.messages.append(Message.init(senderId: id, senderName: name, timestamp: nil, text: text, photoURL: nil))
+                        self.addMessage(withId: id, name: name, text: text)
+                        
+                        // 5
+                        self.finishReceivingMessage()
+                    } else if let id = messageData["senderId"] as String!,
+                        let photoURL = messageData["photoURL"] as String! { // 1
+                        // 2
+                        if let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId) {
+                            // 3
+                            self.addPhotoMessage(withId: id, key: snapshot.key, mediaItem: mediaItem)
+                            // 4
+                            if photoURL.hasPrefix("gs://") {
+                                self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
+                            }
+                        }
+                    } else {
+                        print("Error! Could not decode message data")
+                    }
+                })*/
+                
+                self.channels.append(channel!)
                 self.chatList.reloadData()
             } else {
                 print("Error! Could not decode channel data")
@@ -49,8 +85,9 @@ class ChannelListViewController: BaseViewController {
         super.prepare(for: segue, sender: sender)
         
         if let channel = sender as? Channel {
-            let navController = segue.destination as! UINavigationController
-            let channelVC = navController.viewControllers[0] as! ChannelViewController
+            guard let channelVC = Utility.getDestinationStoryboard(from: segue.destination) as? ChannelViewController else {
+                return
+            }
             
             channelVC.senderDisplayName = System.activeUser?.profile.name
             channelVC.channel = channel
@@ -84,8 +121,8 @@ extension ChannelListViewController: UITableViewDataSource {
         cell.iconIV.image = channel.icon
         cell.nameLbl.text = channel.name
         
-        let latestMessage = channel.messages.last
-        cell.messageTV.text = latestMessage?.message
+        //let latestMessage = channel.messages.last
+        //cell.messageTV.text = latestMessage?.message
         
         return cell
     }
@@ -95,6 +132,6 @@ extension ChannelListViewController: UITableViewDataSource {
 extension ChannelListViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let channel = channels[indexPath.item]
-        self.performSegue(withIdentifier: "showChannel", sender: channel)
+        self.performSegue(withIdentifier: Segues.channelListToChannel, sender: channel)
     }
 }

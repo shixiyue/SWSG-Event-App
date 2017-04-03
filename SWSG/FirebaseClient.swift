@@ -95,5 +95,47 @@ class FirebaseClient {
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: nil)
     }
     
+    public func getChannelsRef() -> FIRDatabaseReference {
+        return databaseReference(for: Config.channelsRef)
+    }
+    
+    private func databaseReference(for name: String) -> FIRDatabaseReference {
+        return FIRDatabase.database().reference().child(name)
+    }
+    
+    
+    private func getProfile(for uid: String) -> Profile? {
+        let usersRef = databaseReference(for: "profiles")
+        _ = usersRef.queryEqual(toValue: uid).observe(.value, with: {
+            (snapshot) -> Void in
+            return Profile(snapshot: snapshot)
+        })
+        
+        return nil
+    }
+    /*
+    private func deserializeProfile(for ref: FIRDatabaseReference) -> Profile {
+        let company = ref.value(forKey: "company") as! String
+        let country = ref.value(forKey: "country") as! String
+        let desc = ref.value(forKey: "desc") as! String
+        let education = ref.value(forKey: "education") as! String
+        let job = ref.value(forKey: "job") as! String
+        let name = ref.value(forKey: "name") as! String
+        let skills = ref.value(forKey: "skills") as! String
+        let team = ref.value(forKey: "team") as! Int
+        
+        let userTypesRef = ref.child("userType")
+        let isAdmin = userTypesRef.value(forKey: "isAdmin") as! Bool
+        let isMentor = userTypesRef.value(forKey: "isMentor") as! Bool
+        let isOrganizer = userTypesRef.value(forKey: "isOrganizer") as! Bool
+        let isParticipant = userTypesRef.value(forKey: "isParticipant") as! Bool
+        let isSpeaker = userTypesRef.value(forKey: "isSpeaker") as! Bool
+        let userType = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker,
+                                 isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
+        
+        return Profile(type: <#T##UserTypes#>, team: <#T##Int#>, name: <#T##String#>, image: <#T##UIImage#>, job: <#T##String#>, company: <#T##String#>, country: <#T##String#>, education: <#T##String#>, skills: <#T##String#>, description: <#T##String#>)
+        
+    }*/
+    
 }
 

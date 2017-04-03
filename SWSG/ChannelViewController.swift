@@ -338,6 +338,7 @@ final class ChannelViewController: JSQMessagesViewController {
             "senderId": senderId!,
             "senderName": senderDisplayName!,
             "text": text!,
+            "timestamp": Date.init().string(format: "YYYY/MM/dd HH:mm"),
             ]
         
         itemRef.setValue(messageItem) // 3

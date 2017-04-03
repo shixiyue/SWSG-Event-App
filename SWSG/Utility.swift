@@ -76,16 +76,11 @@ struct Utility {
     
     static func logOutUser(currentViewController: UIViewController) {
         System.activeUser = nil
-        let client = FirebaseClient()
         showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
     }
     
     static func logInUser(user: User, currentViewController: UIViewController) {
         System.activeUser = user
-        let client = FirebaseClient()
-        client.signIn(email: user.email, password: user.password, completion: {
-            (error) in
-        })
         showStoryboard(storyboard: Config.main, destinationViewController: Config.navigationController, currentViewController: currentViewController)
     }
     
@@ -101,5 +96,12 @@ struct Utility {
         return alertController
     }
 
+    static func getDestinationStoryboard(from navController: UIViewController) -> UIViewController? {
+        guard let navController = navController as? UINavigationController else {
+            return nil
+        }
+        
+        return navController.viewControllers[0]
+    }
     
 }

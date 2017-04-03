@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F0120B81E8CDAA100881A9E /* Segues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0120B71E8CDAA100881A9E /* Segues.swift */; };
 		3F12AFCB1E711CBB00B26D67 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F12AFCA1E711CBB00B26D67 /* AppDelegate.swift */; };
 		3F12AFCD1E711CBB00B26D67 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */; };
 		3F12AFD01E711CBB00B26D67 /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F12AFCE1E711CBB00B26D67 /* Menu.storyboard */; };
@@ -151,6 +152,7 @@
 
 /* Begin PBXFileReference section */
 		189A0D84A7F17FCED8F8F256 /* Pods-SWSG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWSG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SWSG/Pods-SWSG.debug.xcconfig"; sourceTree = "<group>"; };
+		3F0120B71E8CDAA100881A9E /* Segues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segues.swift; sourceTree = "<group>"; };
 		3F12AFC71E711CBB00B26D67 /* SWSG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SWSG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F12AFCA1E711CBB00B26D67 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -388,6 +390,7 @@
 			children = (
 				3F9795231E7A8DBF004BC26C /* Config.swift */,
 				3F97952A1E7A8DBF004BC26C /* Extensions.swift */,
+				3F0120B71E8CDAA100881A9E /* Segues.swift */,
 				3F9795681E7A932D004BC26C /* System.swift */,
 				3FE72F051E7E3BF5007FD55C /* Storage.swift */,
 				3F9795421E7A8DBF004BC26C /* Utility.swift */,
@@ -787,6 +790,7 @@
 				3FED30231E77A2D400C007AD /* MentorCell.swift in Sources */,
 				E348D5781E895D7C00947B3F /* CalendarCell.swift in Sources */,
 				3FED30271E77A57600C007AD /* (null) in Sources */,
+				3F0120B81E8CDAA100881A9E /* Segues.swift in Sources */,
 				3F97951F1E7A6A58004BC26C /* Team.swift in Sources */,
 				CC1CF8AC1E7C178A002224BC /* ProfileTableViewCell.swift in Sources */,
 				3F97955C1E7A8DBF004BC26C /* SignUpViewController.swift in Sources */,

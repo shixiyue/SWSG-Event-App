@@ -100,6 +100,7 @@ struct Config {
     
     // Parameters for Chat
     static let hourInterval = TimeInterval(3600)
+    static let channelsRef = "channels"
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"

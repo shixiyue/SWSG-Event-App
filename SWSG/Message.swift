@@ -9,19 +9,17 @@
 import UIKit
 
 struct Message {
-    var sender: User
-    var timestamp: Date
-    var message: String
-    var image: UIImage?
+    var senderId: String
+    var senderName: String
+    var timestamp: Date?
+    var text: String?
+    var photoURL: String?
     
-    init(sender: User, timestamp: Date, message: String, image: UIImage?) {
-        self.sender = sender
+    init(senderId: String, senderName: String, timestamp: Date?, text: String?, photoURL: String?) {
+        self.senderId = senderId
+        self.senderName = senderName
         self.timestamp = timestamp
-        self.message = message
-        self.image = image
-    }
-    
-    init(sender: User, timestamp: Date, message: String) {
-        self.init(sender: sender, timestamp: timestamp, message: message, image: nil)
+        self.text = text
+        self.photoURL = photoURL
     }
 }
