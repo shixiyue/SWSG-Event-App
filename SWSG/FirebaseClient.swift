@@ -14,8 +14,14 @@ class FirebaseClient {
     typealias CreateUserCallback = (FirebaseError?) -> Void
     typealias SignInCallback = (FirebaseError?) -> Void
     typealias GetProfileCallback = (Profile, FirebaseError?) -> Void
+    typealias CreateTeamCallback = (FirebaseError?) -> Void
+    typealias CreateEventCallback = (FirebaseError?) -> Void
+    typealias GetEventCallback = (Event, FirebaseError?) -> Void
+    typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
     
     private let profilesRef = FIRDatabase.database().reference(withPath: "profiles")
+    private let teamsRef = FIRDatabase.database().reference(withPath: "teams")
+    private let eventsRef = FIRDatabase.database().reference(withPath: "events")
     
     public func createNewUserWithProfile(_ profile: Profile, email: String, password: String, completion: @escaping CreateUserCallback) {
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: {(user, err) in
@@ -36,15 +42,18 @@ class FirebaseClient {
         })
     }
     
-    public func getProfile(completion: @escaping GetProfileCallback) {
+    public func getProfileOfCurrentUser(completion: @escaping GetProfileCallback) {
         guard let uid = FIRAuth.auth()?.currentUser?.uid else {
             return
         }
+        getProfileOfUserWith(uid: uid, completion: completion)
+    }
+
+    public func getProfileOfUserWith(uid: String, completion: @escaping GetProfileCallback) {
         let userRef = profilesRef.child(uid)
         // TODO: handle error
         userRef.observeSingleEvent(of: .value, with: {(snapshot) in
             completion(Profile(snapshot: snapshot)!, nil)
-
         })
     }
     
@@ -54,6 +63,35 @@ class FirebaseClient {
         }
         let userRef = profilesRef.child(uid)
         userRef.setValue(newProfile.toDictionary() as Any)
+    }
+    
+    public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
+        let dayString = event.getDayString()
+        let eventId = UUID().uuidString
+        let eventRef = eventsRef.child(dayString).child(eventId)
+        eventRef.setValue(event.toAnyObject(), withCompletionBlock: { (err, _) in
+            completion(self.checkError(err))
+        })
+    }
+    
+    public func getEventWithId(_ eventId: String, completion: @escaping GetEventCallback) {
+        // TODO
+    }
+    
+    public func getEventByDay(_ day: Date, completion: @escaping GetEventByDayCallback) {
+        let dayString = day.string(format: Config.dateTimeFormatDayString)
+        let dayRef = eventsRef.child(dayString)
+        dayRef.observeSingleEvent(of: .value, with: {(snapshot) in
+            var events = [Event]()
+            for event in snapshot.children {
+                events.append(Event(snapshot: event as! FIRDataSnapshot)!)
+            }
+            completion(events, nil)
+        })
+    }
+    
+    func getUid() -> String {
+        return FIRAuth.auth()?.currentUser?.uid ?? ""
     }
     
     private func checkError(_ err: Error?) -> FirebaseError? {
@@ -87,14 +125,6 @@ class FirebaseClient {
         
     }
     
-    public func signUp(email: String, password: String) {
-        FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: nil)
-    }
-    
-    public func createUser(email: String, password: String) {
-        FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: nil)
-    }
-    
     public func getChannelsRef() -> FIRDatabaseReference {
         return databaseReference(for: Config.channelsRef)
     }
@@ -102,40 +132,5 @@ class FirebaseClient {
     private func databaseReference(for name: String) -> FIRDatabaseReference {
         return FIRDatabase.database().reference().child(name)
     }
-    
-    
-    private func getProfile(for uid: String) -> Profile? {
-        let usersRef = databaseReference(for: "profiles")
-        _ = usersRef.queryEqual(toValue: uid).observe(.value, with: {
-            (snapshot) -> Void in
-            return Profile(snapshot: snapshot)
-        })
-        
-        return nil
-    }
-    /*
-    private func deserializeProfile(for ref: FIRDatabaseReference) -> Profile {
-        let company = ref.value(forKey: "company") as! String
-        let country = ref.value(forKey: "country") as! String
-        let desc = ref.value(forKey: "desc") as! String
-        let education = ref.value(forKey: "education") as! String
-        let job = ref.value(forKey: "job") as! String
-        let name = ref.value(forKey: "name") as! String
-        let skills = ref.value(forKey: "skills") as! String
-        let team = ref.value(forKey: "team") as! Int
-        
-        let userTypesRef = ref.child("userType")
-        let isAdmin = userTypesRef.value(forKey: "isAdmin") as! Bool
-        let isMentor = userTypesRef.value(forKey: "isMentor") as! Bool
-        let isOrganizer = userTypesRef.value(forKey: "isOrganizer") as! Bool
-        let isParticipant = userTypesRef.value(forKey: "isParticipant") as! Bool
-        let isSpeaker = userTypesRef.value(forKey: "isSpeaker") as! Bool
-        let userType = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker,
-                                 isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
-        
-        return Profile(type: <#T##UserTypes#>, team: <#T##Int#>, name: <#T##String#>, image: <#T##UIImage#>, job: <#T##String#>, company: <#T##String#>, country: <#T##String#>, education: <#T##String#>, skills: <#T##String#>, description: <#T##String#>)
-        
-    }*/
-    
 }
 

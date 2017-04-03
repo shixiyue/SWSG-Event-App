@@ -8,111 +8,78 @@
 
 import UIKit
 
-class IdeaPostTableViewController: UITableViewController {
+class IdeaPostTableViewController: ImagePickerTableViewController {
     
-    private let ideaCreateErrorMsg = "Sorry, only participants of SWSG can create an idea!"
+    @IBOutlet private var ideaName: UITextField!
+    @IBOutlet private var teamName: UILabel!
+    @IBOutlet private var mainImage: UIButton!
     
-    @IBOutlet weak private var ideaName: UITextField!
+    private var containerHeight: CGFloat!
 
-    @IBOutlet weak private var details: UITextField!
-    @IBOutlet weak private var desc: UITextField!
     private var ideas = Ideas.sharedInstance()
     private var teams = Teams.sharedInstance()
     
-    @IBAction func onBackButtonClick(_ sender: Any) {
-        Utility.onBackButtonClick(tableViewController: self)
-    }
-    @IBAction func onDoneButtonClick(_ sender: Any) {
-        guard let user = System.activeUser, user.profile.type.isParticipant else {
-            self.present(Utility.getFailAlertController(message: ideaCreateErrorMsg), animated: true, completion: nil)
-            return
-        }
-        let name = ideaName.text!
-        let description = desc.text!
-        let team = teams.retrieveTeamAt(index: user.profile.team).name
-        ideas.addIdea(idea: Idea(name: name, description: description, team: team))
-        Utility.onBackButtonClick(tableViewController: self)
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        guard let user = System.activeUser else {
+            return
+        }
+        teamName.text = "by Team \(teams.retrieveTeamAt(index: user.profile.team).name)"
+        NotificationCenter.default.addObserver(self, selector: #selector(addIdea), name: Notification.Name(rawValue: "update"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
+        hideKeyboardWhenTappedAround()
+    }
+    
+    @IBAction func changeMainImage(_ sender: UIButton) {
+        alertControllerPosition = CGPoint(x: view.frame.width / 2, y: mainImage.bounds.maxY)
+        showImageOptions()
+    }
+    
+    override func updateImage(_ notification: NSNotification) {
+        guard let image = notification.userInfo?[Config.image] as? UIImage else {
+            return
+        }
+        mainImage.setImage(image, for: .normal)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Config.image), object: nil)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 6
-    }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        guard segue.identifier == "container", let containerViewController = segue.destination as? TemplateEditViewController else {
+            return
+        }
+        containerViewController.tableView.layoutIfNeeded()
+        containerHeight = containerViewController.tableView.contentSize.height
     }
-    */
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.row {
+        case 0: return 130
+        case 3: return containerHeight
+        default: return 44
+        }
+    }
+    
+    @objc private func addIdea(_ notification: NSNotification) {
+        guard let name = ideaName.text, !name.isEmpty else {
+            present(Utility.getFailAlertController(message: "Idea name cannot be empty"), animated: true, completion: nil)
+            return
+        }
+        guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String, let image = mainImage.image(for: .normal), let user = System.activeUser else {
+            return
+        }
+        NotificationCenter.default.removeObserver(self)
+        
+        let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
+        ideas.addIdea(idea: Idea(name: name, team: user.profile.team, description: description, mainImage: image, images: images, videoLink: videoLink))
+    }
+    
+    @objc private func reload(_ notification: NSNotification) {
+        guard let containerHeight = notification.userInfo?["height"] as? CGFloat else {
+            return
+        }
+        self.containerHeight = containerHeight
+        tableView.reloadData()
+    }
 
 }

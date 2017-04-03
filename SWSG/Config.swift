@@ -10,15 +10,6 @@ import UIKit
 
 struct Config {
     
-    static var currentLogInUser : String {
-        set {
-            self.currentLogInUser = newValue
-        }
-        get {
-            return Storage.readCurrentUserFromLocal()!
-        }
-    }
-    
     static let noTeam = -1
     static let defaultCountry = "Singapore"
     static let joinTeam = "Request to Join"
@@ -33,6 +24,7 @@ struct Config {
     static let password = "password"
     static let team = "team"
     static let name = "name"
+    static let username = "username"
     static let image = "image"
     static let job = "job"
     static let company = "company"
@@ -48,6 +40,15 @@ struct Config {
     static let comment = "comment"
     static let comments = "comments"
     static let words = "words"
+    static let dateTime = "date_time"
+    static let details = "details"
+    static let venue = "venue"
+    static let ideaName = "ideaName"
+    static let ideaTeam = "ideaTeam"
+    static let ideaDescription = "ideaDescription"
+    static let ideaVideo = "ideaVideo"
+    static let upvotes = "upvotes"
+    static let downvotes = "downvotes"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -58,6 +59,10 @@ struct Config {
     static let maximumZoomScale: CGFloat = 10
     static let minimumProfileTextFieldHeight: CGFloat = 49.5
     static let maxTeamMember: Int = 4
+    static let upvoteDefault = UIImage(named: "upvote")
+    static let upvoteFilled = UIImage(named: "upvote-filled")
+    static let downvoteDefault = UIImage(named: "downvote")
+    static let downvoteFilled = UIImage(named: "downvote-filled")
     
     // Parameters for Storyboard:
     static let logInSignUp = "LoginSignup"
@@ -75,6 +80,7 @@ struct Config {
     static let editProfileTable = "EditProfileTable"
     static let imageCropper = "ImageCropper"
     static let imageCropperViewController = "ImageCropperViewController"
+    static let uiSupporting = "UISupporting"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
@@ -105,4 +111,6 @@ struct Config {
     //Parameters for storage
     static let commentsFileName = "commentsFileName"
     static let localUser = "localUser"
+    
+    static let dateTimeFormatDayString = "dd-MM-yyyy"
 }

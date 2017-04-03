@@ -11,21 +11,19 @@ import Firebase
 import FirebaseAuth
 
 /// `SignUpTableViewController` represents the controller for signup table.
-class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class SignUpTableViewController: ImagePickerTableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
     var signUpButton: RoundCornerButton!
     
     private let countryPickerView = UIPickerView()
     private let skillsPlaceholder = "Skills"
     private let descPlaceholder = "Description"
-    private let passwordInvalid = "Password must be greater than 6 characters."
-    private let emailInvalid = "Please enter a valid email address."
-    private let signUpProblem = "There was a problem signing up."
     
     @IBOutlet fileprivate var signUpTableView: UITableView!
 
     @IBOutlet private var profileImageButton: UIButton!
     @IBOutlet private var nameTextField: UITextField!
+    @IBOutlet private var usernameTextField: UITextField!
     @IBOutlet private var emailTextField: UITextField!
     @IBOutlet private var passwordTextField: UITextField!
     @IBOutlet private var countryTextField: UITextField!
@@ -60,7 +58,7 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
     }
     
     private func setUpTextFields() {
-        textFields = [nameTextField, emailTextField, passwordTextField, countryTextField, jobTextField, companyTextField, educationTextField]
+        textFields = [nameTextField, usernameTextField, emailTextField, passwordTextField, countryTextField, jobTextField, companyTextField, educationTextField]
         for (index, textField) in textFields.enumerated() {
             textField.delegate = self
             textField.tag = index
@@ -131,47 +129,21 @@ class SignUpTableViewController: ImagePickerViewController, UIPickerViewDataSour
     }
     
     @objc private func signUp(sender: UIButton) {
-        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
-            return
-        }
-        guard Utility.isValidPassword(testStr: password) else {
-            self.present(Utility.getFailAlertController(message: passwordInvalid), animated: true, completion: nil)
-            return
-        }
-        guard Utility.isValidEmail(testStr: email) else {
-            self.present(Utility.getFailAlertController(message: emailInvalid), animated: true, completion: nil)
+        guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let username = usernameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
             return
         }
         let type = Storage.retrieveUserType(email: email)
-        let profile = Profile(type: type, team: -1, name: name, image: image, job: job, company: company, country: country,
+        let profile = Profile(type: type, team: Config.noTeam, name: name, username: username, image: image, job: job, company: company, country: country,
                               education: education, skills: skills, description: desc)
-        let user = User(profile: profile, password: password, email: email)
-        let success = Storage.saveUser(user: user)
         
-        guard success else {
-            self.present(Utility.getFailAlertController(message: signUpProblem), animated: true, completion: nil)
-            return
-        }
-        
-        /*
-         I added this for Firebase
-         */
-        
-        let client = FirebaseClient()
-        client.createNewUserWithProfile(profile, email: email, password: password, completion: { (error) in
-            
-            if error == nil {
-                print("You have successfully signed up")
-                //Goes to the Setup page which lets the user take a photo for their profile picture and also chose a username
-                
-                Utility.logInUser(user: user, currentViewController: self)
-                
+        System.client.createNewUserWithProfile(profile, email: email, password: password, completion: { (error) in
+            if let firebaseError = error {
+                self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
             } else {
-                print(error)
-                self.present(Utility.getFailAlertController(message: self.signUpProblem), animated: true, completion: nil)
+                let user = User(profile: profile, password: password, email: email)
+                Utility.logInUser(user: user, currentViewController: self)
             }
-        }
-        )
+        })
     }
     
     override func updateImage(_ notification: NSNotification) {
@@ -235,8 +207,10 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
         }
         constraint.constant = size.height
         textView.setContentOffset(CGPoint(), animated: false)
+        UIView.setAnimationsEnabled(false)
         signUpTableView.beginUpdates()
         signUpTableView.endUpdates()
+        UIView.setAnimationsEnabled(true)
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

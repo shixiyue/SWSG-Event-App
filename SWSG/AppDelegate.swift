@@ -17,18 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         setNavigationBar()
-        FIRApp.configure()
-        guard let userData = UserDefaults.standard.data(forKey: Config.user), let user = NSKeyedUnarchiver.unarchiveObject(with: userData) as? User else {
-            showLogInSignUpScreen()
-            return true
-        }
-        System.activeUser = user
-        
-        let client = FirebaseClient()
-        client.signIn(email: user.email, password: user.password, completion: {
-            (error) in
-        })
-        
+        checkLogin()
         return true
     }
     
@@ -37,6 +26,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barTintColor = Config.themeColor
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
         UINavigationBar.appearance().tintColor = UIColor.white
+    }
+    
+    private func checkLogin() {
+        FIRApp.configure()
+        guard let userData = UserDefaults.standard.data(forKey: Config.user), let user = NSKeyedUnarchiver.unarchiveObject(with: userData) as? User else {
+            showLogInSignUpScreen()
+            return
+        }
+        
+        System.client.signIn(email: user.email, password: user.password, completion: { (error) in
+            if error != nil {
+                self.showLogInSignUpScreen()
+                return
+            }
+        })
+        
+        System.activeUser = user
     }
     
     /// Shows logInSignUp screen if the user hasn't loged in.

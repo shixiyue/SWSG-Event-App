@@ -9,7 +9,7 @@
 import UIKit
 
 /// `EditProfileTableViewController` represents the controller for signup table.
-class EditProfileTableViewController: ImagePickerViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class EditProfileTableViewController: ImagePickerTableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
     var doneButton: RoundCornerButton!
     
@@ -143,13 +143,10 @@ class EditProfileTableViewController: ImagePickerViewController, UIPickerViewDat
         guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
             return
         }
-        user.profile.updateProfile(name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
+        user.profile.updateProfile(name: name, username: user.profile.username, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         System.updateActiveUser()
-        let success = Storage.saveUser(user: user)
-        guard success else {
-            self.present(Utility.getFailAlertController(message: updateProblem), animated: true, completion: nil)
-            return
-        }
+        // Error handling?
+        System.client.updateProfile(newProfile: user.profile)
         dismiss(animated: false, completion: nil)
     }
     
