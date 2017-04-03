@@ -8,8 +8,7 @@
 
 import UIKit
 
-class ConsultationDayCell: UITableViewCell {
+class ConsultationDayCell: UICollectionViewCell {
     @IBOutlet weak var dayLbl: UILabel!
     @IBOutlet weak var dateLbl: UILabel!
-    @IBOutlet weak var slotCollection: UICollectionView!
 }

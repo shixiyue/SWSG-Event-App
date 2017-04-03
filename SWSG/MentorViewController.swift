@@ -15,7 +15,8 @@ class MentorViewController: UIViewController {
     @IBOutlet weak var companyLbl: UILabel!
     @IBOutlet weak var descriptionTB: UITextView!
     
-    @IBOutlet weak var consultationDayList: UITableView!
+    
+    @IBOutlet weak var consultationSlotCollection: UICollectionView!
     @IBOutlet weak var relatedMentorCollection: UICollectionView!
     
     private let mentorBookingErrorMsg = "Sorry, only participants of SWSG can book a slot!"
@@ -28,12 +29,12 @@ class MentorViewController: UIViewController {
         
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         
-        consultationDayList.delegate = self
-        consultationDayList.dataSource = self
+        consultationSlotCollection.delegate = self
+        consultationSlotCollection.dataSource = self
         
-        relatedMentorCollection.tag = -1
-        relatedMentorCollection.delegate = self
-        relatedMentorCollection.dataSource = self
+        //relatedMentorCollection.tag = -1
+        //relatedMentorCollection.delegate = self
+        //relatedMentorCollection.dataSource = self
         
         setUpDescription()
         
@@ -92,7 +93,7 @@ class MentorViewController: UIViewController {
         }
     }
 }
-
+/*
 extension MentorViewController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let mentor = mentor else {
@@ -131,9 +132,76 @@ extension MentorViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
 }
-
+*/
 extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        guard let mentor = mentor else {
+                return 1
+        }
+        
+        return mentor.days.count
+    }
+    
     public func collectionView(_ collectionView: UICollectionView,
+                               numberOfItemsInSection section: Int) -> Int {
+        guard let mentor = mentor else {
+            return 0
+        }
+        
+        return mentor.days[section].slots.count
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView,
+                               cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        if indexPath.item == 0 {
+            return getConsultationDayCell(for: collectionView, at: indexPath)
+        } else {
+            return getConsultationSlotCell(for: collectionView, at: indexPath)
+        }
+    }
+    
+    private func getConsultationDayCell(for collectionView: UICollectionView,
+                                      at indexPath: IndexPath) -> UICollectionViewCell {
+        guard let mentor = mentor, let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier:"consultationDayCell",
+            for: indexPath) as? ConsultationDayCell
+            else {
+                return ConsultationDayCell()
+        }
+        
+        let date = mentor.days[indexPath.section].date
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        formatter.dateFormat = "EE"
+        
+        cell.dayLbl.text = formatter.string(from: date)
+        
+        formatter.dateFormat = "d/MM"
+        cell.dateLbl.text = formatter.string(from: date)
+        
+        return cell
+    }
+    
+    private func getConsultationSlotCell(for collectionView: UICollectionView,
+                                         at indexPath: IndexPath) -> UICollectionViewCell {
+        guard let mentor = mentor, let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier:"consultationSlotCell",
+            for: indexPath) as? ConsultationSlotCell
+            else {
+                return ConsultationSlotCell()
+        }
+        let consultationSlots = mentor.days[indexPath.section].slots
+        let slot = consultationSlots[indexPath.item]
+        
+        cell.setTime(to: slot.startDateTime)
+        cell.setStatus(is: slot.status)
+        
+        return cell
+    }
+    
+    
+/*    public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
         if collectionView.tag == -1 {
             return getNoOfRelatedMentors()
@@ -250,5 +318,5 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         //Present the Popup
         self.present(bookingController, animated: true, completion: nil)
-    }
+    }*/
 }
