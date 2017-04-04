@@ -31,6 +31,7 @@ class MentorViewController: UIViewController {
         
         consultationSlotCollection.delegate = self
         consultationSlotCollection.dataSource = self
+        consultationSlotCollection.collectionViewLayout = MultiDirectionCollectionViewLayout()
         
         //relatedMentorCollection.tag = -1
         //relatedMentorCollection.delegate = self
@@ -148,7 +149,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
             return 0
         }
         
-        return mentor.days[section].slots.count
+        return mentor.days[section].slots.count + 1
     }
     
     public func collectionView(_ collectionView: UICollectionView,
@@ -192,12 +193,52 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return ConsultationSlotCell()
         }
         let consultationSlots = mentor.days[indexPath.section].slots
-        let slot = consultationSlots[indexPath.item]
+        let slot = consultationSlots[indexPath.item - 1]
         
         cell.setTime(to: slot.startDateTime)
         cell.setStatus(is: slot.status)
         
         return cell
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView,
+                               didSelectItemAt indexPath: IndexPath){
+        selectedSlot(for: collectionView, at: indexPath)
+    }
+    
+    private func selectedSlot(for collectionView: UICollectionView,
+                              at indexPath: IndexPath) {
+        guard let mentor = mentor else {
+            return
+        }
+        
+        let dayIndex = collectionView.tag
+        let index = indexPath.item
+        let slot = mentor.days[dayIndex].slots[index]
+        
+        guard slot.status == .vacant else {
+            return
+        }
+        
+        let message = "Would you like to book \(slot.startDateTime.string(format: "dd/M - Ha"))?"
+        let bookingController = UIAlertController(title: "Book Slot", message: message,
+                                                  preferredStyle: UIAlertControllerStyle.alert)
+        
+        //Add an Action to Confirm the Deletion with the Destructive Style
+        let confirmAction = UIAlertAction(title: "Confirm", style: .default) { _ -> Void in
+            self.bookSlot(on: dayIndex, at: index)
+            
+            collectionView.reloadItems(at: [indexPath])
+        }
+        bookingController.addAction(confirmAction)
+        
+        //Add a Cancel Action to the Popup
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        }
+        bookingController.addAction(cancelAction)
+        
+        //Present the Popup
+        self.present(bookingController, animated: true, completion: nil)
     }
     
     
@@ -276,47 +317,5 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.setStatus(is: slot.status)
         
         return cell
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView,
-                               didSelectItemAt indexPath: IndexPath){
-        if collectionView.tag != -1 {
-            selectedSlot(for: collectionView, at: indexPath)
-        }
-    }
-    
-    private func selectedSlot(for collectionView: UICollectionView,
-                              at indexPath: IndexPath) {
-        guard let mentor = mentor else {
-            return
-        }
-        
-        let dayIndex = collectionView.tag
-        let index = indexPath.item
-        let slot = mentor.days[dayIndex].slots[index]
-        
-        guard slot.status == .vacant else {
-            return
-        }
-        
-        let message = "Would you like to book \(slot.startDateTime.string(format: "dd/M - Ha"))?"
-        let bookingController = UIAlertController(title: "Book Slot", message: message,
-                                                  preferredStyle: UIAlertControllerStyle.alert)
-        
-        //Add an Action to Confirm the Deletion with the Destructive Style
-        let confirmAction = UIAlertAction(title: "Confirm", style: .default) { _ -> Void in
-            self.bookSlot(on: dayIndex, at: index)
-            
-            collectionView.reloadItems(at: [indexPath])
-        }
-        bookingController.addAction(confirmAction)
-        
-        //Add a Cancel Action to the Popup
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-        }
-        bookingController.addAction(cancelAction)
-        
-        //Present the Popup
-        self.present(bookingController, animated: true, completion: nil)
     }*/
 }

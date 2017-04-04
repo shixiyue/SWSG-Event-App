@@ -29,6 +29,7 @@ struct System {
             mentor.addSlots(on: Date.date(from: "2017-07-21"))
             mentor.addSlots(on: Date.date(from: "2017-07-22"))
             mentor.addSlots(on: Date.date(from: "2017-07-23"))
+            mentor.addSlots(on: Date.date(from: "2017-07-24"))
             mentors.append(mentor)
         }
         

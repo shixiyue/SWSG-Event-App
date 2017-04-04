@@ -95,7 +95,7 @@ class FirebaseClient {
     }
     
     private func checkError(_ err: Error?) -> FirebaseError? {
-        guard let nsError = err as? NSError else {
+        guard let nsError = err as NSError? else {
             return nil
         }
         guard let errorCode = FIRAuthErrorCode(rawValue: nsError.code) else {

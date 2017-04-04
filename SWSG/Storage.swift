@@ -142,7 +142,7 @@ struct Storage {
                
                         return nil
                     }
-                    let imageFilePath = getLocalFileURL(fileName: "\(email).png").path
+                    _ = getLocalFileURL(fileName: "\(email).png").path
                     /*guard let image = UIImage(contentsOfFile: imageFilePath) else {
                         print("user image is nil")
                         return nil
