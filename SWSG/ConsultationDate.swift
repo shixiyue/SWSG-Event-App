@@ -16,4 +16,19 @@ struct ConsultationDate {
         self.date = date
         self.slots = [ConsultationSlot]()
     }
+    
+    func toDictionary() -> [String: Any] {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        
+        formatter.dateFormat = "d/MM/YYYY"
+        
+        var dict = [[String: Any]]()
+        
+        for slot in slots {
+            dict.append(slot.toDictionary())
+        }
+        
+        return [formatter.string(from: date): dict]
+    }
 }

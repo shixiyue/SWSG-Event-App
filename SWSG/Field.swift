@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Field {
+enum Field: String {
     case business
     case engineer
     case softwareEngineer

@@ -21,8 +21,8 @@ class MentorViewController: UIViewController {
     
     private let mentorBookingErrorMsg = "Sorry, only participants of SWSG can book a slot!"
     
-    public var mentor: Mentor?
-    fileprivate var relatedMentors: [Mentor]?
+    public var mentorAcct: User?
+    fileprivate var relatedMentors: [User]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,20 +39,20 @@ class MentorViewController: UIViewController {
         
         setUpDescription()
         
-        relatedMentors = [Mentor]()
+        relatedMentors = [User]()
         
         for individual in System.mentors {
-            if individual.field == mentor?.field {
+            if individual.mentor?.field == mentorAcct?.mentor?.field {
                 relatedMentors?.append(individual)
             }
         }
     }
     
     func setUpDescription() {
-        guard let mentor = mentor else {
+        guard let mentorAcct = mentorAcct else {
             return
         }
-        let profile = mentor.profile
+        let profile = mentorAcct.profile
         
         profileImg.image = profile.image
         nameLbl.text = profile.name
@@ -62,7 +62,7 @@ class MentorViewController: UIViewController {
     }
     
     func bookSlot(on dayIndex: Int, at index: Int) {
-        guard let mentor = mentor else {
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
             return
         }
         
@@ -72,7 +72,7 @@ class MentorViewController: UIViewController {
             return
         }
         if user.team != -1 {
-            mentor.days[dayIndex].slots[user.team].team = Teams.sharedInstance().retrieveTeamAt(index: user.team )
+            mentor.days[dayIndex].slots[user.team].team = user.team
         }
     }
     
@@ -89,7 +89,7 @@ class MentorViewController: UIViewController {
             let mentorVC = segue.destination as! MentorViewController
             if let indexPaths = relatedMentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item
-                mentorVC.mentor = relatedMentors[index]
+                mentorVC.mentorAcct = relatedMentors[index]
             }
         }
     }
@@ -97,7 +97,7 @@ class MentorViewController: UIViewController {
 
 extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        guard let mentor = mentor else {
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
                 return 1
         }
         
@@ -106,7 +106,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
-        guard let mentor = mentor else {
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
             return 0
         }
         
@@ -125,7 +125,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func getConsultationDayCell(for collectionView: UICollectionView,
                                       at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let mentor = mentor, let cell = collectionView.dequeueReusableCell(
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor, let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier:"consultationDayCell",
             for: indexPath) as? ConsultationDayCell
             else {
@@ -147,7 +147,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func getConsultationSlotCell(for collectionView: UICollectionView,
                                          at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let mentor = mentor, let cell = collectionView.dequeueReusableCell(
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor, let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier:"consultationSlotCell",
             for: indexPath) as? ConsultationSlotCell
             else {
@@ -171,7 +171,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func selectedSlot(for collectionView: UICollectionView,
                               at indexPath: IndexPath) {
-        guard let mentor = mentor else {
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
             return
         }
         

@@ -30,7 +30,7 @@ class MentorGridViewController: BaseViewController {
             
             if let indexPaths = mentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item
-                mentorVC.mentor = System.mentors[index]
+                mentorVC.mentorAcct = System.mentors[index]
             }
         }
     }

@@ -9,12 +9,10 @@
 import Foundation
 
 class Mentor {
-    var profile: Profile
     var days = [ConsultationDate]()
     var field: Field
     
     init(profile: Profile, field: Field) {
-        self.profile = profile
         self.field = field
     }
     
@@ -34,5 +32,9 @@ class Mentor {
         }
         
         days.append(day)
+    }
+    
+    func toDictionary() -> [String: Any] {
+        return [Config.consultationDays: days, Config.field: field.rawValue]
     }
 }

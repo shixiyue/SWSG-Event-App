@@ -86,7 +86,7 @@ class User {
     }
     
     func toDictionary() -> [String: Any] {
-        return [Config.userType: type.toDictionary(), Config.team: team, Config.email: email, Config.profile: profile.toDictionary()]
+        return [Config.userType: type.toDictionary(), Config.team: team, Config.email: email, Config.profile: profile.toDictionary(), Config.mentor: mentor?.toDictionary()]
     }
     
     internal func _checkRep() {

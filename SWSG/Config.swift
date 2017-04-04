@@ -50,6 +50,11 @@ struct Config {
     static let ideaVideo = "ideaVideo"
     static let upvotes = "upvotes"
     static let downvotes = "downvotes"
+    static let mentor = "mentor"
+    static let field = "field"
+    static let consultationDays = "consultationDays"
+    static let consultationSlots = "consultationSlots"
+    static let consultationStatus = "consultationStatus"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)

@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ConsultationSlotStatus {
+enum ConsultationSlotStatus: String {
     case vacant
     case booked
     case unavailable
