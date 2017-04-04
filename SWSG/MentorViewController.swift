@@ -94,46 +94,7 @@ class MentorViewController: UIViewController {
         }
     }
 }
-/*
-extension MentorViewController: UITableViewDelegate, UITableViewDataSource {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let mentor = mentor else {
-            return 0
-        }
-        
-        return mentor.days.count
-    }
-    
-    public func tableView(_ tableView: UITableView,
-                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let mentor = mentor else {
-            return ConsultationDayCell()
-        }
-        
-        let index = indexPath.item
-        let date =  mentor.days[index]
-        
-        guard let cell = consultationDayList.dequeueReusableCell(withIdentifier: "consultationDayCell",
-                                                      for: indexPath) as? ConsultationDayCell else {
-              return ConsultationDayCell()
-        }
-        
-        let formatter = DateFormatter()
-        formatter.locale = Locale.current
-        formatter.dateFormat = "EE"
-        
-        cell.dayLbl.text = formatter.string(from: date.date)
-        
-        formatter.dateFormat = "d/MM"
-        cell.dateLbl.text = formatter.string(from: date.date)
-        cell.slotCollection.delegate = self
-        cell.slotCollection.dataSource = self
-        cell.slotCollection.tag = index
-        
-        return cell
-    }
-}
-*/
+
 extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         guard let mentor = mentor else {
@@ -203,7 +164,9 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     public func collectionView(_ collectionView: UICollectionView,
                                didSelectItemAt indexPath: IndexPath){
-        selectedSlot(for: collectionView, at: indexPath)
+        if indexPath.item > 0 {
+            selectedSlot(for: collectionView, at: indexPath)
+        }
     }
     
     private func selectedSlot(for collectionView: UICollectionView,
@@ -213,7 +176,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
         
         let dayIndex = collectionView.tag
-        let index = indexPath.item
+        let index = indexPath.item - 1
         let slot = mentor.days[dayIndex].slots[index]
         
         guard slot.status == .vacant else {

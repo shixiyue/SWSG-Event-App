@@ -1,21 +1,35 @@
 //
-//  MultiDirectionCollectionViewLayout.swift
-//  SWSG
+//  CustomCollectionViewLayout.swift
+//  MultiDirectionCollectionView
 //
-//  Created by Jeremy Jee on 3/4/17.
-//  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
-//  Code from: https://www.credera.com/blog/mobile-applications-and-web/building-a-multi-directional-uicollectionview-in-swift/
-
+//  Created by Kyle Andrews on 4/20/15.
+//  Copyright (c) 2015 Credera. All rights reserved.
+//
 import UIKit
 
 class MultiDirectionCollectionViewLayout: UICollectionViewLayout {
-
+    
+    // Used for calculating each cells CGRect on screen.
+    // CGRect will define the Origin and Size of the cell.
     let CELL_HEIGHT = 50.0
     let CELL_WIDTH = 50.0
+    let STATUS_BAR = UIApplication.shared.statusBarFrame.height
     
-    var cellAttrDict = [IndexPath: UICollectionViewLayoutAttributes]()
+    // Dictionary to hold the UICollectionViewLayoutAttributes for
+    // each cell. The layout attribtues will define the cell's size
+    // and position (x, y, and z index). I have found this process
+    // to be one of the heavier parts of the layout. I recommend
+    // holding onto this data after it has been calculated in either
+    // a dictionary or data store of some kind for a smooth performance.
+    var cellAttrsDictionary = [IndexPath: UICollectionViewLayoutAttributes]()
+    
+    // Defines the size of the area the user can move around in
+    // within the collection view.
     var contentSize = CGSize.zero
     
+    // Used to determine if a data source update has occured.
+    // Note: The data source would be responsible for updating
+    // this value if an update was performed.
     var dataSourceDidUpdate = true
     
     override var collectionViewContentSize: CGSize {
@@ -23,19 +37,53 @@ class MultiDirectionCollectionViewLayout: UICollectionViewLayout {
     }
     
     override func prepare() {
-        guard let collectionView = collectionView, dataSourceDidUpdate else {
+        
+        guard let collectionView = collectionView else {
             return
         }
         
+        // Only update header cells.
+        if !dataSourceDidUpdate {
+            
+            // Determine current content offsets.
+            let xOffset = collectionView.contentOffset.x
+            let yOffset = collectionView.contentOffset.y
+            
+            if collectionView.numberOfSections > 0 {
+                for section in 0..<collectionView.numberOfSections {
+                    
+                    // Confirm the section has items.
+                    if collectionView.numberOfItems(inSection: section) > 0 {
+                        
+                        // Update all items in the first row.
+                        let indexPath = IndexPath(item: 0, section: section)
+                        
+                        // Update y-position to follow user.
+                        if let attrs = cellAttrsDictionary[indexPath] {
+                            var frame = attrs.frame
+                            frame.origin.x = xOffset
+                            attrs.frame = frame
+                        }
+                    }
+                }
+            }
+            
+            
+            // Do not run attribute generation code
+            // unless data source has been updated.
+            return
+        }
+        
+        // Acknowledge data source change, and disable for next time.
         dataSourceDidUpdate = false
         
         // Cycle through each section of the data source.
         if collectionView.numberOfSections > 0 {
-            for section in 0...collectionView.numberOfSections - 1 {
+            for section in 0..<collectionView.numberOfSections {
                 
                 // Cycle through each item in the section.
                 if collectionView.numberOfItems(inSection: section) > 0 {
-                    for item in 0...collectionView.numberOfItems(inSection: section) - 1 {
+                    for item in 0..<collectionView.numberOfItems(inSection: section) {
                         
                         // Build the UICollectionVieLayoutAttributes for the cell.
                         let cellIndex = IndexPath(item: item, section: section)
@@ -57,7 +105,7 @@ class MultiDirectionCollectionViewLayout: UICollectionViewLayout {
                         }
                         
                         // Save the attributes.
-                        cellAttrDict[cellIndex] = cellAttributes
+                        cellAttrsDictionary[cellIndex] = cellAttributes
                         
                     }
                 }
@@ -69,8 +117,8 @@ class MultiDirectionCollectionViewLayout: UICollectionViewLayout {
         let contentWidth = Double(collectionView.numberOfItems(inSection: 0)) * CELL_WIDTH
         let contentHeight = Double(collectionView.numberOfSections) * CELL_HEIGHT
         self.contentSize = CGSize(width: contentWidth, height: contentHeight)
+        
     }
-    
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         
@@ -78,7 +126,7 @@ class MultiDirectionCollectionViewLayout: UICollectionViewLayout {
         var attributesInRect = [UICollectionViewLayoutAttributes]()
         
         // Check each element to see if it should be returned.
-        for cellAttributes in cellAttrDict.values {
+        for cellAttributes in cellAttrsDictionary.values {
             if rect.intersects(cellAttributes.frame) {
                 attributesInRect.append(cellAttributes)
             }
@@ -89,7 +137,7 @@ class MultiDirectionCollectionViewLayout: UICollectionViewLayout {
     }
     
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        return cellAttrDict[indexPath]!
+        return cellAttrsDictionary[indexPath]!
     }
     
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {

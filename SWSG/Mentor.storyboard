@@ -227,16 +227,11 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="64f-Q2-th1">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="64f-Q2-th1">
                                 <rect key="frame" x="16" y="329" width="343" height="166"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="5" id="jGW-QJ-Lhe">
-                                    <size key="itemSize" width="50" height="50"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
+                                <collectionViewLayout key="collectionViewLayout" id="lz3-Tg-v1g" customClass="MultiDirectionCollectionViewLayout" customModule="SWSG" customModuleProvider="target"/>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="consultationDayCell" id="Vnr-kx-v2y" customClass="ConsultationDayCell" customModule="SWSG" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -245,57 +240,79 @@
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fri" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NRT-Sh-one">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NRT-Sh-one">
                                                     <rect key="frame" x="4" y="7" width="42" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
                                                     <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(23/7)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kvo-LM-FMM">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(23/7)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kvo-LM-FMM">
                                                     <rect key="frame" x="2" y="22" width="47" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                                     <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                         </view>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="NRT-Sh-one" firstAttribute="leading" secondItem="Vnr-kx-v2y" secondAttribute="leading" constant="4" id="92Z-Jy-FhQ"/>
+                                            <constraint firstAttribute="bottom" secondItem="NRT-Sh-one" secondAttribute="bottom" constant="22" id="AcQ-A4-XrW"/>
+                                            <constraint firstAttribute="bottom" secondItem="kvo-LM-FMM" secondAttribute="bottom" constant="7" id="KRj-dM-6pt"/>
+                                            <constraint firstAttribute="trailing" secondItem="NRT-Sh-one" secondAttribute="trailing" constant="4" id="XSf-cb-3MR"/>
+                                            <constraint firstItem="NRT-Sh-one" firstAttribute="top" secondItem="Vnr-kx-v2y" secondAttribute="top" constant="7" id="a8b-Ba-6yW"/>
+                                            <constraint firstItem="kvo-LM-FMM" firstAttribute="leading" secondItem="Vnr-kx-v2y" secondAttribute="leading" constant="2" id="btO-oH-XhK"/>
+                                            <constraint firstAttribute="trailing" secondItem="kvo-LM-FMM" secondAttribute="trailing" constant="1" id="daO-fJ-F9N"/>
+                                            <constraint firstItem="kvo-LM-FMM" firstAttribute="top" secondItem="Vnr-kx-v2y" secondAttribute="top" constant="22" id="uVo-Wn-Kmn"/>
+                                        </constraints>
                                         <connections>
                                             <outlet property="dateLbl" destination="kvo-LM-FMM" id="Vdy-tT-sd8"/>
                                             <outlet property="dayLbl" destination="NRT-Sh-one" id="bs6-bE-Zhk"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="consultationSlotCell" id="O5j-w3-iNK" customClass="ConsultationSlotCell" customModule="SWSG" customModuleProvider="target">
-                                        <rect key="frame" x="58.5" y="0.0" width="50" height="50"/>
+                                        <rect key="frame" x="73.5" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pJO-GJ-VN4">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pJO-GJ-VN4">
+                                                    <rect key="frame" x="2.5" y="3" width="44" height="44"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cbO-pd-C6o">
-                                                            <rect key="frame" x="3" y="3" width="44" height="44"/>
-                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4MJ-VN-CCf">
+                                                            <rect key="frame" x="1" y="1" width="42" height="42"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="12pm" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4ah-l0-IY2">
-                                                                    <rect key="frame" x="-4.5" y="11" width="53" height="21"/>
-                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12pm" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4ah-l0-IY2">
+                                                                    <rect key="frame" x="3.5" y="13" width="35.5" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                             </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <constraints>
+                                                                <constraint firstItem="4ah-l0-IY2" firstAttribute="centerX" secondItem="4MJ-VN-CCf" secondAttribute="centerX" id="S8b-eZ-nIZ"/>
+                                                                <constraint firstItem="4ah-l0-IY2" firstAttribute="centerY" secondItem="4MJ-VN-CCf" secondAttribute="centerY" id="cMQ-Ef-878"/>
+                                                            </constraints>
                                                         </view>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="bottom" secondItem="4MJ-VN-CCf" secondAttribute="bottom" constant="1" id="Qig-mR-lZ5"/>
+                                                        <constraint firstAttribute="trailing" secondItem="4MJ-VN-CCf" secondAttribute="trailing" constant="1" id="Ras-zO-F1z"/>
+                                                        <constraint firstItem="4MJ-VN-CCf" firstAttribute="leading" secondItem="pJO-GJ-VN4" secondAttribute="leading" constant="1" id="efN-VZ-apQ"/>
+                                                        <constraint firstItem="4MJ-VN-CCf" firstAttribute="top" secondItem="pJO-GJ-VN4" secondAttribute="top" constant="1" id="oE1-A5-rQW"/>
+                                                    </constraints>
                                                 </view>
                                             </subviews>
                                         </view>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="pJO-GJ-VN4" secondAttribute="trailing" constant="3.5" id="1PL-Bi-9Cg"/>
+                                            <constraint firstItem="pJO-GJ-VN4" firstAttribute="leading" secondItem="O5j-w3-iNK" secondAttribute="leading" constant="2.5" id="7P7-Yt-xRy"/>
+                                            <constraint firstItem="pJO-GJ-VN4" firstAttribute="top" secondItem="O5j-w3-iNK" secondAttribute="top" constant="3" id="eI3-kk-aAs"/>
+                                            <constraint firstAttribute="bottom" secondItem="pJO-GJ-VN4" secondAttribute="bottom" constant="3" id="hDh-hF-zQP"/>
+                                        </constraints>
                                         <connections>
                                             <outlet property="outerFrame" destination="pJO-GJ-VN4" id="ftJ-Dg-Uab"/>
                                             <outlet property="timeLbl" destination="4ah-l0-IY2" id="0l7-Ws-xua"/>

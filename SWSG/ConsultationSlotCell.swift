@@ -14,7 +14,7 @@ class ConsultationSlotCell: UICollectionViewCell {
     
     func setTime(to date: Date) {
         let formatter = DateFormatter()
-        formatter.dateFormat = "Ha"
+        formatter.dateFormat = "ha"
         
         timeLbl.text = formatter.string(from: date)
     }
