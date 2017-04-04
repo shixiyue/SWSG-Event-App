@@ -14,13 +14,13 @@ class Comments {
     public static var comments = [String: [Comment]]() {
         didSet {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "comments"), object: self)
-            Storage.saveComments(data: comments, fileName: Config.commentsFileName)
+            //Storage.saveComments(data: comments, fileName: Config.commentsFileName)
         }
     }
     public static var commentsForIdeas = [String: [Comment]]() {
         didSet {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "commentsForIdeas"), object: self)
-            Storage.saveComments(data: comments, fileName: Config.commentsFileName)
+            //Storage.saveComments(data: comments, fileName: Config.commentsFileName)
         }
     }
     

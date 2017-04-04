@@ -7,62 +7,94 @@
 //
 
 import Foundation
+import Firebase
 
 /// `User` represents a User of SWSG App.
-class User: NSObject, NSCoding {
+class User {
     
     let email: String
+    public private (set) var  uid: String
     public private (set) var profile: Profile
-    public internal (set) var password: String
+    public private (set) var type: UserTypes
+    public private (set) var team = Config.noTeam
+    public private (set) var mentor: Mentor?
     
-    init(profile: Profile, password: String, email: String) {
+    init(uid: String, profile: Profile, type: UserTypes, team: Int, email: String) {
+        self.uid = uid
+        self.type = type
+        self.team = team
         self.profile = profile
-        self.password = password
         self.email = email
         
-        super.init()
         _checkRep()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        guard let profile = aDecoder.decodeObject(forKey: Config.profile) as? Profile else {
+    convenience init(uid: String, profile: Profile, type: UserTypes, email: String) {
+        self.init(uid: uid, profile: profile, type: type, team: Config.noTeam, email: email)
+    }
+    
+    convenience init(profile: Profile, type: UserTypes, email: String) {
+        self.init(uid: "", profile: profile, type: type, team: Config.noTeam, email: email)
+    }
+    
+    init?(snapshot: FIRDataSnapshot) {
+        guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
+            return nil
+        }
+        guard let uid = snapshotValue[Config.uid] as? String else {
+            return nil
+        }
+        self.uid = uid
+        guard let userTypes = snapshotValue[Config.userType] as? [String: Bool], let isParticipant = userTypes[Config.isParticipant], let isSpeaker = userTypes[Config.isSpeaker], let isMentor = userTypes[Config.isMentor], let isOrganizer = userTypes[Config.isOrganizer], let isAdmin = userTypes[Config.isAdmin] else {
+            return nil
+        }
+        self.type = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
+        guard let team = snapshotValue[Config.team] as? Int else {
+            return nil
+        }
+        self.team = team
+        guard let profile = snapshotValue[Config.profile] as? Profile else {
             return nil
         }
         self.profile = profile
-        guard let password = aDecoder.decodeObject(forKey: Config.password) as? String else {
-            return nil
-        }
-        self.password = password
-        guard let email = aDecoder.decodeObject(forKey: Config.email) as? String else {
+        guard let email = snapshotValue[Config.email] as? String else {
             return nil
         }
         self.email = email
-        
-        super.init()
-        _checkRep()
     }
     
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(profile, forKey: Config.profile)
-        aCoder.encode(password, forKey: Config.password)
-        aCoder.encode(email, forKey: Config.email)
+    var hasTeam: Bool {
+        return team != Config.noTeam
     }
     
-    func setPassword(newPassword: String) -> Bool {
-        _checkRep()
-        password = newPassword
-        _checkRep()
-        // Cominucate with backend...
-        return true
+    func setTeamIndex(index: Int) {
+        guard type.isParticipant else {
+            return
+        }
+        team = index
+    }
+    
+    func setUid(uid: String) {
+        self.uid = uid
+    }
+    
+    func setMentor(mentor: Mentor) {
+        guard type.isMentor else {
+            return
+        }
+        self.mentor = mentor
     }
     
     func toDictionary() -> [String: Any] {
-        return [Config.email: email, Config.password: password, Config.profile: profile.toDictionary()]
+        return [Config.userType: type.toDictionary(), Config.team: team, Config.email: email, Config.profile: profile.toDictionary()]
     }
     
     internal func _checkRep() {
         // Assumption: type, profile and team have met their representation invariants.
-        assert (Utility.isValidEmail(testStr: email) && Utility.isValidPassword(testStr: password))
+        assert (Utility.isValidEmail(testStr: email))
+        if !type.isParticipant {
+            assert(team == -1)
+        }
     }
     
 }

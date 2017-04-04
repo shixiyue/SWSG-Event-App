@@ -13,22 +13,22 @@ class FirebaseClient {
     
     typealias CreateUserCallback = (FirebaseError?) -> Void
     typealias SignInCallback = (FirebaseError?) -> Void
-    typealias GetProfileCallback = (Profile, FirebaseError?) -> Void
+    typealias GetUserCallback = (User, FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
     typealias GetEventCallback = (Event, FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
     
-    private let profilesRef = FIRDatabase.database().reference(withPath: "profiles")
+    private let usersRef = FIRDatabase.database().reference(withPath: "users")
     private let teamsRef = FIRDatabase.database().reference(withPath: "teams")
     private let eventsRef = FIRDatabase.database().reference(withPath: "events")
     
-    public func createNewUserWithProfile(_ profile: Profile, email: String, password: String, completion: @escaping CreateUserCallback) {
-        FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: {(user, err) in
+    public func createNewUser(_ user: User, email: String, password: String, completion: @escaping CreateUserCallback) {
+        FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: {(firUser, err) in
             if err == nil {
-                if let uid = user?.uid {
-                    let userRef = self.profilesRef.child(uid)
-                    userRef.setValue(profile.toDictionary() as Any)
+                if let uid = firUser?.uid {
+                    let userRef = self.usersRef.child(uid)
+                    userRef.setValue(user.toDictionary() as Any)
                 }
             }
             completion(self.checkError(err))
@@ -42,27 +42,44 @@ class FirebaseClient {
         })
     }
     
-    public func getProfileOfCurrentUser(completion: @escaping GetProfileCallback) {
+    public func alreadySignedIn() -> Bool {
+        if let _ = FIRAuth.auth()?.currentUser {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    //TEMP SOLUTION
+    public func signOut() {
+        do {
+            try FIRAuth.auth()?.signOut()
+        } catch {
+            return
+        }
+    }
+    
+    public func getCurrentUser(completion: @escaping GetUserCallback) {
         guard let uid = FIRAuth.auth()?.currentUser?.uid else {
             return
         }
-        getProfileOfUserWith(uid: uid, completion: completion)
+        getUserWith(uid: uid, completion: completion)
     }
 
-    public func getProfileOfUserWith(uid: String, completion: @escaping GetProfileCallback) {
-        let userRef = profilesRef.child(uid)
+    public func getUserWith(uid: String, completion: @escaping GetUserCallback) {
+        let userRef = usersRef.child(uid)
         // TODO: handle error
         userRef.observeSingleEvent(of: .value, with: {(snapshot) in
-            completion(Profile(snapshot: snapshot)!, nil)
+            completion(User(snapshot: snapshot)!, nil)
         })
     }
     
-    public func updateProfile(newProfile: Profile) {
+    public func updateUser(newUser: User) {
         guard let uid = FIRAuth.auth()?.currentUser?.uid else {
             return
         }
-        let userRef = profilesRef.child(uid)
-        userRef.setValue(newProfile.toDictionary() as Any)
+        let userRef = usersRef.child(uid)
+        userRef.setValue(newUser.toDictionary() as Any)
     }
     
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {

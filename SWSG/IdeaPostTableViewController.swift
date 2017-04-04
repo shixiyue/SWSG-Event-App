@@ -24,7 +24,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         guard let user = System.activeUser else {
             return
         }
-        teamName.text = "by Team \(teams.retrieveTeamAt(index: user.profile.team).name)"
+        teamName.text = "by Team \(teams.retrieveTeamAt(index: user.team).name)"
         NotificationCenter.default.addObserver(self, selector: #selector(addIdea), name: Notification.Name(rawValue: "update"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
         hideKeyboardWhenTappedAround()
@@ -71,7 +71,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         NotificationCenter.default.removeObserver(self)
         
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
-        ideas.addIdea(idea: Idea(name: name, team: user.profile.team, description: description, mainImage: image, images: images, videoLink: videoLink))
+        ideas.addIdea(idea: Idea(name: name, team: user.team, description: description, mainImage: image, images: images, videoLink: videoLink))
     }
     
     @objc private func reload(_ notification: NSNotification) {

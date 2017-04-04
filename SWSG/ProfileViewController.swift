@@ -48,12 +48,12 @@ class ProfileViewController: ImagePickerViewController {
         nameLbl.text = user.profile.name
         usernameLbl.text = "@\(user.profile.username)"
         
-        guard user.profile.type.isParticipant else {
-            teamLbl.text = user.profile.type.toString()
+        guard user.type.isParticipant else {
+            teamLbl.text = user.type.toString()
             return
         }
-        if user.profile.team != -1 {
-            teamLbl.text = Teams.sharedInstance().retrieveTeamAt(index: user.profile.team).name
+        if user.team != -1 {
+            teamLbl.text = Teams.sharedInstance().retrieveTeamAt(index: user.team).name
         } else {
             teamLbl.text = Config.noTeamLabel
         }
@@ -75,7 +75,7 @@ class ProfileViewController: ImagePickerViewController {
         user.profile.updateImage(image: image)
         System.updateActiveUser()
         // Error handling?
-        System.client.updateProfile(newProfile: user.profile)
+        System.client.updateUser(newUser: user)
         
         NotificationCenter.default.removeObserver(self)
     }

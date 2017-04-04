@@ -17,6 +17,7 @@ struct Config {
     static let fullTeam = "Team is Full"
     
     // Keys for encode/decode:
+    static let uid = "uid"
     static let user = "user"
     static let userType = "userType"
     static let profile = "profile"

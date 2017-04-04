@@ -26,9 +26,9 @@ class EventDetailsTableViewController: UITableViewController {
         hideKeyboardWhenTappedAround()
         
         NotificationCenter.default.addObserver(self, selector: #selector(update), name: Notification.Name(rawValue: "comments"), object: nil)
-        if let comments = Storage.readComments(fileName: Config.commentsFileName) {
+        /*if let comments = Storage.readComments(fileName: Config.commentsFileName) {
             Comments.comments = comments
-        }
+        }*/
        // CommentsInputTableViewCell.delegate = self
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

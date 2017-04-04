@@ -77,6 +77,7 @@ struct Utility {
     static func logOutUser(currentViewController: UIViewController) {
         System.activeUser = nil
         showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
+        System.client.signOut()
     }
     
     static func logInUser(user: User, currentViewController: UIViewController) {

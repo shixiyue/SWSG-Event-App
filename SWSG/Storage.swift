@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+/*
 /// `Storage` represents the storage of SWSG App. It will comunicate with the backend.
 struct Storage {
     
@@ -153,7 +153,7 @@ struct Storage {
                         return nil
                     }
                     let userProfile = Profile(type: userType, team: team_participant, name: name, username: username, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-                    let participant =  User(profile: userProfile, password: password, email: email)
+                   //let participant =  User(profile: userProfile, password: password, email: email)
                     members_retrieved.append(participant)
                 }
                 let team = Team(members: members_retrieved, name: teamName, info: info, lookingFor: lookingFor, isPrivate: isPrivate)
@@ -202,4 +202,4 @@ struct Storage {
         return localData
     }
 }
-
+*/

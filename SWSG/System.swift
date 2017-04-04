@@ -4,16 +4,7 @@ struct System {
     
     static var client = FirebaseClient()
     
-    static var activeUser: User? {
-        didSet {
-            guard let user = activeUser else {
-                UserDefaults.standard.removeObject(forKey: Config.user)
-                return
-            }
-            let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: user)
-            UserDefaults.standard.set(encodedData, forKey: Config.user)
-        }
-    }
+    static var activeUser: User? 
     
     public static var mentors: [Mentor] {
         var mentors = [Mentor]()

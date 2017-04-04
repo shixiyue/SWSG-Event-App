@@ -47,7 +47,7 @@ extension Team {
         var member_data = [[String: Any]]()
         for each_member in members {
             var user_data = each_member.toDictionary()
-            user_data.updateValue(each_member.profile.team as Any , forKey: "team")
+            user_data.updateValue(each_member.team as Any , forKey: "team")
             member_data.append(user_data)
         }
         data.updateValue(member_data, forKey: "members")

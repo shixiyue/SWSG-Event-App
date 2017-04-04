@@ -38,11 +38,11 @@ class IdeasListTableViewController: BaseViewController {
     }
     
     @IBAction func addIdea() {
-        guard let user = System.activeUser, user.profile.type.isParticipant else {
+        guard let user = System.activeUser, user.type.isParticipant else {
             present(Utility.getFailAlertController(message: ideaCreateErrorMsg.notParticipant.rawValue), animated: true, completion: nil)
             return
         }
-        guard user.profile.hasTeam else {
+        guard user.hasTeam else {
             present(Utility.getFailAlertController(message: ideaCreateErrorMsg.noTeam.rawValue), animated: true, completion: nil)
             return
         }

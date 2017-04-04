@@ -51,12 +51,12 @@ class MenuViewController: UIViewController {
         nameLbl.text = user.profile.name
         usernameLbl.text = "@\(user.profile.username)"
         
-        guard user.profile.type.isParticipant else {
-            teamLbl.text = user.profile.type.toString()
+        guard user.type.isParticipant else {
+            teamLbl.text = user.type.toString()
             return
         }
-        if user.profile.team != -1 && teams.count != 0 {
-            teamLbl.text = teams.retrieveTeamAt(index: user.profile.team).name
+        if user.team != -1 && teams.count != 0 {
+            teamLbl.text = teams.retrieveTeamAt(index: user.team).name
         } else {
             teamLbl.text = Config.noTeamLabel
         }

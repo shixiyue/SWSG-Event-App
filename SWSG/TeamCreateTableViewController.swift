@@ -27,7 +27,7 @@ class TeamCreateTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     @IBAction func onDoneButtonClick(_ sender: Any) {
-        guard let user = System.activeUser, user.profile.type.isParticipant else {
+        guard let user = System.activeUser, user.type.isParticipant else {
             self.present(Utility.getFailAlertController(message: teamCreateErrorMsg), animated: true, completion: nil)
             return
         }
@@ -36,7 +36,7 @@ class TeamCreateTableViewController: UITableViewController {
         let lookingFor = self.lookingFor.text
         let team = Team(members: [user], name: team_name, info: info, lookingFor: lookingFor, isPrivate: false)
         teams.addTeam(team: team)
-        user.profile.setTeamIndex(index: teams.count-1)
+        user.setTeamIndex(index: teams.count-1)
         System.activeUser = user
         dismiss(animated: true, completion: nil)
         Utility.onBackButtonClick(tableViewController: self)

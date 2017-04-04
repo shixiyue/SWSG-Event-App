@@ -47,7 +47,6 @@ class MultiDirectionCollectionViewLayout: UICollectionViewLayout {
             
             // Determine current content offsets.
             let xOffset = collectionView.contentOffset.x
-            let yOffset = collectionView.contentOffset.y
             
             if collectionView.numberOfSections > 0 {
                 for section in 0..<collectionView.numberOfSections {

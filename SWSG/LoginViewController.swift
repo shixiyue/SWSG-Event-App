@@ -40,11 +40,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             if let firebaseError = error {
                 self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
             } else {
-                System.client.getProfileOfCurrentUser(completion: { (profile, profileError) in
-                    if let firebaseError = profileError {
+                System.client.getCurrentUser(completion: { (user, userError) in
+                    if let firebaseError = userError {
                         self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
                     } else {
-                        let user = User(profile: profile, password: password, email: email)
                         Utility.logInUser(user: user, currentViewController: self)
                     }
                 })

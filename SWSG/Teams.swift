@@ -14,13 +14,14 @@ class Teams {
         didSet {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "teams"), object: self)
             print("saving teams")
-            Storage.saveTeams(data: teams, fileName: "Teams")
+            //Storage.saveTeams(data: teams, fileName: "Teams")
         }
     }
     
     private init() {
         print("reading from storage for teams")
-        self.teams = Storage.readTeams(fileName: "Teams") ?? [Team]()
+        teams = [Team]()
+        //self.teams = Storage.readTeams(fileName: "Teams") ?? [Team]()
     }
     
     class func sharedInstance() -> Teams {

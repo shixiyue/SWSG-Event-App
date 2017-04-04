@@ -28,13 +28,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().tintColor = UIColor.white
     }
     
+    //TODO: Automatic Login with Firebase
     private func checkLogin() {
         FIRApp.configure()
-        guard let userData = UserDefaults.standard.data(forKey: Config.user), let user = NSKeyedUnarchiver.unarchiveObject(with: userData) as? User else {
+        
+        if System.client.alreadySignedIn() {
+            
+        } else {
             showLogInSignUpScreen()
             return
         }
         
+        /*
+        guard let userData = UserDefaults.standard.data(forKey: Config.user), let user = NSKeyedUnarchiver.unarchiveObject(with: userData) as? User else {
+            showLogInSignUpScreen()
+            return
+        }
         System.client.signIn(email: user.email, password: user.password, completion: { (error) in
             if error != nil {
                 self.showLogInSignUpScreen()
@@ -42,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         })
         
-        System.activeUser = user
+        System.activeUser = user*/
     }
     
     /// Shows logInSignUp screen if the user hasn't loged in.

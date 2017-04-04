@@ -132,15 +132,16 @@ class SignUpTableViewController: ImagePickerTableViewController, UIPickerViewDat
         guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let username = usernameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
             return
         }
-        let type = Storage.retrieveUserType(email: email)
+        //TODO: Removed line: let type = Storage.retrieveUserType(email: email)
+        let type = UserTypes(isParticipant: true, isSpeaker: false, isMentor: false, isOrganizer: false, isAdmin: false)
         let profile = Profile(type: type, team: Config.noTeam, name: name, username: username, image: image, job: job, company: company, country: country,
                               education: education, skills: skills, description: desc)
-        
-        System.client.createNewUserWithProfile(profile, email: email, password: password, completion: { (error) in
+        let user = User(profile: profile, type: type, email: email)
+        System.client.createNewUser(user, email: email, password: password, completion: { (error) in
             if let firebaseError = error {
                 self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
             } else {
-                let user = User(profile: profile, password: password, email: email)
+                user.setUid(uid: System.client.getUid())
                 Utility.logInUser(user: user, currentViewController: self)
             }
         })

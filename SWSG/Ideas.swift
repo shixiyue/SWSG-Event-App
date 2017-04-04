@@ -15,13 +15,14 @@ class Ideas {
     private static var ideasInstance = Ideas()
     private var ideas : [Idea] {
         didSet {
-            Storage.saveIdeas(data: ideas, fileName: "Ideas")
+            //Storage.saveIdeas(data: ideas, fileName: "Ideas")
         }
     }
     
     private init() {
         print("reading from storage for ideas")
-        self.ideas = Storage.readIdeas(fileName: "Ideas") ?? [Idea]()
+        ideas = [Idea]()
+       //self.ideas = Storage.readIdeas(fileName: "Ideas") ?? [Idea]()
     }
     
     class func sharedInstance() -> Ideas {
@@ -37,7 +38,7 @@ class Ideas {
     }
     
     func save() {
-        Storage.saveIdeas(data: ideas, fileName: "Ideas")
+        //Storage.saveIdeas(data: ideas, fileName: "Ideas")
     }
    
 }

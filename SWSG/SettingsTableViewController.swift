@@ -74,8 +74,9 @@ class SettingsTableViewController: BaseViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
+    //TODO: Change Password in Firebase
     private func changePassword(from currentPassword: String, to newPassword: String) {
-        guard let user = System.activeUser else {
+        /*guard let user = System.activeUser else {
             Utility.logOutUser(currentViewController: self)
             return
         }
@@ -90,7 +91,7 @@ class SettingsTableViewController: BaseViewController {
         let _ = user.setPassword(newPassword: newPassword)
         /*let _ = Storage.saveUser(user: user)*/
         System.updateActiveUser()
-        self.present(Utility.getSuccessAlertController(), animated: true, completion: nil)
+        self.present(Utility.getSuccessAlertController(), animated: true, completion: nil)*/
     }
 
 }
