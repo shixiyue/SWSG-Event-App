@@ -35,6 +35,13 @@ class Mentor {
     }
     
     func toDictionary() -> [String: Any] {
-        return [Config.consultationDays: days, Config.field: field.rawValue]
+        
+        var dict = [[String: Any]]()
+        
+        for day in days {
+            dict.append(day.toDictionary())
+        }
+        
+        return [Config.consultationDays: dict, Config.field: field.rawValue]
     }
 }

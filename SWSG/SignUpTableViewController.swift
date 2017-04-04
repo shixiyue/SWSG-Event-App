@@ -141,7 +141,6 @@ class SignUpTableViewController: ImagePickerTableViewController, UIPickerViewDat
             if let firebaseError = error {
                 self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
             } else {
-                user.setUid(uid: System.client.getUid())
                 Utility.logInUser(user: user, currentViewController: self)
             }
         })

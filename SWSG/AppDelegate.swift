@@ -33,7 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FIRApp.configure()
         
         if System.client.alreadySignedIn() {
-            
+            print(System.client.getUid())
+            System.client.getCurrentUser(completion: { (user, userError) in
+                System.activeUser = user
+            })
         } else {
             showLogInSignUpScreen()
             return

@@ -432,21 +432,6 @@ extension ChannelViewController: UIImagePickerControllerDelegate, UINavigationCo
                         // 7
                         self.setImageURL(self.storageRef.child((metadata?.path)!).description, forPhotoMessageWithKey: key)
                     }
-                    
-                    /*let imageFileURL = contentEditingInput?.fullSizeImageURL
-                    
-                    // 5
-                    let path = "\(FIRAuth.auth()?.currentUser?.uid)/\(Int(Date.timeIntervalSinceReferenceDate * 1000))/\(photoReferenceUrl.lastPathComponent)"
-                
-                    // 6
-                    self.storageRef.child(path).putFile(imageFileURL!, metadata: nil) { (metadata, error) in
-                        if let error = error {
-                            print("Error uploading photo: \(error.localizedDescription)")
-                            return
-                        }
-                        // 7
-                        self.setImageURL(self.storageRef.child((metadata?.path)!).description, forPhotoMessageWithKey: key)
-                    }*/
                 })
             }
         } else {

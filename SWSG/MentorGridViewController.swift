@@ -17,6 +17,8 @@ class MentorGridViewController: BaseViewController {
         super.viewDidLoad()
         addSlideMenuButton()
         
+        System.createSampleMentors()
+        
         insets = self.view.frame.width * 0.01
         
         mentorCollection.delegate = self

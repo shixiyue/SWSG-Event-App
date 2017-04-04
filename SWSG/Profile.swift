@@ -36,10 +36,7 @@ class Profile {
         _checkRep()
     }
     
-    init?(snapshot: FIRDataSnapshot) {
-        guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
-            return nil
-        }
+    init?(snapshotValue: [String: Any]) {
         image = UIImage()
         guard let username = snapshotValue[Config.username] as? String else {
             return nil

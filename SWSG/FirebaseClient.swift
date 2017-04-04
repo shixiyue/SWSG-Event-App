@@ -14,6 +14,7 @@ class FirebaseClient {
     typealias CreateUserCallback = (FirebaseError?) -> Void
     typealias SignInCallback = (FirebaseError?) -> Void
     typealias GetUserCallback = (User, FirebaseError?) -> Void
+    typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
     typealias GetEventCallback = (Event, FirebaseError?) -> Void
@@ -57,6 +58,17 @@ class FirebaseClient {
         } catch {
             return
         }
+    }
+    
+    public func getMentors(completion: @escaping GetMentorsCallback) {
+        let mentorRef = usersRef.queryOrdered(byChild: "userType").queryEqual(toValue: true, childKey: "isMentor")
+        mentorRef.observeSingleEvent(of: .value, with: {(snapshot) in
+            var mentors = [User]()
+            for mentor in snapshot.children {
+                mentors.append(User(snapshot: mentor as! FIRDataSnapshot)!)
+            }
+            completion(mentors, nil)
+        })
     }
     
     public func getCurrentUser(completion: @escaping GetUserCallback) {

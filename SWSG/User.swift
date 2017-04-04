@@ -13,14 +13,12 @@ import Firebase
 class User {
     
     let email: String
-    public private (set) var  uid: String
     public private (set) var profile: Profile
     public private (set) var type: UserTypes
     public private (set) var team = Config.noTeam
     public private (set) var mentor: Mentor?
     
-    init(uid: String, profile: Profile, type: UserTypes, team: Int, email: String) {
-        self.uid = uid
+    init(profile: Profile, type: UserTypes, team: Int, email: String) {
         self.type = type
         self.team = team
         self.profile = profile
@@ -29,22 +27,14 @@ class User {
         _checkRep()
     }
     
-    convenience init(uid: String, profile: Profile, type: UserTypes, email: String) {
-        self.init(uid: uid, profile: profile, type: type, team: Config.noTeam, email: email)
-    }
-    
     convenience init(profile: Profile, type: UserTypes, email: String) {
-        self.init(uid: "", profile: profile, type: type, team: Config.noTeam, email: email)
+        self.init(profile: profile, type: type, team: Config.noTeam, email: email)
     }
     
     init?(snapshot: FIRDataSnapshot) {
         guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
             return nil
         }
-        guard let uid = snapshotValue[Config.uid] as? String else {
-            return nil
-        }
-        self.uid = uid
         guard let userTypes = snapshotValue[Config.userType] as? [String: Bool], let isParticipant = userTypes[Config.isParticipant], let isSpeaker = userTypes[Config.isSpeaker], let isMentor = userTypes[Config.isMentor], let isOrganizer = userTypes[Config.isOrganizer], let isAdmin = userTypes[Config.isAdmin] else {
             return nil
         }
@@ -53,7 +43,7 @@ class User {
             return nil
         }
         self.team = team
-        guard let profile = snapshotValue[Config.profile] as? Profile else {
+        guard let profileSnapshot = snapshotValue[Config.profile] as? [String: Any], let profile = Profile(snapshotValue: profileSnapshot) else {
             return nil
         }
         self.profile = profile
@@ -74,10 +64,6 @@ class User {
         team = index
     }
     
-    func setUid(uid: String) {
-        self.uid = uid
-    }
-    
     func setMentor(mentor: Mentor) {
         guard type.isMentor else {
             return
@@ -86,7 +72,11 @@ class User {
     }
     
     func toDictionary() -> [String: Any] {
-        return [Config.userType: type.toDictionary(), Config.team: team, Config.email: email, Config.profile: profile.toDictionary(), Config.mentor: mentor?.toDictionary()]
+        guard let mentor = mentor else {
+            return [Config.userType: type.toDictionary(), Config.team: team, Config.email: email, Config.profile: profile.toDictionary(), Config.mentor: ""]
+        }
+        
+        return [Config.userType: type.toDictionary(), Config.team: team, Config.email: email, Config.profile: profile.toDictionary(), Config.mentor: mentor.toDictionary()]
     }
     
     internal func _checkRep() {

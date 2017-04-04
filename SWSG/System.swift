@@ -4,11 +4,16 @@ struct System {
     
     static var client = FirebaseClient()
     
-    static var activeUser: User? 
+    static var activeUser: User?
     
-    public static var mentors: [User] {
-        return [User]()
-    }
+    static var mentors: [User] = {
+        var users = [User]()
+        client.getMentors(completion: { (mentors, error) in
+            users = mentors
+        })
+        
+        return users
+    }()
     
     static func createSampleMentors() {
         let create = true
@@ -20,7 +25,7 @@ struct System {
                                   company: "UOB Pte. Ltd.", country: "Singapore",
                                   education: "National University of Singapore",
                                   skills: "Financial Planning", description: "Awesome guy")
-            let email = "mentor1@mentor.com"
+            let email = "mentor100@mentor.com"
             let password = "Password123"
             let user = User(profile: profile, type: type, email: email)
             
