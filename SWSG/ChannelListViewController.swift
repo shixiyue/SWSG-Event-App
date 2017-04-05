@@ -14,7 +14,7 @@ class ChannelListViewController: BaseViewController {
     
     // MARK: Properties
     fileprivate var channels: [Channel] = []
-    fileprivate var client = FirebaseClient()
+    fileprivate var client = System.client
     
     //MARK: Firebase References
     private var channelRef: FIRDatabaseReference!
@@ -43,34 +43,6 @@ class ChannelListViewController: BaseViewController {
             let channel: Channel?
             if let name = channelData["name"] as? String, name.characters.count > 0 {
                 channel = Channel(id: id, name: name)
-                
-                /*let childChannelRef = self.channelRef.child(id)
-                let messageRef = childChannelRef!.child("messages")
-                let messageQuery = messageRef.queryLimited(toLast:1)
-                let newMessageRefHandle = messageQuery.observe(.childAdded, with: { (snapshot) -> Void in
-                    let messageData = snapshot.value as! Dictionary<String, String>
-                    
-                    if let id = messageData["senderId"] as String!, let name = messageData["senderName"] as String!, let text = messageData["text"] as String!, text.characters.count > 0 {
-                        channel.messages.append(Message.init(senderId: id, senderName: name, timestamp: nil, text: text, photoURL: nil))
-                        self.addMessage(withId: id, name: name, text: text)
-                        
-                        // 5
-                        self.finishReceivingMessage()
-                    } else if let id = messageData["senderId"] as String!,
-                        let photoURL = messageData["photoURL"] as String! { // 1
-                        // 2
-                        if let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId) {
-                            // 3
-                            self.addPhotoMessage(withId: id, key: snapshot.key, mediaItem: mediaItem)
-                            // 4
-                            if photoURL.hasPrefix("gs://") {
-                                self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
-                            }
-                        }
-                    } else {
-                        print("Error! Could not decode message data")
-                    }
-                })*/
                 
                 self.channels.append(channel!)
                 self.chatList.reloadData()
@@ -132,6 +104,6 @@ extension ChannelListViewController: UITableViewDataSource {
 extension ChannelListViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let channel = channels[indexPath.item]
-        self.performSegue(withIdentifier: Segues.channelListToChannel, sender: channel)
+        self.performSegue(withIdentifier: Config.channelListToChannel, sender: channel)
     }
 }

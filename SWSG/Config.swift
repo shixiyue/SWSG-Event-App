@@ -15,6 +15,7 @@ struct Config {
     static let joinTeam = "Request to Join"
     static let quitTeam = "Quit Team"
     static let fullTeam = "Team is Full"
+    static let appURL = "gs://swsg-74fdd.appspot.com"
     
     // Keys for encode/decode:
     static let uid = "uid"
@@ -91,6 +92,11 @@ struct Config {
     static let imageCropperViewController = "ImageCropperViewController"
     static let uiSupporting = "UISupporting"
     
+    //Parameters for Segues:
+    static let channelListToChannel = "showChannel"
+    static let mentorGridToMentor = "chosenMentor"
+    static let mentorToRelatedMentor = "showRelatedMentor"
+    
     // Parameters for tableView:
     static let profileCell = "profileCell"
 
@@ -111,7 +117,10 @@ struct Config {
         return Date.time(from: "17:00")
     }
     
-    static var duration = 60
+    static let duration = 60
+    
+    static let slotCollectionTag = 1
+    static let relatedCollectionTag = 2
     
     // Parameters for Chat
     static let hourInterval = TimeInterval(3600)
@@ -122,4 +131,7 @@ struct Config {
     static let localUser = "localUser"
     
     static let dateTimeFormatDayString = "dd-MM-yyyy"
+    
+    //Parameters for Firebase Client
+    static let users = "users"
 }

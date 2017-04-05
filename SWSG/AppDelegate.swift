@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if System.client.alreadySignedIn() {
             showLaunchScreen()
             System.client.getCurrentUser(completion: { (user, userError) in
-                if userError != nil {
+                if userError != nil || user == nil {
                     self.showLogInSignUpScreen()
                 } else {
                     System.activeUser = user

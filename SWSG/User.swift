@@ -17,6 +17,7 @@ class User {
     public private (set) var type: UserTypes
     public private (set) var team = Config.noTeam
     public private (set) var mentor: Mentor?
+    public private (set) var uid: String?
     
     init(profile: Profile, type: UserTypes, team: Int, email: String) {
         self.type = type
@@ -73,6 +74,10 @@ class User {
             return
         }
         self.mentor = mentor
+    }
+    
+    func setUid(uid: String) {
+        self.uid = uid
     }
     
     func toDictionary() -> [String: Any] {

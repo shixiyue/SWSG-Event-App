@@ -20,11 +20,14 @@ struct ConsultationDate {
         self.date = date
         for key in snapshot.keys {
             guard let slotDateTime = Utility.fbDateTimeFormatter.date(from: key),
-                let slot = snapshot[key] as? [String: Any] else {
-                return nil
+                let slotSnapshot = snapshot[key] as? [String: Any],
+                let slot = ConsultationSlot(snapshot: slotSnapshot, at: slotDateTime) else {
+                    return nil
             }
-            self.slots.append(ConsultationSlot(snapshot: slot, at: slotDateTime)!)
+            
+            self.slots.append(slot)
         }
+        self.slots = self.slots.sorted(by: { $0.startDateTime < $1.startDateTime })
     }
     
     func toDictionary() -> [String: Any] {

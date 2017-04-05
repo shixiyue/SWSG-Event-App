@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class MentorGridViewController: BaseViewController {
     @IBOutlet weak var mentorCollection: UICollectionView!
@@ -14,13 +15,9 @@ class MentorGridViewController: BaseViewController {
     fileprivate var insets: CGFloat!
     fileprivate var mentors = [User]()
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        System.createSampleMentors()
-        System.client.getMentors(completion: { (users, error) in
-            self.mentors = users
-        })
-    }
+    //MARK: Firebase References
+    private var mentorsRef: FIRDatabaseQuery?
+    private var mentorsRefHandle: FIRDatabaseHandle?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,23 +27,47 @@ class MentorGridViewController: BaseViewController {
         
         mentorCollection.delegate = self
         mentorCollection.dataSource = self
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        mentorCollection.reloadData()
+        
+        mentorsRef = System.client.getMentorsRef()
+        observeMentors()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "chosenMentor" {
-            let navController = segue.destination as! UINavigationController
-            let mentorVC = navController.viewControllers[0] as! MentorViewController
+        if segue.identifier == Config.mentorGridToMentor {
+            let mentorVC = segue.destination as! MentorViewController
             
             if let indexPaths = mentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item
                 mentorVC.mentorAcct = mentors[index]
             }
         }
+    }
+    
+    // MARK: Firebase related methods
+    private func observeMentors() {
+        // Use the observe method to listen for new
+        // channels being written to the Firebase DB
+        guard let mentorsRef = mentorsRef else {
+            return
+        }
+        
+        mentorsRefHandle = mentorsRef.observe(.value, with: { (snapshot) -> Void in
+            self.mentors = [User]()
+            for mentorData in snapshot.children {
+                guard let mentorSnapshot = mentorData as? FIRDataSnapshot,
+                    let mentorAcct = User(snapshot: mentorSnapshot) else {
+                    continue
+                }
+                
+                mentorAcct.setUid(uid: mentorSnapshot.key)
+                System.client.fetchProfileImage(for: mentorSnapshot.key, completion: { (image) in
+                    mentorAcct.profile.updateImage(image: image)
+                    self.mentorCollection.reloadData()
+                })
+                self.mentors.append(mentorAcct)
+            }
+            self.mentorCollection.reloadData()
+        })
     }
 }
 
@@ -58,12 +79,10 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
     
     public func collectionView(_ collectionView: UICollectionView,
                                cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print("test")
         guard let cell = mentorCollection.dequeueReusableCell(withReuseIdentifier: "mentorCell",
                                                               for: indexPath) as? MentorCell else {
             return MentorCell()
         }
-        print("test")
         
         let index = indexPath.item
         let profile = mentors[index].profile
