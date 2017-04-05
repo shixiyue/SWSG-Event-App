@@ -48,6 +48,15 @@ class MentorViewController: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        consultationSlotCollection.reloadData()
+        if mentorAcct!.mentor == nil {
+            print("sad")
+        }
+        print("\(mentorAcct?.mentor?.days.count)")
+    }
+    
     func setUpDescription() {
         guard let mentorAcct = mentorAcct else {
             return

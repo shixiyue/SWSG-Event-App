@@ -10,26 +10,28 @@ import Foundation
 
 struct ConsultationSlot {
     var startDateTime: Date
-    var duration: Int
     var status: ConsultationSlotStatus
     var team: Int
     
-    init(start date: Date, duration: Int, status: ConsultationSlotStatus) {
+    init(start date: Date, status: ConsultationSlotStatus) {
         self.startDateTime = date
-        self.duration = duration
         self.status = status
         self.team = -1
     }
     
+    init?(snapshot: [String: Any], at startDateTime: Date) {
+        self.startDateTime = startDateTime
+        guard let team = snapshot[Config.team] as? Int else {
+            return nil
+        }
+        self.team = team
+        guard let status = snapshot[Config.consultationStatus] as? ConsultationSlotStatus.RawValue else {
+            return nil
+        }
+        self.status = ConsultationSlotStatus(rawValue: status)!
+    }
+    
     func toDictionary() -> [String: Any] {
-        let formatter = DateFormatter()
-        formatter.locale = Locale.current
-        
-        formatter.dateFormat = "d/MM/YYYY HH:mm"
-        
-        let dict = [Config.team: "\(team)", Config.consultationStatus: status.rawValue]
-        
-        
-        return [formatter.string(from: startDateTime): dict]
+        return [Config.team: team, Config.consultationStatus: status.rawValue]
     }
 }

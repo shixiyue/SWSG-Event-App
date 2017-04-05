@@ -51,6 +51,10 @@ class User {
             return nil
         }
         self.email = email
+        if let mentorSnapshot = snapshotValue[Config.mentor] as? [String: Any], let mentor = Mentor(snapshot: mentorSnapshot) {
+            self.mentor = mentor
+        }
+
     }
     
     var hasTeam: Bool {

@@ -48,6 +48,7 @@ class MenuViewController: UIViewController {
         }
         
         profileImgButton.setImage(user.profile.image, for: .normal)
+        
         nameLbl.text = user.profile.name
         usernameLbl.text = "@\(user.profile.username)"
         
@@ -55,6 +56,7 @@ class MenuViewController: UIViewController {
             teamLbl.text = user.type.toString()
             return
         }
+        
         if user.team != -1 && teams.count != 0 {
             teamLbl.text = teams.retrieveTeamAt(index: user.team).name
         } else {

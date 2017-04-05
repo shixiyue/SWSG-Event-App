@@ -105,4 +105,22 @@ struct Utility {
         return navController.viewControllers[0]
     }
     
+    static var fbDateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+    
+        formatter.dateFormat = "d-MM-YYYY"
+    
+        return formatter
+    }
+    
+    static var fbDateTimeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        
+        formatter.dateFormat = "d-MM-YYYY-HH:mm"
+        
+        return formatter
+    }
+    
 }

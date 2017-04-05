@@ -12,17 +12,29 @@ class MentorGridViewController: BaseViewController {
     @IBOutlet weak var mentorCollection: UICollectionView!
     
     fileprivate var insets: CGFloat!
+    fileprivate var mentors = [User]()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        System.createSampleMentors()
+        System.client.getMentors(completion: { (users, error) in
+            self.mentors = users
+        })
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()
         
-        System.createSampleMentors()
-        
         insets = self.view.frame.width * 0.01
         
         mentorCollection.delegate = self
         mentorCollection.dataSource = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        mentorCollection.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -32,7 +44,7 @@ class MentorGridViewController: BaseViewController {
             
             if let indexPaths = mentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item
-                mentorVC.mentorAcct = System.mentors[index]
+                mentorVC.mentorAcct = mentors[index]
             }
         }
     }
@@ -41,18 +53,20 @@ class MentorGridViewController: BaseViewController {
 extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
-        return System.mentors.count
+        return mentors.count
     }
     
     public func collectionView(_ collectionView: UICollectionView,
                                cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
+        print("test")
         guard let cell = mentorCollection.dequeueReusableCell(withReuseIdentifier: "mentorCell",
                                                               for: indexPath) as? MentorCell else {
             return MentorCell()
         }
+        print("test")
+        
         let index = indexPath.item
-        let profile = System.mentors[index].profile
+        let profile = mentors[index].profile
         
         cell.iconIV.image = profile.image
         cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)

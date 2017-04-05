@@ -61,12 +61,13 @@ class FirebaseClient {
     }
     
     public func getMentors(completion: @escaping GetMentorsCallback) {
-        let mentorRef = usersRef.queryOrdered(byChild: "userType").queryEqual(toValue: true, childKey: "isMentor")
+        let mentorRef = usersRef.queryOrdered(byChild: "userType/isMentor").queryEqual(toValue: true)
         mentorRef.observeSingleEvent(of: .value, with: {(snapshot) in
             var mentors = [User]()
             for mentor in snapshot.children {
                 mentors.append(User(snapshot: mentor as! FIRDataSnapshot)!)
             }
+            print(mentors)
             completion(mentors, nil)
         })
     }

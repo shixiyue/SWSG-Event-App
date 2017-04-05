@@ -9,23 +9,23 @@ struct System {
     static var mentors: [User] = {
         var users = [User]()
         client.getMentors(completion: { (mentors, error) in
-            users = mentors
+            users += mentors
         })
-        
+        print("\(users.count)")
         return users
     }()
     
     static func createSampleMentors() {
         let create = true
         
-        if create {
+        if create && System.client.alreadySignedIn() {
             let image = UIImage(named: "Profile")
             let type = UserTypes(isParticipant: false, isSpeaker: false, isMentor: true, isOrganizer: false, isAdmin: false)
             let profile = Profile(type: type, team: -1, name: "Mr Tan Hwee Huat", username: "HweeHuat", image: image!, job: "Asset Manager",
                                   company: "UOB Pte. Ltd.", country: "Singapore",
                                   education: "National University of Singapore",
                                   skills: "Financial Planning", description: "Awesome guy")
-            let email = "mentor100@mentor.com"
+            let email = "mentor10000@mentor.com"
             let password = "Password123"
             let user = User(profile: profile, type: type, email: email)
             
