@@ -144,16 +144,12 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
             return
         }
         user.profile.updateProfile(username: user.profile.username, name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-        System.updateActiveUser()
         // Error handling?
         System.client.updateUser(newUser: user)
         dismiss(animated: false, completion: nil)
     }
     
-    override func updateImage(_ notification: NSNotification) {
-        guard let image = notification.userInfo?[Config.image] as? UIImage else {
-            return
-        }
+    override func updateImage(to image: UIImage) {
         profileImageButton.setImage(image, for: .normal)
         NotificationCenter.default.removeObserver(self)
     }

@@ -63,17 +63,12 @@ class ProfileViewController: ImagePickerViewController {
         dismiss(animated: false, completion: nil)
     }
     
-    override func updateImage(_ notification: NSNotification) {
-        guard let image = notification.userInfo?[Config.image] as? UIImage else {
-            return
-        }
-        
+    override func updateImage(to image: UIImage) {
         guard let user = System.activeUser else {
             Utility.logOutUser(currentViewController: self)
             return
         }
         user.profile.updateImage(image: image)
-        System.updateActiveUser()
         // Error handling?
         System.client.updateUser(newUser: user)
         

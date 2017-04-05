@@ -146,10 +146,7 @@ class SignUpTableViewController: ImagePickerTableViewController, UIPickerViewDat
         })
     }
     
-    override func updateImage(_ notification: NSNotification) {
-        guard let image = notification.userInfo?[Config.image] as? UIImage else {
-            return
-        }
+    override func updateImage(to image: UIImage) {
         profileImageButton.setImage(image, for: .normal)
         NotificationCenter.default.removeObserver(self)
     }

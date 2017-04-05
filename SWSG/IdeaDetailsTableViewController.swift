@@ -27,7 +27,6 @@ class IdeaDetailsTableViewController: UITableViewController {
         ideaNameLabel.text = idea.name
         teamNameLabel.text = idea.teamName
         updateVotes()
-        //NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "commentsForIdeas"), object: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
