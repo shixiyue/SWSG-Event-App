@@ -34,12 +34,17 @@ class MentorGridViewController: BaseViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Config.mentorGridToMentor {
-            let mentorVC = segue.destination as! MentorViewController
-            
-            if let indexPaths = mentorCollection.indexPathsForSelectedItems {
+            if let mentorVC = segue.destination as? MentorViewController,
+                let indexPaths = mentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item
                 mentorVC.mentorAcct = mentors[index]
             }
+        }
+    }
+    
+    deinit {
+        if let refHandle = mentorsRefHandle {
+            mentorsRef?.removeObserver(withHandle: refHandle)
         }
     }
     
@@ -66,6 +71,7 @@ class MentorGridViewController: BaseViewController {
                 })
                 self.mentors.append(mentorAcct)
             }
+            self.mentors = self.mentors.sorted(by: { $0.profile.name < $1.profile.name })
             self.mentorCollection.reloadData()
         })
     }
@@ -94,33 +100,6 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
         cell.companyLbl.text = profile.company
         
         return cell
-    }
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout
-extension MentorGridViewController : UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let availableWidth = self.view.frame.width
-        let widthPerItem = (availableWidth / 2) - insets - insets
-        
-        return CGSize(width: widthPerItem, height: widthPerItem)
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return insets
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return insets
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets.init(top: 0, left: insets, bottom: 0, right: insets)
     }
 }
 

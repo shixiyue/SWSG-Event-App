@@ -57,13 +57,13 @@ class ChannelListViewController: BaseViewController {
         super.prepare(for: segue, sender: sender)
         
         if let channel = sender as? Channel {
-            guard let channelVC = Utility.getDestinationStoryboard(from: segue.destination) as? ChannelViewController else {
+            guard let chatVc = segue.destination as? ChannelViewController else {
                 return
             }
             
-            channelVC.senderDisplayName = System.activeUser?.profile.name
-            channelVC.channel = channel
-            channelVC.channelRef = channelRef.child(channel.id)
+            chatVc.senderDisplayName = System.activeUser?.profile.username
+            chatVc.channel = channel
+            chatVc.channelRef = channelRef.child(channel.id)
         }
     }
     

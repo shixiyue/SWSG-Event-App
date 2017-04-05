@@ -40,12 +40,34 @@ class MenuViewController: UIViewController {
         menuList.dataSource = self
         menuList.tableFooterView = UIView(frame: CGRect.zero)
         setUpUserInfo()
+        observeImage()
         
         userRef = System.client.getUserRef(for: System.client.getUid())
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setUpUserInfo()
+    }
+    
+    deinit {
+        if let refHandle = userRefHandle {
+            userRef?.removeObserver(withHandle: refHandle)
+        }
+    }
+    
+    private func observeImage() {
+        guard let userRef = userRef, let uid = System.activeUser?.uid else {
+            return
+        }
+        
+        userRefHandle = userRef.observe(.value, with: { (snapshot) -> Void in
+            System.client.fetchProfileImage(for: uid, completion: { (image) in
+                guard let image = image else {
+                    return
+                }
+                self.profileImgButton.setImage(image, for: .normal)
+            })
+        })
     }
     
     private func setUpUserInfo() {
