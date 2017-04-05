@@ -82,9 +82,9 @@ extension ChannelListViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = chatList.dequeueReusableCell(withIdentifier: "channelCell",
-                                                                 for: indexPath) as? ChannelCell else {
-                                                                    return ChannelCell()
+        guard let cell = chatList.dequeueReusableCell(
+            withIdentifier: Config.channelCell, for: indexPath) as? ChannelCell else {
+                return ChannelCell()
         }
         
         let index = indexPath.item

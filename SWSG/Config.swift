@@ -125,6 +125,10 @@ struct Config {
     // Parameters for Chat
     static let hourInterval = TimeInterval(3600)
     static let channelsRef = "channels"
+    static let channelCell = "channelCell"
+    static let memberCell = "memberCell"
+    static let isPublic = "isPublic"
+    static let members = "members"
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"

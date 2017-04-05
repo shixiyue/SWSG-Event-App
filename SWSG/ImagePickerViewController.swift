@@ -59,10 +59,12 @@ class ImagePickerTableViewController: UITableViewController, UIImagePickerContro
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        print("test")
         guard let chosenImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {
             dismiss(animated: true, completion: nil)
             return
         }
+        
         dismiss(animated: true, completion: nil)
         handleImage(chosenImage: chosenImage)
     }

@@ -69,7 +69,8 @@ class FirebaseClient {
     }
     
     public func getMentors(completion: @escaping GetMentorsCallback) {
-        let mentorRef = usersRef.queryOrdered(byChild: "userType/isMentor").queryEqual(toValue: true)
+        let mentorRef = usersRef.queryOrdered(byChild: "\(Config.userType)/\(Config.isMentor)")
+                                .queryEqual(toValue: true)
         mentorRef.observeSingleEvent(of: .value, with: {(snapshot) in
             var mentors = [User]()
             for mentor in snapshot.children {
@@ -101,6 +102,29 @@ class FirebaseClient {
             }
             user.setUid(uid: uid)
             completion(user, nil)
+        })
+    }
+    
+    public func getUserWith(username: String, completion: @escaping GetUserCallback) {
+        let userRef = usersRef
+            .queryOrdered(byChild: "\(Config.profile)/\(Config.username)").queryEqual(toValue: username)
+        userRef.observeSingleEvent(of: .value, with: {(snapshot) in
+            if snapshot.children.allObjects.count == 0 {
+                completion(nil, nil)
+            } else {
+                var userAcct: User?
+                for userSnapshot in snapshot.children {
+                    guard let userSnapshot = userSnapshot as? FIRDataSnapshot,
+                        let user = User(snapshot: userSnapshot) else {
+                        continue
+                    }
+                    
+                    user.setUid(uid: userSnapshot.key)
+                    userAcct = user
+                }
+                
+                completion(userAcct, nil)
+            }
         })
     }
     
@@ -140,6 +164,32 @@ class FirebaseClient {
                 events.append(Event(snapshot: event as! FIRDataSnapshot)!)
             }
             completion(events, nil)
+        })
+    }
+    
+    public func createChannel(icon: UIImage?, name: String, members: [User]) {
+        let channelsRef = getChannelsRef()
+        let channelRef = channelsRef.childByAutoId()
+        channelRef.child(Config.name).setValue(name)
+        channelRef.child(Config.isPublic).setValue(false)
+        
+        for member in members {
+            guard let uid = member.uid else {
+                continue
+            }
+            channelRef.child(Config.members).childByAutoId().setValue(uid)
+        }
+        
+        guard let icon = icon else {
+            return
+        }
+        
+        saveImage(image: icon, completion: { (imageURL, firError) in
+            guard firError == nil else {
+                return
+            }
+            channelRef.child(Config.image).setValue(imageURL)
+            
         })
     }
     
