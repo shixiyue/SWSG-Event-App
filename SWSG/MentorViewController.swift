@@ -76,12 +76,19 @@ class MentorViewController: UIViewController {
     
     private func getRelatedMentors() {
         System.client.getMentors(completion: { (mentors, error) in
+            var relatedMentors = [User]()
             for mentorAcct in mentors {
                 if self.mentorAcct?.mentor?.field == mentorAcct.mentor?.field &&
-                    self.mentorAcct?.uid != mentorAcct.uid {
-                    self.relatedMentors.append(mentorAcct)
+                    self.mentorAcct?.uid != mentorAcct.uid,
+                    let uid = mentorAcct.uid {
+                    System.client.fetchProfileImage(for: uid, completion: { (image) in
+                        mentorAcct.profile.updateImage(image: image)
+                        self.relatedMentorCollection.reloadData()
+                    })
+                    relatedMentors.append(mentorAcct)
                 }
             }
+            
             self.relatedMentorCollection.reloadData()
         })
     }
@@ -222,6 +229,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let profile = relatedMentors[indexPath.item].profile
         
         cell.iconIV.image = profile.image
+        cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
         cell.nameLbl.text = profile.name
         cell.positionLbl.text = profile.job
         cell.companyLbl.text = profile.company
