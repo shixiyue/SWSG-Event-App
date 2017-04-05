@@ -13,6 +13,7 @@ class FirebaseClient {
     
     typealias CreateUserCallback = (FirebaseError?) -> Void
     typealias SignInCallback = (FirebaseError?) -> Void
+    typealias UserAuthCallback = (FirebaseError?) -> Void
     typealias GetUserCallback = (User?, FirebaseError?) -> Void
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
@@ -63,6 +64,21 @@ class FirebaseClient {
             try FIRAuth.auth()?.signOut()
         } catch {
             return
+        }
+    }
+    
+    func reauthenticateUser(email: String, password: String, completion: @escaping UserAuthCallback) {
+        let user = FIRAuth.auth()?.currentUser
+        let credential = FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
+        
+        user?.reauthenticate(with: credential) { error in
+            completion(self.checkError(error))
+        }
+    }
+    
+    func changePassword(newPassword: String, completion: @escaping UserAuthCallback) {
+        FIRAuth.auth()?.currentUser?.updatePassword(newPassword) { error in
+            completion(self.checkError(error))
         }
     }
     
