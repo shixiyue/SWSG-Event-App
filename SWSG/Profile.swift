@@ -21,7 +21,7 @@ class Profile {
     public private (set) var skills: String
     public private (set) var desc: String
 
-    init(type: UserTypes, team: Int, name: String, username: String, image: UIImage, job: String, company: String, country: String,
+    init(type: UserTypes, name: String, username: String, image: UIImage, job: String, company: String, country: String,
          education: String, skills: String, description: String) {
         self.username = username
         self.name = name

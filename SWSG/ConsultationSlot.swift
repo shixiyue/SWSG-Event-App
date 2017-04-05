@@ -22,15 +22,16 @@ struct ConsultationSlot {
     init?(snapshot: [String: Any], at startDateTime: Date) {
         self.startDateTime = startDateTime
         
-        guard let teamString = snapshot[Config.team] as? String, let team = Int(teamString) else {
+        guard let team = snapshot[Config.team] as? Int else {
             return nil
         }
         self.team = team
         
-        guard let status = snapshot[Config.consultationStatus] as? String else {
+        guard let statusSnapshot = snapshot[Config.consultationStatus] as? String,
+            let status = ConsultationSlotStatus(rawValue: statusSnapshot) else {
             return nil
         }
-        self.status = ConsultationSlotStatus(rawValue: status)!
+        self.status = status
     }
     
     func toDictionary() -> [String: Any] {

@@ -88,7 +88,7 @@
                                             <outlet property="iconIV" destination="6Gk-2i-aXA" id="AXI-Ew-JmZ"/>
                                             <outlet property="nameLbl" destination="bJL-ek-dKD" id="u3g-Zh-7r5"/>
                                             <outlet property="positionLbl" destination="LQu-LP-LBh" id="HPD-Fo-n2X"/>
-                                            <segue destination="jSh-zt-jaw" kind="presentation" identifier="chosenMentor" modalTransitionStyle="crossDissolve" id="aXq-yE-LeK"/>
+                                            <segue destination="S0B-9p-C9T" kind="show" identifier="chosenMentor" id="1FG-yX-a7x"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -171,7 +171,7 @@
                                 <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OKC-K1-ZYz">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OKC-K1-ZYz">
                                 <rect key="frame" x="16" y="540" width="343" height="119"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -227,7 +227,7 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="64f-Q2-th1">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="64f-Q2-th1">
                                 <rect key="frame" x="16" y="329" width="343" height="166"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -325,11 +325,6 @@
                     </view>
                     <navigationItem key="navigationItem" title="Mentor" id="T7v-nL-AhR">
                         <barButtonItem key="backBarButtonItem" title="Back" id="JcI-KA-kL6"/>
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="Rfl-hx-EMH">
-                            <connections>
-                                <action selector="backButtonPressed:" destination="S0B-9p-C9T" id="fcu-Ce-ySb"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="companyLbl" destination="40q-Ia-GOl" id="gRY-Wg-Js7"/>
@@ -345,29 +340,11 @@
             </objects>
             <point key="canvasLocation" x="2623.1999999999998" y="106.59670164917542"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="cpX-Na-ftI">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jSh-zt-jaw" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="9wu-br-hwd">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="S0B-9p-C9T" kind="relationship" relationship="rootViewController" id="n2A-hE-rO3"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="M9G-y4-1VW" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1684" y="106.59670164917542"/>
-        </scene>
     </scenes>
     <resources>
         <image name="Profile" width="133" height="133"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="n2A-hE-rO3"/>
+        <segue reference="1FG-yX-a7x"/>
     </inferredMetricsTieBreakers>
 </document>

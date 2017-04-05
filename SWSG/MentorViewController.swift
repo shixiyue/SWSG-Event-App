@@ -24,7 +24,7 @@ class MentorViewController: UIViewController {
     
     public var mentorAcct: User?
     fileprivate var mentor: Mentor?
-    fileprivate var relatedMentors: [User]?
+    fileprivate var relatedMentors = [User]()
     fileprivate var cvLayout = MultiDirectionCollectionViewLayout()
     
     //MARK: Firebase References
@@ -40,9 +40,8 @@ class MentorViewController: UIViewController {
         consultationSlotCollection.dataSource = self
         consultationSlotCollection.collectionViewLayout = cvLayout
         
-        //relatedMentorCollection.tag = -1
-        //relatedMentorCollection.delegate = self
-        //relatedMentorCollection.dataSource = self
+        relatedMentorCollection.delegate = self
+        relatedMentorCollection.dataSource = self
         
         setUpDescription()
         
@@ -51,36 +50,40 @@ class MentorViewController: UIViewController {
         }
         
         mentorRef = System.client.getMentorRef(for: uid)
-        observeSlots()
-        
-        relatedMentors = [User]()
-        
-        /*for individual in System.mentors {
-            if individual.mentor?.field == mentor {
-                relatedMentors?.append(individual)
-            }
-        }*/
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        consultationSlotCollection.reloadData()
+        observeSlots()
+        getRelatedMentors()
     }
     
     // MARK: Firebase related methods
     private func observeSlots() {
         // Use the observe method to listen for new
         // channels being written to the Firebase DB
+        print("test2")
         mentorRefHandle = mentorRef.observe(.value, with: { (snapshot) -> Void in
             guard let userSnapshot = snapshot.value as? [String: Any],
                 let mentorSnapshot = userSnapshot[Config.mentor] as? [String: Any],
                 let mentor = Mentor(snapshot: mentorSnapshot) else {
-                return
+                    return
             }
-            
             self.mentor = mentor
             self.cvLayout.dataSourceDidUpdate = true
             self.consultationSlotCollection.reloadData()
+        })
+    }
+    
+    private func getRelatedMentors() {
+        System.client.getMentors(completion: { (mentors, error) in
+            for mentorAcct in mentors {
+                if self.mentorAcct?.mentor?.field == mentorAcct.mentor?.field &&
+                    self.mentorAcct?.uid != mentorAcct.uid {
+                    self.relatedMentors.append(mentorAcct)
+                }
+            }
+            self.relatedMentorCollection.reloadData()
         })
     }
     
@@ -108,8 +111,8 @@ class MentorViewController: UIViewController {
         let slotTimeString = Utility.fbDateTimeFormatter.string(from: slot.startDateTime)
         
         let slotRef = mentorRef.child("mentor/consultationDays/\(dateString)/\(slotTimeString)")
-        slotRef.child("consultationStatus").setValue(ConsultationSlotStatus.booked.rawValue)
-        slotRef.child("team").setValue(System.activeUser?.team)
+        slotRef.child(Config.consultationStatus).setValue(ConsultationSlotStatus.booked.rawValue)
+        slotRef.child(Config.team).setValue(System.activeUser?.team)
     }
     
     @IBAction func backButtonPressed(_ sender: UIBarButtonItem) {
@@ -117,11 +120,7 @@ class MentorViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showRelatedMentor" {
-            guard let relatedMentors = relatedMentors else {
-                return
-            }
-            
+        if segue.identifier == Config.mentorToRelatedMentor {
             let mentorVC = segue.destination as! MentorViewController
             if let indexPaths = relatedMentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item
@@ -137,7 +136,11 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return 1
         }
         
-        return mentor.days.count
+        if collectionView.tag == Config.slotCollectionTag {
+            return mentor.days.count
+        } else {
+            return 1
+        }
     }
     
     public func collectionView(_ collectionView: UICollectionView,
@@ -146,16 +149,26 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
             return 0
         }
         
-        return mentor.days[section].slots.count + 1
+        if collectionView.tag == Config.slotCollectionTag {
+            return mentor.days[section].slots.count + 1
+        } else if collectionView.tag == Config.relatedCollectionTag {
+            return relatedMentors.count
+        } else {
+            return 0
+        }
     }
     
     public func collectionView(_ collectionView: UICollectionView,
                                cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if indexPath.item == 0 {
+        if collectionView.tag == Config.slotCollectionTag && indexPath.item == 0 {
             return getConsultationDayCell(for: collectionView, at: indexPath)
-        } else {
+        } else if collectionView.tag == Config.slotCollectionTag {
             return getConsultationSlotCell(for: collectionView, at: indexPath)
+        } else if collectionView.tag == Config.relatedCollectionTag {
+            return getRelatedMentorCell(for: collectionView, at: indexPath)
+        } else {
+            return UICollectionViewCell()
         }
     }
     
@@ -198,11 +211,30 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         return cell
     }
     
+    private func getRelatedMentorCell(for collectionView: UICollectionView,
+                                      at indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier:"relatedMentorCell",
+            for: indexPath) as? MentorCell
+            else {
+                return MentorCell()
+        }
+        
+        let profile = relatedMentors[indexPath.item].profile
+        
+        cell.iconIV.image = profile.image
+        cell.nameLbl.text = profile.name
+        cell.positionLbl.text = profile.job
+        cell.companyLbl.text = profile.company
+        
+        return cell
+    }
+    
     public func collectionView(_ collectionView: UICollectionView,
                                didSelectItemAt indexPath: IndexPath){
-        if indexPath.item > 0 {
+        if collectionView.tag == Config.slotCollectionTag && indexPath.item > 0 {
             selectedSlot(for: collectionView, at: indexPath)
-        }
+        } 
     }
     
     private func selectedSlot(for collectionView: UICollectionView,
@@ -239,82 +271,4 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         //Present the Popup
         self.present(bookingController, animated: true, completion: nil)
     }
-    
-    
-/*    public func collectionView(_ collectionView: UICollectionView,
-                               numberOfItemsInSection section: Int) -> Int {
-        if collectionView.tag == -1 {
-            return getNoOfRelatedMentors()
-        } else {
-            return getNoOfSlots(for: collectionView.tag)
-        }
-    }
-    
-    private func getNoOfRelatedMentors() -> Int {
-        guard let relatedMentors = relatedMentors else {
-            return 0
-        }
-        
-        return relatedMentors.count
-    }
-    
-    private func getNoOfSlots(for dayIndex: Int) -> Int{
-        guard let mentor = mentor else {
-            return 0
-        }
-        
-        let consultationSlots = mentor.days[dayIndex].slots
-        
-        return consultationSlots.count
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView,
-                               cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        if collectionView.tag == -1 {
-            return getRelatedMentorCell(for: collectionView, at: indexPath)
-        } else {
-            return getConsultationSlotCell(for: collectionView, at: indexPath)
-        }
-    }
-    
-    private func getRelatedMentorCell(for collectionView: UICollectionView,
-                                      at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let relatedMentors = relatedMentors, let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier:"relatedMentorCell",
-            for: indexPath) as? MentorCell
-            else {
-                return MentorCell()
-        }
-        
-        let profile = relatedMentors[indexPath.item].profile
-        
-        cell.iconIV.image = profile.image
-        cell.nameLbl.text = profile.name
-        cell.positionLbl.text = profile.job
-        cell.companyLbl.text = profile.company
-        
-        return cell
-    }
-    
-    private func getConsultationSlotCell(for collectionView: UICollectionView,
-                                         at indexPath: IndexPath) -> UICollectionViewCell {
-        let dayIndex = collectionView.tag
-        
-        guard let mentor = mentor, let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier:"consultationSlotCell",
-            for: indexPath) as? ConsultationSlotCell
-            else {
-                return ConsultationSlotCell()
-        }
-        let consultationSlots = mentor.days[dayIndex].slots
-        
-        let index = indexPath.item
-        let slot = consultationSlots[index]
-        
-        cell.setTime(to: slot.startDateTime)
-        cell.setStatus(is: slot.status)
-        
-        return cell
-    }*/
 }

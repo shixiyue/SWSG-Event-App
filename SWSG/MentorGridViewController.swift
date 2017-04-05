@@ -38,9 +38,10 @@ class MentorGridViewController: BaseViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "chosenMentor" {
-            let navController = segue.destination as! UINavigationController
-            let mentorVC = navController.viewControllers[0] as! MentorViewController
+        if segue.identifier == Config.mentorGridToMentor {
+            let mentorVC = segue.destination as! MentorViewController
+            //let navController = segue.destination as! UINavigationController
+            //let mentorVC = navController.viewControllers[0] as! MentorViewController
             
             if let indexPaths = mentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item

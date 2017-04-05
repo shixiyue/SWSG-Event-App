@@ -104,6 +104,6 @@ extension ChannelListViewController: UITableViewDataSource {
 extension ChannelListViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let channel = channels[indexPath.item]
-        self.performSegue(withIdentifier: Segues.channelListToChannel, sender: channel)
+        self.performSegue(withIdentifier: Config.channelListToChannel, sender: channel)
     }
 }
