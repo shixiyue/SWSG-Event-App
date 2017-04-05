@@ -92,7 +92,7 @@ class Profile {
         _checkRep()
     }
     
-    func updateImage(image: UIImage) {
+    func updateImage(image: UIImage?) {
         _checkRep()
         self.image = image
         _checkRep()

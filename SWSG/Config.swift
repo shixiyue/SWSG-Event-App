@@ -131,4 +131,7 @@ struct Config {
     static let localUser = "localUser"
     
     static let dateTimeFormatDayString = "dd-MM-yyyy"
+    
+    //Parameters for Firebase Client
+    static let users = "users"
 }

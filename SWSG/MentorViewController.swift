@@ -16,7 +16,6 @@ class MentorViewController: UIViewController {
     @IBOutlet weak var companyLbl: UILabel!
     @IBOutlet weak var descriptionTB: UITextView!
     
-    
     @IBOutlet weak var consultationSlotCollection: UICollectionView!
     @IBOutlet weak var relatedMentorCollection: UICollectionView!
     
@@ -33,6 +32,7 @@ class MentorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        profileImg = Utility.roundUIImageView(for: profileImg)
         
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         
@@ -49,7 +49,7 @@ class MentorViewController: UIViewController {
             return
         }
         
-        mentorRef = System.client.getMentorRef(for: uid)
+        mentorRef = System.client.getUserRef(for: uid)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -62,7 +62,6 @@ class MentorViewController: UIViewController {
     private func observeSlots() {
         // Use the observe method to listen for new
         // channels being written to the Firebase DB
-        print("test2")
         mentorRefHandle = mentorRef.observe(.value, with: { (snapshot) -> Void in
             guard let userSnapshot = snapshot.value as? [String: Any],
                 let mentorSnapshot = userSnapshot[Config.mentor] as? [String: Any],

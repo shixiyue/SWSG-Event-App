@@ -144,7 +144,6 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
             return
         }
         user.profile.updateProfile(username: user.profile.username, name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
-        System.updateActiveUser()
         // Error handling?
         System.client.updateUser(newUser: user)
         dismiss(animated: false, completion: nil)

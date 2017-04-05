@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class MenuViewController: UIViewController {
     @IBOutlet weak var menuList: UITableView! {
@@ -26,7 +27,12 @@ class MenuViewController: UIViewController {
     @IBOutlet private weak var usernameLbl: UILabel!
     @IBOutlet private weak var teamLbl: UILabel!
     
+    //MARK: Firebase References
+    private var userRef: FIRDatabaseReference?
+    private var userRefHandle: FIRDatabaseHandle?
+    
     var teams = Teams.sharedInstance()
+    var user: User?
     var btnMenu : UIButton!
     var delegate : SlideMenuDelegate?
     
@@ -35,15 +41,36 @@ class MenuViewController: UIViewController {
         menuList.dataSource = self
         menuList.tableFooterView = UIView(frame: CGRect.zero)
         setUpUserInfo()
+        
+        userRef = System.client.getUserRef(for: System.client.getUid())
+        observeImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setUpUserInfo()
     }
     
+    private func observeImage() {
+        guard let userRef = userRef, let uid = user?.uid else {
+            return
+        }
+        
+        userRefHandle = userRef.observe(.value, with: { (snapshot) -> Void in
+            System.client.fetchProfileImage(for: uid, completion: { (image) in
+                self.profileImgButton.setImage(image, for: .normal)
+            })
+        })
+    }
+    
     private func setUpUserInfo() {
-        guard let user = System.activeUser else {
+        guard System.activeUser != nil else {
             Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
+        self.user = System.activeUser
+        
+        guard let user = self.user else {
             return
         }
         

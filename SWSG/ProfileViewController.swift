@@ -73,7 +73,6 @@ class ProfileViewController: ImagePickerViewController {
             return
         }
         user.profile.updateImage(image: image)
-        System.updateActiveUser()
         // Error handling?
         System.client.updateUser(newUser: user)
         

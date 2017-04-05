@@ -110,6 +110,12 @@ class FirebaseClient {
         }
         let userRef = usersRef.child(uid)
         userRef.setValue(newUser.toDictionary() as Any)
+        
+        if let img = newUser.profile.image {
+            self.saveImage(image: img, completion: { (photoURL, error) in
+                userRef.child(Config.profile).child(Config.image).setValue(photoURL)
+            })
+        }
     }
     
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
@@ -176,6 +182,25 @@ class FirebaseClient {
         }
     }
     
+    public func fetchProfileImage(for uid: String, completion: @escaping ImageCallback) {
+        usersRef.child(uid).child(Config.profile).observe(.value, with: { (snapshot) in
+            guard snapshot.hasChild(Config.image) else {
+                completion(nil)
+                return
+            }
+            
+            let data = snapshot.childSnapshot(forPath: Config.image)
+            guard let imageURL = data.value as? String else {
+                completion(nil)
+                return
+            }
+            
+            self.fetchImageDataAtURL(imageURL, completion: { (image)  in
+                completion(image)
+            })
+        })
+    }
+    
     func getUid() -> String {
         return FIRAuth.auth()?.currentUser?.uid ?? ""
     }
@@ -215,8 +240,12 @@ class FirebaseClient {
         return databaseReference(for: Config.channelsRef)
     }
     
-    public func getMentorRef(for uid: String) -> FIRDatabaseReference {
-        return databaseReference(for: "users/\(uid)")
+    public func getUserRef(for uid: String) -> FIRDatabaseReference {
+        return databaseReference(for: Config.users).child(uid)
+    }
+    
+    public func getMentorsRef() -> FIRDatabaseQuery {
+        return usersRef.queryOrdered(byChild: "userType/isMentor").queryEqual(toValue: true)
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {
