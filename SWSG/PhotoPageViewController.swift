@@ -36,7 +36,7 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let currentIndex = pages.index(of: viewController), currentIndex - 1 > 0 else {
+        guard let currentIndex = pages.index(of: viewController), currentIndex - 1 >= 0 else {
             return nil
         }
         return pages[currentIndex - 1]
@@ -54,11 +54,6 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
         delegate = self
         dataSource = self
         
-        guard images.count > 0 else {
-            view.isHidden = true
-            return
-        }
-        view.isHidden = false
         pages = []
         for i in 0..<images.count {
             let pageContent = storyboard?.instantiateViewController(withIdentifier: "PhotoContentViewController") as! PhotoContentViewController

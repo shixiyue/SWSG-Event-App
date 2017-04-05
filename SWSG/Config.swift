@@ -70,7 +70,7 @@ struct Config {
     static let upvoteFilled = UIImage(named: "upvote-filled")
     static let downvoteDefault = UIImage(named: "downvote")
     static let downvoteFilled = UIImage(named: "downvote-filled")
-    static let placeholderImg = UIImage(named: "Profile")
+    static let placeholderImg = UIImage(named: "Profile")!
     
     // Parameters for Storyboard:
     static let launchScreen = "LaunchScreen"
