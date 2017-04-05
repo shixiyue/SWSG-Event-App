@@ -43,6 +43,7 @@ PODS:
   - JSQSystemSoundPlayer (2.0.1)
   - JTAppleCalendar (6.1.5)
   - SwiftGifOrigin (1.6.1)
+  - TextFieldEffects (1.3.1)
 
 DEPENDENCIES:
   - Firebase/Auth
@@ -51,6 +52,7 @@ DEPENDENCIES:
   - JSQMessagesViewController
   - JTAppleCalendar (~> 6.1)
   - SwiftGifOrigin
+  - TextFieldEffects
 
 SPEC CHECKSUMS:
   Firebase: 85a581fb04e44f63ae9f4fbc8d6dabf4a4c18653
@@ -66,7 +68,8 @@ SPEC CHECKSUMS:
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTAppleCalendar: 7fe18d6b7c26b8095f714ff089d4c0cbd9d6a632
   SwiftGifOrigin: d6679d3ebe9df2e049a84bc52582635107b581f6
+  TextFieldEffects: faa47d428ee8eafb781a8413ac4345420d2328c4
 
-PODFILE CHECKSUM: 301aba2f45f0acd7de21d0679644b7f6457e3323
+PODFILE CHECKSUM: 36a9d248d60ca37265c8c0e4ea03e25b59814daa
 
 COCOAPODS: 1.2.0

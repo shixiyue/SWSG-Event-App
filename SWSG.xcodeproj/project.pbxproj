@@ -135,6 +135,9 @@
 		E348D57A1E895E8300947B3F /* EventCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5791E895E8300947B3F /* EventCalendarViewController.swift */; };
 		E348D57E1E8A828900947B3F /* PinkSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */; };
 		E348D5801E8A830900947B3F /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */; };
+		E355BB821E94E244002E29DD /* TagCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E355BB811E94E243002E29DD /* TagCell.xib */; };
+		E355BB841E94E399002E29DD /* TagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB831E94E399002E29DD /* TagCell.swift */; };
+		E355BB881E94F6AD002E29DD /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB871E94F6AD002E29DD /* FlowLayout.swift */; };
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
 		E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */; };
@@ -282,6 +285,9 @@
 		E348D5791E895E8300947B3F /* EventCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCalendarViewController.swift; sourceTree = "<group>"; };
 		E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PinkSectionHeaderView.xib; sourceTree = "<group>"; };
 		E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarHeaderView.swift; sourceTree = "<group>"; };
+		E355BB811E94E243002E29DD /* TagCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagCell.xib; sourceTree = "<group>"; };
+		E355BB831E94E399002E29DD /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
+		E355BB871E94F6AD002E29DD /* FlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLookingForTableViewCell.swift; sourceTree = "<group>"; };
@@ -605,6 +611,9 @@
 			isa = PBXGroup;
 			children = (
 				E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */,
+				E355BB871E94F6AD002E29DD /* FlowLayout.swift */,
+				E355BB811E94E243002E29DD /* TagCell.xib */,
+				E355BB831E94E399002E29DD /* TagCell.swift */,
 				E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */,
 				E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */,
 				E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */,
@@ -728,6 +737,7 @@
 				3F408CC71E83BEA000E2B787 /* Chat.storyboard in Resources */,
 				CC168B2C1E7E8C5800F8725A /* UISupporting.storyboard in Resources */,
 				E348D5741E895CD700947B3F /* CalendarCellView.xib in Resources */,
+				E355BB821E94E244002E29DD /* TagCell.xib in Resources */,
 				CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */,
 				3F408CC41E83BB8200E2B787 /* GoogleService-Info.plist in Resources */,
 				CC5F1C5B1E863044006A5322 /* Information.storyboard in Resources */,
@@ -875,6 +885,7 @@
 				CC1CF8AE1E7C1ED6002224BC /* EditProfileViewController.swift in Sources */,
 				CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */,
 				CCE7DDE01E8B760C0044A863 /* VideoLinkTableViewCell.swift in Sources */,
+				E355BB881E94F6AD002E29DD /* FlowLayout.swift in Sources */,
 				3F97955B1E7A8DBF004BC26C /* SignUpTableViewController.swift in Sources */,
 				E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */,
 				E348D5681E840D6100947B3F /* IdeaDetailsTableViewController.swift in Sources */,
@@ -896,6 +907,7 @@
 				3F12AFCB1E711CBB00B26D67 /* AppDelegate.swift in Sources */,
 				3FED30291E77A5CB00C007AD /* Mentor.swift in Sources */,
 				CCE7DDDE1E8B757E0044A863 /* PhotoTableViewCell.swift in Sources */,
+				E355BB841E94E399002E29DD /* TagCell.swift in Sources */,
 				3FC314661E77DD7D009B21AB /* ConsultationSlotStatus.swift in Sources */,
 				CC7A4B121E88A85F00BC8A4B /* SponsorsTitleTableViewCell.swift in Sources */,
 				3FED301C1E77930200C007AD /* BaseViewController.swift in Sources */,

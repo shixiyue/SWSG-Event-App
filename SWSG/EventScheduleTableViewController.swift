@@ -15,12 +15,7 @@ class EventScheduleTableViewController: UITableViewController {
         didSet{
             let eventItemTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventScheduleTableViewController.eventItemTapHandler))
             eventItemTapGesture.numberOfTapsRequired = 1
-            let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventScheduleTableViewController.hideNavBarTapHandler))
-            hideNavBarTapGesture.numberOfTapsRequired = 2
-            
-            eventsTableView.addGestureRecognizer(eventItemTapGesture)
-            eventsTableView.addGestureRecognizer(hideNavBarTapGesture)
-            
+            eventsTableView.addGestureRecognizer(eventItemTapGesture)            
             eventsTableView.isUserInteractionEnabled = true
             
         }
@@ -43,14 +38,6 @@ class EventScheduleTableViewController: UITableViewController {
             }
         }
     }
-    
-    func hideNavBarTapHandler(recognizer: UIGestureRecognizer) {
-        if recognizer.state == .ended {
-            self.navigationItem.hidesBackButton = !self.navigationItem.hidesBackButton
-            self.navigationController?.setNavigationBarHidden(self.navigationItem.hidesBackButton, animated: true)
-        }
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.hidesBackButton = self.navigationController?.isNavigationBarHidden ?? false

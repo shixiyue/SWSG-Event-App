@@ -8,33 +8,44 @@
 
 import UIKit
 
-class TeamCreateTableViewController: UITableViewController {
+class TeamCreateTableViewController: UITableViewController, UICollectionViewDataSource  {
 
     @IBOutlet weak var teamName: UITextField!
     @IBOutlet weak var skills: UITextField!
     @IBOutlet weak var lookingFor: UITextField!
     
     private let teamCreateErrorMsg = "Sorry, only participants of SWSG can create a team!"
+    private let emptyFieldErrorMsg = "Fields cannot be empty!"
+    private let mtplTeamErrorMsg = "You can not join more than 1 team!"
+    
     private let teams = Teams.sharedInstance()
+    var sizingCell: TagCell?
+    
+    let TAGS = ["Tech", "Design", "Humor", "Travel", "Music", "Writing", "Social Media", "Life", "Education", "Edtech", "Education Reform", "Photography", "Startup", "Poetry", "Women In Tech", "Female Founders", "Business", "Fiction", "Love", "Food", "Sports"]
+    @IBOutlet weak var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        let cellNib = UINib(nibName: "TagCell", bundle: nil)
+        self.collectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
+        self.collectionView.backgroundColor = UIColor.clear
+        self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
     }
     @IBAction func onDoneButtonClick(_ sender: Any) {
         guard let user = System.activeUser, user.type.isParticipant else {
             self.present(Utility.getFailAlertController(message: teamCreateErrorMsg), animated: true, completion: nil)
             return
         }
-        let team_name = teamName.text!
-        let info = skills.text!
-        let lookingFor = self.lookingFor.text
-        let team = Team(members: [user], name: team_name, info: info, lookingFor: lookingFor, isPrivate: false)
+        guard teamName.text! != "" , skills.text! != "", lookingFor.text! != "" else {
+            self.present(Utility.getFailAlertController(message: emptyFieldErrorMsg),animated: true, completion: nil)
+            return
+        }
+        guard System.activeUser?.team == Config.noTeam else {
+            self.present(Utility.getFailAlertController(message: mtplTeamErrorMsg),animated: true, completion: nil)
+            return
+        }
+        
+        let team = Team(members: [user], name: teamName.text!, info: skills.text!, lookingFor: lookingFor.text!, isPrivate: false)
         teams.addTeam(team: team)
         user.setTeamIndex(index: teams.count-1)
         System.activeUser = user
@@ -42,6 +53,9 @@ class TeamCreateTableViewController: UITableViewController {
         Utility.onBackButtonClick(tableViewController: self)
     }
 
+    @IBAction func onBackBtnClick(_ sender: Any) {
+        Utility.onBackButtonClick(tableViewController: self)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -56,62 +70,54 @@ class TeamCreateTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 6
+        return 3
     }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+    
+    
+    
+    public override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 200
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    public override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
-    */
+    
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
+
+
+extension TeamCreateTableViewController {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return TAGS.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TagCell", for: indexPath) as! TagCell
+        cell.tagName.text = TAGS[indexPath.row]
+        
+        return cell
+    }
+    
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let data = TAGS[indexPath.item]
+        let sectionInset = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset
+        let widthToSubtract = sectionInset!.left + sectionInset!.right
+        
+        let requiredWidth = collectionView.bounds.size.width
+        
+        
+        let targetSize = CGSize(width: requiredWidth, height: 0)
+        
+        //sizingCell.configureCell(data, delegate: self)
+        let adequateSize = self.sizingCell?.preferredLayoutSizeFittingSize(targetSize: targetSize)
+        return CGSize(width: (self.collectionView?.bounds.width)! - widthToSubtract, height: adequateSize!.height)
+    }
+
+    
+    
+   }
+

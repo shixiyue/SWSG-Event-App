@@ -12,14 +12,7 @@ class EventDetailsTableViewController: UITableViewController {
     
     public static var event : Event?
     
-    @IBOutlet weak var eventDetailsTableView: UITableView! {
-        didSet{
-            let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventScheduleTableViewController.hideNavBarTapHandler))
-            hideNavBarTapGesture.numberOfTapsRequired = 2
-            eventDetailsTableView.addGestureRecognizer(hideNavBarTapGesture)
-            eventDetailsTableView.isUserInteractionEnabled = true
-        }
-    }
+    @IBOutlet weak var eventDetailsTableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTable()

@@ -10,6 +10,7 @@ platform :ios, '9.0'
   pod 'Firebase/Database'
   pod 'JSQMessagesViewController'
   pod 'JTAppleCalendar', '~> 6.1'
+  pod 'TextFieldEffects'
   
 end
 

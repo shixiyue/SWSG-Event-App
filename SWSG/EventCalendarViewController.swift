@@ -29,23 +29,11 @@ class EventCalendarViewController: BaseViewController {
         calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
         calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView"])
  
-        let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventCalendarViewController.hideNavBarTapHandler))
-        hideNavBarTapGesture.numberOfTapsRequired = 2
-        
-        view.addGestureRecognizer(hideNavBarTapGesture)
-        
         view.isUserInteractionEnabled = true
         // Do any additional setup after loading the view.
 
     }
     
-    func hideNavBarTapHandler(recognizer: UIGestureRecognizer) {
-        if recognizer.state == .ended {
-            self.navigationItem.hidesBackButton = !self.navigationItem.hidesBackButton
-            self.navigationController?.setNavigationBarHidden(self.navigationItem.hidesBackButton, animated: true)
-        }
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
