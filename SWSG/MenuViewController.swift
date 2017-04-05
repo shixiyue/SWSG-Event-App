@@ -50,6 +50,12 @@ class MenuViewController: UIViewController {
         setUpUserInfo()
     }
     
+    deinit {
+        if let refHandle = userRefHandle {
+            userRef?.removeObserver(withHandle: refHandle)
+        }
+    }
+    
     private func observeImage() {
         guard let userRef = userRef, let uid = user?.uid else {
             return

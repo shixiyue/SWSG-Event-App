@@ -58,6 +58,12 @@ class MentorViewController: UIViewController {
         getRelatedMentors()
     }
     
+    deinit {
+        if let refHandle = mentorRefHandle {
+            mentorRef.removeObserver(withHandle: refHandle)
+        }
+    }
+    
     // MARK: Firebase related methods
     private func observeSlots() {
         // Use the observe method to listen for new

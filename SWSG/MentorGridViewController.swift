@@ -42,6 +42,12 @@ class MentorGridViewController: BaseViewController {
         }
     }
     
+    deinit {
+        if let refHandle = mentorsRefHandle {
+            mentorsRef?.removeObserver(withHandle: refHandle)
+        }
+    }
+    
     // MARK: Firebase related methods
     private func observeMentors() {
         // Use the observe method to listen for new
