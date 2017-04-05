@@ -17,7 +17,7 @@ class Mentor {
     }
     
     init?(snapshot: [String: Any]) {
-        guard let field = snapshot[Config.field] as? Field.RawValue else {
+        guard let field = snapshot[Config.field] as? String else {
             return nil
         }
         self.field = Field(rawValue: field)!
@@ -28,11 +28,13 @@ class Mentor {
         
         for day in daysArr.keys {
             guard let date = Utility.fbDateFormatter.date(from: day),
-                let consultationDate = snapshot[day] as? [String: Any] else {
+                let dateSnapshot = daysArr[day] as? [String: Any],
+                let consultationDate = ConsultationDate(snapshot: dateSnapshot, at: date) else {
                     return nil
             }
-            self.days.append(ConsultationDate(snapshot: consultationDate, at: date)!)
+            self.days.append(consultationDate)
         }
+        self.days = self.days.sorted(by: { $0.date < $1.date })
     }
     
     func addSlots(on date: Date) {

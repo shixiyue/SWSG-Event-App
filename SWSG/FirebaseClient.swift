@@ -65,9 +65,13 @@ class FirebaseClient {
         mentorRef.observeSingleEvent(of: .value, with: {(snapshot) in
             var mentors = [User]()
             for mentor in snapshot.children {
-                mentors.append(User(snapshot: mentor as! FIRDataSnapshot)!)
+                guard let mentor = mentor as? FIRDataSnapshot, let user = User(snapshot: mentor) else {
+                    continue
+                }
+                
+                user.setUid(uid: mentor.key)
+                mentors.append(user)
             }
-            print(mentors)
             completion(mentors, nil)
         })
     }
@@ -83,7 +87,9 @@ class FirebaseClient {
         let userRef = usersRef.child(uid)
         // TODO: handle error
         userRef.observeSingleEvent(of: .value, with: {(snapshot) in
-            completion(User(snapshot: snapshot)!, nil)
+            let user = User(snapshot: snapshot)!
+            user.setUid(uid: uid)
+            completion(user, nil)
         })
     }
     
@@ -157,6 +163,10 @@ class FirebaseClient {
     
     public func getChannelsRef() -> FIRDatabaseReference {
         return databaseReference(for: Config.channelsRef)
+    }
+    
+    public func getMentorRef(for uid: String) -> FIRDatabaseReference {
+        return databaseReference(for: "users/\(uid)")
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {

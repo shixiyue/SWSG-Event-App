@@ -21,11 +21,13 @@ struct ConsultationSlot {
     
     init?(snapshot: [String: Any], at startDateTime: Date) {
         self.startDateTime = startDateTime
-        guard let team = snapshot[Config.team] as? Int else {
+        
+        guard let teamString = snapshot[Config.team] as? String, let team = Int(teamString) else {
             return nil
         }
         self.team = team
-        guard let status = snapshot[Config.consultationStatus] as? ConsultationSlotStatus.RawValue else {
+        
+        guard let status = snapshot[Config.consultationStatus] as? String else {
             return nil
         }
         self.status = ConsultationSlotStatus(rawValue: status)!

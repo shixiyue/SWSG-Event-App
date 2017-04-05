@@ -109,7 +109,7 @@ struct Utility {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
     
-        formatter.dateFormat = "d-MM-YYYY"
+        formatter.dateFormat = "d-MM-yyyy"
     
         return formatter
     }
@@ -118,7 +118,7 @@ struct Utility {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
         
-        formatter.dateFormat = "d-MM-YYYY-HH:mm"
+        formatter.dateFormat = "d-MM-yyyy-HH:mm"
         
         return formatter
     }

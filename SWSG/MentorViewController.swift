@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class MentorViewController: UIViewController {
     @IBOutlet weak var profileImg: UIImageView!
@@ -22,7 +23,13 @@ class MentorViewController: UIViewController {
     private let mentorBookingErrorMsg = "Sorry, only participants of SWSG can book a slot!"
     
     public var mentorAcct: User?
+    fileprivate var mentor: Mentor?
     fileprivate var relatedMentors: [User]?
+    fileprivate var cvLayout = MultiDirectionCollectionViewLayout()
+    
+    //MARK: Firebase References
+    private var mentorRef: FIRDatabaseReference!
+    private var mentorRefHandle: FIRDatabaseHandle?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +38,7 @@ class MentorViewController: UIViewController {
         
         consultationSlotCollection.delegate = self
         consultationSlotCollection.dataSource = self
-        consultationSlotCollection.collectionViewLayout = MultiDirectionCollectionViewLayout()
+        consultationSlotCollection.collectionViewLayout = cvLayout
         
         //relatedMentorCollection.tag = -1
         //relatedMentorCollection.delegate = self
@@ -39,22 +46,42 @@ class MentorViewController: UIViewController {
         
         setUpDescription()
         
+        guard let mentorAcct = mentorAcct, let uid = mentorAcct.uid else {
+            return
+        }
+        
+        mentorRef = System.client.getMentorRef(for: uid)
+        observeSlots()
+        
         relatedMentors = [User]()
         
-        for individual in System.mentors {
-            if individual.mentor?.field == mentorAcct?.mentor?.field {
+        /*for individual in System.mentors {
+            if individual.mentor?.field == mentor {
                 relatedMentors?.append(individual)
             }
-        }
+        }*/
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         consultationSlotCollection.reloadData()
-        if mentorAcct!.mentor == nil {
-            print("sad")
-        }
-        print("\(mentorAcct?.mentor?.days.count)")
+    }
+    
+    // MARK: Firebase related methods
+    private func observeSlots() {
+        // Use the observe method to listen for new
+        // channels being written to the Firebase DB
+        mentorRefHandle = mentorRef.observe(.value, with: { (snapshot) -> Void in
+            guard let userSnapshot = snapshot.value as? [String: Any],
+                let mentorSnapshot = userSnapshot[Config.mentor] as? [String: Any],
+                let mentor = Mentor(snapshot: mentorSnapshot) else {
+                return
+            }
+            
+            self.mentor = mentor
+            self.cvLayout.dataSourceDidUpdate = true
+            self.consultationSlotCollection.reloadData()
+        })
     }
     
     func setUpDescription() {
@@ -71,18 +98,18 @@ class MentorViewController: UIViewController {
     }
     
     func bookSlot(on dayIndex: Int, at index: Int) {
-        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
+        guard let mentor = mentor else {
             return
         }
         
-        mentor.days[dayIndex].slots[index].status = .booked
-        guard let user = System.activeUser, user.type.isParticipant else {
-            self.present(Utility.getFailAlertController(message: mentorBookingErrorMsg), animated: true, completion: nil)
-            return
-        }
-        if user.team != -1 {
-            mentor.days[dayIndex].slots[user.team].team = user.team
-        }
+        let day = mentor.days[dayIndex]
+        let dateString = Utility.fbDateFormatter.string(from: day.date)
+        let slot = day.slots[index]
+        let slotTimeString = Utility.fbDateTimeFormatter.string(from: slot.startDateTime)
+        
+        let slotRef = mentorRef.child("mentor/consultationDays/\(dateString)/\(slotTimeString)")
+        slotRef.child("consultationStatus").setValue(ConsultationSlotStatus.booked.rawValue)
+        slotRef.child("team").setValue(System.activeUser?.team)
     }
     
     @IBAction func backButtonPressed(_ sender: UIBarButtonItem) {
@@ -106,7 +133,7 @@ class MentorViewController: UIViewController {
 
 extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
+        guard let mentor = mentor else {
                 return 1
         }
         
@@ -115,7 +142,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
-        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
+        guard let mentor = mentor else {
             return 0
         }
         
@@ -134,7 +161,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func getConsultationDayCell(for collectionView: UICollectionView,
                                       at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor, let cell = collectionView.dequeueReusableCell(
+        guard let mentor = mentor, let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier:"consultationDayCell",
             for: indexPath) as? ConsultationDayCell
             else {
@@ -156,7 +183,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func getConsultationSlotCell(for collectionView: UICollectionView,
                                          at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor, let cell = collectionView.dequeueReusableCell(
+        guard let mentor = mentor, let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier:"consultationSlotCell",
             for: indexPath) as? ConsultationSlotCell
             else {
@@ -200,7 +227,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let confirmAction = UIAlertAction(title: "Confirm", style: .default) { _ -> Void in
             self.bookSlot(on: dayIndex, at: index)
             
-            collectionView.reloadItems(at: [indexPath])
+            //collectionView.reloadItems(at: [indexPath])
         }
         bookingController.addAction(confirmAction)
         

@@ -58,12 +58,10 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
     
     public func collectionView(_ collectionView: UICollectionView,
                                cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print("test")
         guard let cell = mentorCollection.dequeueReusableCell(withReuseIdentifier: "mentorCell",
                                                               for: indexPath) as? MentorCell else {
             return MentorCell()
         }
-        print("test")
         
         let index = indexPath.item
         let profile = mentors[index].profile
