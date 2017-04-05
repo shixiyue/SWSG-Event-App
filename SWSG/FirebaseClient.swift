@@ -13,6 +13,7 @@ class FirebaseClient {
     
     typealias CreateUserCallback = (FirebaseError?) -> Void
     typealias SignInCallback = (FirebaseError?) -> Void
+    typealias UserAuthCallback = (FirebaseError?) -> Void
     typealias GetUserCallback = (User?, FirebaseError?) -> Void
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
@@ -33,11 +34,9 @@ class FirebaseClient {
                 if let uid = firUser?.uid {
                     let userRef = self.usersRef.child(uid)
                     userRef.setValue(user.toDictionary() as Any)
-                    if user.profile.image != nil {
-                        self.saveImage(image: user.profile.image!, completion: { (photoURL, error) in
+                    self.saveImage(image: user.profile.image, completion: { (photoURL, error) in
                             userRef.child(Config.profile).child(Config.image).setValue(photoURL)
-                        })
-                    }
+                    })
                 }
             }
             completion(self.checkError(err))
@@ -65,6 +64,21 @@ class FirebaseClient {
             try FIRAuth.auth()?.signOut()
         } catch {
             return
+        }
+    }
+    
+    func reauthenticateUser(email: String, password: String, completion: @escaping UserAuthCallback) {
+        let user = FIRAuth.auth()?.currentUser
+        let credential = FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
+        
+        user?.reauthenticate(with: credential) { error in
+            completion(self.checkError(error))
+        }
+    }
+    
+    func changePassword(newPassword: String, completion: @escaping UserAuthCallback) {
+        FIRAuth.auth()?.currentUser?.updatePassword(newPassword) { error in
+            completion(self.checkError(error))
         }
     }
     
@@ -111,11 +125,9 @@ class FirebaseClient {
         let userRef = usersRef.child(uid)
         userRef.setValue(newUser.toDictionary() as Any)
         
-        if let img = newUser.profile.image {
-            self.saveImage(image: img, completion: { (photoURL, error) in
-                userRef.child(Config.profile).child(Config.image).setValue(photoURL)
-            })
-        }
+        self.saveImage(image: newUser.profile.image, completion: { (photoURL, error) in
+            userRef.child(Config.profile).child(Config.image).setValue(photoURL)
+        })
     }
     
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {

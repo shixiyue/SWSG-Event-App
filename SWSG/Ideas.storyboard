@@ -18,27 +18,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="ALL-6Y-JGX">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uw5-f4-PhW">
-                                    <rect key="frame" x="8" y="7" width="359" height="30"/>
-                                    <nil key="textColor"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                </textField>
-                            </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <constraints>
-                                <constraint firstItem="uw5-f4-PhW" firstAttribute="centerY" secondItem="ALL-6Y-JGX" secondAttribute="centerY" id="QyZ-l7-ywG"/>
-                                <constraint firstAttribute="trailing" secondItem="uw5-f4-PhW" secondAttribute="trailing" constant="8" id="iei-Xp-87L"/>
-                                <constraint firstItem="uw5-f4-PhW" firstAttribute="leading" secondItem="ALL-6Y-JGX" secondAttribute="leading" constant="8" id="t0t-z5-HOU"/>
-                            </constraints>
-                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ideaItemCell" rowHeight="110" id="XKk-Xu-ks7" customClass="IdeaItemTableViewCell" customModule="SWSG" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="72" width="375" height="110"/>
+                                <rect key="frame" x="0.0" y="28" width="375" height="110"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XKk-Xu-ks7" id="y4P-mL-I4z">
                                     <rect key="frame" x="0.0" y="0.0" width="342" height="110"/>
