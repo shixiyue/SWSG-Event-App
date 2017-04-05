@@ -15,6 +15,7 @@ struct Config {
     static let joinTeam = "Request to Join"
     static let quitTeam = "Quit Team"
     static let fullTeam = "Team is Full"
+    static let appURL = "gs://swsg-74fdd.appspot.com"
     
     // Keys for encode/decode:
     static let uid = "uid"

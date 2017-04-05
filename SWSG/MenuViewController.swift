@@ -47,7 +47,11 @@ class MenuViewController: UIViewController {
             return
         }
         
-        profileImgButton.setImage(user.profile.image, for: .normal)
+        if user.profile.image != nil {
+            profileImgButton.setImage(user.profile.image, for: .normal)
+        } else {
+            profileImgButton.setImage(Config.placeholderImg, for: .normal)
+        }
         
         nameLbl.text = user.profile.name
         usernameLbl.text = "@\(user.profile.username)"
