@@ -32,7 +32,6 @@ class MenuViewController: UIViewController {
     private var userRefHandle: FIRDatabaseHandle?
     
     var teams = Teams.sharedInstance()
-    var user: User?
     var btnMenu : UIButton!
     var delegate : SlideMenuDelegate?
     
@@ -43,43 +42,19 @@ class MenuViewController: UIViewController {
         setUpUserInfo()
         
         userRef = System.client.getUserRef(for: System.client.getUid())
-        observeImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setUpUserInfo()
     }
     
-    private func observeImage() {
-        guard let userRef = userRef, let uid = user?.uid else {
-            return
-        }
-        
-        userRefHandle = userRef.observe(.value, with: { (snapshot) -> Void in
-            System.client.fetchProfileImage(for: uid, completion: { (image) in
-                self.profileImgButton.setImage(image, for: .normal)
-            })
-        })
-    }
-    
     private func setUpUserInfo() {
-        guard System.activeUser != nil else {
+        guard let user = System.activeUser else {
             Utility.logOutUser(currentViewController: self)
             return
         }
         
-        self.user = System.activeUser
-        
-        guard let user = self.user else {
-            return
-        }
-        
-        if user.profile.image != nil {
-            profileImgButton.setImage(user.profile.image, for: .normal)
-        } else {
-            profileImgButton.setImage(Config.placeholderImg, for: .normal)
-        }
-        
+        profileImgButton.setImage(user.profile.image, for: .normal)
         nameLbl.text = user.profile.name
         usernameLbl.text = "@\(user.profile.username)"
         

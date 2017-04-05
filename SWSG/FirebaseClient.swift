@@ -33,11 +33,9 @@ class FirebaseClient {
                 if let uid = firUser?.uid {
                     let userRef = self.usersRef.child(uid)
                     userRef.setValue(user.toDictionary() as Any)
-                    if user.profile.image != nil {
-                        self.saveImage(image: user.profile.image!, completion: { (photoURL, error) in
+                    self.saveImage(image: user.profile.image, completion: { (photoURL, error) in
                             userRef.child(Config.profile).child(Config.image).setValue(photoURL)
-                        })
-                    }
+                    })
                 }
             }
             completion(self.checkError(err))
@@ -111,11 +109,9 @@ class FirebaseClient {
         let userRef = usersRef.child(uid)
         userRef.setValue(newUser.toDictionary() as Any)
         
-        if let img = newUser.profile.image {
-            self.saveImage(image: img, completion: { (photoURL, error) in
-                userRef.child(Config.profile).child(Config.image).setValue(photoURL)
-            })
-        }
+        self.saveImage(image: newUser.profile.image, completion: { (photoURL, error) in
+            userRef.child(Config.profile).child(Config.image).setValue(photoURL)
+        })
     }
     
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {

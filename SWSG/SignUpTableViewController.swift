@@ -134,7 +134,7 @@ class SignUpTableViewController: ImagePickerTableViewController, UIPickerViewDat
         }
         //TODO: Removed line: let type = Storage.retrieveUserType(email: email)
         let type = UserTypes(isParticipant: true, isSpeaker: false, isMentor: false, isOrganizer: false, isAdmin: false)
-        let profile = Profile(type: type, name: name, username: username, image: image, job: job, company: company, country: country,
+        let profile = Profile(name: name, username: username, image: image, job: job, company: company, country: country,
                               education: education, skills: skills, description: desc)
         let user = User(profile: profile, type: type, email: email)
         System.client.createNewUser(user, email: email, password: password, completion: { (error) in

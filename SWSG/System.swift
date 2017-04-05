@@ -21,7 +21,7 @@ struct System {
         if create && System.client.alreadySignedIn() {
             let image = UIImage(named: "Profile")
             let type = UserTypes(isParticipant: false, isSpeaker: false, isMentor: true, isOrganizer: false, isAdmin: false)
-            let profile = Profile(type: type, name: "Mr Lim Lay Buat", username: "LimLay", image: image!, job: "Asset Manager",
+            let profile = Profile(name: "Mr Lim Lay Buat", username: "LimLay", image: image!, job: "Asset Manager",
                                   company: "DBS Pte. Ltd.", country: "Singapore",
                                   education: "Nanyang Technological University",
                                   skills: "Financial Planning", description: "SuperAwesome guy")
