@@ -18,6 +18,7 @@ class FirebaseClient {
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
+    typealias GetMessageCallback = (Message, FirebaseError?) -> Void
     typealias GetEventCallback = (Event, FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
@@ -245,7 +246,19 @@ class FirebaseClient {
     }
     
     public func fetchProfileImage(for uid: String, completion: @escaping ImageCallback) {
-        usersRef.child(uid).child(Config.profile).observe(.value, with: { (snapshot) in
+        fetchImage(for: usersRef.child(uid).child(Config.profile), completion: { (image) in
+            completion(image)
+        })
+    }
+    
+    public func fetchChannelIcon(for id: String, completion: @escaping ImageCallback) {
+        fetchImage(for: getChannelsRef().child(id), completion: { (image) in
+            completion(image)
+        })
+    }
+    
+    private func fetchImage(for ref: FIRDatabaseReference, completion: @escaping ImageCallback) {
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
             guard snapshot.hasChild(Config.image) else {
                 completion(nil)
                 return
@@ -300,6 +313,12 @@ class FirebaseClient {
     
     public func getChannelsRef() -> FIRDatabaseReference {
         return databaseReference(for: Config.channelsRef)
+    }
+    
+    
+    
+    public func getLatestMessageQuery(for channel: String) -> FIRDatabaseQuery {
+        return getChannelsRef().child(channel).child(Config.messages).queryLimited(toLast: 1)
     }
     
     public func getUserRef(for uid: String) -> FIRDatabaseReference {

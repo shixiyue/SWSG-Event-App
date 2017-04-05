@@ -7,22 +7,31 @@
 //
 
 import UIKit
+import Firebase
 
-struct Channel {
+class Channel {
     var id: String
-    var icon: UIImage
+    var icon: UIImage?
     var name: String
-    var messages: [Message]
+    var latestMessage: Message?
     
-    init(id: String, icon: UIImage, name: String) {
+    init(id: String, icon: UIImage?, name: String) {
         self.id = id
         self.icon = icon
         self.name = name
-        self.messages = [Message]()
     }
     
-    init(id: String, name: String) {
-        self.init(id: id, icon: UIImage(named: "Profile")!, name: name)
+    init?(id: String, snapshot: FIRDataSnapshot) {
+        self.id = id
+        
+        guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
+            return nil
+        }
+        
+        guard let name = snapshotValue[Config.name] as? String else {
+            return nil
+        }
+        self.name = name
     }
     
 }

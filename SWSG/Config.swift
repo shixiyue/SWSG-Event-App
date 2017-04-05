@@ -70,7 +70,7 @@ struct Config {
     static let upvoteFilled = UIImage(named: "upvote-filled")
     static let downvoteDefault = UIImage(named: "downvote")
     static let downvoteFilled = UIImage(named: "downvote-filled")
-    static let placeholderImg = UIImage(named: "Profile")!
+    static let placeholderImg = UIImage(named: "Placeholder")!
     
     // Parameters for Storyboard:
     static let launchScreen = "LaunchScreen"
@@ -128,7 +128,13 @@ struct Config {
     static let channelCell = "channelCell"
     static let memberCell = "memberCell"
     static let isPublic = "isPublic"
+    static let messages = "messages"
     static let members = "members"
+    static let senderId = "senderId"
+    static let senderName = "senderName"
+    static let timestamp = "timestamp"
+    static let text = "text"
+    static let photoURL = "photoURL"
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"

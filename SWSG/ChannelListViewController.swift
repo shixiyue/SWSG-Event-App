@@ -13,18 +13,19 @@ class ChannelListViewController: BaseViewController {
     @IBOutlet weak var chatList: UITableView!
     
     // MARK: Properties
-    fileprivate var channels: [Channel] = []
+    fileprivate var channels = [Channel]()
     fileprivate var client = System.client
     
     //MARK: Firebase References
-    private var channelRef: FIRDatabaseReference!
-    private var channelRefHandle: FIRDatabaseHandle?
+    private var channelsRef: FIRDatabaseReference!
+    private var channelsExistingHandle: FIRDatabaseHandle?
+    private var channelsNewHandle: FIRDatabaseHandle?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()
         
-        channelRef = client.getChannelsRef()
+        channelsRef = client.getChannelsRef()
         
         chatList.delegate = self
         chatList.dataSource = self
@@ -35,21 +36,42 @@ class ChannelListViewController: BaseViewController {
     
     // MARK: Firebase related methods
     private func observeChannels() {
-        // Use the observe method to listen for new
-        // channels being written to the Firebase DB
-        channelRefHandle = channelRef.observe(.childAdded, with: { (snapshot) -> Void in
-            let channelData = snapshot.value as! Dictionary<String, AnyObject>
-            let id = snapshot.key
-            let channel: Channel?
-            if let name = channelData["name"] as? String, name.characters.count > 0 {
-                channel = Channel(id: id, name: name)
-                
-                self.channels.append(channel!)
-                self.chatList.reloadData()
-            } else {
-                print("Error! Could not decode channel data")
+        channelsExistingHandle = channelsRef.observe(.value, with: { (snapshot) -> Void in
+            self.channels = [Channel]()
+            for channelData in snapshot.children {
+                self.addNewChannel(snapshot: channelData)
             }
+            self.chatList.reloadData()
         })
+        
+        channelsNewHandle = channelsRef.observe(.childAdded, with: { (snapshot) -> Void in
+            self.addNewChannel(snapshot: snapshot)
+        })
+    }
+    
+    private func addNewChannel(snapshot: Any) {
+        guard let channelSnapshot = snapshot as? FIRDataSnapshot,
+            let channel = Channel(id: channelSnapshot.key, snapshot: channelSnapshot) else {
+                return
+        }
+        self.client.fetchChannelIcon(for: channelSnapshot.key, completion: { (image) in
+            channel.icon = image
+            self.chatList.reloadData()
+        })
+        let query = self.client.getLatestMessageQuery(for: channelSnapshot.key)
+        query.observe(.value, with: { (snapshot) in
+            for child in snapshot.children {
+                guard let mentorSnapshot = child as? FIRDataSnapshot,
+                    let message = Message(snapshot: mentorSnapshot) else {
+                        continue
+                }
+                
+                channel.latestMessage = message
+            }
+            
+        })
+        self.channels.append(channel)
+        
     }
     
     // MARK: Navigation
@@ -63,13 +85,17 @@ class ChannelListViewController: BaseViewController {
             
             chatVc.senderDisplayName = System.activeUser?.profile.username
             chatVc.channel = channel
-            chatVc.channelRef = channelRef.child(channel.id)
+            chatVc.channelRef = channelsRef.child(channel.id)
         }
     }
     
     deinit {
-        if let refHandle = channelRefHandle {
-            channelRef.removeObserver(withHandle: refHandle)
+        if let existingHandle = channelsExistingHandle {
+            channelsRef.removeObserver(withHandle: existingHandle)
+        }
+        
+        if let newHandle = channelsNewHandle {
+            channelsRef.removeObserver(withHandle: newHandle)
         }
     }
 }
@@ -82,19 +108,46 @@ extension ChannelListViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = chatList.dequeueReusableCell(
+        guard let cell = tableView.dequeueReusableCell(
             withIdentifier: Config.channelCell, for: indexPath) as? ChannelCell else {
                 return ChannelCell()
         }
         
         let index = indexPath.item
         let channel = channels[index]
+        if channel.icon == nil {
+            cell.iconIV.image = Config.placeholderImg
+        } else {
+            cell.iconIV.image = channel.icon
+        }
         
-        cell.iconIV.image = channel.icon
+        cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
         cell.nameLbl.text = channel.name
         
-        //let latestMessage = channel.messages.last
-        //cell.messageTV.text = latestMessage?.message
+        if let message = channel.latestMessage {
+            var text = ""
+            
+            if let msgText = message.text {
+                text = "\(message.senderName): \(msgText)"
+            } else if let message = channel.latestMessage, let _ = message.photoURL {
+                text = "\(message.senderName) sent an image."
+            }
+            
+            let nsText = text as NSString
+            let textRange = NSMakeRange(0, message.senderName.characters.count + 2)
+            let attributedString = NSMutableAttributedString(string: text)
+            
+            nsText.enumerateSubstrings(in: textRange, options: .byWords, using: {
+                (substring, substringRange, _, _) in
+                
+                attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.red, range: substringRange)
+                attributedString.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 12.0), range: substringRange)
+            })
+            
+            cell.messageTV.attributedText = attributedString
+        } else {
+            cell.messageTV.text = "No messages yet"
+        }
         
         return cell
     }
