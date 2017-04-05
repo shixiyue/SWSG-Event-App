@@ -1,14 +1,14 @@
 PODS:
-  - Firebase/Auth (3.14.0):
+  - Firebase/Auth (3.15.0):
     - Firebase/Core
     - FirebaseAuth (= 3.1.1)
-  - Firebase/Core (3.14.0):
+  - Firebase/Core (3.15.0):
     - FirebaseAnalytics (= 3.7.0)
-    - FirebaseCore (= 3.5.1)
-  - Firebase/Database (3.14.0):
+    - FirebaseCore (= 3.5.2)
+  - Firebase/Database (3.15.0):
     - Firebase/Core
     - FirebaseDatabase (= 3.1.2)
-  - Firebase/Storage (3.14.0):
+  - Firebase/Storage (3.15.0):
     - Firebase/Core
     - FirebaseStorage (= 1.1.0)
   - FirebaseAnalytics (3.7.0):
@@ -19,7 +19,7 @@ PODS:
     - FirebaseAnalytics (~> 3.7)
     - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (3.5.1):
+  - FirebaseCore (3.5.2):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
   - FirebaseDatabase (3.1.2):
     - FirebaseAnalytics (~> 3.7)
@@ -37,12 +37,12 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.1.1)
     - GoogleToolboxForMac/NSString+URLArguments (= 2.1.1)
   - GoogleToolboxForMac/NSString+URLArguments (2.1.1)
-  - GTMSessionFetcher/Core (1.1.8)
+  - GTMSessionFetcher/Core (1.1.9)
   - JSQMessagesViewController (7.3.4):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
-  - JTAppleCalendar (6.1.5)
-  - RSKImageCropper (1.6.0)
+  - JTAppleCalendar (6.1.6)
+  - RSKImageCropper (1.6.1)
   - SwiftGifOrigin (1.6.1)
 
 DEPENDENCIES:
@@ -55,19 +55,19 @@ DEPENDENCIES:
   - SwiftGifOrigin
 
 SPEC CHECKSUMS:
-  Firebase: 85a581fb04e44f63ae9f4fbc8d6dabf4a4c18653
-  FirebaseAnalytics: d0717daef87bbbf8548e5067534b61a91223d037
+  Firebase: 2b1cdfba1cda8589f32904a697cc753322bff9d8
+  FirebaseAnalytics: 0d1b7d81d5021155be37702a94ba1ec16d45365d
   FirebaseAuth: cc8a1824170adbd351edb7f994490a3fb5c18be6
-  FirebaseCore: 139b65e693ba91ecd7d0f0d5183398c802e38fce
-  FirebaseDatabase: fe37b87e5188a748d27efeadb5e2b280a37a08e3
+  FirebaseCore: a024587e43778508700af8c6b1209f7c4516ba02
+  FirebaseDatabase: 05c96d7b43a7368dc91c07791adb49683e1738d1
   FirebaseInstanceID: 2d0518b1378fe9d685ef40cbdd63d2fdc1125339
   FirebaseStorage: a5c55b23741a49a72af8f30f95b3bb5ddbeda12d
   GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
-  GTMSessionFetcher: 61ba0d20522c288cbf337c8dd77337bbb06b5961
-  JSQMessagesViewController: 22e0767a3a4f5cfe8f1e5e5fdcf83083e7bd55ab
+  GTMSessionFetcher: 5c046c76a1f859bc9c187e918f18e4fc7bb57b5e
+  JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
-  JTAppleCalendar: 7fe18d6b7c26b8095f714ff089d4c0cbd9d6a632
-  RSKImageCropper: 0540f444a66ce6a3103d38b3549593873eb7018d
+  JTAppleCalendar: 560fb46421880f53ad54123295072de24bca2b18
+  RSKImageCropper: 0df8c99e77a8ea7ca7a8b83ef468556f31584254
   SwiftGifOrigin: d6679d3ebe9df2e049a84bc52582635107b581f6
 
 PODFILE CHECKSUM: f42a96d0b2cb515d73a0dca9a9389f0e1f13ee51

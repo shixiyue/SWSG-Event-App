@@ -73,7 +73,7 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
         dismiss(animated: true, completion: nil)
     }
     
-    func updateImage(to: UIImage) {
+    func updateImage(to image: UIImage) {
         fatalError("This method must be overridden")
     }
     

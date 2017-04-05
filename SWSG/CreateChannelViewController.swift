@@ -13,7 +13,7 @@ class CreateChannelViewController: ImagePickerViewController {
     
     @IBOutlet weak var nameTF: UITextField!
     @IBOutlet weak var memberTF: UITextField!
-    @IBOutlet weak var addBtn: UIButton!
+    @IBOutlet weak var addBtn: RoundCornerButton!
     @IBOutlet weak var doneBtn: UIBarButtonItem!
     @IBOutlet weak var editBtn: UIButton!
     @IBOutlet weak var memberList: UITableView!
@@ -90,10 +90,7 @@ class CreateChannelViewController: ImagePickerViewController {
         })
     }
     
-    override func updateImage(_ notification: NSNotification) {
-        guard let image = notification.userInfo?[Config.image] as? UIImage else {
-            return
-        }
+    override func updateImage(to image: UIImage) {
         iconIV.image = image
         iconAdded = true
     }
