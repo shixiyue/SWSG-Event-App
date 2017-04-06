@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.makeKeyAndVisible()
     }
     
-    /// Shows launchScreen while waiting for firebase screen if the user hasn't loged in.
+    /// Shows HomeScreen fter Firebase loads
     private func showHomeScreen() {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         let storyboard = UIStoryboard(name: Config.main, bundle: nil)

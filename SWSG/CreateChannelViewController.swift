@@ -52,13 +52,26 @@ class CreateChannelViewController: ImagePickerViewController {
             return
         }
         
+        var memberUIDs = [String]()
+        
+        for member in members {
+            guard let uid = member.uid else {
+                continue
+            }
+            
+            memberUIDs.append(uid)
+        }
+        
         var image: UIImage? = nil
         
         if iconAdded {
             image = iconIV.image
         }
         
-        client.createChannel(icon: image, name: name, members: members)
+        let channel = Channel(id: nil, type: .privateChannel, icon: image, name: name,
+                              members: memberUIDs)
+        
+        client.createChannel(for: channel)
         
         _ = navigationController?.popViewController(animated: true)
     }
@@ -74,7 +87,9 @@ class CreateChannelViewController: ImagePickerViewController {
         
         client.getUserWith(username: username, completion: { (user, error) in
             guard let user = user else {
-                self.displayDismissivePopup(title: "Error", message: "Username does not exist!")
+                Utility.displayDismissivePopup(title: "Error",
+                                               message: "Username does not exist!",
+                                               viewController: self, completion: { _ in })
                 return
             }
             
@@ -123,19 +138,6 @@ class CreateChannelViewController: ImagePickerViewController {
                 }
                 
         }
-    }
-    
-    private func displayDismissivePopup(title: String, message: String) {
-        let dismissController = UIAlertController(title: title, message: message,
-                                               preferredStyle: UIAlertControllerStyle.alert)
-        
-        //Add an Action to Confirm quitting with the Destructive Style
-        let dismissAction = UIAlertAction(title: "Dismiss", style: .default) { _ in
-        }
-        dismissController.addAction(dismissAction)
-        
-        //Present the Popup
-        self.present(dismissController, animated: true, completion: nil)
     }
 }
 

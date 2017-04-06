@@ -94,6 +94,7 @@ struct Config {
     
     //Parameters for Segues:
     static let channelListToChannel = "showChannel"
+    static let channelListToCreateChannel = "showCreateChannel"
     static let mentorGridToMentor = "chosenMentor"
     static let mentorToRelatedMentor = "showRelatedMentor"
     
@@ -135,6 +136,7 @@ struct Config {
     static let timestamp = "timestamp"
     static let text = "text"
     static let photoURL = "photoURL"
+    static let channelType = "channelType"
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"

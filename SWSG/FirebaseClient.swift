@@ -180,20 +180,18 @@ class FirebaseClient {
         })
     }
     
-    public func createChannel(icon: UIImage?, name: String, members: [User]) {
+    public func createChannel(for channel: Channel) {
         let channelsRef = getChannelsRef()
         let channelRef = channelsRef.childByAutoId()
-        channelRef.child(Config.name).setValue(name)
-        channelRef.child(Config.isPublic).setValue(false)
         
-        for member in members {
-            guard let uid = member.uid else {
-                continue
-            }
-            channelRef.child(Config.members).childByAutoId().setValue(uid)
+        if let name = channel.name {
+            channelRef.child(Config.name).setValue(name)
         }
         
-        guard let icon = icon else {
+        channelRef.child(Config.channelType).setValue(channel.type.rawValue)
+        channelRef.child(Config.members).setValue(channel.members)
+        
+        guard let icon = channel.icon else {
             return
         }
         
@@ -204,6 +202,17 @@ class FirebaseClient {
             channelRef.child(Config.image).setValue(imageURL)
             
         })
+    }
+    
+    public func deleteChannel(for channel: Channel) {
+        guard let id = channel.id else {
+            return
+        }
+        
+        let channelsRef = getChannelsRef()
+        let channelRef = channelsRef.child(id)
+        channelRef.removeValue { (error, ref) in
+        }
     }
     
     public func saveImage(image: UIImage, completion: @escaping ImageURLCallback) {
@@ -314,8 +323,6 @@ class FirebaseClient {
     public func getChannelsRef() -> FIRDatabaseReference {
         return databaseReference(for: Config.channelsRef)
     }
-    
-    
     
     public func getLatestMessageQuery(for channel: String) -> FIRDatabaseQuery {
         return getChannelsRef().child(channel).child(Config.messages).queryLimited(toLast: 1)
