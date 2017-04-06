@@ -32,7 +32,7 @@ enum FirebaseError: Error {
         case .userNotFound:
             return "The email does not match any account."
         case .userTokenExpired:
-            return "Please log out and log in again."
+            return "Sorry, you signed in too long ago.\n Please log out and log in again."
         case .emailAlreadyInUse:
             return "Email already taken.\n Please try again using another email."
         case .invalidEmail:

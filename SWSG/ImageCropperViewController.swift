@@ -93,7 +93,8 @@ class ImageCropperViewController: UIViewController, UIScrollViewDelegate {
     
     @IBAction func choose(_ sender: UIBarButtonItem) {
         let croppedCGImage = imageView.image?.cgImage?.cropping(to:  cropArea)
-        let croppedImage = UIImage(cgImage: croppedCGImage!)
+        var croppedImage = UIImage(cgImage: croppedCGImage!)
+        croppedImage = croppedImage.fixOrientation()
     
         let imageDataDict:[String: UIImage] = [Config.image: croppedImage]
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Config.image), object: nil, userInfo: imageDataDict)

@@ -10,25 +10,34 @@ import Foundation
 
 struct ConsultationDate {
     var date: Date
-    var slots: [ConsultationSlot]
+    var slots = [ConsultationSlot]()
     
     init(on date: Date) {
         self.date = date
-        self.slots = [ConsultationSlot]()
+    }
+    
+    init?(snapshot: [String: Any], at date: Date) {
+        self.date = date
+        for key in snapshot.keys {
+            guard let slotDateTime = Utility.fbDateTimeFormatter.date(from: key),
+                let slotSnapshot = snapshot[key] as? [String: Any],
+                let slot = ConsultationSlot(snapshot: slotSnapshot, at: slotDateTime) else {
+                    return nil
+            }
+            
+            self.slots.append(slot)
+        }
+        self.slots = self.slots.sorted(by: { $0.startDateTime < $1.startDateTime })
     }
     
     func toDictionary() -> [String: Any] {
-        let formatter = DateFormatter()
-        formatter.locale = Locale.current
         
-        formatter.dateFormat = "d/MM/YYYY"
-        
-        var dict = [[String: Any]]()
+        var dict = [String: Any]()
         
         for slot in slots {
-            dict.append(slot.toDictionary())
+            dict[Utility.fbDateTimeFormatter.string(from: slot.startDateTime)] = slot.toDictionary()
         }
         
-        return [formatter.string(from: date): dict]
+        return dict
     }
 }

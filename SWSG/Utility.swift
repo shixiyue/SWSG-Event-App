@@ -105,4 +105,38 @@ struct Utility {
         return navController.viewControllers[0]
     }
     
+    static var fbDateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+    
+        formatter.dateFormat = "d-MM-yyyy"
+    
+        return formatter
+    }
+    
+    static var fbDateTimeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        
+        formatter.dateFormat = "d-MM-yyyy-HH:mm"
+        
+        return formatter
+    }
+    
+    static func displayDismissivePopup(title: String, message: String,
+                                       viewController: UIViewController,
+                                       completion: @escaping () -> Void) {
+        let dismissController = UIAlertController(title: title, message: message,
+                                                  preferredStyle: UIAlertControllerStyle.alert)
+        
+        //Add an Action to Confirm quitting with the Destructive Style
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .default) { _ in
+            completion()
+        }
+        dismissController.addAction(dismissAction)
+        
+        //Present the Popup
+        viewController.present(dismissController, animated: true, completion: nil)
+    }
+    
 }

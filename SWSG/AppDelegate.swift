@@ -31,30 +31,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //TODO: Automatic Login with Firebase
     private func checkLogin() {
         FIRApp.configure()
-        
         if System.client.alreadySignedIn() {
-            print(System.client.getUid())
+            showLaunchScreen()
             System.client.getCurrentUser(completion: { (user, userError) in
-                System.activeUser = user
+                if userError != nil || user == nil {
+                    self.showLogInSignUpScreen()
+                } else {
+                    System.activeUser = user
+                    self.showHomeScreen()
+                }
             })
         } else {
             showLogInSignUpScreen()
             return
         }
-        
-        /*
-        guard let userData = UserDefaults.standard.data(forKey: Config.user), let user = NSKeyedUnarchiver.unarchiveObject(with: userData) as? User else {
-            showLogInSignUpScreen()
-            return
-        }
-        System.client.signIn(email: user.email, password: user.password, completion: { (error) in
-            if error != nil {
-                self.showLogInSignUpScreen()
-                return
-            }
-        })
-        
-        System.activeUser = user*/
+    }
+    
+    /// Shows launchScreen while waiting for firebase screen if the user hasn't loged in.
+    private func showLaunchScreen() {
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let storyboard = UIStoryboard(name: Config.launchScreen, bundle: nil)
+        let initialViewController = storyboard.instantiateViewController(withIdentifier: Config.initialScreen)
+        self.window?.rootViewController = initialViewController
+        self.window?.makeKeyAndVisible()
+    }
+    
+    /// Shows HomeScreen fter Firebase loads
+    private func showHomeScreen() {
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let storyboard = UIStoryboard(name: Config.main, bundle: nil)
+        let initialViewController = storyboard.instantiateViewController(withIdentifier: Config.navigationController)
+        self.window?.rootViewController = initialViewController
+        self.window?.makeKeyAndVisible()
     }
     
     /// Shows logInSignUp screen if the user hasn't loged in.

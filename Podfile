@@ -11,6 +11,8 @@ platform :ios, '9.0'
   pod 'JSQMessagesViewController'
   pod 'JTAppleCalendar', '~> 6.1'
   pod 'TextFieldEffects'
+  pod 'RSKImageCropper'
+
   
 end
 

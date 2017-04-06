@@ -15,6 +15,7 @@ struct Config {
     static let joinTeam = "Request to Join"
     static let quitTeam = "Quit Team"
     static let fullTeam = "Team is Full"
+    static let appURL = "gs://swsg-74fdd.appspot.com"
     
     // Keys for encode/decode:
     static let uid = "uid"
@@ -69,12 +70,15 @@ struct Config {
     static let upvoteFilled = UIImage(named: "upvote-filled")
     static let downvoteDefault = UIImage(named: "downvote")
     static let downvoteFilled = UIImage(named: "downvote-filled")
+    static let placeholderImg = UIImage(named: "Placeholder")!
     
     // Parameters for Storyboard:
+    static let launchScreen = "LaunchScreen"
     static let logInSignUp = "LoginSignup"
     static let initialScreen = "InitialScreen"
     static let signUpTable = "signUpTable"
     static let main = "Main"
+    static let homeViewController = "HomeViewController"
     static let eventSystem = "EventSystem"
     static let navigationController = "NavigationController"
 
@@ -87,6 +91,12 @@ struct Config {
     static let imageCropper = "ImageCropper"
     static let imageCropperViewController = "ImageCropperViewController"
     static let uiSupporting = "UISupporting"
+    
+    //Parameters for Segues:
+    static let channelListToChannel = "showChannel"
+    static let channelListToCreateChannel = "showCreateChannel"
+    static let mentorGridToMentor = "chosenMentor"
+    static let mentorToRelatedMentor = "showRelatedMentor"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
@@ -108,15 +118,32 @@ struct Config {
         return Date.time(from: "17:00")
     }
     
-    static var duration = 60
+    static let duration = 60
+    
+    static let slotCollectionTag = 1
+    static let relatedCollectionTag = 2
     
     // Parameters for Chat
     static let hourInterval = TimeInterval(3600)
     static let channelsRef = "channels"
+    static let channelCell = "channelCell"
+    static let memberCell = "memberCell"
+    static let isPublic = "isPublic"
+    static let messages = "messages"
+    static let members = "members"
+    static let senderId = "senderId"
+    static let senderName = "senderName"
+    static let timestamp = "timestamp"
+    static let text = "text"
+    static let photoURL = "photoURL"
+    static let channelType = "channelType"
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"
     static let localUser = "localUser"
     
     static let dateTimeFormatDayString = "dd-MM-yyyy"
+    
+    //Parameters for Firebase Client
+    static let users = "users"
 }

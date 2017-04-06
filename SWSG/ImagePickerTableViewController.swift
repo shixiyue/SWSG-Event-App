@@ -30,7 +30,11 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
         }
         
         alertController.addAction(cancelAction)
-        alertController.addAction(takePhotoAction)
+        
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            alertController.addAction(takePhotoAction)
+        }
+        
         alertController.addAction(selectPhotoAction)
         
         alertController.popoverPresentationController?.sourceView = view
@@ -40,10 +44,6 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     private func takePhoto() {
-        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-            present(Utility.getFailAlertController(message: "Sorry, this device has no camera"), animated: true, completion: nil)
-            return
-        }
         imagePicker.allowsEditing = false
         imagePicker.sourceType = .camera
         imagePicker.cameraCaptureMode = .photo
