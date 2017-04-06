@@ -16,6 +16,7 @@ class ChannelInfoViewController: UIViewController {
     
     var channel: Channel!
     var members = [User]()
+    fileprivate let client = System.client
     fileprivate var imagePicker = ImagePickerPopoverViewController()
     fileprivate var channelRef: FIRDatabaseReference?
     private var channelExistingHandle: FIRDatabaseHandle?
@@ -33,12 +34,15 @@ class ChannelInfoViewController: UIViewController {
             return
         }
         
-        channelRef = System.client.getChannelRef(for: id)
+        channelRef = client.getChannelRef(for: id)
         
         observeChannel()
         
         let tapIconGesture = UITapGestureRecognizer(target: self, action: #selector(editIcon))
         iconIV.addGestureRecognizer(tapIconGesture)
+        
+        let tapNameGesture = UITapGestureRecognizer(target: self, action: #selector(editName))
+        nameLbl.addGestureRecognizer(tapNameGesture)
     }
     
     // MARK: Firebase related methods
@@ -48,13 +52,12 @@ class ChannelInfoViewController: UIViewController {
                 return
             }
             
-            System.client.getUserWith(uid: memberUID, completion: { (user, error) in
+            self.client.getUserWith(uid: memberUID, completion: { (user, error) in
                 guard error == nil, let user = user else {
                     return
                 }
                 
                 self.members.append(user)
-                print(self.members.count)
                 self.membersList.reloadData()
             })
             
@@ -84,10 +87,18 @@ class ChannelInfoViewController: UIViewController {
         editIcon()
     }
     
+    @IBAction func editNameBtnPressed(_ sender: Any) {
+        editName()
+    }
+    
+    @IBAction func addMemberBtnPressed(_ sender: Any) {
+        addMember(existingText: "")
+    }
+    
     func editIcon() {
         let completionHandler: (UIImage?)->Void = { (image) in
             if let image = image {
-                System.client.updateChannel(icon: image, for: self.channel)
+                self.client.updateChannel(icon: image, for: self.channel)
             }
         }
         
@@ -98,11 +109,67 @@ class ChannelInfoViewController: UIViewController {
         imagePicker.showImageOptions()
     }
     
-    @IBAction func editNameBtnPressed(_ sender: Any) {
+    func editName() {
+        guard let channel = channel, let name = channel.name else {
+            return
+        }
+        
+        let title = "Change Name?"
+        let message = "Change the Channel Name to?"
+        let btnText = "Change"
+        let placeholderText = "Channel Name"
+        let existingText = "\(name)"
+        Utility.createPopUpWithTextField(title: title, message: message,
+                                         btnText: btnText, placeholderText: placeholderText,
+                                         existingText: existingText, viewController: self,
+                                         completion: { (name) in
+            self.client.updateChannel(name: name, for: channel)
+            self.channel.name = name
+            self.nameLbl.text = name
+        })
     }
     
-    @IBAction func addMemberBtnPressed(_ sender: Any) {
+    func addMember(existingText: String) {
+        
+        let title = "Add New Member"
+        let message = "Enter the User's Username"
+        let btnText = "Add"
+        let placeholderText = "Username"
+        let existingText = "\(existingText)"
+        Utility.createPopUpWithTextField(title: title, message: message,
+                                         btnText: btnText, placeholderText: placeholderText,
+                                         existingText: existingText, viewController: self,
+                                         completion: { (name) in
+            self.client.getUserWith(username: name, completion: { (user, error) in
+                guard let user = user else {
+                    Utility.displayDismissivePopup(title: "Error", message: "Username does not exist!", viewController: self, completion: { _ in
+                        self.addMember(existingText: name)
+                    })
+                    return
+                }
+                
+                for member in self.members {
+                    guard member.uid != user.uid else {
+                        Utility.displayDismissivePopup(title: "Error",
+                                                       message: "Username already added",
+                                                       viewController: self, completion: { _ in })
+                        return
+                    }
+                }
+                
+                self.client.fetchProfileImage(for: user.uid!, completion: { (image) in
+                    user.profile.updateImage(image: image)
+                    self.membersList.reloadData()
+                })
+                
+                self.client.addMember(to: self.channel, member: user)
+                self.membersList.reloadData()
+                self.view.endEditing(true)
+            })
+            
+        })
     }
+
 }
 
 // MARK: UITableViewDataSource
@@ -142,7 +209,7 @@ extension ChannelInfoViewController: UITableViewDataSource {
 extension ChannelInfoViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView,
                                editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]?{
-        if members[indexPath.item].uid == System.client.getUid() {
+        if members[indexPath.item].uid == client.getUid() {
             let action = UITableViewRowAction()
             action.title = "Quit"
             action.backgroundColor = Config.themeColor
@@ -163,12 +230,19 @@ extension ChannelInfoViewController: UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if members[indexPath.item].uid == System.client.getUid() {
+        if members[indexPath.item].uid == client.getUid() {
             return false
         } else {
             return true
         }
     }
-    
+}
+
+// MARK: UITextFieldDelegate
+extension ChannelInfoViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
 }
 

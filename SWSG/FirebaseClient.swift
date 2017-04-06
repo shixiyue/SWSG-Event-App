@@ -18,6 +18,7 @@ class FirebaseClient {
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
+    typealias GetChannelCallback = (Channel?, FirebaseError?) -> Void
     typealias GetMessageCallback = (Message, FirebaseError?) -> Void
     typealias GetEventCallback = (Event, FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
@@ -185,16 +186,29 @@ class FirebaseClient {
         })
     }
     
-    public func createChannel(for channel: Channel) {
-        let channelsRef = getChannelsRef()
-        let channelRef = channelsRef.childByAutoId()
-        
-        if let name = channel.name {
-            channelRef.child(Config.name).setValue(name)
+    public func createChannel(for channel: Channel, completion: @escaping GetChannelCallback) {
+        if channel.type == .directMessage {
+            getChannel(with: channel.members, completion: { (existingChannel, error) in
+                if let existingChannel = existingChannel {
+                    completion(existingChannel, error)
+                } else {
+                    self.createNewChannel(for: channel, completion: { (channel, error) in
+                        completion(channel, error)
+                    })
+                }
+            })
+        } else {
+            createNewChannel(for: channel, completion: { (channel, error) in
+                completion(channel, error)
+            })
         }
+    }
+    
+    public func createNewChannel(for channel: Channel, completion: @escaping GetChannelCallback) {
+        let channelRef = getChannelsRef().childByAutoId()
+        channel.id = channelRef.key
         
-        channelRef.child(Config.channelType).setValue(channel.type.rawValue)
-        channelRef.child(Config.members).setValue(channel.members)
+        channelRef.setValue(channel.toDictionary())
         
         guard let icon = channel.icon else {
             return
@@ -207,6 +221,8 @@ class FirebaseClient {
             channelRef.child(Config.image).setValue(imageURL)
             
         })
+        
+        completion(channel, nil)
     }
     
     public func updateChannel(icon: UIImage, for channel: Channel) {
@@ -214,7 +230,7 @@ class FirebaseClient {
             return
         }
         
-        let channelRef = getChannelsRef().child(id)
+        let channelRef = getChannelRef(for: id)
         
         saveImage(image: icon, completion: { (imageURL, firError) in
             guard firError == nil else {
@@ -223,6 +239,15 @@ class FirebaseClient {
             channelRef.child(Config.image).setValue(imageURL)
             
         })
+    }
+    
+    public func updateChannel(name: String, for channel: Channel) {
+        guard let id = channel.id else {
+            return
+        }
+        
+        let channelRef = getChannelRef(for: id)
+        channelRef.child(Config.name).setValue(name)
     }
     
     public func deleteChannel(for channel: Channel) {
@@ -234,6 +259,49 @@ class FirebaseClient {
         let channelRef = channelsRef.child(id)
         channelRef.removeValue { (error, ref) in
         }
+    }
+    
+    private func getChannel(with members: [String], completion: @escaping GetChannelCallback) {
+        let channelRef = getChannelsRef()
+        
+        let members = members.sorted(by: {$0 < $1})
+        
+        guard members.count > 1 else {
+            return
+        }
+        
+        let mainQuery = channelRef.queryOrdered(byChild: Config.channelType)
+            .queryEqual(toValue: ChannelType.directMessage.rawValue)
+        
+        mainQuery.observeSingleEvent(of: .value, with: { (snapshot) in
+            let membersSet = Set(members)
+            for child in snapshot.children {
+                guard let childSnapshot = child as? FIRDataSnapshot,
+                    let channel = Channel(id: childSnapshot.key, snapshot: childSnapshot) else {
+                    continue
+                }
+                
+                let childSet = Set(channel.members)
+                
+                if membersSet == childSet {
+                    completion(channel, nil)
+                    return
+                }
+            }
+            
+            completion(nil, nil)
+        })
+    }
+    
+    public func addMember(to channel: Channel, member: User) {
+        guard let id = channel.id, let uid = member.uid else {
+            return
+        }
+        
+        let channelRef = getChannelRef(for: id)
+        var members = channel.members
+        members.append(uid)
+        channelRef.child(Config.members).setValue(members)
     }
     
     public func saveImage(image: UIImage, completion: @escaping ImageURLCallback) {

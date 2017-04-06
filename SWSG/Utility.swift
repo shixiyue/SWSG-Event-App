@@ -164,4 +164,70 @@ struct Utility {
         }
     }
     
+    static func createPopUpWithTextField(title: String, message: String, btnText: String, placeholderText: String, existingText: String, viewController: UIViewController, completion: @escaping (String) -> Void) {
+        //Creating a Alert Popup for Saving
+        let createController = UIAlertController(title: title, message: message,
+                                                 preferredStyle: UIAlertControllerStyle.alert)
+        
+        //Creates a Save Button for the Popup
+        let action = UIAlertAction(title: btnText, style: .default) { _ -> Void in
+            
+            if let textField = createController.textFields?[0] {
+                guard var text = textField.text else {
+                    return
+                }
+                
+                text = text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                
+                completion(text)
+            }
+        }
+        createController.addAction(action)
+        
+        //Creates a Cancel Button for the Popup
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        }
+        createController.addAction(cancelAction)
+        
+        //Creates a Textfield to enter the Level Name in the Popup
+        createController.addTextField(configurationHandler: { (textField) -> Void in
+            textField.placeholder = placeholderText
+            
+            if existingText.characters.count > 0 {
+                textField.text = existingText
+            }
+            
+            //Disable the Save Button by default
+            action.isEnabled = false
+            
+            textField.textAlignment = .center
+            
+            guard let _ = viewController as? UITextFieldDelegate else {
+                return
+            }
+            
+            textField.delegate = viewController as? UITextFieldDelegate
+            textField.returnKeyType = .done
+            
+            //Sets the Save Button to disabled if the textfield is empty
+            NotificationCenter.default.addObserver(
+                forName: NSNotification.Name.UITextFieldTextDidChange,
+                object: textField, queue: OperationQueue.main) { _ in
+                    guard var text = textField.text else {
+                        return
+                    }
+                    text = text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    
+                    if text != "" {
+                        action.isEnabled = true
+                    } else {
+                        action.isEnabled = false
+                    }
+            }
+        })
+        
+        //Displays the Save Popup
+        viewController.present(createController, animated: true, completion: nil)
+    }
+    
 }

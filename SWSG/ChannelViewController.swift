@@ -144,7 +144,9 @@ final class ChannelViewController: JSQMessagesViewController {
     }
     
     func iconIVTapped(sender: UIGestureRecognizer) {
-        performSegue(withIdentifier: Config.channelToChannelInfo, sender: self)
+        if channel?.type != .directMessage {
+            performSegue(withIdentifier: Config.channelToChannelInfo, sender: self)
+        }
     }
     
     private func setupOutgoingBubble() -> JSQMessagesBubbleImage {

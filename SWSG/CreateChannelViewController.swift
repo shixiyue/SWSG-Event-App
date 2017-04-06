@@ -38,7 +38,7 @@ class CreateChannelViewController: ImagePickerViewController {
         memberList.dataSource = self
         
         iconIV = Utility.roundUIImageView(for: iconIV)
-        iconIV.image = UIImage(named: "Placeholder")
+        iconIV.image = Config.placeholderImg
         
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showImageOptions))
         iconIV.addGestureRecognizer(gestureRecognizer)
@@ -48,7 +48,15 @@ class CreateChannelViewController: ImagePickerViewController {
     }
     
     @IBAction func saveBtnPressed(_ sender: Any) {
+        print("test")
         guard let name = nameTF.text else {
+            return
+        }
+        
+        print("test1")
+        guard members.count > 1 else {
+            print("test2")
+            Utility.displayDismissivePopup(title: "Not Enough Members", message: "You need at least 1 other member", viewController: self, completion: { _ in })
             return
         }
         
@@ -71,9 +79,11 @@ class CreateChannelViewController: ImagePickerViewController {
         let channel = Channel(id: nil, type: .privateChannel, icon: image, name: name,
                               members: memberUIDs)
         
-        client.createChannel(for: channel)
+        client.createChannel(for: channel, completion: { (channel, error) in
+            _ = self.navigationController?.popViewController(animated: true)
+            
+        })
         
-        _ = navigationController?.popViewController(animated: true)
     }
     
     @IBAction func addBtnPressed(_ sender: Any) {
@@ -91,6 +101,15 @@ class CreateChannelViewController: ImagePickerViewController {
                                                message: "Username does not exist!",
                                                viewController: self, completion: { _ in })
                 return
+            }
+            
+            for member in self.members {
+                guard member.uid != user.uid else {
+                    Utility.displayDismissivePopup(title: "Error",
+                                                   message: "Username already added",
+                                                   viewController: self, completion: { _ in })
+                    return
+                }
             }
             
             self.client.fetchProfileImage(for: user.uid!, completion: { (image) in
