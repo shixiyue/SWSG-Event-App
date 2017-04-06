@@ -149,4 +149,8 @@ struct Config {
     
     //Parameters for Firebase Client
     static let users = "users"
+    
+    // Parameters for notification:
+    static let fullScreenImage = "fullScreenImage"
+    
 }

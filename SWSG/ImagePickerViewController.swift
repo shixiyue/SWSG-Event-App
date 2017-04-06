@@ -59,7 +59,6 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        print("test")
         guard let chosenImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {
             dismiss(animated: true, completion: nil)
             return

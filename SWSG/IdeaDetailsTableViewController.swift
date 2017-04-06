@@ -8,7 +8,7 @@
 
 import UIKit
 
-class IdeaDetailsTableViewController: UITableViewController {
+class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
     var idea: Idea!
     

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PeopleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class PeopleViewController: FullScreenImageViewController, UITableViewDataSource, UITableViewDelegate {
     
     var people: [Person]!
     var header: String!
@@ -25,7 +25,6 @@ class PeopleViewController: UIViewController, UITableViewDataSource, UITableView
         peopleTableView.delegate = self
         peopleTableView.tableFooterView = UIView(frame: CGRect.zero)
         peopleTableView.allowsSelection = false
-        peopleTableView.isUserInteractionEnabled = true
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -59,26 +58,9 @@ class PeopleViewController: UIViewController, UITableViewDataSource, UITableView
         }
         let person = people[index - 1]
         cell.setUp(person: person)
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullScreenImage))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullScreenImage as (UITapGestureRecognizer) -> Void))
         cell.addGestureRecognizer(tapGesture)
         return cell
     }
     
-    @objc private func showFullScreenImage(sender: UITapGestureRecognizer) {
-        guard let imageView = sender.view as? UIImageView else {
-            return
-        }
-        let newImageView = UIImageView(image: imageView.image)
-        newImageView.frame = self.view.frame
-        newImageView.backgroundColor = .black
-        newImageView.contentMode = .scaleAspectFit
-        newImageView.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreenImage))
-        newImageView.addGestureRecognizer(tap)
-        self.view.addSubview(newImageView)
-    }
-    
-    @objc private func dismissFullscreenImage(sender: UITapGestureRecognizer) {
-        sender.view?.removeFromSuperview()
-    }
 }

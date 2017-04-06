@@ -72,6 +72,7 @@
 		CC1F153A1E8F8C7000293488 /* DescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1F15391E8F8C7000293488 /* DescriptionTableViewCell.swift */; };
 		CC507F2B1E96697F006432FC /* People.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC507F2A1E96697F006432FC /* People.swift */; };
 		CC507F2D1E967124006432FC /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC507F2C1E967124006432FC /* Person.swift */; };
+		CC507F2F1E96908B006432FC /* FullScreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC507F2E1E96908B006432FC /* FullScreenImageViewController.swift */; };
 		CC5F1C581E862704006A5322 /* InformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC5F1C571E862704006A5322 /* InformationViewController.swift */; };
 		CC5F1C5B1E863044006A5322 /* Information.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC5F1C5A1E863044006A5322 /* Information.storyboard */; };
 		CC5F1C5D1E8630F1006A5322 /* InformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC5F1C5C1E8630F1006A5322 /* InformationCell.swift */; };
@@ -217,6 +218,7 @@
 		CC4CBC4A1E94F01A00179969 /* bridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridgingHeader.h; sourceTree = "<group>"; };
 		CC507F2A1E96697F006432FC /* People.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = People.swift; sourceTree = "<group>"; };
 		CC507F2C1E967124006432FC /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		CC507F2E1E96908B006432FC /* FullScreenImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenImageViewController.swift; sourceTree = "<group>"; };
 		CC5F1C571E862704006A5322 /* InformationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
 		CC5F1C5A1E863044006A5322 /* Information.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Information.storyboard; sourceTree = "<group>"; };
 		CC5F1C5C1E8630F1006A5322 /* InformationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationCell.swift; sourceTree = "<group>"; };
@@ -514,6 +516,7 @@
 				CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */,
 				CC8A4E111E8CB5C3005E2AC5 /* ImagePickerViewController.swift */,
 				CCE7DDE11E8BF5030044A863 /* LPRTableView.swift */,
+				CC507F2E1E96908B006432FC /* FullScreenImageViewController.swift */,
 			);
 			name = "UI Supporting";
 			sourceTree = "<group>";
@@ -863,6 +866,7 @@
 				E3220C431E7AE40B008AFA85 /* CommentsTableViewCell.swift in Sources */,
 				CC1AA6C61E77C328004F5F95 /* (null) in Sources */,
 				E3220C351E7A8D0B008AFA85 /* EventDetailsTableViewController.swift in Sources */,
+				CC507F2F1E96908B006432FC /* FullScreenImageViewController.swift in Sources */,
 				CC95008D1E8639CB00EC871F /* PhotoContentViewController.swift in Sources */,
 				E348D57A1E895E8300947B3F /* EventCalendarViewController.swift in Sources */,
 				CC7A4B101E88A78C00BC8A4B /* SponsorsTableViewCell.swift in Sources */,

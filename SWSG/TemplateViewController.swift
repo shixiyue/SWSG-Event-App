@@ -45,6 +45,7 @@ class TemplateViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         photoPageViewController.images = images
+        photoPageViewController.setUpPageViewController()
         overviewText.text = OverviewContent.description
         loadYoutube()
         overviewTableView.reloadData()
