@@ -338,7 +338,7 @@ final class ChannelViewController: JSQMessagesViewController {
             "senderId": senderId!,
             "senderName": senderDisplayName!,
             "text": text!,
-            "timestamp": Date.init().string(format: "YYYY/MM/dd HH:mm"),
+            "timestamp": Utility.fbDateTimeFormatter.string(from: Date.init()),
             ]
         
         itemRef.setValue(messageItem) // 3

@@ -74,24 +74,24 @@ class SettingsTableViewController: BaseViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    //TODO: Change Password in Firebase
     private func changePassword(from currentPassword: String, to newPassword: String) {
-        /*guard let user = System.activeUser else {
+        guard let user = System.activeUser else {
             Utility.logOutUser(currentViewController: self)
             return
         }
-        guard currentPassword == user.password else {
-            self.present(Utility.getFailAlertController(message: wrongPassword), animated: true, completion: nil)
-            return
-        }
-        guard Utility.isValidPassword(testStr: newPassword) else {
-            self.present(Utility.getFailAlertController(message: passwordInvalid), animated: true, completion: nil)
-            return
-        }
-        let _ = user.setPassword(newPassword: newPassword)
-        /*let _ = Storage.saveUser(user: user)*/
-        System.updateActiveUser()
-        self.present(Utility.getSuccessAlertController(), animated: true, completion: nil)*/
+        System.client.reauthenticateUser(email: user.email, password: currentPassword, completion: { (error) in
+            if let firebaseError = error {
+                self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+                return
+            }
+            System.client.changePassword(newPassword: newPassword, completion: { (error) in
+                if let firebaseError = error {
+                    self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+                    return
+                }
+                self.present(Utility.getSuccessAlertController(), animated: true, completion: nil)
+            })
+        })
     }
 
 }

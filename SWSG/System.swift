@@ -9,23 +9,23 @@ struct System {
     static var mentors: [User] = {
         var users = [User]()
         client.getMentors(completion: { (mentors, error) in
-            users = mentors
+            users += mentors
         })
-        
+        print("\(users.count)")
         return users
     }()
     
     static func createSampleMentors() {
         let create = true
         
-        if create {
+        if create && System.client.alreadySignedIn() {
             let image = UIImage(named: "Profile")
             let type = UserTypes(isParticipant: false, isSpeaker: false, isMentor: true, isOrganizer: false, isAdmin: false)
-            let profile = Profile(type: type, team: -1, name: "Mr Tan Hwee Huat", username: "HweeHuat", image: image!, job: "Asset Manager",
-                                  company: "UOB Pte. Ltd.", country: "Singapore",
-                                  education: "National University of Singapore",
-                                  skills: "Financial Planning", description: "Awesome guy")
-            let email = "mentor100@mentor.com"
+            let profile = Profile(name: "Mr Lim Lay Buat", username: "LimLay", image: image!, job: "Asset Manager",
+                                  company: "DBS Pte. Ltd.", country: "Singapore",
+                                  education: "Nanyang Technological University",
+                                  skills: "Financial Planning", description: "SuperAwesome guy")
+            let email = "mentor100000@mentor.com"
             let password = "Password123"
             let user = User(profile: profile, type: type, email: email)
             
@@ -42,13 +42,5 @@ struct System {
             })
         }
     }
-
-    static func updateActiveUser() {
-        guard let user = activeUser else {
-            return
-        }
-        let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: user)
-        UserDefaults.standard.set(encodedData, forKey: Config.user)
-    }
-    
+   
 }

@@ -13,7 +13,7 @@ import Firebase
 class Profile {
     public private (set) var username: String
     public private (set) var name: String
-    public private (set) var image: UIImage
+    public private (set) var image: UIImage = Config.placeholderImg
     public private (set) var job: String
     public private (set) var company: String
     public private (set) var country: String
@@ -21,7 +21,7 @@ class Profile {
     public private (set) var skills: String
     public private (set) var desc: String
 
-    init(type: UserTypes, team: Int, name: String, username: String, image: UIImage, job: String, company: String, country: String,
+    init(name: String, username: String, image: UIImage, job: String, company: String, country: String,
          education: String, skills: String, description: String) {
         self.username = username
         self.name = name
@@ -37,7 +37,6 @@ class Profile {
     }
     
     init?(snapshotValue: [String: Any]) {
-        image = UIImage()
         guard let username = snapshotValue[Config.username] as? String else {
             return nil
         }
@@ -70,7 +69,14 @@ class Profile {
             return nil
         }
         self.desc = desc
-        
+        guard let imageURL = snapshotValue[Config.image] as? String else {
+            return
+        }
+        System.client.fetchImageDataAtURL(imageURL, completion: { (image) in
+            if let image = image {
+                self.image = image
+            }
+        })
     }
     
     func updateProfile(username: String,name: String, image: UIImage, job: String, company: String, country: String, education: String, skills: String, description: String) {
@@ -89,9 +95,9 @@ class Profile {
         _checkRep()
     }
     
-    func updateImage(image: UIImage) {
+    func updateImage(image: UIImage?) {
         _checkRep()
-        self.image = image
+        self.image = image ?? Config.placeholderImg
         _checkRep()
     }
     
@@ -100,6 +106,6 @@ class Profile {
     }
     
     private func _checkRep() {
-        assert(!(name.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty) /*&& image.cgImage != nil*/)
+        assert(!(name.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty) && image.cgImage != nil)
     }
 }

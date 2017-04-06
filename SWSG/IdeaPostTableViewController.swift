@@ -35,10 +35,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         showImageOptions()
     }
     
-    override func updateImage(_ notification: NSNotification) {
-        guard let image = notification.userInfo?[Config.image] as? UIImage else {
-            return
-        }
+    override func updateImage(to image: UIImage) {
         mainImage.setImage(image, for: .normal)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Config.image), object: nil)
     }
@@ -62,7 +59,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     
     @objc private func addIdea(_ notification: NSNotification) {
         guard let name = ideaName.text, !name.isEmpty else {
-            present(Utility.getFailAlertController(message: "Idea name cannot be empty"), animated: true, completion: nil)
+            present(Utility.getFailAlertController(message: "Idea name cannot be empty!"), animated: true, completion: nil)
             return
         }
         guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String, let image = mainImage.image(for: .normal), let user = System.activeUser else {

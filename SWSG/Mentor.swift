@@ -16,6 +16,27 @@ class Mentor {
         self.field = field
     }
     
+    init?(snapshot: [String: Any]) {
+        guard let field = snapshot[Config.field] as? String else {
+            return nil
+        }
+        self.field = Field(rawValue: field)!
+        
+        guard let daysArr = snapshot[Config.consultationDays] as? [String: Any] else {
+            return nil
+        }
+        
+        for day in daysArr.keys {
+            guard let date = Utility.fbDateFormatter.date(from: day),
+                let dateSnapshot = daysArr[day] as? [String: Any],
+                let consultationDate = ConsultationDate(snapshot: dateSnapshot, at: date) else {
+                    return nil
+            }
+            self.days.append(consultationDate)
+        }
+        self.days = self.days.sorted(by: { $0.date < $1.date })
+    }
+    
     func addSlots(on date: Date) {
         var day = ConsultationDate(on: date)
         
@@ -23,8 +44,7 @@ class Mentor {
         let endTime = Date.dateTime(forDate: date, forTime: Config.consultationEndTime)
         
         while slotTime <= endTime {
-            let slot = ConsultationSlot(start: slotTime, duration: Config.duration,
-                                        status: .vacant)
+            let slot = ConsultationSlot(start: slotTime, status: .vacant)
             
             day.slots.append(slot)
             
@@ -35,11 +55,10 @@ class Mentor {
     }
     
     func toDictionary() -> [String: Any] {
-        
-        var dict = [[String: Any]]()
+        var dict = [String: Any]()
         
         for day in days {
-            dict.append(day.toDictionary())
+            dict[Utility.fbDateFormatter.string(from: day.date)] = day.toDictionary()
         }
         
         return [Config.consultationDays: dict, Config.field: field.rawValue]

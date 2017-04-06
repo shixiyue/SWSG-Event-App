@@ -13,18 +13,19 @@ class ChannelListViewController: BaseViewController {
     @IBOutlet weak var chatList: UITableView!
     
     // MARK: Properties
-    fileprivate var channels: [Channel] = []
-    fileprivate var client = FirebaseClient()
+    fileprivate var channels = [Channel]()
+    fileprivate var client = System.client
     
     //MARK: Firebase References
-    private var channelRef: FIRDatabaseReference!
-    private var channelRefHandle: FIRDatabaseHandle?
+    private var channelsRef: FIRDatabaseReference!
+    private var channelsExistingHandle: FIRDatabaseHandle?
+    private var channelsNewHandle: FIRDatabaseHandle?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()
         
-        channelRef = client.getChannelsRef()
+        channelsRef = client.getChannelsRef()
         
         chatList.delegate = self
         chatList.dataSource = self
@@ -35,49 +36,146 @@ class ChannelListViewController: BaseViewController {
     
     // MARK: Firebase related methods
     private func observeChannels() {
-        // Use the observe method to listen for new
-        // channels being written to the Firebase DB
-        channelRefHandle = channelRef.observe(.childAdded, with: { (snapshot) -> Void in
-            let channelData = snapshot.value as! Dictionary<String, AnyObject>
-            let id = snapshot.key
-            let channel: Channel?
-            if let name = channelData["name"] as? String, name.characters.count > 0 {
-                channel = Channel(id: id, name: name)
+        channelsExistingHandle = channelsRef.observe(.value, with: { (snapshot) -> Void in
+            self.channels = [Channel]()
+            for channelData in snapshot.children {
+                self.addNewChannel(snapshot: channelData)
+            }
+            self.chatList.reloadData()
+        })
+        
+        channelsNewHandle = channelsRef.observe(.childAdded, with: { (snapshot) -> Void in
+            self.addNewChannel(snapshot: snapshot)
+        })
+    }
+    
+    private func addNewChannel(snapshot: Any) {
+        guard let channelSnapshot = snapshot as? FIRDataSnapshot,
+            let channel = Channel(id: channelSnapshot.key, snapshot: channelSnapshot) else {
+                return
+        }
+        self.client.fetchChannelIcon(for: channelSnapshot.key, completion: { (image) in
+            channel.icon = image
+            self.chatList.reloadData()
+        })
+        let query = self.client.getLatestMessageQuery(for: channelSnapshot.key)
+        query.observe(.value, with: { (snapshot) in
+            for child in snapshot.children {
+                guard let mentorSnapshot = child as? FIRDataSnapshot,
+                    let message = Message(snapshot: mentorSnapshot) else {
+                        continue
+                }
                 
-                /*let childChannelRef = self.channelRef.child(id)
-                let messageRef = childChannelRef!.child("messages")
-                let messageQuery = messageRef.queryLimited(toLast:1)
-                let newMessageRefHandle = messageQuery.observe(.childAdded, with: { (snapshot) -> Void in
-                    let messageData = snapshot.value as! Dictionary<String, String>
-                    
-                    if let id = messageData["senderId"] as String!, let name = messageData["senderName"] as String!, let text = messageData["text"] as String!, text.characters.count > 0 {
-                        channel.messages.append(Message.init(senderId: id, senderName: name, timestamp: nil, text: text, photoURL: nil))
-                        self.addMessage(withId: id, name: name, text: text)
-                        
-                        // 5
-                        self.finishReceivingMessage()
-                    } else if let id = messageData["senderId"] as String!,
-                        let photoURL = messageData["photoURL"] as String! { // 1
-                        // 2
-                        if let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self.senderId) {
-                            // 3
-                            self.addPhotoMessage(withId: id, key: snapshot.key, mediaItem: mediaItem)
-                            // 4
-                            if photoURL.hasPrefix("gs://") {
-                                self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: nil)
-                            }
-                        }
-                    } else {
-                        print("Error! Could not decode message data")
+                channel.latestMessage = message
+            }
+            
+        })
+        self.channels.append(channel)
+        
+    }
+    
+    @IBAction func composeBtnPressed(_ sender: Any) {
+        
+        let composeController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let channelAction = UIAlertAction(title: "Group Channel", style: .default, handler: {
+            _ in
+            self.performSegue(withIdentifier: Config.channelListToCreateChannel, sender: self)
+        })
+        composeController.addAction(channelAction)
+        
+        let directAction = UIAlertAction(title: "Direct Message", style: .default, handler: {
+            _ in
+            self.createDirectChatPressed(existingText: "")
+        })
+        composeController.addAction(directAction)
+        
+        //Add a Cancel Action to the Popup
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        }
+        composeController.addAction(cancelAction)
+        
+        composeController.popoverPresentationController?.sourceView = self.view
+        
+        //Displays the Compose Popup
+        self.present(composeController, animated: true, completion: nil)
+    }
+    
+    //Handling Creating a Direct Chat
+    private func createDirectChatPressed(existingText: String) {
+        //Creating a Alert Popup for Saving
+        let message = "Who do you want to message?"
+        let createController = UIAlertController(title: "Direct Message", message: message,
+                                               preferredStyle: UIAlertControllerStyle.alert)
+        
+        //Creates a Save Button for the Popup
+        let createAction = UIAlertAction(title: "Create", style: .default) { _ -> Void in
+            
+            if let nameTF = createController.textFields?[0] {
+                guard var username = nameTF.text else {
+                    return
+                }
+                
+                username = username.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                
+                self.client.getUserWith(username: username, completion: { (user, error) in
+                    guard let user = user, let userUID = user.uid else {
+                        Utility.displayDismissivePopup(title: "Error", message: "Username does not exist!", viewController: self, completion: { _ in
+                            self.createDirectChatPressed(existingText: username)
+                        })
+                        return
                     }
-                })*/
-                
-                self.channels.append(channel!)
-                self.chatList.reloadData()
-            } else {
-                print("Error! Could not decode channel data")
+                    
+                    var members = [String]()
+                    members.append(self.client.getUid())
+                    members.append(userUID)
+                    
+                    let channel = Channel(type: .directMessage, members: members)
+                    self.client.createChannel(for: channel)
+                })
+            }
+        }
+        createController.addAction(createAction)
+        
+        //Creates a Cancel Button for the Popup
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        }
+        createController.addAction(cancelAction)
+        
+        //Creates a Textfield to enter the Level Name in the Popup
+        createController.addTextField(configurationHandler: { (textField) -> Void in
+            textField.placeholder = "Username"
+            
+            if existingText.characters.count > 0 {
+                textField.text = existingText
+            }
+            
+            //Disable the Save Button by default
+            createAction.isEnabled = false
+            
+            textField.textAlignment = .center
+            textField.delegate = self
+            textField.returnKeyType = .done
+            
+            //Sets the Save Button to disabled if the textfield is empty
+            NotificationCenter.default.addObserver(
+                forName: NSNotification.Name.UITextFieldTextDidChange,
+                object: textField, queue: OperationQueue.main) { _ in
+                    guard var text = textField.text else {
+                        return
+                    }
+                    text = text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    
+                    if text != "" {
+                        createAction.isEnabled = true
+                    } else {
+                        createAction.isEnabled = false
+                    }
             }
         })
+        
+        //Displays the Save Popup
+        self.present(createController, animated: true, completion: nil)
     }
     
     // MARK: Navigation
@@ -85,19 +183,24 @@ class ChannelListViewController: BaseViewController {
         super.prepare(for: segue, sender: sender)
         
         if let channel = sender as? Channel {
-            guard let channelVC = Utility.getDestinationStoryboard(from: segue.destination) as? ChannelViewController else {
+            guard let chatVc = segue.destination as? ChannelViewController,
+                let id = channel.id else {
                 return
             }
             
-            channelVC.senderDisplayName = System.activeUser?.profile.name
-            channelVC.channel = channel
-            channelVC.channelRef = channelRef.child(channel.id)
+            chatVc.senderDisplayName = System.activeUser?.profile.username
+            chatVc.channel = channel
+            chatVc.channelRef = channelsRef.child(id)
         }
     }
     
     deinit {
-        if let refHandle = channelRefHandle {
-            channelRef.removeObserver(withHandle: refHandle)
+        if let existingHandle = channelsExistingHandle {
+            channelsRef.removeObserver(withHandle: existingHandle)
+        }
+        
+        if let newHandle = channelsNewHandle {
+            channelsRef.removeObserver(withHandle: newHandle)
         }
     }
 }
@@ -110,19 +213,82 @@ extension ChannelListViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = chatList.dequeueReusableCell(withIdentifier: "channelCell",
-                                                                 for: indexPath) as? ChannelCell else {
-                                                                    return ChannelCell()
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: Config.channelCell, for: indexPath) as? ChannelCell else {
+                return ChannelCell()
         }
         
         let index = indexPath.item
         let channel = channels[index]
+        cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
         
-        cell.iconIV.image = channel.icon
-        cell.nameLbl.text = channel.name
+        if channel.type == .directMessage {
+            var otherUID: String?
+            
+            for member in channel.members {
+                if member != client.getUid() {
+                    otherUID = member
+                    break
+                }
+            }
+            
+            guard let uid = otherUID else {
+                return ChannelCell()
+            }
+            
+            client.fetchProfileImage(for: uid, completion: { (image) in
+                if let image = image {
+                    cell.iconIV.image = image
+                }
+            })
+            
+            client.getUserWith(uid: uid, completion: { (user, error) in
+                cell.nameLbl.text = user?.profile.name
+            })
+            
+            cell.iconIV.image = Config.placeholderImg
+        } else if channel.type != .directMessage {
+            
+            if channel.icon == nil {
+                cell.iconIV.image = Config.placeholderImg
+            } else {
+                cell.iconIV.image = channel.icon
+            }
+            
+            cell.nameLbl.text = channel.name
+        }
         
-        //let latestMessage = channel.messages.last
-        //cell.messageTV.text = latestMessage?.message
+        
+        if let message = channel.latestMessage {
+            var text = ""
+            
+            var senderName = message.senderName
+            
+            if message.senderId == client.getUid() {
+                senderName = "Me"
+            }
+            
+            if let msgText = message.text {
+                text = "\(senderName): \(msgText)"
+            } else if let message = channel.latestMessage, let _ = message.photoURL {
+                text = "\(senderName) sent an image."
+            }
+            
+            let nsText = text as NSString
+            let textRange = NSMakeRange(0, senderName.characters.count + 2)
+            let attributedString = NSMutableAttributedString(string: text)
+            
+            nsText.enumerateSubstrings(in: textRange, options: .byWords, using: {
+                (substring, substringRange, _, _) in
+                
+                attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.red, range: substringRange)
+                attributedString.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 12.0), range: substringRange)
+            })
+            
+            cell.messageTV.attributedText = attributedString
+        } else {
+            cell.messageTV.text = "No messages yet"
+        }
         
         return cell
     }
@@ -132,6 +298,33 @@ extension ChannelListViewController: UITableViewDataSource {
 extension ChannelListViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let channel = channels[indexPath.item]
-        self.performSegue(withIdentifier: Segues.channelListToChannel, sender: channel)
+        self.performSegue(withIdentifier: Config.channelListToChannel, sender: channel)
+    }
+    
+    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let channel = channels[indexPath.row]
+            client.deleteChannel(for: channel)
+            channels.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
+    public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        let channel = channels[indexPath.row]
+        
+        if channel.type == .directMessage {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+// MARK: UITextFieldDelegate
+extension ChannelListViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
     }
 }
