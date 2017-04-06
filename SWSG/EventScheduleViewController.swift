@@ -11,7 +11,9 @@ import UIKit
 class EventScheduleViewController: UIViewController {
     var date : Date?
     var events = Events.sharedInstance()
+    var delegate: EventScheduleViewControllerDelegate?
     
+    @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var eventsTableView: UITableView! {
         didSet{
             let eventItemTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventScheduleViewController.eventItemTapHandler))
@@ -27,7 +29,17 @@ class EventScheduleViewController: UIViewController {
         }
         
     }
+    @IBOutlet weak var rightBtn: UIButton!
+    @IBOutlet weak var leftBtn: UIButton!
     
+    @IBAction func onLeftBtnPressed(_ sender: Any) {
+        delegate?.onLeftScrollBtnPressed()
+    }
+    
+    @IBAction func onRightBtnPressed(_ sender: Any) {
+        delegate?.onRightScrollBtnPressed()
+    }
+ 
     @IBAction func onBackButtonPressed(_ sender: Any) {
         Utility.onBackButtonClick(tableViewController: self)
     }
@@ -58,11 +70,21 @@ class EventScheduleViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.hidesBackButton = self.navigationController?.isNavigationBarHidden ?? false
+        if let delegate = delegate, !delegate.hasNextPage() {
+            rightBtn.setTitleColor(UIColor.lightGray, for: .normal)
+        }
+        if let delegate = delegate, !delegate.hasPrevPage() {
+            leftBtn.setTitleColor(UIColor.lightGray, for: .normal)
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         eventsTableView.tableFooterView = UIView(frame: .zero)
+        if let date = date {
+        dateLabel.text = Date.toString(date: date)
+        dateLabel.textColor = UIColor.red
+        }
     }
     
     override func didReceiveMemoryWarning() {
