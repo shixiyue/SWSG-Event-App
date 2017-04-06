@@ -14,14 +14,14 @@ struct Message {
     var senderName: String
     var timestamp: Date
     var text: String?
-    var photoURL: String?
+    var image: String?
     
-    init(senderId: String, senderName: String, timestamp: Date, text: String?, photoURL: String?) {
+    init(senderId: String, senderName: String, timestamp: Date, text: String?, image: String?) {
         self.senderId = senderId
         self.senderName = senderName
         self.timestamp = timestamp
         self.text = text
-        self.photoURL = photoURL
+        self.image = image
     }
     
     init?(snapshot: FIRDataSnapshot) {
@@ -30,13 +30,11 @@ struct Message {
         }
         
         guard let id = snapshotValue[Config.senderId] as? String else {
-            print("test3")
             return nil
         }
         self.senderId = id
         
         guard let name = snapshotValue[Config.senderName] as? String else {
-            print("test4")
             return nil
         }
         self.senderName = name
@@ -50,8 +48,8 @@ struct Message {
             self.text = text
         }
         
-        if let photoURL = snapshotValue[Config.photoURL] as? String {
-            self.photoURL = photoURL
+        if let image = snapshotValue[Config.image] as? String {
+            self.image = image
         }
         
     }

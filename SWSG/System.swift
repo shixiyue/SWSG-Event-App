@@ -6,6 +6,8 @@ struct System {
     
     static var activeUser: User?
     
+    static var profileImageCache = [String: UIImage]()
+    
     static var mentors: [User] = {
         var users = [User]()
         client.getMentors(completion: { (mentors, error) in

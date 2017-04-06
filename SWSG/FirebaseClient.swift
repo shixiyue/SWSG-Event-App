@@ -35,9 +35,12 @@ class FirebaseClient {
                 if let uid = firUser?.uid {
                     let userRef = self.usersRef.child(uid)
                     userRef.setValue(user.toDictionary() as Any)
-                    self.saveImage(image: user.profile.image, completion: { (photoURL, error) in
+                    
+                    if let img = user.profile.image {
+                        self.saveImage(image: img, completion: { (photoURL, error) in
                             userRef.child(Config.profile).child(Config.image).setValue(photoURL)
-                    })
+                        })
+                    }
                 }
             }
             completion(self.checkError(err))
@@ -150,9 +153,11 @@ class FirebaseClient {
         let userRef = usersRef.child(uid)
         userRef.setValue(newUser.toDictionary() as Any)
         
-        self.saveImage(image: newUser.profile.image, completion: { (photoURL, error) in
-            userRef.child(Config.profile).child(Config.image).setValue(photoURL)
-        })
+        if let img = newUser.profile.image {
+            self.saveImage(image: img, completion: { (photoURL, error) in
+                userRef.child(Config.profile).child(Config.image).setValue(photoURL)
+            })
+        }
     }
     
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
@@ -233,6 +238,11 @@ class FirebaseClient {
     }
     
     public func fetchImageDataAtURL(_ imageURL: String, completion: @escaping ImageCallback) {
+        guard (imageURL.hasPrefix("gs://") || imageURL.hasPrefix("http://")
+            || imageURL.hasPrefix("https://")) else {
+            return
+        }
+        
         let storageRef = FIRStorage.storage().reference(forURL: imageURL)
         
         storageRef.data(withMaxSize: INT64_MAX){ (data, error) in
@@ -320,8 +330,24 @@ class FirebaseClient {
         
     }
     
+    public func getQuery(at ref: FIRDatabaseReference, for child: String, equal value: Any) -> FIRDatabaseQuery {
+        return ref.child(child).queryOrderedByValue().queryEqual(toValue: value)
+    }
+    
     public func getChannelsRef() -> FIRDatabaseReference {
         return databaseReference(for: Config.channelsRef)
+    }
+    
+    public func getChannelRef(for channelID: String) -> FIRDatabaseReference {
+        return getChannelsRef().child(channelID)
+    }
+    
+    public func getMessagesRef(for channel: FIRDatabaseReference) -> FIRDatabaseReference {
+        return channel.child(Config.messages)
+    }
+    
+    public func getTypingRef(for channel: FIRDatabaseReference, by uid: String) -> FIRDatabaseReference {
+        return channel.child(Config.typingIndicator).child(uid)
     }
     
     public func getLatestMessageQuery(for channel: String) -> FIRDatabaseQuery {
@@ -330,6 +356,10 @@ class FirebaseClient {
     
     public func getUserRef(for uid: String) -> FIRDatabaseReference {
         return databaseReference(for: Config.users).child(uid)
+    }
+    
+    public func getStorageRef() -> FIRStorageReference {
+        return storageRef
     }
     
     public func getMentorsRef() -> FIRDatabaseQuery {

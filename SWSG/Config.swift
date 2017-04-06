@@ -137,6 +137,7 @@ struct Config {
     static let text = "text"
     static let photoURL = "photoURL"
     static let channelType = "channelType"
+    static let typingIndicator = "typingIndicator"
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"

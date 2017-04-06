@@ -139,4 +139,15 @@ struct Utility {
         viewController.present(dismissController, animated: true, completion: nil)
     }
     
+    static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
+        if System.profileImageCache.keys.contains(uid) {
+            completion(System.profileImageCache[uid])
+        } else {
+            System.client.fetchProfileImage(for: uid, completion: { (image) in
+                System.profileImageCache[uid] = image
+                completion(image)
+            })
+        }
+    }
+    
 }

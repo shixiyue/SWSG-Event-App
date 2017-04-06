@@ -13,7 +13,7 @@ import Firebase
 class Profile {
     public private (set) var username: String
     public private (set) var name: String
-    public private (set) var image: UIImage = Config.placeholderImg
+    public private (set) var image: UIImage?
     public private (set) var job: String
     public private (set) var company: String
     public private (set) var country: String
@@ -21,7 +21,7 @@ class Profile {
     public private (set) var skills: String
     public private (set) var desc: String
 
-    init(name: String, username: String, image: UIImage, job: String, company: String, country: String,
+    init(name: String, username: String, image: UIImage?, job: String, company: String, country: String,
          education: String, skills: String, description: String) {
         self.username = username
         self.name = name
@@ -106,6 +106,6 @@ class Profile {
     }
     
     private func _checkRep() {
-        assert(!(name.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty) && image.cgImage != nil)
+        assert(!(name.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty))
     }
 }

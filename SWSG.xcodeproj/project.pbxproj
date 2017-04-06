@@ -44,6 +44,7 @@
 		3FC3146C1E7A5017009B21AB /* ConsultationDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3146B1E7A5017009B21AB /* ConsultationDate.swift */; };
 		3FC621991E9542AB00661305 /* MemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC621981E9542AB00661305 /* MemberCell.swift */; };
 		3FC6219B1E95DCD100661305 /* ChannelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC6219A1E95DCD100661305 /* ChannelType.swift */; };
+		3FC6219D1E95EED700661305 /* ImagePickerPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC6219C1E95EED700661305 /* ImagePickerPopoverViewController.swift */; };
 		3FE72F061E7E3BF5007FD55C /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE72F051E7E3BF5007FD55C /* Storage.swift */; };
 		3FED30161E76FA0A00C007AD /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30151E76FA0A00C007AD /* MenuViewController.swift */; };
 		3FED30181E76FBCE00C007AD /* MenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30171E76FBCE00C007AD /* MenuItems.swift */; };
@@ -191,6 +192,7 @@
 		3FC3146B1E7A5017009B21AB /* ConsultationDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationDate.swift; sourceTree = "<group>"; };
 		3FC621981E9542AB00661305 /* MemberCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberCell.swift; sourceTree = "<group>"; };
 		3FC6219A1E95DCD100661305 /* ChannelType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelType.swift; sourceTree = "<group>"; };
+		3FC6219C1E95EED700661305 /* ImagePickerPopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerPopoverViewController.swift; sourceTree = "<group>"; };
 		3FE72F051E7E3BF5007FD55C /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		3FED30151E76FA0A00C007AD /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		3FED30171E76FBCE00C007AD /* MenuItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItems.swift; sourceTree = "<group>"; };
@@ -514,6 +516,7 @@
 				CC168B2B1E7E8C5800F8725A /* UISupporting.storyboard */,
 				CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */,
 				CC8A4E111E8CB5C3005E2AC5 /* ImagePickerViewController.swift */,
+				3FC6219C1E95EED700661305 /* ImagePickerPopoverViewController.swift */,
 				CCE7DDE11E8BF5030044A863 /* LPRTableView.swift */,
 			);
 			name = "UI Supporting";
@@ -892,6 +895,7 @@
 				E3220C4F1E7B99CF008AFA85 /* UISubclasses.swift in Sources */,
 				CC7A4AFE1E87807700BC8A4B /* PeopleViewController.swift in Sources */,
 				3FED30181E76FBCE00C007AD /* MenuItems.swift in Sources */,
+				3FC6219D1E95EED700661305 /* ImagePickerPopoverViewController.swift in Sources */,
 				3F408CD01E83C27E00E2B787 /* Message.swift in Sources */,
 				3F9795441E7A8DBF004BC26C /* Config.swift in Sources */,
 				3F12AFCB1E711CBB00B26D67 /* AppDelegate.swift in Sources */,

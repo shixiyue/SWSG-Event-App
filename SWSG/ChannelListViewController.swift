@@ -36,16 +36,21 @@ class ChannelListViewController: BaseViewController {
     
     // MARK: Firebase related methods
     private func observeChannels() {
-        channelsExistingHandle = channelsRef.observe(.value, with: { (snapshot) -> Void in
-            self.channels = [Channel]()
-            for channelData in snapshot.children {
-                self.addNewChannel(snapshot: channelData)
-            }
+        channelsNewHandle = channelsRef.observe(.childAdded, with: { (snapshot) -> Void in
+            self.addNewChannel(snapshot: snapshot)
             self.chatList.reloadData()
         })
         
-        channelsNewHandle = channelsRef.observe(.childAdded, with: { (snapshot) -> Void in
-            self.addNewChannel(snapshot: snapshot)
+        channelsExistingHandle = channelsRef.observe(.childChanged, with: { (snapshot) in
+            for (index, channel) in self.channels.enumerated() {
+                if snapshot.key == channel.id {
+                    self.getLatestMessage(channel: channel, snapshot: snapshot)
+                    
+                    let indexPath = IndexPath(row: index, section: 0)
+                    self.chatList.reloadRows(at: [indexPath], with: .automatic)
+                    break
+                }
+            }
         })
     }
     
@@ -58,7 +63,15 @@ class ChannelListViewController: BaseViewController {
             channel.icon = image
             self.chatList.reloadData()
         })
-        let query = self.client.getLatestMessageQuery(for: channelSnapshot.key)
+        
+        getLatestMessage(channel: channel, snapshot: channelSnapshot)
+        
+        self.channels.append(channel)
+        
+    }
+    
+    private func getLatestMessage(channel: Channel, snapshot: FIRDataSnapshot) {
+        let query = self.client.getLatestMessageQuery(for: snapshot.key)
         query.observe(.value, with: { (snapshot) in
             for child in snapshot.children {
                 guard let mentorSnapshot = child as? FIRDataSnapshot,
@@ -70,12 +83,10 @@ class ChannelListViewController: BaseViewController {
             }
             
         })
-        self.channels.append(channel)
         
     }
     
     @IBAction func composeBtnPressed(_ sender: Any) {
-        
         let composeController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let channelAction = UIAlertAction(title: "Group Channel", style: .default, handler: {
@@ -183,14 +194,12 @@ class ChannelListViewController: BaseViewController {
         super.prepare(for: segue, sender: sender)
         
         if let channel = sender as? Channel {
-            guard let chatVc = segue.destination as? ChannelViewController,
-                let id = channel.id else {
+            guard let chatVc = segue.destination as? ChannelViewController else {
                 return
             }
             
             chatVc.senderDisplayName = System.activeUser?.profile.username
             chatVc.channel = channel
-            chatVc.channelRef = channelsRef.child(id)
         }
     }
     
@@ -236,7 +245,9 @@ extension ChannelListViewController: UITableViewDataSource {
                 return ChannelCell()
             }
             
-            client.fetchProfileImage(for: uid, completion: { (image) in
+            cell.iconIV.image = Config.placeholderImg
+            
+            Utility.getProfileImg(uid: uid, completion: { (image) in
                 if let image = image {
                     cell.iconIV.image = image
                 }
@@ -245,8 +256,6 @@ extension ChannelListViewController: UITableViewDataSource {
             client.getUserWith(uid: uid, completion: { (user, error) in
                 cell.nameLbl.text = user?.profile.name
             })
-            
-            cell.iconIV.image = Config.placeholderImg
         } else if channel.type != .directMessage {
             
             if channel.icon == nil {
@@ -260,6 +269,7 @@ extension ChannelListViewController: UITableViewDataSource {
         
         
         if let message = channel.latestMessage {
+            print("test")
             var text = ""
             
             var senderName = message.senderName
@@ -270,19 +280,23 @@ extension ChannelListViewController: UITableViewDataSource {
             
             if let msgText = message.text {
                 text = "\(senderName): \(msgText)"
-            } else if let message = channel.latestMessage, let _ = message.photoURL {
+            } else if message.image != nil {
                 text = "\(senderName) sent an image."
             }
             
             let nsText = text as NSString
-            let textRange = NSMakeRange(0, senderName.characters.count + 2)
+            let textRange = NSMakeRange(0, senderName.characters.count + 1)
             let attributedString = NSMutableAttributedString(string: text)
             
             nsText.enumerateSubstrings(in: textRange, options: .byWords, using: {
                 (substring, substringRange, _, _) in
                 
-                attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.red, range: substringRange)
-                attributedString.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 12.0), range: substringRange)
+                attributedString.addAttribute(NSForegroundColorAttributeName,
+                                              value: Config.themeColor,
+                                              range: substringRange)
+                attributedString.addAttribute(NSFontAttributeName,
+                                              value: UIFont.italicSystemFont(ofSize: 12.0),
+                                              range: substringRange)
             })
             
             cell.messageTV.attributedText = attributedString
