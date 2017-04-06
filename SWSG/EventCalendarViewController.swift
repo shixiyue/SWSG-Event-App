@@ -15,7 +15,7 @@ class EventCalendarViewController: BaseViewController {
     // a new color every time a cell is displayed. We do not want a laggy
     // scrolling calendar.
 
-    internal var events = Events()
+    var events = Events.sharedInstance()
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
 
@@ -82,25 +82,6 @@ class EventCalendarViewController: BaseViewController {
         }
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        let cellTapped = cellSelected
-        if let dateSelected = dateSelected {
-        let dateTapped = Calendar.current.date(byAdding: .day, value: 1, to: dateSelected)
-            if events.contains(date: dateTapped!){
-                print("contains")
-                performSegue(withIdentifier: "calendarSegue", sender: self)
-            }
-        }
-        
-    }
-    */
-
 }
 
 extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
@@ -127,8 +108,8 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
         // Setup Cell text
         myCustomCell.dayLabel.text = cellState.text
         myCustomCell.dot.layer.cornerRadius = 5
-        if events.contains(date: date) {
-            print("highlighted date is \(date)")
+        if events.contains(date: Date.date(from: Date.toString(date: date))) {
+            print("highlighted date is \(Date.date(from: Date.toString(date: date)))")
             myCustomCell.dot.isHidden = false
         } else {
             myCustomCell.dot.isHidden = true
@@ -143,8 +124,9 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
         handleCellTextColor(view: cell, cellState: cellState)
 
         let storyboard = UIStoryboard(name: Config.eventSystem, bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "EventScheduleTableViewController") as UIViewController
-        if events.contains(date: date){
+        let controller = storyboard.instantiateViewController(withIdentifier: "EventListPageViewController") as? EventListPageViewController
+        if events.contains(date: date), let controller = controller {
+            controller.startDate = Date.date(from: Date.toString(date: date))
             self.navigationController?.pushViewController(controller, animated: true)
         }
 

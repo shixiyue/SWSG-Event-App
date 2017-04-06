@@ -99,7 +99,7 @@
 		CCE7DDE01E8B760C0044A863 /* VideoLinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDDF1E8B760C0044A863 /* VideoLinkTableViewCell.swift */; };
 		CCE7DDE21E8BF5030044A863 /* LPRTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDE11E8BF5030044A863 /* LPRTableView.swift */; };
 		E3220C291E796BC0008AFA85 /* EventSystem.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3220C281E796BC0008AFA85 /* EventSystem.storyboard */; };
-		E3220C2B1E796C7B008AFA85 /* EventScheduleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */; };
+		E3220C2B1E796C7B008AFA85 /* EventScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2A1E796C7B008AFA85 /* EventScheduleViewController.swift */; };
 		E3220C2D1E796CB8008AFA85 /* EventScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */; };
 		E3220C311E7A3B99008AFA85 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C301E7A3B99008AFA85 /* Event.swift */; };
 		E3220C331E7A62F9008AFA85 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C321E7A62F9008AFA85 /* Events.swift */; };
@@ -135,6 +135,7 @@
 		E348D57A1E895E8300947B3F /* EventCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5791E895E8300947B3F /* EventCalendarViewController.swift */; };
 		E348D57E1E8A828900947B3F /* PinkSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */; };
 		E348D5801E8A830900947B3F /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */; };
+		E355BB8A1E951A2C002E29DD /* EventListPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB891E951A2C002E29DD /* EventListPageViewController.swift */; };
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
 		E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */; };
@@ -246,7 +247,7 @@
 		CCE7DDDF1E8B760C0044A863 /* VideoLinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoLinkTableViewCell.swift; sourceTree = "<group>"; };
 		CCE7DDE11E8BF5030044A863 /* LPRTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LPRTableView.swift; sourceTree = "<group>"; };
 		E3220C281E796BC0008AFA85 /* EventSystem.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = EventSystem.storyboard; sourceTree = "<group>"; };
-		E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleTableViewController.swift; sourceTree = "<group>"; };
+		E3220C2A1E796C7B008AFA85 /* EventScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleViewController.swift; sourceTree = "<group>"; };
 		E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleTableViewCell.swift; sourceTree = "<group>"; };
 		E3220C301E7A3B99008AFA85 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = SWSG/Event.swift; sourceTree = SOURCE_ROOT; };
 		E3220C321E7A62F9008AFA85 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
@@ -282,6 +283,7 @@
 		E348D5791E895E8300947B3F /* EventCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCalendarViewController.swift; sourceTree = "<group>"; };
 		E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PinkSectionHeaderView.xib; sourceTree = "<group>"; };
 		E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarHeaderView.swift; sourceTree = "<group>"; };
+		E355BB891E951A2C002E29DD /* EventListPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventListPageViewController.swift; sourceTree = "<group>"; };
 		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLookingForTableViewCell.swift; sourceTree = "<group>"; };
@@ -578,13 +580,14 @@
 			isa = PBXGroup;
 			children = (
 				E3220C281E796BC0008AFA85 /* EventSystem.storyboard */,
+				E355BB891E951A2C002E29DD /* EventListPageViewController.swift */,
 				E348D5791E895E8300947B3F /* EventCalendarViewController.swift */,
 				E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */,
 				E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */,
 				E348D5771E895D7C00947B3F /* CalendarCell.swift */,
 				E348D5731E895CD700947B3F /* CalendarCellView.xib */,
 				E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */,
-				E3220C2A1E796C7B008AFA85 /* EventScheduleTableViewController.swift */,
+				E3220C2A1E796C7B008AFA85 /* EventScheduleViewController.swift */,
 				E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */,
 				E3220C3A1E7AE387008AFA85 /* EventImageTableViewCell.swift */,
 				E3220C3C1E7AE39D008AFA85 /* EventTimeTableViewCell.swift */,
@@ -798,6 +801,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E355BB8A1E951A2C002E29DD /* EventListPageViewController.swift in Sources */,
 				3FED30231E77A2D400C007AD /* MentorCell.swift in Sources */,
 				E348D5781E895D7C00947B3F /* CalendarCell.swift in Sources */,
 				3FED30271E77A57600C007AD /* (null) in Sources */,
@@ -905,7 +909,7 @@
 				CC9500891E86398F00EC871F /* TemplateViewController.swift in Sources */,
 				CC8A4E121E8CB5C3005E2AC5 /* ImagePickerTableViewController.swift in Sources */,
 				3FED30161E76FA0A00C007AD /* MenuViewController.swift in Sources */,
-				E3220C2B1E796C7B008AFA85 /* EventScheduleTableViewController.swift in Sources */,
+				E3220C2B1E796C7B008AFA85 /* EventScheduleViewController.swift in Sources */,
 				E3220C511E7BA903008AFA85 /* CommentsInputTableViewCell.swift in Sources */,
 				E3220C6D1E7D6B40008AFA85 /* TeamCreateTableViewController.swift in Sources */,
 				E3220C411E7AE3C6008AFA85 /* EventDetailTableViewCell.swift in Sources */,

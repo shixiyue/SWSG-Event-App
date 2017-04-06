@@ -14,7 +14,7 @@ class EventDetailsTableViewController: UITableViewController {
     
     @IBOutlet weak var eventDetailsTableView: UITableView! {
         didSet{
-            let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventScheduleTableViewController.hideNavBarTapHandler))
+            let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventScheduleViewController.hideNavBarTapHandler))
             hideNavBarTapGesture.numberOfTapsRequired = 2
             eventDetailsTableView.addGestureRecognizer(hideNavBarTapGesture)
             eventDetailsTableView.isUserInteractionEnabled = true

@@ -44,7 +44,7 @@ extension Date {
     static func date(from dateString: String) -> Date {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.dateFormat = "yyyy MM dd"
         
         guard let date = formatter.date(from: dateString) else {
             return Date()
@@ -63,6 +63,12 @@ extension Date {
         }
         
         return date
+    }
+    
+    static func toString(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy MM dd"
+       return formatter.string(from: date)
     }
     
     static func dateTime(forDate date: Date, forTime time: Date) -> Date {
