@@ -13,10 +13,12 @@ import Photos
 import SwiftGifOrigin
 
 final class ChannelViewController: JSQMessagesViewController {
+    
     //MARK: Class Variables
     var channel: Channel?
     fileprivate var client = System.client
     fileprivate var imagePicker = ImagePickerPopoverViewController()
+    fileprivate var iconIV = UIImageView()
     fileprivate var avatarCache = [String: UIImage]()
     fileprivate let imageURLNotSetKey = "NOTSET"
     fileprivate var localTyping = false
@@ -70,6 +72,17 @@ final class ChannelViewController: JSQMessagesViewController {
         observeTyping()
     }
     
+    // MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.channelToChannelInfo,
+            let dest = segue.destination as? ChannelInfoViewController,
+            let channel = channel {
+            dest.channel = channel
+        }
+    }
+    
     deinit {
         if let refHandle = newMessageRefHandle {
             messageRef.removeObserver(withHandle: refHandle)
@@ -93,17 +106,45 @@ final class ChannelViewController: JSQMessagesViewController {
     }
     
     private func setUpChannelInfo() {
+        iconIV.frame.size = CGSize(width: Config.chatIconWidth, height: Config.chatIconWidth)
+        iconIV = Utility.roundUIImageView(for: iconIV)
+        iconIV.image = Config.placeholderImg
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: iconIV)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(iconIVTapped))
+        iconIV.addGestureRecognizer(tapGesture)
+        
         if let channel = channel, channel.type == .directMessage {
-            for member in channel.members {
-                if member != senderId {
-                    client.getUserWith(uid: member, completion: { (user, error) in
+            for memberId in channel.members {
+                if memberId != senderId {
+                    client.getUserWith(uid: memberId, completion: { (user, error) in
                         self.title = user?.profile.name
+                    })
+                    
+                    Utility.getProfileImg(uid: memberId, completion: { (image) in
+                        if let image = image {
+                            self.iconIV.image = image
+                        }
                     })
                 }
             }
         } else {
             title = channel?.name
+            
+            guard let id = channel?.id else {
+                return
+            }
+            
+            Utility.getChatIcon(id: id, completion: { (image) in
+                if let image = image {
+                    self.iconIV.image = image
+                }
+            })
         }
+    }
+    
+    func iconIVTapped(sender: UIGestureRecognizer) {
+        performSegue(withIdentifier: Config.channelToChannelInfo, sender: self)
     }
     
     private func setupOutgoingBubble() -> JSQMessagesBubbleImage {
@@ -248,86 +289,19 @@ final class ChannelViewController: JSQMessagesViewController {
     
     //MARK: Typing Indicator Methods
     private func observeTyping() {
-        let typingIndicatorRef = channelRef!.child("typingIndicator")
-        userIsTypingRef = typingIndicatorRef.child(senderId)
+        userIsTypingRef = client.getTypingRef(for: channelRef, by: senderId)
         userIsTypingRef.onDisconnectRemoveValue()
         
         usersTypingQuery.observe(.value) { (data: FIRDataSnapshot) in
-            // 2 You're the only one typing, don't show the indicator
             if data.childrenCount == 1 && self.isTyping {
                 return
             }
             
-            // 3 Are there others typing?
             self.showTypingIndicator = data.childrenCount > 0
             self.scrollToBottom(animated: true)
         }
     }
     
-    override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
-        let message = messages[indexPath.item]
-        if message.senderId == senderId {
-            return outgoingBubbleImageView
-        } else {
-            return incomingBubbleImageView
-        }
-    }
-    
-    override func collectionView(_ collectionView: JSQMessagesCollectionView, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout, heightForMessageBubbleTopLabelAt indexPath: IndexPath) -> CGFloat {
-        
-        if shouldShowNameLabel(index: indexPath.item) {
-            return kJSQMessagesCollectionViewCellLabelHeightDefault
-        } else {
-            return 0.0
-        }
-    }
-    
-    override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAt indexPath: IndexPath!) -> CGFloat {
-        
-        if shouldShowDateLabel(index: indexPath.item) {
-            return kJSQMessagesCollectionViewCellLabelHeightDefault
-        } else {
-            return 0.0
-        }
-    }
-    
-    
-    override func textViewDidChange(_ textView: UITextView) {
-        super.textViewDidChange(textView)
-        // If the text is not empty, the user is typing
-        isTyping = textView.text != ""
-    }
-    
-    fileprivate func shouldShowNameLabel(index: Int) -> Bool {
-        let message = messages[index]
-        
-        if index > 0 {
-            let previousMessage = messages[index - 1]
-            
-            if previousMessage.senderId == message.senderId || message.senderId == senderId {
-                return false
-            }
-        }
-        
-        return true
-    }
-    
-    fileprivate func shouldShowDateLabel(index: Int) -> Bool {
-        let message = messages[index]
-        
-        if index > 0 {
-            let previous = messages[index - 1]
-            
-            if message.date.lessThan(interval: Config.hourInterval, from: previous.date) {
-                return false
-            } else {
-                print(message.date)
-                print(previous.date)
-            }
-        }
-
-        return true
-    }
 }
 
 //MARK: JSQMessagesCollectionView DataSource Methods
@@ -338,6 +312,15 @@ extension ChannelViewController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
+        let message = messages[indexPath.item]
+        if message.senderId == senderId {
+            return outgoingBubbleImageView
+        } else {
+            return incomingBubbleImageView
+        }
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource! {
@@ -400,5 +383,64 @@ extension ChannelViewController {
             cell.textView?.textColor = UIColor.black
         }
         return cell
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout, heightForMessageBubbleTopLabelAt indexPath: IndexPath) -> CGFloat {
+        
+        if shouldShowNameLabel(index: indexPath.item) {
+            return kJSQMessagesCollectionViewCellLabelHeightDefault
+        } else {
+            return 0.0
+        }
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAt indexPath: IndexPath!) -> CGFloat {
+        
+        if shouldShowDateLabel(index: indexPath.item) {
+            return kJSQMessagesCollectionViewCellLabelHeightDefault
+        } else {
+            return 0.0
+        }
+    }
+    
+}
+
+//MARK: JSQMessagesCollectionView Delegate Methods
+extension ChannelViewController {
+    override func textViewDidChange(_ textView: UITextView) {
+        super.textViewDidChange(textView)
+        // If the text is not empty, the user is typing
+        isTyping = textView.text != ""
+    }
+    
+    fileprivate func shouldShowNameLabel(index: Int) -> Bool {
+        let message = messages[index]
+        
+        if index > 0 {
+            let previousMessage = messages[index - 1]
+            
+            if previousMessage.senderId == message.senderId || message.senderId == senderId {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    fileprivate func shouldShowDateLabel(index: Int) -> Bool {
+        let message = messages[index]
+        
+        if index > 0 {
+            let previous = messages[index - 1]
+            
+            if message.date.lessThan(interval: Config.hourInterval, from: previous.date) {
+                return false
+            } else {
+                print(message.date)
+                print(previous.date)
+            }
+        }
+        
+        return true
     }
 }

@@ -209,6 +209,22 @@ class FirebaseClient {
         })
     }
     
+    public func updateChannel(icon: UIImage, for channel: Channel) {
+        guard let id = channel.id else {
+            return
+        }
+        
+        let channelRef = getChannelsRef().child(id)
+        
+        saveImage(image: icon, completion: { (imageURL, firError) in
+            guard firError == nil else {
+                return
+            }
+            channelRef.child(Config.image).setValue(imageURL)
+            
+        })
+    }
+    
     public func deleteChannel(for channel: Channel) {
         guard let id = channel.id else {
             return

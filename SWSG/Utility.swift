@@ -139,6 +139,7 @@ struct Utility {
         viewController.present(dismissController, animated: true, completion: nil)
     }
     
+    //TODO: Implement Check for Updates
     static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
         if System.profileImageCache.keys.contains(uid) {
             completion(System.profileImageCache[uid])
@@ -146,6 +147,19 @@ struct Utility {
             System.client.fetchProfileImage(for: uid, completion: { (image) in
                 System.profileImageCache[uid] = image
                 completion(image)
+            })
+        }
+    }
+    
+    //TODO: Implement Check for Updates
+    static func getChatIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        if System.chatIconCache.keys.contains(id) {
+            completion(System.chatIconCache[id])
+        } else {
+            System.client.fetchChannelIcon(for: id, completion: { (image) in
+                System.chatIconCache[id] = image
+                completion(image)
+                
             })
         }
     }

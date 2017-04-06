@@ -59,9 +59,12 @@ class ChannelListViewController: BaseViewController {
             let channel = Channel(id: channelSnapshot.key, snapshot: channelSnapshot) else {
                 return
         }
-        self.client.fetchChannelIcon(for: channelSnapshot.key, completion: { (image) in
-            channel.icon = image
-            self.chatList.reloadData()
+        
+        Utility.getChatIcon(id: channelSnapshot.key, completion: { (image) in
+            if let image = image {
+                channel.icon = image
+                self.chatList.reloadData()
+            }
         })
         
         getLatestMessage(channel: channel, snapshot: channelSnapshot)
@@ -269,7 +272,6 @@ extension ChannelListViewController: UITableViewDataSource {
         
         
         if let message = channel.latestMessage {
-            print("test")
             var text = ""
             
             var senderName = message.senderName

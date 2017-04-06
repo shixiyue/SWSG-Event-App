@@ -71,6 +71,7 @@ struct Config {
     static let downvoteDefault = UIImage(named: "downvote")
     static let downvoteFilled = UIImage(named: "downvote-filled")
     static let placeholderImg = UIImage(named: "Placeholder")!
+    static let chatIconWidth: CGFloat = 40
     
     // Parameters for Storyboard:
     static let launchScreen = "LaunchScreen"
@@ -97,6 +98,7 @@ struct Config {
     static let channelListToCreateChannel = "showCreateChannel"
     static let mentorGridToMentor = "chosenMentor"
     static let mentorToRelatedMentor = "showRelatedMentor"
+    static let channelToChannelInfo = "showChatInfo"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
