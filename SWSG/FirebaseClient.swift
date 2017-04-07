@@ -18,11 +18,12 @@ class FirebaseClient {
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
+    typealias GetChannelCallback = (Channel?, FirebaseError?) -> Void
     typealias GetMessageCallback = (Message, FirebaseError?) -> Void
     typealias GetEventCallback = (Event, FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
-    typealias ImageCallback = (UIImage?) -> Void
+    typealias ImageCallback = (UIImage?, String?) -> Void
     
     private let usersRef = FIRDatabase.database().reference(withPath: "users")
     private let teamsRef = FIRDatabase.database().reference(withPath: "teams")
@@ -35,9 +36,12 @@ class FirebaseClient {
                 if let uid = firUser?.uid {
                     let userRef = self.usersRef.child(uid)
                     userRef.setValue(user.toDictionary() as Any)
-                    self.saveImage(image: user.profile.image, completion: { (photoURL, error) in
+                    
+                    if let img = user.profile.image {
+                        self.saveImage(image: img, completion: { (photoURL, error) in
                             userRef.child(Config.profile).child(Config.image).setValue(photoURL)
-                    })
+                        })
+                    }
                 }
             }
             completion(self.checkError(err))
@@ -150,9 +154,11 @@ class FirebaseClient {
         let userRef = usersRef.child(uid)
         userRef.setValue(newUser.toDictionary() as Any)
         
-        self.saveImage(image: newUser.profile.image, completion: { (photoURL, error) in
-            userRef.child(Config.profile).child(Config.image).setValue(photoURL)
-        })
+        if let img = newUser.profile.image {
+            self.saveImage(image: img, completion: { (photoURL, error) in
+                userRef.child(Config.profile).child(Config.image).setValue(photoURL)
+            })
+        }
     }
     
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
@@ -180,16 +186,29 @@ class FirebaseClient {
         })
     }
     
-    public func createChannel(for channel: Channel) {
-        let channelsRef = getChannelsRef()
-        let channelRef = channelsRef.childByAutoId()
-        
-        if let name = channel.name {
-            channelRef.child(Config.name).setValue(name)
+    public func createChannel(for channel: Channel, completion: @escaping GetChannelCallback) {
+        if channel.type == .directMessage {
+            getChannel(with: channel.members, completion: { (existingChannel, error) in
+                if let existingChannel = existingChannel {
+                    completion(existingChannel, error)
+                } else {
+                    self.createNewChannel(for: channel, completion: { (channel, error) in
+                        completion(channel, error)
+                    })
+                }
+            })
+        } else {
+            createNewChannel(for: channel, completion: { (channel, error) in
+                completion(channel, error)
+            })
         }
+    }
+    
+    public func createNewChannel(for channel: Channel, completion: @escaping GetChannelCallback) {
+        let channelRef = getChannelsRef().childByAutoId()
+        channel.id = channelRef.key
         
-        channelRef.child(Config.channelType).setValue(channel.type.rawValue)
-        channelRef.child(Config.members).setValue(channel.members)
+        channelRef.setValue(channel.toDictionary())
         
         guard let icon = channel.icon else {
             return
@@ -202,6 +221,33 @@ class FirebaseClient {
             channelRef.child(Config.image).setValue(imageURL)
             
         })
+        
+        completion(channel, nil)
+    }
+    
+    public func updateChannel(icon: UIImage, for channel: Channel) {
+        guard let id = channel.id else {
+            return
+        }
+        
+        let channelRef = getChannelRef(for: id)
+        
+        saveImage(image: icon, completion: { (imageURL, firError) in
+            guard firError == nil else {
+                return
+            }
+            channelRef.child(Config.image).setValue(imageURL)
+            
+        })
+    }
+    
+    public func updateChannel(name: String, for channel: Channel) {
+        guard let id = channel.id else {
+            return
+        }
+        
+        let channelRef = getChannelRef(for: id)
+        channelRef.child(Config.name).setValue(name)
     }
     
     public func deleteChannel(for channel: Channel) {
@@ -213,6 +259,49 @@ class FirebaseClient {
         let channelRef = channelsRef.child(id)
         channelRef.removeValue { (error, ref) in
         }
+    }
+    
+    private func getChannel(with members: [String], completion: @escaping GetChannelCallback) {
+        let channelRef = getChannelsRef()
+        
+        let members = members.sorted(by: {$0 < $1})
+        
+        guard members.count > 1 else {
+            return
+        }
+        
+        let mainQuery = channelRef.queryOrdered(byChild: Config.channelType)
+            .queryEqual(toValue: ChannelType.directMessage.rawValue)
+        
+        mainQuery.observeSingleEvent(of: .value, with: { (snapshot) in
+            let membersSet = Set(members)
+            for child in snapshot.children {
+                guard let childSnapshot = child as? FIRDataSnapshot,
+                    let channel = Channel(id: childSnapshot.key, snapshot: childSnapshot) else {
+                    continue
+                }
+                
+                let childSet = Set(channel.members)
+                
+                if membersSet == childSet {
+                    completion(channel, nil)
+                    return
+                }
+            }
+            
+            completion(nil, nil)
+        })
+    }
+    
+    public func addMember(to channel: Channel, member: User) {
+        guard let id = channel.id, let uid = member.uid else {
+            return
+        }
+        
+        let channelRef = getChannelRef(for: id)
+        var members = channel.members
+        members.append(uid)
+        channelRef.child(Config.members).setValue(members)
     }
     
     public func saveImage(image: UIImage, completion: @escaping ImageURLCallback) {
@@ -232,7 +321,40 @@ class FirebaseClient {
         }
     }
     
+    public func getProfileImageURL(for uid: String, completion: @escaping ImageURLCallback) {
+        let userRef = usersRef.child(uid).child(Config.profile)
+        
+        getImageURL(for: userRef, completion: { (url, error) in
+            completion(url, error)
+        })
+    }
+    
+    public func getChatIconImageURL(for id: String, completion: @escaping ImageURLCallback) {
+        let channelRef = getChannelRef(for: id)
+        
+        getImageURL(for: channelRef, completion: { (url, error) in
+            completion(url, error)
+        })
+    }
+    
+    private func getImageURL(for ref: FIRDatabaseReference, completion: @escaping ImageURLCallback) {
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            if snapshot.hasChild(Config.image),
+                let url = snapshot.childSnapshot(forPath: Config.image).value as? String? {
+                completion(url, nil)
+            } else {
+                completion(nil, nil)
+            }
+        })
+        
+    }
+    
     public func fetchImageDataAtURL(_ imageURL: String, completion: @escaping ImageCallback) {
+        guard (imageURL.hasPrefix("gs://") || imageURL.hasPrefix("http://")
+            || imageURL.hasPrefix("https://")) else {
+            return
+        }
+        
         let storageRef = FIRStorage.storage().reference(forURL: imageURL)
         
         storageRef.data(withMaxSize: INT64_MAX){ (data, error) in
@@ -249,38 +371,38 @@ class FirebaseClient {
                     return
                 }
                 
-                completion(UIImage.init(data: data))
+                completion(UIImage.init(data: data), imageURL)
             })
         }
     }
     
     public func fetchProfileImage(for uid: String, completion: @escaping ImageCallback) {
-        fetchImage(for: usersRef.child(uid).child(Config.profile), completion: { (image) in
-            completion(image)
+        fetchImage(for: usersRef.child(uid).child(Config.profile), completion: { (image, url) in
+            completion(image, url)
         })
     }
     
     public func fetchChannelIcon(for id: String, completion: @escaping ImageCallback) {
-        fetchImage(for: getChannelsRef().child(id), completion: { (image) in
-            completion(image)
+        fetchImage(for: getChannelsRef().child(id), completion: { (image, url) in
+            completion(image, url)
         })
     }
     
     private func fetchImage(for ref: FIRDatabaseReference, completion: @escaping ImageCallback) {
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             guard snapshot.hasChild(Config.image) else {
-                completion(nil)
+                completion(nil, nil)
                 return
             }
             
             let data = snapshot.childSnapshot(forPath: Config.image)
             guard let imageURL = data.value as? String else {
-                completion(nil)
+                completion(nil, nil)
                 return
             }
             
-            self.fetchImageDataAtURL(imageURL, completion: { (image)  in
-                completion(image)
+            self.fetchImageDataAtURL(imageURL, completion: { (image, url)  in
+                completion(image, url)
             })
         })
     }
@@ -320,8 +442,24 @@ class FirebaseClient {
         
     }
     
+    public func getQuery(at ref: FIRDatabaseReference, for child: String, equal value: Any) -> FIRDatabaseQuery {
+        return ref.child(child).queryOrderedByValue().queryEqual(toValue: value)
+    }
+    
     public func getChannelsRef() -> FIRDatabaseReference {
         return databaseReference(for: Config.channelsRef)
+    }
+    
+    public func getChannelRef(for channelID: String) -> FIRDatabaseReference {
+        return getChannelsRef().child(channelID)
+    }
+    
+    public func getMessagesRef(for channel: FIRDatabaseReference) -> FIRDatabaseReference {
+        return channel.child(Config.messages)
+    }
+    
+    public func getTypingRef(for channel: FIRDatabaseReference, by uid: String) -> FIRDatabaseReference {
+        return channel.child(Config.typingIndicator).child(uid)
     }
     
     public func getLatestMessageQuery(for channel: String) -> FIRDatabaseQuery {
@@ -330,6 +468,10 @@ class FirebaseClient {
     
     public func getUserRef(for uid: String) -> FIRDatabaseReference {
         return databaseReference(for: Config.users).child(uid)
+    }
+    
+    public func getStorageRef() -> FIRStorageReference {
+        return storageRef
     }
     
     public func getMentorsRef() -> FIRDatabaseQuery {

@@ -22,6 +22,8 @@ enum FirebaseError: Error {
     case userDisabled
     case wrongPassword
     
+    case chatAlreadyExists
+    
     case otherError(errorCode: Int)
     
     /// The corresponding error message for the firebase error.
@@ -43,6 +45,8 @@ enum FirebaseError: Error {
             return "The account is disabled."
         case .wrongPassword:
             return "The email and password do not match."
+        case .chatAlreadyExists:
+            return "The chat already exists."
         default:
             return "There was a problem.\n Please try again later."
         }
