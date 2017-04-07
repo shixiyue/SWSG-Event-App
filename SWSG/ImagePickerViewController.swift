@@ -85,7 +85,7 @@ extension ImagePickerViewController: RSKImageCropViewControllerDelegate {
     }
     
     func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
-        updateImage(to: croppedImage)
+        updateImage(to: croppedImage.cropToSquare())
         dismiss(animated: true, completion: nil)
     }
     
@@ -178,7 +178,7 @@ extension ImagePickerTableViewController: RSKImageCropViewControllerDelegate {
     }
     
     func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
-        updateImage(to: croppedImage)
+        updateImage(to: croppedImage.cropToSquare())
         dismiss(animated: true, completion: nil)
     }
     
