@@ -44,6 +44,7 @@ PODS:
   - JTAppleCalendar (6.1.6)
   - RSKImageCropper (1.6.1)
   - SwiftGifOrigin (1.6.1)
+  - TextFieldEffects (1.3.2)
 
 DEPENDENCIES:
   - Firebase/Auth
@@ -53,6 +54,7 @@ DEPENDENCIES:
   - JTAppleCalendar (~> 6.1)
   - RSKImageCropper
   - SwiftGifOrigin
+  - TextFieldEffects
 
 SPEC CHECKSUMS:
   Firebase: 2b1cdfba1cda8589f32904a697cc753322bff9d8
@@ -69,7 +71,8 @@ SPEC CHECKSUMS:
   JTAppleCalendar: 560fb46421880f53ad54123295072de24bca2b18
   RSKImageCropper: 0df8c99e77a8ea7ca7a8b83ef468556f31584254
   SwiftGifOrigin: d6679d3ebe9df2e049a84bc52582635107b581f6
+  TextFieldEffects: 9e5cce561ea39c75b86e9d3637601727a67e8b23
 
-PODFILE CHECKSUM: f42a96d0b2cb515d73a0dca9a9389f0e1f13ee51
+PODFILE CHECKSUM: e7bd2fdb9e9131c235565bc7e8661e197a1d2a6f
 
 COCOAPODS: 1.2.0

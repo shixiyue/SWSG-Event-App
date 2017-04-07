@@ -136,6 +136,7 @@
 		E348D57E1E8A828900947B3F /* PinkSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */; };
 		E348D5801E8A830900947B3F /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */; };
 		E355BB8A1E951A2C002E29DD /* EventListPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB891E951A2C002E29DD /* EventListPageViewController.swift */; };
+		E355BB8C1E97C657002E29DD /* CreateEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */; };
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
 		E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */; };
@@ -285,6 +286,7 @@
 		E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PinkSectionHeaderView.xib; sourceTree = "<group>"; };
 		E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarHeaderView.swift; sourceTree = "<group>"; };
 		E355BB891E951A2C002E29DD /* EventListPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventListPageViewController.swift; sourceTree = "<group>"; };
+		E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateEventTableViewController.swift; sourceTree = "<group>"; };
 		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLookingForTableViewCell.swift; sourceTree = "<group>"; };
@@ -582,6 +584,7 @@
 			isa = PBXGroup;
 			children = (
 				E3220C281E796BC0008AFA85 /* EventSystem.storyboard */,
+				E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */,
 				E355BB891E951A2C002E29DD /* EventListPageViewController.swift */,
 				E348D5791E895E8300947B3F /* EventCalendarViewController.swift */,
 				E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */,
@@ -804,6 +807,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E355BB8A1E951A2C002E29DD /* EventListPageViewController.swift in Sources */,
+				E355BB8C1E97C657002E29DD /* CreateEventTableViewController.swift in Sources */,
 				3FED30231E77A2D400C007AD /* MentorCell.swift in Sources */,
 				E348D5781E895D7C00947B3F /* CalendarCell.swift in Sources */,
 				3FED30271E77A57600C007AD /* (null) in Sources */,

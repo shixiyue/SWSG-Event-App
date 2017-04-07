@@ -56,6 +56,8 @@ struct Config {
     static let consultationDays = "consultationDays"
     static let consultationSlots = "consultationSlots"
     static let consultationStatus = "consultationStatus"
+    static let start = "start"
+    static let end = "end"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
