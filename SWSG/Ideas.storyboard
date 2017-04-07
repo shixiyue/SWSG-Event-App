@@ -474,6 +474,7 @@
                         <outlet property="teamNameLabel" destination="pVM-sW-Ggw" id="WyY-ui-xvt"/>
                         <outlet property="upvoteButton" destination="O4m-0n-jae" id="Ce4-0p-KSq"/>
                         <outlet property="votes" destination="miJ-5G-HR5" id="Cg1-Uu-42y"/>
+                        <segue destination="lmr-Uf-aqu" kind="show" identifier="editIdea" id="AtR-m3-JxD"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VLS-Xa-pOU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -494,4 +495,7 @@
         <image name="downvote" width="25" height="25"/>
         <image name="upvote" width="25" height="25"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="AtR-m3-JxD"/>
+    </inferredMetricsTieBreakers>
 </document>

@@ -20,8 +20,8 @@ class Idea {
     public private(set) var images: [UIImage]
     public private(set) var videoLink: String
   
-    private var upvotes: Set<String>
-    private var downvotes: Set<String>
+    fileprivate var upvotes: Set<String>
+    fileprivate var downvotes: Set<String>
     
     convenience init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
         self.init(name: name, team: team, description: description, mainImage: mainImage, images: images, videoLink: videoLink, upvotes: Set<String>(), downvotes: Set<String>())
@@ -36,6 +36,14 @@ class Idea {
         self.videoLink = videoLink
         self.upvotes = upvotes
         self.downvotes = downvotes
+    }
+    
+    func update(name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
+        self.name = name
+        self.description = description
+        self.mainImage = mainImage
+        self.images = images
+        self.videoLink = videoLink
     }
     
     func upvote() {
@@ -83,4 +91,17 @@ class Idea {
         assert(upvotes.intersection(downvotes).isEmpty)
     }
 
+}
+
+extension Idea: Equatable { }
+    
+func ==(lhs: Idea, rhs: Idea) -> Bool {
+    return lhs.name == rhs.name
+        && lhs.team == rhs.team
+        && lhs.description == rhs.description
+        && lhs.mainImage == rhs.mainImage
+        && lhs.images == rhs.images
+        && lhs.videoLink == rhs.videoLink
+        && lhs.upvotes == rhs.upvotes
+        && lhs.downvotes == rhs.downvotes
 }

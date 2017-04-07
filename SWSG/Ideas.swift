@@ -15,12 +15,11 @@ class Ideas {
     private static var ideasInstance = Ideas()
     private var ideas : [Idea] {
         didSet {
-            //Storage.saveIdeas(data: ideas, fileName: "Ideas")
+            
         }
     }
     
     private init() {
-        print("reading from storage for ideas")
         ideas = [Idea]()
        //self.ideas = Storage.readIdeas(fileName: "Ideas") ?? [Idea]()
     }
@@ -39,6 +38,20 @@ class Ideas {
     
     func save() {
         //Storage.saveIdeas(data: ideas, fileName: "Ideas")
+    }
+    
+    func removeIdea(idea: Idea) {
+        guard let index = ideas.index(of: idea) else {
+            return
+        }
+        ideas.remove(at: index)
+    }
+    
+    func updateIdea(_ idea: Idea, name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
+        guard let index = ideas.index(of: idea) else {
+            return
+        }
+        ideas[index].update(name: name, description: description, mainImage: mainImage, images: images, videoLink: videoLink)
     }
    
 }

@@ -106,6 +106,7 @@ class ImagePickerTableViewController: UITableViewController, UIImagePickerContro
     
     private let imagePicker = UIImagePickerController()
     var alertControllerPosition = CGPoint()
+    var cropMode = RSKImageCropMode.circle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -184,7 +185,7 @@ extension ImagePickerTableViewController: RSKImageCropViewControllerDelegate {
     
     fileprivate func jumpToCropImage(imageToCrop: UIImage) {
         var imageCropVC : RSKImageCropViewController!
-        imageCropVC = RSKImageCropViewController(image: imageToCrop, cropMode: RSKImageCropMode.circle)
+        imageCropVC = RSKImageCropViewController(image: imageToCrop, cropMode: cropMode)
         imageCropVC.delegate = self
         self.present(imageCropVC, animated: false, completion: nil)
     }

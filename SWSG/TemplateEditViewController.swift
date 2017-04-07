@@ -68,7 +68,6 @@ class TemplateEditViewController: ImagePickerTableViewController {
         }
         let infoDict: [String: Any] = ["description": description, "images": images, "videoId": videoId]
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "update"), object: nil, userInfo: infoDict)
-        //OverviewContent.update(description: description, images: images, videoLink: videoLink)
         _ = navigationController?.popViewController(animated: true)
     }
     

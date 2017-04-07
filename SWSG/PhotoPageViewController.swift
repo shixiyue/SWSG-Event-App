@@ -21,7 +21,6 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
             return
         }
         setUpPageViewController()
-        setUpPageControl()
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
@@ -47,6 +46,9 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
     }
     
     func setUpPageViewController() {
+        guard images.count > 0 else {
+            return
+        }
         delegate = self
         dataSource = self
         
@@ -59,6 +61,7 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
             pages.append(pageContent)
         }
         setViewControllers([pages[0]], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
+        setUpPageControl()
     }
     
     private func setUpPageControl() {

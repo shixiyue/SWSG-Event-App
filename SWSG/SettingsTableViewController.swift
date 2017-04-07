@@ -22,7 +22,7 @@ class SettingsTableViewController: BaseViewController {
     }
     
     fileprivate func showChangePassword() {
-        let alertController = UIAlertController(title: "Change Password", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let alertController = UIAlertController(title: "Change Password", message: nil, preferredStyle: .alert)
         
         let updateAction = UIAlertAction(title: "OK", style: .default) { [weak alertController] _ in
             guard let alertController = alertController else {
