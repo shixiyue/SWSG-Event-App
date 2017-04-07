@@ -96,7 +96,7 @@ class CreateChannelViewController: ImagePickerViewController {
         }
         
         client.getUserWith(username: username, completion: { (user, error) in
-            guard let user = user else {
+            guard let user = user, let uid = user.uid else {
                 Utility.displayDismissivePopup(title: "Error",
                                                message: "Username does not exist!",
                                                viewController: self, completion: { _ in })
@@ -112,7 +112,7 @@ class CreateChannelViewController: ImagePickerViewController {
                 }
             }
             
-            self.client.fetchProfileImage(for: user.uid!, completion: { (image) in
+            Utility.getProfileImg(uid: uid, completion: { (image) in
                 user.profile.updateImage(image: image)
                 self.memberList.reloadData()
             })

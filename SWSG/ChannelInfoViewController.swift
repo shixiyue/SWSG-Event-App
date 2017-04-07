@@ -141,7 +141,7 @@ class ChannelInfoViewController: UIViewController {
                                          existingText: existingText, viewController: self,
                                          completion: { (name) in
             self.client.getUserWith(username: name, completion: { (user, error) in
-                guard let user = user else {
+                guard let user = user, let uid = user.uid else {
                     Utility.displayDismissivePopup(title: "Error", message: "Username does not exist!", viewController: self, completion: { _ in
                         self.addMember(existingText: name)
                     })
@@ -156,11 +156,6 @@ class ChannelInfoViewController: UIViewController {
                         return
                     }
                 }
-                
-                self.client.fetchProfileImage(for: user.uid!, completion: { (image) in
-                    user.profile.updateImage(image: image)
-                    self.membersList.reloadData()
-                })
                 
                 self.client.addMember(to: self.channel, member: user)
                 self.membersList.reloadData()
@@ -194,9 +189,9 @@ extension ChannelInfoViewController: UITableViewDataSource {
         Utility.getProfileImg(uid: member.uid!, completion: { (image) in
             if let image = image {
                 cell.iconIV.image = image
-                self.membersList.reloadRows(at: [indexPath], with: .automatic)
             }
         })
+        
         
         cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
         cell.nameLbl.text = "\(member.profile.name) (@\(member.profile.username))"

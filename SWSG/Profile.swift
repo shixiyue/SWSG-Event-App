@@ -72,7 +72,7 @@ class Profile {
         guard let imageURL = snapshotValue[Config.image] as? String else {
             return
         }
-        System.client.fetchImageDataAtURL(imageURL, completion: { (image) in
+        System.client.fetchImageDataAtURL(imageURL, completion: { (image, url) in
             if let image = image {
                 self.image = image
             }

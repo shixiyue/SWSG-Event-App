@@ -23,7 +23,7 @@ class FirebaseClient {
     typealias GetEventCallback = (Event, FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
-    typealias ImageCallback = (UIImage?) -> Void
+    typealias ImageCallback = (UIImage?, String?) -> Void
     
     private let usersRef = FIRDatabase.database().reference(withPath: "users")
     private let teamsRef = FIRDatabase.database().reference(withPath: "teams")
@@ -321,6 +321,34 @@ class FirebaseClient {
         }
     }
     
+    public func getProfileImageURL(for uid: String, completion: @escaping ImageURLCallback) {
+        let userRef = usersRef.child(uid).child(Config.profile)
+        
+        getImageURL(for: userRef, completion: { (url, error) in
+            completion(url, error)
+        })
+    }
+    
+    public func getChatIconImageURL(for id: String, completion: @escaping ImageURLCallback) {
+        let channelRef = getChannelRef(for: id)
+        
+        getImageURL(for: channelRef, completion: { (url, error) in
+            completion(url, error)
+        })
+    }
+    
+    private func getImageURL(for ref: FIRDatabaseReference, completion: @escaping ImageURLCallback) {
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            if snapshot.hasChild(Config.image),
+                let url = snapshot.childSnapshot(forPath: Config.image).value as? String? {
+                completion(url, nil)
+            } else {
+                completion(nil, nil)
+            }
+        })
+        
+    }
+    
     public func fetchImageDataAtURL(_ imageURL: String, completion: @escaping ImageCallback) {
         guard (imageURL.hasPrefix("gs://") || imageURL.hasPrefix("http://")
             || imageURL.hasPrefix("https://")) else {
@@ -343,38 +371,38 @@ class FirebaseClient {
                     return
                 }
                 
-                completion(UIImage.init(data: data))
+                completion(UIImage.init(data: data), imageURL)
             })
         }
     }
     
     public func fetchProfileImage(for uid: String, completion: @escaping ImageCallback) {
-        fetchImage(for: usersRef.child(uid).child(Config.profile), completion: { (image) in
-            completion(image)
+        fetchImage(for: usersRef.child(uid).child(Config.profile), completion: { (image, url) in
+            completion(image, url)
         })
     }
     
     public func fetchChannelIcon(for id: String, completion: @escaping ImageCallback) {
-        fetchImage(for: getChannelsRef().child(id), completion: { (image) in
-            completion(image)
+        fetchImage(for: getChannelsRef().child(id), completion: { (image, url) in
+            completion(image, url)
         })
     }
     
     private func fetchImage(for ref: FIRDatabaseReference, completion: @escaping ImageCallback) {
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             guard snapshot.hasChild(Config.image) else {
-                completion(nil)
+                completion(nil, nil)
                 return
             }
             
             let data = snapshot.childSnapshot(forPath: Config.image)
             guard let imageURL = data.value as? String else {
-                completion(nil)
+                completion(nil, nil)
                 return
             }
             
-            self.fetchImageDataAtURL(imageURL, completion: { (image)  in
-                completion(image)
+            self.fetchImageDataAtURL(imageURL, completion: { (image, url)  in
+                completion(image, url)
             })
         })
     }

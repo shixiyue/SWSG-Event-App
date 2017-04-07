@@ -278,7 +278,7 @@ final class ChannelViewController: JSQMessagesViewController {
     }
     
     private func fetchImageDataAtURL(photoURL: String, mediaItem: JSQPhotoMediaItem, key: String) {
-        self.client.fetchImageDataAtURL(photoURL, completion: { (image) in
+        self.client.fetchImageDataAtURL(photoURL, completion: { (image, url) in
             guard let image = image else {
                 return
             }

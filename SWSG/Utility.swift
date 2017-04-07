@@ -139,30 +139,68 @@ struct Utility {
         viewController.present(dismissController, animated: true, completion: nil)
     }
     
-    //TODO: Implement Check for Updates
     static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
         if System.profileImageCache.keys.contains(uid) {
-            completion(System.profileImageCache[uid])
+            System.client.getProfileImageURL(for: uid, completion: { (url, error) in
+                if System.profileImageCache[uid]?.url == url {
+                    completion(System.profileImageCache[uid]?.image)
+                } else {
+                    forceGetProfileImg(uid: uid, completion: { (image) in
+                        completion(image)
+                    })
+                }
+            })
         } else {
-            System.client.fetchProfileImage(for: uid, completion: { (image) in
-                System.profileImageCache[uid] = image
+            forceGetProfileImg(uid: uid, completion: { (image) in
                 completion(image)
             })
         }
     }
     
-    //TODO: Implement Check for Updates
+    static func forceGetProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
+        System.client.fetchProfileImage(for: uid, completion: { (image, url) in
+            guard let image = image, let url = url else {
+                return
+            }
+            
+            System.profileImageCache[uid] = (image: image, url: url)
+            completion(image)
+        })
+    }
+    
     static func getChatIcon(id: String, completion: @escaping (UIImage?) -> Void) {
         if System.chatIconCache.keys.contains(id) {
-            completion(System.chatIconCache[id])
+            System.client.getChatIconImageURL(for: id, completion: { (url, error) in
+                if System.chatIconCache[id]?.url == url {
+                    completion(System.chatIconCache[id]?.image)
+                } else {
+                    forceGetChatIcon(id: id, completion: { (image) in
+                        completion(image)
+                    })
+                }
+            })
         } else {
-            System.client.fetchChannelIcon(for: id, completion: { (image) in
-                System.chatIconCache[id] = image
+            forceGetChatIcon(id: id, completion: { (image) in
                 completion(image)
-                
             })
         }
+        
+        
     }
+    
+    static func forceGetChatIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        System.client.fetchChannelIcon(for: id, completion: { (image,url) in
+            guard let image = image, let url = url else {
+                return
+            }
+            
+            System.chatIconCache[id] = (image: image, url: url)
+            completion(image)
+            
+        })
+    }
+    
+    
     
     static func createPopUpWithTextField(title: String, message: String, btnText: String, placeholderText: String, existingText: String, viewController: UIViewController, completion: @escaping (String) -> Void) {
         //Creating a Alert Popup for Saving
