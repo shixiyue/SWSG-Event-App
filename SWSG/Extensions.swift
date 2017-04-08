@@ -174,4 +174,27 @@ extension UIImage {
     func jpeg(_ quality: JPEGQuality) -> Data? {
         return UIImageJPEGRepresentation(self, quality.rawValue)
     }
+    
+    func cropToSquare() -> UIImage {
+        guard size.height != size.width else {
+            return self
+        }
+        
+        let sideLength = size.height < size.width ? size.height : size.width
+        let xOffset = (size.width - sideLength) / 2
+        let yOffset = (size.height - sideLength) / 2
+        let cropArea = CGRect(x: xOffset, y: yOffset, width: sideLength, height: sideLength)
+        let croppedCGImage = cgImage?.cropping(to: cropArea)
+        return UIImage(cgImage: croppedCGImage!, scale: 0, orientation: self.imageOrientation)
+    }
+    
+    func cropSquareToCircle() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        let breadthRect = CGRect(origin: .zero, size: size)
+        UIBezierPath(ovalIn: breadthRect).addClip()
+        self.draw(in: breadthRect)
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+    
 }

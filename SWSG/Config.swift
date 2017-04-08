@@ -45,17 +45,20 @@ struct Config {
     static let dateTime = "date_time"
     static let details = "details"
     static let venue = "venue"
+    static let id = "id"
     static let ideaName = "ideaName"
     static let ideaTeam = "ideaTeam"
     static let ideaDescription = "ideaDescription"
     static let ideaVideo = "ideaVideo"
-    static let upvotes = "upvotes"
-    static let downvotes = "downvotes"
+    static let votes = "votes"
     static let mentor = "mentor"
     static let field = "field"
     static let consultationDays = "consultationDays"
     static let consultationSlots = "consultationSlots"
     static let consultationStatus = "consultationStatus"
+    static let speakers = "Speakers"
+    static let organizers = "Organizing Team"
+    static let judges = "Judges"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -149,4 +152,8 @@ struct Config {
     
     //Parameters for Firebase Client
     static let users = "users"
+    
+    // Parameters for notification:
+    static let fullScreenImage = "fullScreenImage"
+    
 }

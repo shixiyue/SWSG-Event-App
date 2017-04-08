@@ -18,6 +18,7 @@ class FirebaseClient {
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
+    typealias GeneralIdeaCallback = (FirebaseError?) -> Void
     typealias GetChannelCallback = (Channel?, FirebaseError?) -> Void
     typealias GetMessageCallback = (Message, FirebaseError?) -> Void
     typealias GetEventCallback = (Event, FirebaseError?) -> Void
@@ -25,10 +26,24 @@ class FirebaseClient {
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
     typealias ImageCallback = (UIImage?, String?) -> Void
     
+    var isConnected: Bool = false
+    
     private let usersRef = FIRDatabase.database().reference(withPath: "users")
     private let teamsRef = FIRDatabase.database().reference(withPath: "teams")
     private let eventsRef = FIRDatabase.database().reference(withPath: "events")
+    private let ideasRef = FIRDatabase.database().reference(withPath: "ideas")
     private let storageRef = FIRStorage.storage().reference(forURL: Config.appURL)
+    
+    init() {
+        let connectedRef = FIRDatabase.database().reference(withPath: ".info/connected")
+        connectedRef.observe(.value, with: { snapshot in
+            if let connected = snapshot.value as? Bool, connected {
+                self.isConnected = true
+            } else {
+                self.isConnected = false
+            }
+        })
+    }
     
     public func createNewUser(_ user: User, email: String, password: String, completion: @escaping CreateUserCallback) {
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: {(firUser, err) in
@@ -184,6 +199,29 @@ class FirebaseClient {
             }
             completion(events, nil)
         })
+    }
+    
+    func createIdea(idea: Idea, completion: @escaping GeneralIdeaCallback) {
+        let ideaRef = ideasRef.childByAutoId()
+        idea.id = ideaRef.key
+        
+        ideaRef.setValue(idea.toDictionary(), withCompletionBlock: { (err, _) in
+            completion(self.checkError(err))
+        })
+    }
+    
+    func updateIdeaContent(for idea: Idea) {
+        guard let id = idea.id else {
+            return
+        }
+        
+        let ideaRef = getIdeaRef(for: id)
+        ideaRef.updateChildValues(idea.toDictionary())
+    }
+    
+    func updateIdeaVote(for id: String, user: String, vote: Bool) {
+        let ideaRef = getIdeaRef(for: id)
+        ideaRef.child(Config.votes).child(user).setValue(vote)
     }
     
     public func createChannel(for channel: Channel, completion: @escaping GetChannelCallback) {
@@ -476,6 +514,14 @@ class FirebaseClient {
     
     public func getMentorsRef() -> FIRDatabaseQuery {
         return usersRef.queryOrdered(byChild: "userType/isMentor").queryEqual(toValue: true)
+    }
+    
+    public func getIdeasRef() -> FIRDatabaseReference {
+        return ideasRef
+    }
+    
+    public func getIdeaRef(for ideaID: String) -> FIRDatabaseReference {
+        return ideasRef.child(ideaID)
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {

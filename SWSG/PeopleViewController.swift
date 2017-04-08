@@ -8,9 +8,9 @@
 
 import UIKit
 
-class PeopleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class PeopleViewController: FullScreenImageViewController, UITableViewDataSource, UITableViewDelegate {
     
-    var people: [(name: String, title: String, intro: String, photo: String)]!
+    var people: [Person]!
     var header: String!
 
     @IBOutlet var peopleTableView: UITableView!
@@ -57,10 +57,9 @@ class PeopleViewController: UIViewController, UITableViewDataSource, UITableView
             return PeopleTableViewCell()
         }
         let person = people[index - 1]
-        cell.name.text = person.name
-        cell.title.text = person.title
-        cell.intro.text = person.intro
-        cell.photo.image = UIImage(named: person.photo)
+        cell.setUp(person: person)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullScreenImage as (UITapGestureRecognizer) -> Void))
+        cell.addGestureRecognizer(tapGesture)
         return cell
     }
     

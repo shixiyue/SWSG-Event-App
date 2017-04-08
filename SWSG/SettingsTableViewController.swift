@@ -15,6 +15,8 @@ class SettingsTableViewController: BaseViewController {
     
     @IBOutlet private var settingsTable: UITableView!
     
+    override var menuYOffset: CGFloat { return -20 }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         settingsTable.tableFooterView = UIView(frame: CGRect.zero)
@@ -22,7 +24,7 @@ class SettingsTableViewController: BaseViewController {
     }
     
     fileprivate func showChangePassword() {
-        let alertController = UIAlertController(title: "Change Password", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let alertController = UIAlertController(title: "Change Password", message: nil, preferredStyle: .alert)
         
         let updateAction = UIAlertAction(title: "OK", style: .default) { [weak alertController] _ in
             guard let alertController = alertController else {

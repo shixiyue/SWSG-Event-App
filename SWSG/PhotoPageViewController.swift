@@ -21,11 +21,6 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
             return
         }
         setUpPageViewController()
-        setUpPageControl()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        setUpPageViewController()
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
@@ -40,27 +35,33 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
             return nil
         }
         return pages[currentIndex - 1]
-    }
+    } 
     
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
-        return images.count
+        return pages.count
     }
     
     func presentationIndex(for pageViewController: UIPageViewController) -> Int {
         return 0
     }
     
-    private func setUpPageViewController() {
+    func setUpPageViewController() {
+        guard images.count > 0 else {
+            return
+        }
         delegate = self
         dataSource = self
         
         pages = []
-        for i in 0..<images.count {
-            let pageContent = storyboard?.instantiateViewController(withIdentifier: "PhotoContentViewController") as! PhotoContentViewController
-            pageContent.image = images[i]
+        for image in images {
+            guard let pageContent = storyboard?.instantiateViewController(withIdentifier: "PhotoContentViewController") as? PhotoContentViewController else {
+                continue
+            }
+            pageContent.setImage(image)
             pages.append(pageContent)
         }
         setViewControllers([pages[0]], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
+        setUpPageControl()
     }
     
     private func setUpPageControl() {

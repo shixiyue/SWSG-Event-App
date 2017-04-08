@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OverviewViewController: UIViewController {
+class OverviewViewController: FullScreenImageViewController {
     
     private var containerViewController: TemplateViewController!
 
@@ -30,3 +30,4 @@ class OverviewViewController: UIViewController {
     }
 
 }
+
