@@ -37,17 +37,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         
         System.client.signIn(email: email, password: password, completion: { (error) in
-            if let firebaseError = error {
-                self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
-            } else {
-                System.client.getCurrentUser(completion: { (user, userError) in
-                    if let firebaseError = userError, user == nil {
-                        self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
-                    } else {
-                        Utility.logInUser(user: user!, currentViewController: self)
-                    }
-                })
-            }
+            Utility.logUserIn(error: error, current: self)
         })
     }
     

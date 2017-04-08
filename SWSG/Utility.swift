@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FacebookCore
+import FacebookLogin
 
 struct Utility {
     
@@ -75,9 +77,13 @@ struct Utility {
     }
     
     static func logOutUser(currentViewController: UIViewController) {
+        System.client.signOut()
+        
+        if let _ = AccessToken.current {
+            LoginManager().logOut()
+        }
         System.activeUser = nil
         showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
-        System.client.signOut()
     }
     
     static func logInUser(user: User, currentViewController: UIViewController) {
@@ -266,6 +272,46 @@ struct Utility {
         
         //Displays the Save Popup
         viewController.present(createController, animated: true, completion: nil)
+    }
+    
+    static func logUserIn(error: FirebaseError?, current viewController: UIViewController) {
+        if let firebaseError = error {
+            viewController.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+        } else {
+            System.client.getCurrentUser(completion: { (user, userError) in
+                if let firebaseError = userError, user == nil {
+                    viewController.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+                } else {
+                    Utility.logInUser(user: user!, currentViewController: viewController)
+                }
+            })
+        }
+    }
+    
+    static func checkExistingEmail(email: String, client: String, viewController: UIViewController, completion: @escaping ([String]?) -> Void) {
+        System.client.checkIfEmailAlreadyExists(email: email, completion: { (arr, error) in
+            if let arr = arr {
+                if arr[0] == client {
+                    completion(arr)
+                } else {
+                    let title = "An error has occured"
+                    let message = "A user with the same email exists, log in from that account and link this account through the settings."
+                    Utility.displayDismissivePopup(title: title, message: message, viewController: viewController, completion: { _  in
+                        completion(arr)
+                    })
+                }
+            } else {
+                completion(nil)
+            }
+        })
+    }
+    
+    static func showImagePicker(imagePicker: ImagePickerPopoverViewController, viewController: UIViewController, completion: @escaping (UIImage?)->Void) {
+        imagePicker.modalPresentationStyle = .overCurrentContext
+        imagePicker.completionHandler = completion
+        
+        viewController.present(imagePicker, animated: true, completion: nil)
+        imagePicker.showImageOptions()
     }
     
 }

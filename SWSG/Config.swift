@@ -72,12 +72,13 @@ struct Config {
     static let downvoteFilled = UIImage(named: "downvote-filled")
     static let placeholderImg = UIImage(named: "Placeholder")!
     static let chatIconWidth: CGFloat = 40
+    static let headerBuffer: CGFloat = 45
+    static let keyboardOffsetSignUp: CGFloat = 94
     
     // Parameters for Storyboard:
     static let launchScreen = "LaunchScreen"
     static let logInSignUp = "LoginSignup"
     static let initialScreen = "InitialScreen"
-    static let signUpTable = "signUpTable"
     static let main = "Main"
     static let homeViewController = "HomeViewController"
     static let eventSystem = "EventSystem"
@@ -99,6 +100,9 @@ struct Config {
     static let mentorGridToMentor = "chosenMentor"
     static let mentorToRelatedMentor = "showRelatedMentor"
     static let channelToChannelInfo = "showChatInfo"
+    static let signUpTable = "signUpTable"
+    static let initialToSignUp = "showSignUp"
+    static let initialToLogin = "showLogin"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
@@ -149,4 +153,9 @@ struct Config {
     
     //Parameters for Firebase Client
     static let users = "users"
+    static let me = "me"
+    static let id = "id"
+    
+    //Parameters for Facebook
+    static let fbIdentifier = "facebook.com"
 }

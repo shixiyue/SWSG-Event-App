@@ -8,13 +8,17 @@
 
 import Foundation
 import Firebase
+import FacebookCore
+import FacebookLogin
 
 class FirebaseClient {
     
     typealias CreateUserCallback = (FirebaseError?) -> Void
     typealias SignInCallback = (FirebaseError?) -> Void
     typealias UserAuthCallback = (FirebaseError?) -> Void
+    typealias GetFBUserCallback = (FBUser?, FirebaseError?) -> Void
     typealias GetUserCallback = (User?, FirebaseError?) -> Void
+    typealias CheckEmailCallback = ([String]?, FirebaseError?) -> Void
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
@@ -29,34 +33,83 @@ class FirebaseClient {
     private let teamsRef = FIRDatabase.database().reference(withPath: "teams")
     private let eventsRef = FIRDatabase.database().reference(withPath: "events")
     private let storageRef = FIRStorage.storage().reference(forURL: Config.appURL)
+    private let auth = FIRAuth.auth()
     
     public func createNewUser(_ user: User, email: String, password: String, completion: @escaping CreateUserCallback) {
-        FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: {(firUser, err) in
-            if err == nil {
-                if let uid = firUser?.uid {
-                    let userRef = self.usersRef.child(uid)
-                    userRef.setValue(user.toDictionary() as Any)
-                    
-                    if let img = user.profile.image {
-                        self.saveImage(image: img, completion: { (photoURL, error) in
-                            userRef.child(Config.profile).child(Config.image).setValue(photoURL)
-                        })
-                    }
-                }
+        auth?.createUser(withEmail: email, password: password, completion: {(firUser, err) in
+            if err == nil, let uid = firUser?.uid {
+                self.createUserAccount(uid: uid, user: user, completion: completion)
             }
             completion(self.checkError(err))
         })
         
     }
     
+    public func createNewUser(_ user: User, credential: FIRAuthCredential, completion: @escaping CreateUserCallback) {
+        auth?.signIn(with: credential) { (firUser, err) in
+            if err == nil, let uid = firUser?.uid {
+                self.createUserAccount(uid: uid, user: user, completion: completion)
+            }
+            completion(self.checkError(err))
+        }
+    }
+    
     public func signIn(email: String, password: String, completion: @escaping SignInCallback) {
-        FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: {(user, err) in
+        auth?.signIn(withEmail: email, password: password, completion: {(user, err) in
             completion(self.checkError(err))
         })
     }
     
+    public func signIn(credential: FIRAuthCredential, completion: @escaping SignInCallback) {
+        auth?.signIn(with: credential) { (user, err) in
+            completion(self.checkError(err))
+        }
+    }
+    
+    public func createUserAccount(uid: String, user: User, completion: @escaping CreateUserCallback) {
+        let userRef = self.usersRef.child(uid)
+        userRef.setValue(user.toDictionary() as Any)
+        
+        if let img = user.profile.image {
+            self.saveImage(image: img, completion: { (photoURL, error) in
+                userRef.child(Config.profile).child(Config.image).setValue(photoURL)
+                completion(nil)
+            })
+        }
+        
+        completion(nil)
+    }
+    
+    public func fbSignIn(completion: @escaping SignInCallback){
+        guard let token = AccessToken.current else {
+            return
+        }
+        
+        let credential = FIRFacebookAuthProvider.credential(withAccessToken: token.authenticationToken)
+        
+        signIn(credential: credential, completion: { (error) in
+            completion(error)
+        })
+    }
+    
+    public func getFBProfile(completion: @escaping GetFBUserCallback) {
+        let connection = GraphRequestConnection()
+        connection.add(FBRequest()) { response, result in
+            switch result {
+            case .success(let response):
+                completion(response.user, nil)
+            case .failed(let error):
+                print("Custom Graph Request Failed: \(error)")
+                completion(nil, nil)
+            }
+        }
+        connection.start()
+    }
+    
     public func alreadySignedIn() -> Bool {
-        if let _ = FIRAuth.auth()?.currentUser {
+        if let _ = auth?.currentUser {
+            return true
+        } else if let _ = AccessToken.current {
             return true
         } else {
             return false
@@ -66,14 +119,20 @@ class FirebaseClient {
     //TEMP SOLUTION
     public func signOut() {
         do {
-            try FIRAuth.auth()?.signOut()
+            try auth?.signOut()
         } catch {
             return
         }
     }
     
+    public func checkIfEmailAlreadyExists(email: String, completion: @escaping CheckEmailCallback) {
+        auth?.fetchProviders(forEmail: email, completion: { (arr, err) in
+            completion(arr, nil)
+        })
+    }
+    
     func reauthenticateUser(email: String, password: String, completion: @escaping UserAuthCallback) {
-        let user = FIRAuth.auth()?.currentUser
+        let user = auth?.currentUser
         let credential = FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
         
         user?.reauthenticate(with: credential) { error in
@@ -82,7 +141,7 @@ class FirebaseClient {
     }
     
     func changePassword(newPassword: String, completion: @escaping UserAuthCallback) {
-        FIRAuth.auth()?.currentUser?.updatePassword(newPassword) { error in
+        auth?.currentUser?.updatePassword(newPassword) { error in
             completion(self.checkError(error))
         }
     }
@@ -105,7 +164,8 @@ class FirebaseClient {
     }
     
     public func getCurrentUser(completion: @escaping GetUserCallback) {
-        guard let uid = FIRAuth.auth()?.currentUser?.uid else {
+        guard let uid = auth?.currentUser?.uid else {
+            completion(nil, nil)
             return
         }
         getUserWith(uid: uid, completion: completion)
@@ -148,7 +208,7 @@ class FirebaseClient {
     }
     
     public func updateUser(newUser: User) {
-        guard let uid = FIRAuth.auth()?.currentUser?.uid else {
+        guard let uid = auth?.currentUser?.uid else {
             return
         }
         let userRef = usersRef.child(uid)
@@ -306,7 +366,7 @@ class FirebaseClient {
     
     public func saveImage(image: UIImage, completion: @escaping ImageURLCallback) {
         let imageData = image.jpeg(.low)
-        let imagePath = FIRAuth.auth()!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
+        let imagePath = auth!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
         
         let metadata = FIRStorageMetadata()
         metadata.contentType = "image/jpeg"
@@ -408,7 +468,7 @@ class FirebaseClient {
     }
     
     func getUid() -> String {
-        return FIRAuth.auth()?.currentUser?.uid ?? ""
+        return auth?.currentUser?.uid ?? ""
     }
     
     private func checkError(_ err: Error?) -> FirebaseError? {
