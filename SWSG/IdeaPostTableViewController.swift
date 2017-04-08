@@ -78,6 +78,10 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     }
     
     @objc private func addIdea(_ notification: NSNotification) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         guard let name = ideaName.text, !name.isEmpty else {
             present(Utility.getFailAlertController(message: "Idea name cannot be empty!"), animated: true, completion: nil)
             return
@@ -85,11 +89,11 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String, let image = mainImage.image(for: .normal), let user = System.activeUser else {
             return
         }
-        NotificationCenter.default.removeObserver(self)
         
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
         if let idea = currentIdea {
             ideas.updateIdea(idea, name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
+            NotificationCenter.default.removeObserver(self)
             NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
             return
         }
@@ -100,6 +104,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
                 return
             }
             self.ideas.addIdea(idea: idea)
+            NotificationCenter.default.removeObserver(self)
             NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
         })
     }

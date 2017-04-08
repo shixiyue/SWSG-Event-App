@@ -21,23 +21,52 @@ class Idea {
     public private(set) var mainImage: UIImage
     public private(set) var images: [UIImage]
     public private(set) var videoLink: String
-  
-    fileprivate var upvotes: Set<String>
-    fileprivate var downvotes: Set<String>
     
-    convenience init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
-        self.init(name: name, team: team, description: description, mainImage: mainImage, images: images, videoLink: videoLink, upvotes: Set<String>(), downvotes: Set<String>())
-    }
+    fileprivate var upvotes = Set<String>()
+    fileprivate var downvotes = Set<String>()
     
-    init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String, upvotes: Set<String>, downvotes: Set<String>) {
+    init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
         self.name = name
         self.team = team
         self.description = description
         self.mainImage = mainImage
         self.images = images
         self.videoLink = videoLink
-        self.upvotes = upvotes
-        self.downvotes = downvotes
+    }
+    
+    init?(snapshotValue: [String: Any]) {
+        guard let id = snapshotValue[Config.id] as? String else {
+            return nil
+        }
+        self.id = id
+        guard let name = snapshotValue[Config.ideaName] as? String else {
+            return nil
+        }
+        self.name = name
+        guard let team = snapshotValue[Config.ideaTeam] as? Int else {
+            return nil
+        }
+        self.team = team
+        guard let description = snapshotValue[Config.ideaDescription] as? String else {
+            return nil
+        }
+        self.description = description
+        mainImage = UIImage()
+        images = []
+        guard let videoLink = snapshotValue[Config.ideaVideo] as? String else {
+            return nil
+        }
+        self.videoLink = videoLink
+        guard let votes = snapshotValue[Config.votes] as? [String: Bool] else {
+            return
+        }
+        for (user, vote) in votes {
+            if vote == true {
+                upvotes.insert(user)
+            } else {
+                downvotes.insert(user)
+            }
+        }
     }
     
     func update(name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
@@ -85,21 +114,29 @@ class Idea {
     }
     
     func toDictionary() -> [String: Any] {
-        return [Config.ideaName: self.name,
-                Config.ideaTeam: self.team,
-                Config.ideaDescription: self.description,
-                Config.ideaVideo: self.videoLink]
+        var dict: [String: Any] = [Config.ideaName: self.name,
+                                   Config.ideaTeam: self.team,
+                                   Config.ideaDescription: self.description,
+                                   Config.ideaVideo: self.videoLink]
+        if let id = id {
+            dict[Config.id] = id
+        }
+        return dict
     }
     
     private func _checkRep() {
         assert(upvotes.intersection(downvotes).isEmpty)
     }
-
+    
 }
 
 extension Idea: Equatable { }
-    
+
 func ==(lhs: Idea, rhs: Idea) -> Bool {
+    
+    if let lhsId = lhs.id, let rhsId = rhs.id {
+        return lhsId == rhsId
+    }
     return lhs.name == rhs.name
         && lhs.team == rhs.team
         && lhs.description == rhs.description

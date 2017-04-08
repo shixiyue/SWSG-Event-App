@@ -65,11 +65,19 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     }
     
     @IBAction func upvote(_ sender: UIButton) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         idea.upvote()
         updateVotes()
     }
     
     @IBAction func downvote(_ sender: UIButton) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         idea.downvote()
         updateVotes()
     }

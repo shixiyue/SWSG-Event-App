@@ -15,6 +15,8 @@ class SettingsTableViewController: BaseViewController {
     
     @IBOutlet private var settingsTable: UITableView!
     
+    override var menuYOffset: CGFloat { return -20 }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         settingsTable.tableFooterView = UIView(frame: CGRect.zero)

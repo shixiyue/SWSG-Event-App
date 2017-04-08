@@ -7,25 +7,32 @@
 //
 
 import Foundation
+import Firebase
 
 class Ideas {
     
     var count: Int { return ideas.count }
     
     private static var ideasInstance = Ideas()
-    private var ideas : [Idea] {
-        didSet {
-            
-        }
-    }
+    private var ideas : [Idea]
     
     private init() {
-        ideas = [Idea]()
-       //self.ideas = Storage.readIdeas(fileName: "Ideas") ?? [Idea]()
+        ideas = []
     }
     
     class func sharedInstance() -> Ideas {
         return ideasInstance
+    }
+    
+    func update(snapshot: FIRDataSnapshot) {
+        var newIdeas: [Idea] = []
+        for ideaSnapshot in snapshot.children {
+            guard let dataSnapshot = ideaSnapshot as? FIRDataSnapshot, let snapshotValue = dataSnapshot.value as? [String: Any], let idea = Idea(snapshotValue: snapshotValue) else {
+                continue
+            }
+            newIdeas.append(idea)
+        }
+        ideas = newIdeas
     }
     
     func addIdea(idea: Idea) {
@@ -34,10 +41,6 @@ class Ideas {
     
     func retrieveIdeaAt(index: Int) -> Idea {
         return ideas[index]
-    }
-    
-    func save() {
-        //Storage.saveIdeas(data: ideas, fileName: "Ideas")
     }
     
     func removeIdea(idea: Idea) {

@@ -26,11 +26,24 @@ class FirebaseClient {
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
     typealias ImageCallback = (UIImage?, String?) -> Void
     
+    var isConnected: Bool = false
+    
     private let usersRef = FIRDatabase.database().reference(withPath: "users")
     private let teamsRef = FIRDatabase.database().reference(withPath: "teams")
     private let eventsRef = FIRDatabase.database().reference(withPath: "events")
     private let ideasRef = FIRDatabase.database().reference(withPath: "ideas")
     private let storageRef = FIRStorage.storage().reference(forURL: Config.appURL)
+    
+    init() {
+        let connectedRef = FIRDatabase.database().reference(withPath: ".info/connected")
+        connectedRef.observe(.value, with: { snapshot in
+            if let connected = snapshot.value as? Bool, connected {
+                self.isConnected = true
+            } else {
+                self.isConnected = false
+            }
+        })
+    }
     
     public func createNewUser(_ user: User, email: String, password: String, completion: @escaping CreateUserCallback) {
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: {(firUser, err) in
@@ -501,6 +514,10 @@ class FirebaseClient {
     
     public func getMentorsRef() -> FIRDatabaseQuery {
         return usersRef.queryOrdered(byChild: "userType/isMentor").queryEqual(toValue: true)
+    }
+    
+    public func getIdeasRef() -> FIRDatabaseReference {
+        return ideasRef
     }
     
     public func getIdeaRef(for ideaID: String) -> FIRDatabaseReference {

@@ -45,6 +45,7 @@ struct Config {
     static let dateTime = "date_time"
     static let details = "details"
     static let venue = "venue"
+    static let id = "id"
     static let ideaName = "ideaName"
     static let ideaTeam = "ideaTeam"
     static let ideaDescription = "ideaDescription"

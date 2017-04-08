@@ -91,6 +91,10 @@ struct Utility {
         return alertController
     }
     
+    static func getNoInternetAlertController() -> UIAlertController {
+        return getFailAlertController(message: "Sorry, there's no internet connection!")
+    }
+    
     static func getSuccessAlertController() -> UIAlertController {
         let alertController = UIAlertController(title: "Success", message: nil, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default))
