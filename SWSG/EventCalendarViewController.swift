@@ -35,6 +35,8 @@ class EventCalendarViewController: BaseViewController {
         view.addGestureRecognizer(hideNavBarTapGesture)
         
         view.isUserInteractionEnabled = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
         // Do any additional setup after loading the view.
 
     }
@@ -67,6 +69,10 @@ class EventCalendarViewController: BaseViewController {
                 myCustomCell.dayLabel.textColor = UIColor.darkGray
             }
         }
+    }
+    
+    @objc private func reload() {
+        calendarView.reloadData()
     }
     
     // Function to handle the calendar selection
@@ -112,6 +118,7 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
             print("highlighted date is \(Date.date(from: Date.toString(date: date)))")
             myCustomCell.dot.isHidden = false
         } else {
+          //  print("does not contain date \(Date.date(from: Date.toString(date: date)))")
             myCustomCell.dot.isHidden = true
         }
         

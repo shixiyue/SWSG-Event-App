@@ -12,38 +12,17 @@ class CreateEventTableViewController: UITableViewController {
 
     @IBOutlet weak var startTime: UITextField!
     @IBOutlet weak var endTime: UITextField!
+    @IBOutlet weak var evntDetails: UITextField!
+    @IBOutlet weak var evntLocation: UITextField!
+    @IBOutlet weak var evntTitle: UITextField!
     
+    @IBOutlet weak var dateField: UITextField!
     private var containerHeight: CGFloat!
-    
     private var timeToEdit = Config.start
-    @IBAction func startTimeTxtFldEditing(_ sender: UITextField) {
-        let datePickerView:UIDatePicker = UIDatePicker()
-        datePickerView.datePickerMode = UIDatePickerMode.dateAndTime
-        sender.inputView = datePickerView
-        timeToEdit = Config.start
-        datePickerView.addTarget(self, action: #selector(CreateEventTableViewController.datePickerValueChanged), for: UIControlEvents.valueChanged)
-    }
-    @IBAction func onBackBtnClicked(_ sender: Any) {
-        Utility.onBackButtonClick(tableViewController: self)
-    }
-    @IBAction func endTimeTxtFldEditing(_ sender: UITextField) {
-        let datePickerView:UIDatePicker = UIDatePicker()
-        datePickerView.datePickerMode = UIDatePickerMode.dateAndTime
-        sender.inputView = datePickerView
-        timeToEdit = Config.end
-        datePickerView.addTarget(self, action: #selector(CreateEventTableViewController.datePickerValueChanged), for: UIControlEvents.valueChanged)
-    }
-    func datePickerValueChanged(sender:UIDatePicker) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = DateFormatter.Style.medium
-        dateFormatter.timeStyle = DateFormatter.Style.medium
-        if timeToEdit == Config.start {
-        startTime.text = dateFormatter.string(from: sender.date)
-        } else if timeToEdit == Config.end {
-            endTime.text = dateFormatter.string(from: sender.date)
-        }
-        print("\(sender.target(forAction:  #selector(CreateEventTableViewController.datePickerValueChanged), withSender: sender))")
-    }
+    private var events = Events.sharedInstance()
+    
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: self.view.frame.size.height/6, width: self.view.frame.size.width, height: 40.0))
@@ -66,7 +45,71 @@ class CreateEventTableViewController: UITableViewController {
         endTime.inputAccessoryView = toolBar
         
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(addEvent), name: Notification.Name(rawValue: "update"), object: nil)
     }
+    @IBAction func dateFldEditing(_ sender: UITextField) {
+        let datePickerView:UIDatePicker = UIDatePicker()
+        datePickerView.datePickerMode = UIDatePickerMode.date
+        sender.inputView = datePickerView
+        timeToEdit = Config.date
+        datePickerView.addTarget(self, action: #selector(CreateEventTableViewController.datePickerValueChanged), for: UIControlEvents.valueChanged)
+    }
+    
+    @IBAction func startTimeTxtFldEditing(_ sender: UITextField) {
+        let datePickerView:UIDatePicker = UIDatePicker()
+        datePickerView.datePickerMode = UIDatePickerMode.time
+        sender.inputView = datePickerView
+        timeToEdit = Config.start
+        datePickerView.addTarget(self, action: #selector(CreateEventTableViewController.datePickerValueChanged), for: UIControlEvents.valueChanged)
+    }
+    
+    @IBAction func onBackBtnClicked(_ sender: Any) {
+        Utility.onBackButtonClick(tableViewController: self)
+    }
+    
+    @IBAction func endTimeTxtFldEditing(_ sender: UITextField) {
+        let datePickerView:UIDatePicker = UIDatePicker()
+        datePickerView.datePickerMode = UIDatePickerMode.time
+        sender.inputView = datePickerView
+        timeToEdit = Config.end
+        datePickerView.addTarget(self, action: #selector(CreateEventTableViewController.datePickerValueChanged), for: UIControlEvents.valueChanged)
+    }
+    
+    func datePickerValueChanged(sender:UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy MM dd"
+        dateFormatter.locale = Locale.current
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH : mm "
+        timeFormatter.locale = Locale.current
+       // dateFormatter.dateStyle = DateFormatter.Style.medium
+        //dateFormatter.timeStyle = DateFormatter.Style.medium
+        if timeToEdit == Config.start {
+        startTime.text = timeFormatter.string(from: sender.date)
+        } else if timeToEdit == Config.end {
+            endTime.text = timeFormatter.string(from: sender.date)
+        } else if timeToEdit == Config.date {
+            dateField.text = dateFormatter.string(from: sender.date)
+        }
+        print("\(sender.target(forAction:  #selector(CreateEventTableViewController.datePickerValueChanged), withSender: sender))")
+    }
+    
+    @objc private func addEvent(_ notification: NSNotification) {
+        guard let name = evntTitle.text, !name.isEmpty, let strtTime = startTime.text, !strtTime.isEmpty, let edTime = endTime.text, !edTime.isEmpty, let ltn = evntLocation.text, !ltn.isEmpty, let ttle = evntTitle.text, !ttle.isEmpty, let details = evntDetails.text, !details.isEmpty else {
+            present(Utility.getFailAlertController(message: "Required fields cannot be empty!"), animated: true, completion: nil)
+            return
+        }
+        guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String, let user = System.activeUser else {
+            return
+        }
+        NotificationCenter.default.removeObserver(self)
+        
+        let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
+        events.addEvent(event: Event(image: images[0], name: ttle, start_datetime: strtTime, end_datetime: edTime, venue: ltn, description: description, details: details), to: Date.date(from:dateField.text!))
+        print("\(Date.date(from: strtTime)) and start time is \(strtTime), string from date is \(Date.toString(date: Date.date(from: strtTime)))")
+        Utility.onBackButtonClick(tableViewController: self)
+    }
+
     
     func donePressed(sender: UIBarButtonItem) {
         if timeToEdit == Config.start {
@@ -83,6 +126,7 @@ class CreateEventTableViewController: UITableViewController {
             endTime.resignFirstResponder()
         }
     }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
@@ -108,12 +152,6 @@ class CreateEventTableViewController: UITableViewController {
         containerHeight = containerViewController.tableView.contentSize.height
     }
     
-
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
     // MARK: - Table view data source
 

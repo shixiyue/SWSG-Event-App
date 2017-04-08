@@ -86,9 +86,9 @@ class EventDetailsTableViewController: UITableViewController {
                 return cell
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "EventTime", for: indexPath) as! EventTimeTableViewCell
-                let timeFormatter = DateFormatter()
-                timeFormatter.dateFormat = "HH:mm"
-                cell.timeLabel.text = timeFormatter.string(from: EventDetailsTableViewController.event!.date_time)
+               // let timeFormatter = DateFormatter()
+                //timeFormatter.dateFormat = "HH:mm"
+                cell.timeLabel.text = EventDetailsTableViewController.event!.start_datetime
                 return cell
             case 2:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "EventVenue", for: indexPath) as! EventVenueTableViewCell

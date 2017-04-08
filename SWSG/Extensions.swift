@@ -44,6 +44,7 @@ extension Date {
     static func date(from dateString: String) -> Date {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
+        //formatter.timeZone = TimeZone.init(abbreviation: "UTC")
         formatter.dateFormat = "yyyy MM dd"
         
         guard let date = formatter.date(from: dateString) else {

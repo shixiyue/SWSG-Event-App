@@ -159,9 +159,9 @@ class FirebaseClient {
         let dayString = event.getDayString()
         let eventId = UUID().uuidString
         let eventRef = eventsRef.child(dayString).child(eventId)
-        eventRef.setValue(event.toAnyObject(), withCompletionBlock: { (err, _) in
-            completion(self.checkError(err))
-        })
+     //   eventRef.setValue(event.toAnyObject(), withCompletionBlock: { (err, _) in
+       //     completion(self.checkError(err))
+       // })
     }
     
     public func getEventWithId(_ eventId: String, completion: @escaping GetEventCallback) {

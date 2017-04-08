@@ -13,14 +13,16 @@ class Event {
     
     var image: UIImage?
     var name : String
-    var date_time: Date
+    var start_datetime: String
+    var end_datetime: String
     var description: String
     var details: String
     var venue: String
-    init(image: UIImage?, name: String, date_time: Date, venue: String, description: String, details: String) {
+    init(image: UIImage?, name: String, start_datetime: String, end_datetime: String, venue: String, description: String, details: String) {
         self.image = image
         self.name = name
-        self.date_time = date_time
+        self.start_datetime = start_datetime
+        self.end_datetime = end_datetime
         self.venue = venue
         self.description = description
         self.details = details
@@ -38,7 +40,8 @@ class Event {
         guard let timestamp = snapshotValue[Config.dateTime] as? TimeInterval else {
             return nil
         }
-        self.date_time = Date(timeIntervalSince1970: timestamp)
+        self.start_datetime = ""
+        self.end_datetime = ""
         guard let desc = snapshotValue[Config.desc] as? String else {
             return nil
         }
@@ -52,19 +55,19 @@ class Event {
         }
         self.venue = venue
     }
-    
+  /*
     public func toAnyObject() -> Any {
         return [
             Config.name: name,
-            Config.dateTime: date_time.timeIntervalSince1970,
+            Config.dateTime: ""
             Config.desc: description,
             Config.details: details,
             Config.venue: venue
         ]
     }
-    
+    */
     public func getDayString() -> String {
-        return date_time.string(format: Config.dateTimeFormatDayString)
+        return start_datetime
     }
     
 }

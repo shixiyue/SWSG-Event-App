@@ -112,9 +112,9 @@ extension EventScheduleViewController: UITableViewDelegate, UITableViewDataSourc
         let cell = tableView.dequeueReusableCell(withIdentifier: "EventCell", for: indexPath) as! EventScheduleTableViewCell
         if let date = date, let event = events.retrieveEventAt(index: indexPath.item, at: date) {
             cell.eventName.text = event.name
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "HH:mm"
-            cell.eventTimeVenue.text = timeFormatter.string(from: event.date_time) + " @ " + event.venue
+           // let timeFormatter = DateFormatter()
+            //timeFormatter.dateFormat = "HH:mm"
+            cell.eventTimeVenue.text = event.start_datetime + "-" + event.end_datetime + " @ " + event.venue
             cell.eventDescription.text = event.description
         }
         cell.preservesSuperviewLayoutMargins = false

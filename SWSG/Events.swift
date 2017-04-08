@@ -10,16 +10,17 @@ import UIKit
 
 class Events {
     private static var eventsInstance = Events()
-    private var events = [Date.date(from: "2017 04 05"): [Event(image: nil, name: "Check-In Registration", date_time: Date.date(from: "2017 04 05"), venue: "Outside Meeting Room 1", description: "Please register and collect your breakfast outside Meeting Room 1", details: "Kindly get all your members to register Outside Meeting Room 1 to collect your daily pass and Wi-Fi password. \nPlease bring a photo ID for identification, duplicates are not accepted. Each member has to be present at the registration"),
-                                                          Event(image: nil, name: "Morning Keynote", date_time: Date.date(from: "2017 04 05"), venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah")],
-                          Date.date(from: "2017 04 06"): [Event(image: nil, name: "Morning Keynote", date_time: Date.date(from: "2017 04 06"), venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah"),
-                                                          Event(image: nil, name: "Morning Keynote", date_time: Date.date(from: "2017 04 06"), venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah")]]
+    private var events = [Date: [Event]]() {
+        didSet {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "events"), object: self)
+        }
+    }
     
     private init() {
-        events = [Date.date(from: "2017 04 05"): [Event(image: nil, name: "Check-In Registration", date_time: Date.date(from: "2017 04 05"), venue: "Outside Meeting Room 1", description: "Please register and collect your breakfast outside Meeting Room 1", details: "Kindly get all your members to register Outside Meeting Room 1 to collect your daily pass and Wi-Fi password. \nPlease bring a photo ID for identification, duplicates are not accepted. Each member has to be present at the registration"),
-                                                  Event(image: nil, name: "Morning Keynote", date_time: Date.date(from: "2017 04 05"), venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah")],
-                  Date.date(from: "2017 04 06"): [Event(image: nil, name: "Morning Keynote", date_time: Date.date(from: "2017 04 06"), venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah"),
-                                                  Event(image: nil, name: "Morning Keynote", date_time: Date.date(from: "2017 04 06"), venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah")]]
+        events = [Date.date(from: "2017 04 05"): [Event(image: nil, name: "Check-In Registration", start_datetime: "", end_datetime:"", venue: "Outside Meeting Room 1", description: "Please register and collect your breakfast outside Meeting Room 1", details: "Kindly get all your members to register Outside Meeting Room 1 to collect your daily pass and Wi-Fi password. \nPlease bring a photo ID for identification, duplicates are not accepted. Each member has to be present at the registration"),
+                                                  Event(image: nil, name: "Morning Keynote", start_datetime:  "2017 04 05", end_datetime: "2017 04 05", venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah")],
+                  Date.date(from: "2017 04 06"): [Event(image: nil, name: "Morning Keynote", start_datetime: "2017 04 05", end_datetime: "2017 04 06", venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah"),
+                                                  Event(image: nil, name: "Morning Keynote", start_datetime: "2017 04 06", end_datetime: "2017 04 05", venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah")]]
     }
     
     class func sharedInstance() -> Events {
@@ -36,6 +37,8 @@ class Events {
         if var events = self.events[date] {
             events.append(event)
             self.events.updateValue(events, forKey: date)
+        } else {
+            self.events.updateValue([event], forKey: date)
         }
     }
     
