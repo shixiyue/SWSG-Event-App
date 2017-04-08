@@ -10,6 +10,8 @@ import UIKit
 
 class IdeaPostTableViewController: ImagePickerTableViewController {
     
+    private var currentIdea: Idea?
+    
     @IBOutlet private var ideaName: UITextField!
     @IBOutlet private var teamName: UILabel!
     @IBOutlet private var mainImage: UIButton!
@@ -24,10 +26,24 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         guard let user = System.activeUser else {
             return
         }
+        cropMode = .square
         teamName.text = "by Team \(teams.retrieveTeamAt(index: user.team).name)"
+        preset()
         NotificationCenter.default.addObserver(self, selector: #selector(addIdea), name: Notification.Name(rawValue: "update"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
         hideKeyboardWhenTappedAround()
+    }
+    
+    func setUpIdea(_ idea: Idea) {
+        self.currentIdea = idea
+    }
+    
+    private func preset() {
+        guard let idea = currentIdea else {
+            return
+        }
+        ideaName.text = idea.name
+        mainImage.setImage(idea.mainImage, for: .normal)
     }
     
     @IBAction func changeMainImage(_ sender: UIButton) {
@@ -39,11 +55,15 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         mainImage.setImage(image, for: .normal)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Config.image), object: nil)
     }
-
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == "container", let containerViewController = segue.destination as? TemplateEditViewController else {
             return
+        }
+        if let idea = currentIdea {
+            let substring = idea.videoLink.components(separatedBy: "https://www.youtube.com/embed/")
+            let videoId = substring.count > 1 ? substring[1] : ""
+            containerViewController.presetInfo(desc: idea.description, images: idea.images, videoId: videoId, isScrollEnabled: false)
         }
         containerViewController.tableView.layoutIfNeeded()
         containerHeight = containerViewController.tableView.contentSize.height
@@ -58,6 +78,10 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     }
     
     @objc private func addIdea(_ notification: NSNotification) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         guard let name = ideaName.text, !name.isEmpty else {
             present(Utility.getFailAlertController(message: "Idea name cannot be empty!"), animated: true, completion: nil)
             return
@@ -65,10 +89,24 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String, let image = mainImage.image(for: .normal), let user = System.activeUser else {
             return
         }
-        NotificationCenter.default.removeObserver(self)
         
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
-        ideas.addIdea(idea: Idea(name: name, team: user.team, description: description, mainImage: image, images: images, videoLink: videoLink))
+        if let idea = currentIdea {
+            ideas.updateIdea(idea, name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
+            NotificationCenter.default.removeObserver(self)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+            return
+        }
+        let idea = Idea(name: name, team: user.team, description: description, mainImage: image, images: images, videoLink: videoLink)
+        System.client.createIdea(idea: idea, completion: { (error) in
+            if let firebaseError = error {
+                self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+                return
+            }
+            self.ideas.addIdea(idea: idea)
+            NotificationCenter.default.removeObserver(self)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+        })
     }
     
     @objc private func reload(_ notification: NSNotification) {

@@ -14,18 +14,19 @@ struct Message {
     var senderName: String
     var timestamp: Date
     var text: String?
-    var photoURL: String?
+    var image: String?
     
-    init(senderId: String, senderName: String, timestamp: Date, text: String?, photoURL: String?) {
+    init(senderId: String, senderName: String, timestamp: Date, text: String?, image: String?) {
         self.senderId = senderId
         self.senderName = senderName
         self.timestamp = timestamp
         self.text = text
-        self.photoURL = photoURL
+        self.image = image
     }
     
     init?(snapshot: FIRDataSnapshot) {
         guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
+            print("test2")
             return nil
         }
         
@@ -42,16 +43,18 @@ struct Message {
         self.senderName = name
         
         guard let timestamp = snapshotValue[Config.timestamp] as? String else {
+            print("test5")
             return nil
         }
         self.timestamp = Utility.fbDateTimeFormatter.date(from: timestamp)!
         
         if let text = snapshotValue[Config.text] as? String {
+            print("test6")
             self.text = text
         }
         
-        if let photoURL = snapshotValue[Config.photoURL] as? String {
-            self.photoURL = photoURL
+        if let image = snapshotValue[Config.image] as? String {
+            self.image = image
         }
         
     }

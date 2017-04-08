@@ -22,7 +22,7 @@ class MenuViewController: UIViewController {
     @IBOutlet private var btnCloseMenuOverlay : UIButton!
     @IBOutlet private var profileOverlay: UIButton!
     
-    @IBOutlet private var profileImgButton: UIButton!
+    @IBOutlet weak var profileImg: UIImageView!
     @IBOutlet private weak var nameLbl: UILabel!
     @IBOutlet private weak var usernameLbl: UILabel!
     @IBOutlet private weak var teamLbl: UILabel!
@@ -43,6 +43,8 @@ class MenuViewController: UIViewController {
         observeImage()
         
         userRef = System.client.getUserRef(for: System.client.getUid())
+        profileImg = Utility.roundUIImageView(for: profileImg)
+        profileImg.image = Config.placeholderImg
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,11 +63,10 @@ class MenuViewController: UIViewController {
         }
         
         userRefHandle = userRef.observe(.value, with: { (snapshot) -> Void in
-            System.client.fetchProfileImage(for: uid, completion: { (image) in
-                guard let image = image else {
-                    return
+            Utility.getProfileImg(uid: uid, completion: { (image) in
+                if let image = image {
+                    self.profileImg.image = image
                 }
-                self.profileImgButton.setImage(image, for: .normal)
             })
         })
     }
@@ -76,7 +77,10 @@ class MenuViewController: UIViewController {
             return
         }
         
-        profileImgButton.setImage(user.profile.image, for: .normal)
+        if let img = user.profile.image {
+            self.profileImg.image = img
+        }
+        
         nameLbl.text = user.profile.name
         usernameLbl.text = "@\(user.profile.username)"
         

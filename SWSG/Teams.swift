@@ -33,6 +33,7 @@ class Teams {
     }
     
     public func retrieveTeamAt(index: Int) -> Team {
+        return Team(members: [], name: "", info: "", lookingFor: nil, isPrivate: false)
         return teams[index]
     }
     

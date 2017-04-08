@@ -12,7 +12,6 @@ platform :ios, '9.0'
   pod 'JTAppleCalendar', '~> 6.1'
   pod 'TextFieldEffects'
   pod 'RSKImageCropper'
-
   
 end
 

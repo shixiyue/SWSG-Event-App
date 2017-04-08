@@ -20,6 +20,7 @@ class ChannelListViewController: BaseViewController {
     private var channelsRef: FIRDatabaseReference!
     private var channelsExistingHandle: FIRDatabaseHandle?
     private var channelsNewHandle: FIRDatabaseHandle?
+    private var channelsDeletedHandle: FIRDatabaseHandle?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,46 +37,90 @@ class ChannelListViewController: BaseViewController {
     
     // MARK: Firebase related methods
     private func observeChannels() {
-        channelsExistingHandle = channelsRef.observe(.value, with: { (snapshot) -> Void in
-            self.channels = [Channel]()
-            for channelData in snapshot.children {
-                self.addNewChannel(snapshot: channelData)
-            }
+        channelsNewHandle = channelsRef.observe(.childAdded, with: { (snapshot) -> Void in
+            self.addNewChannel(snapshot: snapshot)
             self.chatList.reloadData()
         })
         
-        channelsNewHandle = channelsRef.observe(.childAdded, with: { (snapshot) -> Void in
-            self.addNewChannel(snapshot: snapshot)
+        channelsExistingHandle = channelsRef.observe(.childChanged, with: { (snapshot) in
+            for (index, channel) in self.channels.enumerated() {
+                if snapshot.key == channel.id {
+                    guard let channel = Channel(id: snapshot.key, snapshot: snapshot) else {
+                        return
+                    }
+                    self.channels[index].name = channel.name
+                    
+                    let indexPath = IndexPath(row: index, section: 0)
+                    
+                    self.getLatestMessage(channel: channel, snapshot: snapshot, completion: { _ in
+                        self.chatList.reloadRows(at: [indexPath], with: .automatic)
+                    })
+                    self.chatList.reloadRows(at: [indexPath], with: .automatic)
+                    break
+                }
+            }
+        })
+        
+        channelsDeletedHandle = channelsRef.observe(.childRemoved, with: { (snapshot) in
+            for (index, channel) in self.channels.enumerated() {
+                if snapshot.key == channel.id {
+                    self.channels.remove(at: index)
+                    self.chatList.reloadData()
+                    break
+                }
+            }
         })
     }
     
     private func addNewChannel(snapshot: Any) {
         guard let channelSnapshot = snapshot as? FIRDataSnapshot,
-            let channel = Channel(id: channelSnapshot.key, snapshot: channelSnapshot) else {
+            let channel = Channel(id: channelSnapshot.key, snapshot: channelSnapshot),
+            validChannel(channel) else {
                 return
         }
-        self.client.fetchChannelIcon(for: channelSnapshot.key, completion: { (image) in
-            channel.icon = image
-            self.chatList.reloadData()
+        
+        Utility.getChatIcon(id: channelSnapshot.key, completion: { (image) in
+            if let image = image {
+                channel.icon = image
+                self.chatList.reloadData()
+            }
         })
-        let query = self.client.getLatestMessageQuery(for: channelSnapshot.key)
+        
+        getLatestMessage(channel: channel, snapshot: channelSnapshot, completion: { _ in
+        })
+        self.channels.append(channel)
+        
+    }
+    
+    private func validChannel(_ channel: Channel) -> Bool {
+        if channel.type != .publicChannel {
+            if !channel.members.contains(client.getUid()) {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    private func getLatestMessage(channel: Channel, snapshot: FIRDataSnapshot,
+                                  completion: @escaping () -> Void) {
+        let query = self.client.getLatestMessageQuery(for: snapshot.key)
         query.observe(.value, with: { (snapshot) in
             for child in snapshot.children {
                 guard let mentorSnapshot = child as? FIRDataSnapshot,
                     let message = Message(snapshot: mentorSnapshot) else {
                         continue
                 }
-                
                 channel.latestMessage = message
+                completion()
             }
+            completion()
             
         })
-        self.channels.append(channel)
         
     }
     
     @IBAction func composeBtnPressed(_ sender: Any) {
-        
         let composeController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let channelAction = UIAlertAction(title: "Group Channel", style: .default, handler: {
@@ -103,79 +148,38 @@ class ChannelListViewController: BaseViewController {
     
     //Handling Creating a Direct Chat
     private func createDirectChatPressed(existingText: String) {
-        //Creating a Alert Popup for Saving
         let message = "Who do you want to message?"
-        let createController = UIAlertController(title: "Direct Message", message: message,
-                                               preferredStyle: UIAlertControllerStyle.alert)
-        
-        //Creates a Save Button for the Popup
-        let createAction = UIAlertAction(title: "Create", style: .default) { _ -> Void in
-            
-            if let nameTF = createController.textFields?[0] {
-                guard var username = nameTF.text else {
+        let title = "Direct Message"
+        let btnText = "Create"
+        let placeholder = "Username"
+        Utility.createPopUpWithTextField(title: title, message: message,
+                                         btnText: btnText, placeholderText: placeholder,
+                                         existingText: existingText,
+                                         viewController: self,
+                                         completion: { (username) in
+            self.client.getUserWith(username: username, completion: { (user, error) in
+                guard let user = user, let userUID = user.uid,
+                    userUID != self.client.getUid() else {
+                    Utility.displayDismissivePopup(title: "Error", message: "Invalid Username", viewController: self, completion: { _ in
+                        self.createDirectChatPressed(existingText: username)
+                    })
                     return
                 }
                 
-                username = username.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                var members = [String]()
+                members.append(self.client.getUid())
+                members.append(userUID)
                 
-                self.client.getUserWith(username: username, completion: { (user, error) in
-                    guard let user = user, let userUID = user.uid else {
-                        Utility.displayDismissivePopup(title: "Error", message: "Username does not exist!", viewController: self, completion: { _ in
-                            self.createDirectChatPressed(existingText: username)
-                        })
+                let channel = Channel(type: .directMessage, members: members)
+                self.client.createChannel(for: channel, completion: { (channel, error) in
+                    guard error == nil else {
                         return
                     }
-                    
-                    var members = [String]()
-                    members.append(self.client.getUid())
-                    members.append(userUID)
-                    
-                    let channel = Channel(type: .directMessage, members: members)
-                    self.client.createChannel(for: channel)
+                    self.performSegue(withIdentifier: Config.channelListToChannel, sender: channel)
                 })
-            }
-        }
-        createController.addAction(createAction)
-        
-        //Creates a Cancel Button for the Popup
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-        }
-        createController.addAction(cancelAction)
-        
-        //Creates a Textfield to enter the Level Name in the Popup
-        createController.addTextField(configurationHandler: { (textField) -> Void in
-            textField.placeholder = "Username"
+            })
             
-            if existingText.characters.count > 0 {
-                textField.text = existingText
-            }
-            
-            //Disable the Save Button by default
-            createAction.isEnabled = false
-            
-            textField.textAlignment = .center
-            textField.delegate = self
-            textField.returnKeyType = .done
-            
-            //Sets the Save Button to disabled if the textfield is empty
-            NotificationCenter.default.addObserver(
-                forName: NSNotification.Name.UITextFieldTextDidChange,
-                object: textField, queue: OperationQueue.main) { _ in
-                    guard var text = textField.text else {
-                        return
-                    }
-                    text = text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    
-                    if text != "" {
-                        createAction.isEnabled = true
-                    } else {
-                        createAction.isEnabled = false
-                    }
-            }
         })
-        
-        //Displays the Save Popup
-        self.present(createController, animated: true, completion: nil)
     }
     
     // MARK: Navigation
@@ -183,14 +187,12 @@ class ChannelListViewController: BaseViewController {
         super.prepare(for: segue, sender: sender)
         
         if let channel = sender as? Channel {
-            guard let chatVc = segue.destination as? ChannelViewController,
-                let id = channel.id else {
+            guard let chatVc = segue.destination as? ChannelViewController else {
                 return
             }
             
             chatVc.senderDisplayName = System.activeUser?.profile.username
             chatVc.channel = channel
-            chatVc.channelRef = channelsRef.child(id)
         }
     }
     
@@ -236,7 +238,9 @@ extension ChannelListViewController: UITableViewDataSource {
                 return ChannelCell()
             }
             
-            client.fetchProfileImage(for: uid, completion: { (image) in
+            cell.iconIV.image = Config.placeholderImg
+            
+            Utility.getProfileImg(uid: uid, completion: { (image) in
                 if let image = image {
                     cell.iconIV.image = image
                 }
@@ -245,8 +249,6 @@ extension ChannelListViewController: UITableViewDataSource {
             client.getUserWith(uid: uid, completion: { (user, error) in
                 cell.nameLbl.text = user?.profile.name
             })
-            
-            cell.iconIV.image = Config.placeholderImg
         } else if channel.type != .directMessage {
             
             if channel.icon == nil {
@@ -257,7 +259,6 @@ extension ChannelListViewController: UITableViewDataSource {
             
             cell.nameLbl.text = channel.name
         }
-        
         
         if let message = channel.latestMessage {
             var text = ""
@@ -270,19 +271,23 @@ extension ChannelListViewController: UITableViewDataSource {
             
             if let msgText = message.text {
                 text = "\(senderName): \(msgText)"
-            } else if let message = channel.latestMessage, let _ = message.photoURL {
+            } else if message.image != nil {
                 text = "\(senderName) sent an image."
             }
             
             let nsText = text as NSString
-            let textRange = NSMakeRange(0, senderName.characters.count + 2)
+            let textRange = NSMakeRange(0, senderName.characters.count + 1)
             let attributedString = NSMutableAttributedString(string: text)
             
             nsText.enumerateSubstrings(in: textRange, options: .byWords, using: {
                 (substring, substringRange, _, _) in
                 
-                attributedString.addAttribute(NSForegroundColorAttributeName, value: UIColor.red, range: substringRange)
-                attributedString.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 12.0), range: substringRange)
+                attributedString.addAttribute(NSForegroundColorAttributeName,
+                                              value: Config.themeColor,
+                                              range: substringRange)
+                attributedString.addAttribute(NSFontAttributeName,
+                                              value: UIFont.italicSystemFont(ofSize: 12.0),
+                                              range: substringRange)
             })
             
             cell.messageTV.attributedText = attributedString

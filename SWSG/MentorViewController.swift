@@ -49,6 +49,13 @@ class MentorViewController: UIViewController {
             return
         }
         
+        profileImg.image = Config.placeholderImg
+        Utility.getProfileImg(uid: uid, completion: { (image) in
+            if let image = image {
+                self.profileImg.image = image
+            }
+        })
+        
         mentorRef = System.client.getUserRef(for: uid)
     }
     
@@ -82,16 +89,18 @@ class MentorViewController: UIViewController {
     
     private func getRelatedMentors() {
         System.client.getMentors(completion: { (mentors, error) in
-            var relatedMentors = [User]()
+            self.relatedMentors = [User]()
+            
             for mentorAcct in mentors {
                 if self.mentorAcct?.mentor?.field == mentorAcct.mentor?.field &&
                     self.mentorAcct?.uid != mentorAcct.uid,
                     let uid = mentorAcct.uid {
-                    System.client.fetchProfileImage(for: uid, completion: { (image) in
+                    
+                    Utility.getProfileImg(uid: uid, completion: { (image) in
                         mentorAcct.profile.updateImage(image: image)
                         self.relatedMentorCollection.reloadData()
                     })
-                    relatedMentors.append(mentorAcct)
+                    self.relatedMentors.append(mentorAcct)
                 }
             }
             
@@ -161,9 +170,11 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
             return 0
         }
         
+        print("test4")
         if collectionView.tag == Config.slotCollectionTag {
             return mentor.days[section].slots.count + 1
         } else if collectionView.tag == Config.relatedCollectionTag {
+            print(relatedMentors.count)
             return relatedMentors.count
         } else {
             return 0
@@ -239,7 +250,6 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.nameLbl.text = profile.name
         cell.positionLbl.text = profile.job
         cell.companyLbl.text = profile.company
-        
         return cell
     }
     

@@ -45,17 +45,26 @@ struct Config {
     static let dateTime = "date_time"
     static let details = "details"
     static let venue = "venue"
+    static let id = "id"
     static let ideaName = "ideaName"
     static let ideaTeam = "ideaTeam"
     static let ideaDescription = "ideaDescription"
     static let ideaVideo = "ideaVideo"
-    static let upvotes = "upvotes"
-    static let downvotes = "downvotes"
+    static let votes = "votes"
     static let mentor = "mentor"
     static let field = "field"
     static let consultationDays = "consultationDays"
     static let consultationSlots = "consultationSlots"
     static let consultationStatus = "consultationStatus"
+
+    static let start = "start"
+    static let end = "end"
+    static let date = "date"
+
+    static let speakers = "Speakers"
+    static let organizers = "Organizing Team"
+    static let judges = "Judges"
+
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -71,6 +80,7 @@ struct Config {
     static let downvoteDefault = UIImage(named: "downvote")
     static let downvoteFilled = UIImage(named: "downvote-filled")
     static let placeholderImg = UIImage(named: "Placeholder")!
+    static let chatIconWidth: CGFloat = 40
     
     // Parameters for Storyboard:
     static let launchScreen = "LaunchScreen"
@@ -97,6 +107,7 @@ struct Config {
     static let channelListToCreateChannel = "showCreateChannel"
     static let mentorGridToMentor = "chosenMentor"
     static let mentorToRelatedMentor = "showRelatedMentor"
+    static let channelToChannelInfo = "showChatInfo"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
@@ -137,6 +148,7 @@ struct Config {
     static let text = "text"
     static let photoURL = "photoURL"
     static let channelType = "channelType"
+    static let typingIndicator = "typingIndicator"
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"
@@ -146,4 +158,8 @@ struct Config {
     
     //Parameters for Firebase Client
     static let users = "users"
+    
+    // Parameters for notification:
+    static let fullScreenImage = "fullScreenImage"
+    
 }

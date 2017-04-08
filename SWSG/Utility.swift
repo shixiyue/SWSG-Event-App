@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import EventKit
 
 struct Utility {
     
@@ -91,6 +92,10 @@ struct Utility {
         return alertController
     }
     
+    static func getNoInternetAlertController() -> UIAlertController {
+        return getFailAlertController(message: "Sorry, there's no internet connection!")
+    }
+    
     static func getSuccessAlertController() -> UIAlertController {
         let alertController = UIAlertController(title: "Success", message: nil, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default))
@@ -137,6 +142,163 @@ struct Utility {
         
         //Present the Popup
         viewController.present(dismissController, animated: true, completion: nil)
+    }
+    
+
+    static func addEventToCalendar(title: String, description: String?, startDate: Date, endDate: Date, completion: ((_ success: Bool, _ error: NSError?) -> Void)? = nil) {
+        let eventStore = EKEventStore()
+        eventStore.requestAccess(to: .event, completion: { (granted, error) in
+            if (granted) && (error == nil) {
+                let event = EKEvent(eventStore: eventStore)
+                event.title = title
+                event.startDate = startDate
+                event.endDate = endDate 
+                event.notes = description
+                event.calendar = eventStore.defaultCalendarForNewEvents
+                do {
+                    try eventStore.save(event, span: .thisEvent)
+                } catch let e as NSError {
+                    completion?(false, e)
+                    return
+                }
+                completion?(true, nil)
+            } else {
+                completion?(false, error as NSError?)
+            }
+        })
+    }
+    static func strtok(string: String, delimiter: String) -> [Int] {
+        let values = string.components(separatedBy: delimiter).flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
+        return values
+    }
+    static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
+        if System.profileImageCache.keys.contains(uid) {
+            System.client.getProfileImageURL(for: uid, completion: { (url, error) in
+                if System.profileImageCache[uid]?.url == url {
+                    completion(System.profileImageCache[uid]?.image)
+                } else {
+                    forceGetProfileImg(uid: uid, completion: { (image) in
+                        completion(image)
+                    })
+                }
+            })
+        } else {
+            forceGetProfileImg(uid: uid, completion: { (image) in
+                completion(image)
+            })
+        }
+    }
+    
+    static func forceGetProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
+        System.client.fetchProfileImage(for: uid, completion: { (image, url) in
+            guard let image = image, let url = url else {
+                return
+            }
+            
+            System.profileImageCache[uid] = (image: image, url: url)
+            completion(image)
+        })
+    }
+    
+    static func getChatIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        if System.chatIconCache.keys.contains(id) {
+            System.client.getChatIconImageURL(for: id, completion: { (url, error) in
+                if System.chatIconCache[id]?.url == url {
+                    completion(System.chatIconCache[id]?.image)
+                } else {
+                    forceGetChatIcon(id: id, completion: { (image) in
+                        completion(image)
+                    })
+                }
+            })
+        } else {
+            forceGetChatIcon(id: id, completion: { (image) in
+                completion(image)
+            })
+        }
+        
+        
+    }
+    
+    static func forceGetChatIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        System.client.fetchChannelIcon(for: id, completion: { (image,url) in
+            guard let image = image, let url = url else {
+                return
+            }
+            
+            System.chatIconCache[id] = (image: image, url: url)
+            completion(image)
+            
+        })
+    }
+    
+    
+    
+    static func createPopUpWithTextField(title: String, message: String, btnText: String, placeholderText: String, existingText: String, viewController: UIViewController, completion: @escaping (String) -> Void) {
+        //Creating a Alert Popup for Saving
+        let createController = UIAlertController(title: title, message: message,
+                                                 preferredStyle: UIAlertControllerStyle.alert)
+        
+        //Creates a Save Button for the Popup
+        let action = UIAlertAction(title: btnText, style: .default) { _ -> Void in
+            
+            if let textField = createController.textFields?[0] {
+                guard var text = textField.text else {
+                    return
+                }
+                
+                text = text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                
+                completion(text)
+            }
+        }
+        createController.addAction(action)
+        
+        //Creates a Cancel Button for the Popup
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        }
+        createController.addAction(cancelAction)
+        
+        //Creates a Textfield to enter the Level Name in the Popup
+        createController.addTextField(configurationHandler: { (textField) -> Void in
+            textField.placeholder = placeholderText
+            
+            if existingText.characters.count > 0 {
+                textField.text = existingText
+            }
+            
+            //Disable the Save Button by default
+            action.isEnabled = false
+            
+            textField.textAlignment = .center
+            
+            guard let _ = viewController as? UITextFieldDelegate else {
+                return
+            }
+            
+            textField.delegate = viewController as? UITextFieldDelegate
+            textField.returnKeyType = .done
+            
+            //Sets the Save Button to disabled if the textfield is empty
+            NotificationCenter.default.addObserver(
+                forName: NSNotification.Name.UITextFieldTextDidChange,
+                object: textField, queue: OperationQueue.main) { _ in
+                    guard var text = textField.text else {
+                        return
+                    }
+                    text = text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    
+                    if text != "" {
+                        action.isEnabled = true
+                    } else {
+                        action.isEnabled = false
+                    }
+            }
+        })
+        
+        //Displays the Save Popup
+        viewController.present(createController, animated: true, completion: nil)
+
     }
     
 }

@@ -44,7 +44,8 @@ extension Date {
     static func date(from dateString: String) -> Date {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
-        formatter.dateFormat = "yyyy-MM-dd"
+        //formatter.timeZone = TimeZone.init(abbreviation: "UTC")
+        formatter.dateFormat = "yyyy MM dd"
         
         guard let date = formatter.date(from: dateString) else {
             return Date()
@@ -63,6 +64,12 @@ extension Date {
         }
         
         return date
+    }
+    
+    static func toString(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy MM dd"
+       return formatter.string(from: date)
     }
     
     static func dateTime(forDate date: Date, forTime time: Date) -> Date {
@@ -174,4 +181,27 @@ extension UIImage {
     func jpeg(_ quality: JPEGQuality) -> Data? {
         return UIImageJPEGRepresentation(self, quality.rawValue)
     }
+    
+    func cropToSquare() -> UIImage {
+        guard size.height != size.width else {
+            return self
+        }
+        
+        let sideLength = size.height < size.width ? size.height : size.width
+        let xOffset = (size.width - sideLength) / 2
+        let yOffset = (size.height - sideLength) / 2
+        let cropArea = CGRect(x: xOffset, y: yOffset, width: sideLength, height: sideLength)
+        let croppedCGImage = cgImage?.cropping(to: cropArea)
+        return UIImage(cgImage: croppedCGImage!, scale: 0, orientation: self.imageOrientation)
+    }
+    
+    func cropSquareToCircle() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        let breadthRect = CGRect(origin: .zero, size: size)
+        UIBezierPath(ovalIn: breadthRect).addClip()
+        self.draw(in: breadthRect)
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+    
 }
