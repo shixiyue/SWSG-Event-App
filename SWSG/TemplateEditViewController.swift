@@ -39,6 +39,7 @@ class TemplateEditViewController: ImagePickerTableViewController {
         editOverviewTableView.allowsSelection = false
         hideKeyboardWhenTappedAround()
         editOverviewTableView.isScrollEnabled = self.isScrollEnabled
+        NotificationCenter.default.addObserver(self, selector: #selector(done), name: Notification.Name(rawValue: "done"), object: nil)
     }
     
     @IBAction func addPhoto(_ sender: UIButton) {
@@ -68,6 +69,9 @@ class TemplateEditViewController: ImagePickerTableViewController {
         }
         let infoDict: [String: Any] = ["description": description, "images": images, "videoId": videoId]
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "update"), object: nil, userInfo: infoDict)
+    }
+    
+    @objc private func done(_ notification: NSNotification) {
         _ = navigationController?.popViewController(animated: true)
     }
     

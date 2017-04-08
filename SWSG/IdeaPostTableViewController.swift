@@ -89,10 +89,19 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
         if let idea = currentIdea {
-            Ideas.sharedInstance().updateIdea(idea, name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
+            ideas.updateIdea(idea, name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
             return
         }
-        ideas.addIdea(idea: Idea(name: name, team: user.team, description: description, mainImage: image, images: images, videoLink: videoLink))
+        let idea = Idea(name: name, team: user.team, description: description, mainImage: image, images: images, videoLink: videoLink)
+        System.client.createIdea(idea: idea, completion: { (error) in
+            if let firebaseError = error {
+                self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+                return
+            }
+            self.ideas.addIdea(idea: idea)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+        })
     }
     
     @objc private func reload(_ notification: NSNotification) {

@@ -33,6 +33,8 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        mainImage.image = idea.mainImage
+        ideaNameLabel.text = idea.name
         containerViewController.presetInfo(desc: idea.description, images: idea.images, videoLink: idea.videoLink, isScrollEnabled: false)
         containerViewController.setUp()
         DispatchQueue.main.async {

@@ -18,6 +18,7 @@ class FirebaseClient {
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
+    typealias GeneralIdeaCallback = (FirebaseError?) -> Void
     typealias GetChannelCallback = (Channel?, FirebaseError?) -> Void
     typealias GetMessageCallback = (Message, FirebaseError?) -> Void
     typealias GetEventCallback = (Event, FirebaseError?) -> Void
@@ -28,6 +29,7 @@ class FirebaseClient {
     private let usersRef = FIRDatabase.database().reference(withPath: "users")
     private let teamsRef = FIRDatabase.database().reference(withPath: "teams")
     private let eventsRef = FIRDatabase.database().reference(withPath: "events")
+    private let ideasRef = FIRDatabase.database().reference(withPath: "ideas")
     private let storageRef = FIRStorage.storage().reference(forURL: Config.appURL)
     
     public func createNewUser(_ user: User, email: String, password: String, completion: @escaping CreateUserCallback) {
@@ -184,6 +186,29 @@ class FirebaseClient {
             }
             completion(events, nil)
         })
+    }
+    
+    func createIdea(idea: Idea, completion: @escaping GeneralIdeaCallback) {
+        let ideaRef = ideasRef.childByAutoId()
+        idea.id = ideaRef.key
+        
+        ideaRef.setValue(idea.toDictionary(), withCompletionBlock: { (err, _) in
+            completion(self.checkError(err))
+        })
+    }
+    
+    func updateIdeaContent(for idea: Idea) {
+        guard let id = idea.id else {
+            return
+        }
+        
+        let ideaRef = getIdeaRef(for: id)
+        ideaRef.updateChildValues(idea.toDictionary())
+    }
+    
+    func updateIdeaVote(for id: String, user: String, vote: Bool) {
+        let ideaRef = getIdeaRef(for: id)
+        ideaRef.child(Config.votes).child(user).setValue(vote)
     }
     
     public func createChannel(for channel: Channel, completion: @escaping GetChannelCallback) {
@@ -476,6 +501,10 @@ class FirebaseClient {
     
     public func getMentorsRef() -> FIRDatabaseQuery {
         return usersRef.queryOrdered(byChild: "userType/isMentor").queryEqual(toValue: true)
+    }
+    
+    public func getIdeaRef(for ideaID: String) -> FIRDatabaseReference {
+        return ideasRef.child(ideaID)
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {

@@ -13,6 +13,8 @@ class Idea {
     var votes: Int { return upvotes.count - downvotes.count }
     var teamName: String { return "by Team \(Teams.sharedInstance().retrieveTeamAt(index: team).name)" }
     
+    var id: String?
+    
     public private(set) var name: String
     public private(set) var team: Int
     public private(set) var description: String
@@ -44,38 +46,37 @@ class Idea {
         self.mainImage = mainImage
         self.images = images
         self.videoLink = videoLink
+        System.client.updateIdeaContent(for: self)
     }
     
     func upvote() {
-        let uid = System.client.getUid()
+        guard let uid = System.activeUser?.uid, let id = id else {
+            return
+        }
+        System.client.updateIdeaVote(for: id, user: uid, vote: true)
         guard !upvotes.contains(uid) else {
             upvotes.remove(uid)
-            updateStorage()
             return
         }
         upvotes.insert(uid)
         if downvotes.contains(uid) {
             downvotes.remove(uid)
         }
-        updateStorage()
     }
     
     func downvote() {
-        let uid = System.client.getUid()
+        guard let uid = System.activeUser?.uid, let id = id else {
+            return
+        }
+        System.client.updateIdeaVote(for: id, user: uid, vote: false)
         guard !downvotes.contains(uid) else {
             downvotes.remove(uid)
-            updateStorage()
             return
         }
         downvotes.insert(uid)
         if upvotes.contains(uid) {
             upvotes.remove(uid)
         }
-        updateStorage()
-    }
-    
-    private func updateStorage() {
-        Ideas.sharedInstance().save()
     }
     
     func getVotingState() -> (upvote: Bool, downvote: Bool) {
@@ -84,7 +85,10 @@ class Idea {
     }
     
     func toDictionary() -> [String: Any] {
-        return [Config.ideaName: self.name, Config.ideaTeam: self.team, Config.ideaDescription: self.description, Config.ideaVideo: self.videoLink, Config.upvotes: Array(upvotes), Config.downvotes: Array(downvotes)]
+        return [Config.ideaName: self.name,
+                Config.ideaTeam: self.team,
+                Config.ideaDescription: self.description,
+                Config.ideaVideo: self.videoLink]
     }
     
     private func _checkRep() {
