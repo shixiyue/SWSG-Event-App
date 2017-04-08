@@ -10,9 +10,21 @@ import UIKit
 
 class PeopleTableViewCell: UITableViewCell {
 
-    @IBOutlet var photo: UIImageView!
-    @IBOutlet var name: UILabel!
-    @IBOutlet var title: UILabel!
-    @IBOutlet var intro: UILabel!
+    @IBOutlet private var photo: UIImageView!
+    @IBOutlet private var name: UILabel!
+    @IBOutlet private var title: UILabel!
+    @IBOutlet private var intro: UILabel!
+    
+    func setUp(person: Person) {
+        self.photo.image = person.photo
+        self.name.text = person.name
+        self.title.text = person.title
+        self.intro.text = person.intro
+    }
+    
+    override func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
+        self.photo.isUserInteractionEnabled = true
+        photo.addGestureRecognizer(gestureRecognizer)
+    }
     
 }

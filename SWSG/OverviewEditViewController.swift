@@ -18,6 +18,7 @@ class OverviewEditViewController: UIViewController {
         
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
         OverviewContent.update(description: description, images: images, videoLink: videoLink)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
     }
     
     override func viewDidLoad() {

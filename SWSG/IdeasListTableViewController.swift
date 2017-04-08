@@ -7,12 +7,20 @@
 //
 
 import UIKit
+import Firebase
 
 class IdeasListTableViewController: BaseViewController {
+    
+    override var menuYOffset: CGFloat {
+        return super.menuYOffset + ideaListTableView.contentOffset.y
+    }
     
     fileprivate let ideas = Ideas.sharedInstance()
     
     @IBOutlet private var ideaListTableView: UITableView!
+    
+    private var ideasRef: FIRDatabaseReference?
+    private var ideasRefHandle: FIRDatabaseHandle?
     
     private enum ideaCreateErrorMsg: String {
         case notParticipant = "Sorry, only participants of SWSG can create an idea!"
@@ -31,10 +39,21 @@ class IdeasListTableViewController: BaseViewController {
         ideaListTableView.dataSource = self
         ideaListTableView.delegate = self
         addSlideMenuButton()
+        ideasRef = System.client.getIdeasRef()
+        observeIdeas()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        ideaListTableView.reloadData()
+    private func observeIdeas() {
+        guard let ideasRef = ideasRef else {
+            return
+        }
+        
+        ideasRefHandle = ideasRef.observe(.value, with: { (snapshot) -> Void in
+            self.ideas.update(snapshot: snapshot)
+            DispatchQueue.main.async {
+                self.ideaListTableView.reloadData()
+            }
+        })
     }
     
     @IBAction func addIdea() {
@@ -47,6 +66,12 @@ class IdeasListTableViewController: BaseViewController {
             return
         }
         performSegue(withIdentifier: "addIdea", sender: nil)
+    }
+    
+    deinit {
+        if let refHandle = ideasRefHandle {
+            ideasRef?.removeObserver(withHandle: refHandle)
+        }
     }
     
 }

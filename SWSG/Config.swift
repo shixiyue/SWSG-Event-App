@@ -45,17 +45,26 @@ struct Config {
     static let dateTime = "date_time"
     static let details = "details"
     static let venue = "venue"
+    static let id = "id"
     static let ideaName = "ideaName"
     static let ideaTeam = "ideaTeam"
     static let ideaDescription = "ideaDescription"
     static let ideaVideo = "ideaVideo"
-    static let upvotes = "upvotes"
-    static let downvotes = "downvotes"
+    static let votes = "votes"
     static let mentor = "mentor"
     static let field = "field"
     static let consultationDays = "consultationDays"
     static let consultationSlots = "consultationSlots"
     static let consultationStatus = "consultationStatus"
+
+    static let start = "start"
+    static let end = "end"
+    static let date = "date"
+
+    static let speakers = "Speakers"
+    static let organizers = "Organizing Team"
+    static let judges = "Judges"
+
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -158,4 +167,7 @@ struct Config {
     
     //Parameters for Facebook
     static let fbIdentifier = "facebook.com"
+    
+    // Parameters for notification:
+    static let fullScreenImage = "fullScreenImage"
 }

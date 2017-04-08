@@ -9,6 +9,7 @@
 import UIKit
 import FacebookCore
 import FacebookLogin
+import EventKit
 
 struct Utility {
     
@@ -97,6 +98,10 @@ struct Utility {
         return alertController
     }
     
+    static func getNoInternetAlertController() -> UIAlertController {
+        return getFailAlertController(message: "Sorry, there's no internet connection!")
+    }
+    
     static func getSuccessAlertController() -> UIAlertController {
         let alertController = UIAlertController(title: "Success", message: nil, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default))
@@ -145,6 +150,33 @@ struct Utility {
         viewController.present(dismissController, animated: true, completion: nil)
     }
     
+
+    static func addEventToCalendar(title: String, description: String?, startDate: Date, endDate: Date, completion: ((_ success: Bool, _ error: NSError?) -> Void)? = nil) {
+        let eventStore = EKEventStore()
+        eventStore.requestAccess(to: .event, completion: { (granted, error) in
+            if (granted) && (error == nil) {
+                let event = EKEvent(eventStore: eventStore)
+                event.title = title
+                event.startDate = startDate
+                event.endDate = endDate 
+                event.notes = description
+                event.calendar = eventStore.defaultCalendarForNewEvents
+                do {
+                    try eventStore.save(event, span: .thisEvent)
+                } catch let e as NSError {
+                    completion?(false, e)
+                    return
+                }
+                completion?(true, nil)
+            } else {
+                completion?(false, error as NSError?)
+            }
+        })
+    }
+    static func strtok(string: String, delimiter: String) -> [Int] {
+        let values = string.components(separatedBy: delimiter).flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
+        return values
+    }
     static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
         if System.profileImageCache.keys.contains(uid) {
             System.client.getProfileImageURL(for: uid, completion: { (url, error) in
@@ -272,6 +304,7 @@ struct Utility {
         
         //Displays the Save Popup
         viewController.present(createController, animated: true, completion: nil)
+
     }
     
     static func logUserIn(error: FirebaseError?, current viewController: UIViewController) {

@@ -28,13 +28,21 @@ class IdeaItemTableViewCell: UITableViewCell {
         ideaImageView.image = idea.mainImage
         updateVotes()
     }
-
+    
     @IBAction func upvote(_ sender: UIButton) {
+        guard System.client.isConnected else {
+            UIApplication.shared.keyWindow?.rootViewController?.present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         idea.upvote()
         updateVotes()
     }
     
     @IBAction func downvote(_ sender: UIButton) {
+        guard System.client.isConnected else {
+            UIApplication.shared.keyWindow?.rootViewController?.present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         idea.downvote()
         updateVotes()
     }
