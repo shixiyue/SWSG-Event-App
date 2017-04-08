@@ -63,12 +63,14 @@ class MentorGridViewController: BaseViewController {
                     let mentorAcct = User(snapshot: mentorSnapshot) else {
                     continue
                 }
+                let uid = mentorSnapshot.key
+                mentorAcct.setUid(uid: uid)
                 
-                mentorAcct.setUid(uid: mentorSnapshot.key)
-                System.client.fetchProfileImage(for: mentorSnapshot.key, completion: { (image) in
+                Utility.getProfileImg(uid: uid, completion: { (image) in
                     mentorAcct.profile.updateImage(image: image)
                     self.mentorCollection.reloadData()
                 })
+                
                 self.mentors.append(mentorAcct)
             }
             self.mentors = self.mentors.sorted(by: { $0.profile.name < $1.profile.name })
@@ -93,7 +95,12 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
         let index = indexPath.item
         let profile = mentors[index].profile
         
-        cell.iconIV.image = profile.image
+        if profile.image != nil {
+            cell.iconIV.image = profile.image
+        } else {
+            cell.iconIV.image = Config.placeholderImg
+        }
+        
         cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
         cell.nameLbl.text = profile.name
         cell.positionLbl.text = profile.job

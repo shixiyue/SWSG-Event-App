@@ -59,7 +59,6 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        print("test")
         guard let chosenImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {
             dismiss(animated: true, completion: nil)
             return
@@ -86,7 +85,7 @@ extension ImagePickerViewController: RSKImageCropViewControllerDelegate {
     }
     
     func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
-        updateImage(to: croppedImage)
+        updateImage(to: croppedImage.cropToSquare())
         dismiss(animated: true, completion: nil)
     }
     
@@ -107,6 +106,7 @@ class ImagePickerTableViewController: UITableViewController, UIImagePickerContro
     
     private let imagePicker = UIImagePickerController()
     var alertControllerPosition = CGPoint()
+    var cropMode = RSKImageCropMode.circle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -179,13 +179,13 @@ extension ImagePickerTableViewController: RSKImageCropViewControllerDelegate {
     }
     
     func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
-        updateImage(to: croppedImage)
+        updateImage(to: croppedImage.cropToSquare())
         dismiss(animated: true, completion: nil)
     }
     
     fileprivate func jumpToCropImage(imageToCrop: UIImage) {
         var imageCropVC : RSKImageCropViewController!
-        imageCropVC = RSKImageCropViewController(image: imageToCrop, cropMode: RSKImageCropMode.circle)
+        imageCropVC = RSKImageCropViewController(image: imageToCrop, cropMode: cropMode)
         imageCropVC.delegate = self
         self.present(imageCropVC, animated: false, completion: nil)
     }

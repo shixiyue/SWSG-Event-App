@@ -31,15 +31,9 @@ class InformationViewController: BaseViewController {
             return
         }
         switch identifier {
-        case "Speakers":
-            peopleViewController.people = SpeakersInfo.speakers
-            peopleViewController.header = "Speakers"
-        case "Judges":
-            peopleViewController.people = JudgesInfo.judegs
-            peopleViewController.header = "Judges"
-        case "Organizing Team":
-            peopleViewController.people = OrganizersInfo.organizers
-            peopleViewController.header = "Organizing Team"
+        case Config.speakers, Config.judges, Config.organizers:
+            peopleViewController.people = People.getPeopleInstance().retrievePerson(category: identifier)
+            peopleViewController.header = identifier
         default:
             return
         }
