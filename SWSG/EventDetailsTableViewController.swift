@@ -11,7 +11,9 @@ import UIKit
 class EventDetailsTableViewController: UITableViewController {
     
     public static var event : Event?
+    public var date: Date?
     private var containerHeight: CGFloat!
+    private var events = Events.sharedInstance()
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var eventDetailsTableView: UITableView! {
@@ -43,6 +45,20 @@ class EventDetailsTableViewController: UITableViewController {
         tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
     
+    @IBAction func onAddCalendarBtnClicked(_ sender: Any) {
+        guard let event = EventDetailsTableViewController.event, let date = date else{
+            return
+        }
+
+        let startTimes = Utility.strtok(string: event.start_datetime, delimiter: ": ")
+        var startDate = Calendar.current.date(byAdding: .hour, value: startTimes[0], to: date)
+        startDate = Calendar.current.date(byAdding: .minute, value: startTimes[1], to: startDate!)!
+        let endTimes = Utility.strtok(string: event.end_datetime, delimiter: ": ")
+        var endDate = Calendar.current.date(byAdding: .hour, value: endTimes[0], to: date)
+        endDate = Calendar.current.date(byAdding: .minute, value: endTimes[1], to: endDate!)
+
+        Utility.addEventToCalendar(title: event.name, description: event.description, startDate: startDate!, endDate: endDate!)
+    }
     func update() {
         tableView.reloadData()
     }
@@ -84,19 +100,16 @@ class EventDetailsTableViewController: UITableViewController {
         if indexPath.section == 0 {
             switch indexPath.item {
             case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "EventImage", for: indexPath)
-                return cell
-            case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "EventTime", for: indexPath) as! EventTimeTableViewCell
                // let timeFormatter = DateFormatter()
                 //timeFormatter.dateFormat = "HH:mm"
                 cell.timeLabel.text = EventDetailsTableViewController.event!.start_datetime
                 return cell
-            case 2:
+            case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "EventVenue", for: indexPath) as! EventVenueTableViewCell
                 cell.venueLabel.text = EventDetailsTableViewController.event?.venue
                 return cell
-            case 3:
+            case 2:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "EventDetail", for: indexPath) as! EventDetailTableViewCell
                 cell.detailsLabel.text = EventDetailsTableViewController.event?.details
                 return cell

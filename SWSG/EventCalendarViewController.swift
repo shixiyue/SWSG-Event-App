@@ -37,6 +37,7 @@ class EventCalendarViewController: BaseViewController {
         view.isUserInteractionEnabled = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
+          NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "events"), object: nil)
         // Do any additional setup after loading the view.
 
     }

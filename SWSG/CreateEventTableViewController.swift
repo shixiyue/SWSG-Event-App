@@ -101,11 +101,11 @@ class CreateEventTableViewController: UITableViewController {
             present(Utility.getFailAlertController(message: "Required fields cannot be empty!"), animated: true, completion: nil)
             return
         }
-        guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage] else {
+        guard let description = notification.userInfo?["description"] as? String else {
             return
         }
         NotificationCenter.default.removeObserver(self)
-
+        let images = (notification.userInfo?["images"] as? [UIImage]) ?? [UIImage]()
         events.addEvent(event: Event(image: images, name: ttle, start_datetime: strtTime, end_datetime: edTime, venue: ltn, description: description, details: details), to: Date.date(from:dateField.text!))
     
         Utility.onBackButtonClick(tableViewController: self)

@@ -55,6 +55,7 @@ class EventScheduleViewController: UIViewController {
             let event = events.retrieveEventAt(index: indexPath.item, at: date)
             if let destinationvc = self.storyboard?.instantiateViewController(withIdentifier: "EventDetailsTableViewController") as? EventDetailsTableViewController {
                 EventDetailsTableViewController.event = event
+                destinationvc.date = self.date
                 self.navigationController?.pushViewController(destinationvc, animated: true)
             }
         }
