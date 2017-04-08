@@ -11,14 +11,14 @@ import Firebase
 
 class Event {
     
-    var image: UIImage?
+    var image: [UIImage]?
     var name : String
     var start_datetime: String
     var end_datetime: String
     var description: String
     var details: String
     var venue: String
-    init(image: UIImage?, name: String, start_datetime: String, end_datetime: String, venue: String, description: String, details: String) {
+    init(image: [UIImage]?, name: String, start_datetime: String, end_datetime: String, venue: String, description: String, details: String) {
         self.image = image
         self.name = name
         self.start_datetime = start_datetime

@@ -11,7 +11,9 @@ import UIKit
 class EventDetailsTableViewController: UITableViewController {
     
     public static var event : Event?
+    private var containerHeight: CGFloat!
     
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var eventDetailsTableView: UITableView! {
         didSet{
             let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventScheduleViewController.hideNavBarTapHandler))
@@ -143,6 +145,19 @@ class EventDetailsTableViewController: UITableViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "container", let containerViewController = segue.destination as? TemplateViewController else {
+            return
+        }
+        guard let event = EventDetailsTableViewController.event else {
+            return
+        }
+        containerViewController.presetInfo(desc: "", images: event.image!, videoLink: "", isScrollEnabled: false)
+        print("here in preparing for segue \(event.description)")
+        containerViewController.tableView.layoutIfNeeded()
+        containerView.frame = CGRect(x: 0, y: 0, width: tableView.contentSize.width, height: containerViewController.tableView.contentSize.height)
     }
     
 }

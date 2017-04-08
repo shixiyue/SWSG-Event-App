@@ -12,12 +12,13 @@ class CreateEventTableViewController: UITableViewController {
 
     @IBOutlet weak var startTime: UITextField!
     @IBOutlet weak var endTime: UITextField!
-    @IBOutlet weak var evntDetails: UITextField!
+    @IBOutlet weak var evntDetails: UITextView!
     @IBOutlet weak var evntLocation: UITextField!
     @IBOutlet weak var evntTitle: UITextField!
     
     @IBOutlet weak var dateField: UITextField!
     private var containerHeight: CGFloat!
+    public var detailCellHeight = CGFloat(60)
     private var timeToEdit = Config.start
     private var events = Events.sharedInstance()
     
@@ -25,6 +26,7 @@ class CreateEventTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        evntDetails.delegate = self
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: self.view.frame.size.height/6, width: self.view.frame.size.width, height: 40.0))
         toolBar.layer.position = CGPoint(x: self.view.frame.size.width/2, y: self.view.frame.size.height-20.0)
         toolBar.barStyle = UIBarStyle.blackTranslucent
@@ -43,6 +45,7 @@ class CreateEventTableViewController: UITableViewController {
         toolBar.setItems([cancelBtn,flexSpace,textBtn,flexSpace,okBarBtn], animated: true)
         startTime.inputAccessoryView = toolBar
         endTime.inputAccessoryView = toolBar
+        dateField.inputAccessoryView = toolBar
         
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(addEvent), name: Notification.Name(rawValue: "update"), object: nil)
@@ -82,8 +85,7 @@ class CreateEventTableViewController: UITableViewController {
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HH : mm "
         timeFormatter.locale = Locale.current
-       // dateFormatter.dateStyle = DateFormatter.Style.medium
-        //dateFormatter.timeStyle = DateFormatter.Style.medium
+        
         if timeToEdit == Config.start {
         startTime.text = timeFormatter.string(from: sender.date)
         } else if timeToEdit == Config.end {
@@ -99,14 +101,13 @@ class CreateEventTableViewController: UITableViewController {
             present(Utility.getFailAlertController(message: "Required fields cannot be empty!"), animated: true, completion: nil)
             return
         }
-        guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String, let user = System.activeUser else {
+        guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage] else {
             return
         }
         NotificationCenter.default.removeObserver(self)
-        
-        let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
-        events.addEvent(event: Event(image: images[0], name: ttle, start_datetime: strtTime, end_datetime: edTime, venue: ltn, description: description, details: details), to: Date.date(from:dateField.text!))
-        print("\(Date.date(from: strtTime)) and start time is \(strtTime), string from date is \(Date.toString(date: Date.date(from: strtTime)))")
+
+        events.addEvent(event: Event(image: images, name: ttle, start_datetime: strtTime, end_datetime: edTime, venue: ltn, description: description, details: details), to: Date.date(from:dateField.text!))
+    
         Utility.onBackButtonClick(tableViewController: self)
     }
 
@@ -116,6 +117,8 @@ class CreateEventTableViewController: UITableViewController {
         startTime.resignFirstResponder()
         } else if timeToEdit == Config.end {
         endTime.resignFirstResponder()
+        } else if timeToEdit == Config.date {
+            dateField.resignFirstResponder()
         }
     }
     
@@ -124,6 +127,8 @@ class CreateEventTableViewController: UITableViewController {
             startTime.resignFirstResponder()
         } else if timeToEdit == Config.end {
             endTime.resignFirstResponder()
+        } else if timeToEdit == Config.date {
+            dateField.resignFirstResponder()
         }
     }
     
@@ -136,7 +141,7 @@ class CreateEventTableViewController: UITableViewController {
         case 0: return 130
         case 1: return 130
         case 2: return 60
-        case 3: return 60
+        case 3: return detailCellHeight
         case 4: return containerHeight
         default: return 44
         }
@@ -175,4 +180,15 @@ class CreateEventTableViewController: UITableViewController {
     
 
 
+}
+
+extension CreateEventTableViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        self.tableView.beginUpdates()
+        if textView.contentSize.height > CGFloat(60) {
+        self.detailCellHeight = textView.contentSize.height
+        }
+        self.tableView.endUpdates()
+        
+    }
 }
