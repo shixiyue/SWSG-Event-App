@@ -28,7 +28,7 @@ class FirebaseClient {
     typealias GeneralIdeaCallback = (FirebaseError?) -> Void
     typealias GetChannelCallback = (Channel?, FirebaseError?) -> Void
     typealias GetMessageCallback = (Message, FirebaseError?) -> Void
-    typealias GetEventCallback = (Event, FirebaseError?) -> Void
+    typealias GetEventCallback = (Event?, FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
     typealias ImageCallback = (UIImage?, String?) -> Void
@@ -277,25 +277,46 @@ class FirebaseClient {
     }
     
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
-        let dayString = event.getDayString()
-        let eventId = UUID().uuidString
-        let eventRef = eventsRef.child(dayString).child(eventId)
-     //   eventRef.setValue(event.toAnyObject(), withCompletionBlock: { (err, _) in
-       //     completion(self.checkError(err))
-       // })
+        let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
+        let eventRef = eventsRef.child(dayString).childByAutoId()
+        eventRef.setValue(event.toDictionary())
+        
+        var imageURLs = [String]()
+        for image in event.images {
+            saveImage(image: image, completion: { (imageURL, firError) in
+                guard let imageURL = imageURL else {
+                    return
+                }
+                
+                imageURLs.append(imageURL)
+                eventRef.child(Config.image).setValue(imageURLs)
+            })
+        }
     }
     
-    public func getEventWithId(_ eventId: String, completion: @escaping GetEventCallback) {
-        // TODO
+    public func getEventWithId(_ id: String, completion: @escaping GetEventCallback) {
+        let eventRef = eventsRef.queryOrderedByValue().queryEqual(toValue: id)
+        eventRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            for child in snapshot.children {
+                if let child = child as? FIRDataSnapshot {
+                    completion(Event(snapshot: child), nil)
+                    return
+                }
+            }
+            
+            completion(nil, nil)
+        })
     }
     
     public func getEventByDay(_ day: Date, completion: @escaping GetEventByDayCallback) {
-        let dayString = day.string(format: Config.dateTimeFormatDayString)
+        let dayString = Utility.fbDateFormatter.string(from: day)
         let dayRef = eventsRef.child(dayString)
         dayRef.observeSingleEvent(of: .value, with: {(snapshot) in
             var events = [Event]()
-            for event in snapshot.children {
-                events.append(Event(snapshot: event as! FIRDataSnapshot)!)
+            for child in snapshot.children {
+                if let child = child as? FIRDataSnapshot, let event = Event(snapshot: child) {
+                    events.append(event)
+                }
             }
             completion(events, nil)
         })

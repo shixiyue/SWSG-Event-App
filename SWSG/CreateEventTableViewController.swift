@@ -106,7 +106,7 @@ class CreateEventTableViewController: UITableViewController {
         }
         NotificationCenter.default.removeObserver(self)
         let images = (notification.userInfo?["images"] as? [UIImage]) ?? [UIImage]()
-        events.addEvent(event: Event(image: images, name: ttle, start_datetime: strtTime, end_datetime: edTime, venue: ltn, description: description, details: details), to: Date.date(from:dateField.text!))
+        /*events.addEvent(event: Event(images: images, name: ttle, start_datetime: strtTime, end_datetime: edTime, venue: ltn, description: description, details: details), to: Date.date(from:dateField.text!))*/
     
         Utility.onBackButtonClick(tableViewController: self)
     }

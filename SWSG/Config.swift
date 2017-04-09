@@ -118,6 +118,7 @@ struct Config {
     static let signUpToLogin = "showLogin"
     static let mentorToChat = "mentorToChat"
     static let loginToSignup = "loginToSignUp"
+    static let showEventDetails = "showEventDetails"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
@@ -181,4 +182,8 @@ struct Config {
     //Parameters for Event
     static let calendarStartDate = Utility.fbDateFormatter.date(from: "01-01-2017")!
     static let calendarEndDate = Utility.fbDateFormatter.date(from: "31-12-2017")!
+    static let eventCell = "eventCell"
+    static let startDateTime = "startDateTime"
+    static let endDateTime = "endDateTime"
+    static let shortDesc = "shortDesc"
 }
