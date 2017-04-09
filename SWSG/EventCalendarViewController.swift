@@ -29,11 +29,6 @@ class EventCalendarViewController: BaseViewController {
         calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
         calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView"])
  
-        let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventCalendarViewController.hideNavBarTapHandler))
-        hideNavBarTapGesture.numberOfTapsRequired = 2
-        
-        view.addGestureRecognizer(hideNavBarTapGesture)
-        
         view.isUserInteractionEnabled = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
@@ -42,13 +37,6 @@ class EventCalendarViewController: BaseViewController {
 
     }
     
-    func hideNavBarTapHandler(recognizer: UIGestureRecognizer) {
-        if recognizer.state == .ended {
-            self.navigationItem.hidesBackButton = !self.navigationItem.hidesBackButton
-            self.navigationController?.setNavigationBarHidden(self.navigationItem.hidesBackButton, animated: true)
-        }
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

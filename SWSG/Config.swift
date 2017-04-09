@@ -163,7 +163,6 @@ struct Config {
     //Parameters for Firebase Client
     static let users = "users"
     static let me = "me"
-    static let id = "id"
     
     //Parameters for Facebook
     static let fbIdentifier = "facebook.com"

@@ -15,15 +15,11 @@ class EventDetailsTableViewController: UITableViewController {
     private var containerHeight: CGFloat!
     private var events = Events.sharedInstance()
     
+
+    @IBOutlet weak var eventDetailsTableView: UITableView!
+
     @IBOutlet weak var containerView: UIView!
-    @IBOutlet weak var eventDetailsTableView: UITableView! {
-        didSet{
-            let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventScheduleViewController.hideNavBarTapHandler))
-            hideNavBarTapGesture.numberOfTapsRequired = 2
-            eventDetailsTableView.addGestureRecognizer(hideNavBarTapGesture)
-            eventDetailsTableView.isUserInteractionEnabled = true
-        }
-    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTable()
@@ -167,7 +163,7 @@ class EventDetailsTableViewController: UITableViewController {
         guard let event = EventDetailsTableViewController.event else {
             return
         }
-        containerViewController.presetInfo(desc: "", images: event.image!, videoLink: "", isScrollEnabled: false)
+        containerViewController.presetInfo(desc: "", images: event.image, videoLink: "", isScrollEnabled: false)
         print("here in preparing for segue \(event.description)")
         containerViewController.tableView.layoutIfNeeded()
         containerView.frame = CGRect(x: 0, y: 0, width: tableView.contentSize.width, height: containerViewController.tableView.contentSize.height)

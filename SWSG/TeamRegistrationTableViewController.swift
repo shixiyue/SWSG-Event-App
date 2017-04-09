@@ -12,21 +12,7 @@ class TeamRegistrationTableViewController: UITableViewController {
     
     private let teams = Teams.sharedInstance()
 
-    @IBOutlet weak var teamRegistrationTableView: UITableView! {
-        didSet{
-            let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(TeamRegistrationTableViewController.hideNavBarTapHandler))
-            hideNavBarTapGesture.numberOfTapsRequired = 2
-            teamRegistrationTableView.addGestureRecognizer(hideNavBarTapGesture)
-            teamRegistrationTableView.isUserInteractionEnabled = true
-        }
-    }
-    func hideNavBarTapHandler(recognizer: UIGestureRecognizer) {
-        if recognizer.state == .ended {
-            self.navigationItem.hidesBackButton = !self.navigationItem.hidesBackButton
-            self.navigationController?.setNavigationBarHidden(self.navigationItem.hidesBackButton, animated: true)
-        }
-    }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "teams"), object: nil)
@@ -38,7 +24,7 @@ class TeamRegistrationTableViewController: UITableViewController {
     }
     
     func update() {
-        teamRegistrationTableView.reloadData()
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -63,7 +49,7 @@ class TeamRegistrationTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamItemCell", for: indexPath) as! TeamItemTableViewCell
         let team = teams.retrieveTeamAt(index: indexPath.row)
         cell.teamName.text = team.name
-        cell.teamSkills.text = team.info
+        cell.teamSkills.text = "Place to put tags"
         cell.teamIsLookingFor.text = team.lookingFor
 
         return cell
