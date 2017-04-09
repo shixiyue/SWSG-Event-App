@@ -53,6 +53,7 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
         dataSource = self
         
         pages = []
+        print(images.count)
         for image in images {
             guard let pageContent = storyboard?.instantiateViewController(withIdentifier: "PhotoContentViewController") as? PhotoContentViewController else {
                 continue

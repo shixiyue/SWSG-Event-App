@@ -18,12 +18,14 @@ class Idea {
     public private(set) var name: String
     public private(set) var team: Int
     public private(set) var description: String
-    public private(set) var mainImage: UIImage
-    public private(set) var images: [UIImage]
+    public private(set) var mainImage: UIImage = Config.defaultIdeaImage
+    public private(set) var images: [UIImage] = []
     public private(set) var videoLink: String
     
     fileprivate var upvotes = Set<String>()
     fileprivate var downvotes = Set<String>()
+    
+    private var done = false
     
     init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
         self.name = name
@@ -39,33 +41,76 @@ class Idea {
             return nil
         }
         self.id = id
-        guard let name = snapshotValue[Config.ideaName] as? String else {
+        guard let name = snapshotValue[Config.name] as? String else {
             return nil
         }
         self.name = name
-        guard let team = snapshotValue[Config.ideaTeam] as? Int else {
+        guard let team = snapshotValue[Config.team] as? Int else {
             return nil
         }
         self.team = team
-        guard let description = snapshotValue[Config.ideaDescription] as? String else {
+        guard let description = snapshotValue[Config.description] as? String else {
             return nil
         }
         self.description = description
-        mainImage = UIImage()
-        images = []
-        guard let videoLink = snapshotValue[Config.ideaVideo] as? String else {
+        guard let videoLink = snapshotValue[Config.videoLink] as? String else {
             return nil
         }
         self.videoLink = videoLink
-        guard let votes = snapshotValue[Config.votes] as? [String: Bool] else {
+        if let votes = snapshotValue[Config.votes] as? [String: Bool] {
+            for (user, vote) in votes {
+                if vote == true {
+                    upvotes.insert(user)
+                } else {
+                    downvotes.insert(user)
+                }
+            }
+        }
+        if let mainImageURL = snapshotValue[Config.mainImage] as? String {
+            Utility.getImage(name: mainImageURL, completion: { (image) in
+                guard let image = image else {
+                    self.setImages(snapshotValue: snapshotValue)
+                    return
+                }
+                self.mainImage = image
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "refresh"), object: nil)
+                self.setImages(snapshotValue: snapshotValue)
+            })
+        } else {
+            self.setImages(snapshotValue: snapshotValue)
+        }
+    }
+    
+    private func setImages(snapshotValue: [String: Any]) {
+        guard let imagesURL = snapshotValue[Config.images] as? [String: [String: String]] else {
             return
         }
-        for (user, vote) in votes {
-            if vote == true {
-                upvotes.insert(user)
-            } else {
-                downvotes.insert(user)
+        var imagesDict = [String: UIImage]()
+        for (index, imageURL) in imagesURL.values.enumerated() {
+            guard let key = imageURL.keys.first, let url = imageURL.values.first else {
+                return
             }
+            Utility.getImage(name: url, completion: { (image) in
+                guard let image = image else {
+                    return
+                }
+                if self.done {
+                    return
+                }
+                imagesDict[key] = image
+                guard index == imagesURL.count - 1 else {
+                    return
+                }
+                self.done = true
+                let array = imagesDict.sorted(by: { $0.0 < $1.0 })
+                for (_, image) in array {
+                    self.images.append(image)
+                }
+                guard let id = self.id else {
+                    return
+                }
+                NotificationCenter.default.post(name: Notification.Name(rawValue: id), object: nil)
+            })
         }
     }
     
@@ -114,10 +159,10 @@ class Idea {
     }
     
     func toDictionary() -> [String: Any] {
-        var dict: [String: Any] = [Config.ideaName: self.name,
-                                   Config.ideaTeam: self.team,
-                                   Config.ideaDescription: self.description,
-                                   Config.ideaVideo: self.videoLink]
+        var dict: [String: Any] = [Config.name: self.name,
+                                   Config.team: self.team,
+                                   Config.description: self.description,
+                                   Config.videoLink: self.videoLink]
         if let id = id {
             dict[Config.id] = id
         }

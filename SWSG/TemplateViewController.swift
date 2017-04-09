@@ -27,6 +27,12 @@ class TemplateViewController: UITableViewController {
         self.isScrollEnabled = isScrollEnabled
     }
     
+    func updateImages(images: [UIImage]) {
+        photoPageViewController.images = images
+        photoPageViewController.setUpPageViewController()
+        overviewTableView.reloadData()
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == "images", let photoPageViewController = segue.destination as? PhotoPageViewController else {
             return

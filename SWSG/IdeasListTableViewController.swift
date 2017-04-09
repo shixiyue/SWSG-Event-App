@@ -41,6 +41,7 @@ class IdeasListTableViewController: BaseViewController {
         addSlideMenuButton()
         ideasRef = System.client.getIdeasRef()
         observeIdeas()
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: Notification.Name(rawValue: "refresh"), object: nil)
     }
     
     private func observeIdeas() {
@@ -54,6 +55,12 @@ class IdeasListTableViewController: BaseViewController {
                 self.ideaListTableView.reloadData()
             }
         })
+    }
+    
+    @objc private func refresh(_ notification: NSNotification) {
+        DispatchQueue.main.async {
+            self.ideaListTableView.reloadData()
+        }
     }
     
     @IBAction func addIdea() {
@@ -72,6 +79,7 @@ class IdeasListTableViewController: BaseViewController {
         if let refHandle = ideasRefHandle {
             ideasRef?.removeObserver(withHandle: refHandle)
         }
+        NotificationCenter.default.removeObserver(self)
     }
     
 }

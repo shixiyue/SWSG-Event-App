@@ -29,6 +29,10 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         teamNameLabel.text = idea.teamName
         updateVotes()
         setNavigationBar()
+        guard let id = idea.id else {
+            return
+        }
+        NotificationCenter.default.addObserver(self, selector: #selector(updateImages), name: Notification.Name(rawValue: id), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,6 +57,15 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
             return
         } else if segue.identifier == "editIdea", let ideaPostTableViewController = segue.destination as? IdeaPostTableViewController {
             ideaPostTableViewController.setUpIdea(idea)
+        }
+    }
+    
+    @objc func updateImages(_ notification: NSNotification) {
+        containerViewController.updateImages(images: idea.images)
+        DispatchQueue.main.async {
+            self.containerViewController.tableView.layoutIfNeeded()
+            self.containerHeight = self.containerViewController.tableView.contentSize.height
+            self.tableView.reloadData()
         }
     }
     

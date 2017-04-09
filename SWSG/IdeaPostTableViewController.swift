@@ -94,7 +94,6 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         if let idea = currentIdea {
             ideas.updateIdea(idea, name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
             NotificationCenter.default.removeObserver(self)
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
             return
         }
         let idea = Idea(name: name, team: user.team, description: description, mainImage: image, images: images, videoLink: videoLink)
@@ -105,7 +104,6 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
             }
             self.ideas.addIdea(idea: idea)
             NotificationCenter.default.removeObserver(self)
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
         })
     }
     

@@ -46,10 +46,10 @@ struct Config {
     static let details = "details"
     static let venue = "venue"
     static let id = "id"
-    static let ideaName = "ideaName"
-    static let ideaTeam = "ideaTeam"
-    static let ideaDescription = "ideaDescription"
-    static let ideaVideo = "ideaVideo"
+    static let description = "description"
+    static let videoLink = "videoLink"
+    static let mainImage = "mainImage"
+    static let images = "images"
     static let votes = "votes"
     static let mentor = "mentor"
     static let field = "field"
@@ -74,6 +74,7 @@ struct Config {
     static let downvoteDefault = UIImage(named: "downvote")
     static let downvoteFilled = UIImage(named: "downvote-filled")
     static let placeholderImg = UIImage(named: "Placeholder")!
+    static let defaultIdeaImage = UIImage(named: "default-idea-image")!
     static let chatIconWidth: CGFloat = 40
     
     // Parameters for Storyboard:

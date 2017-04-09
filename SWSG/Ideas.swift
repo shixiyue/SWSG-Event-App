@@ -25,14 +25,16 @@ class Ideas {
     }
     
     func update(snapshot: FIRDataSnapshot) {
-        var newIdeas: [Idea] = []
+        ideas = []
         for ideaSnapshot in snapshot.children {
-            guard let dataSnapshot = ideaSnapshot as? FIRDataSnapshot, let snapshotValue = dataSnapshot.value as? [String: Any], let idea = Idea(snapshotValue: snapshotValue) else {
+            guard let dataSnapshot = ideaSnapshot as? FIRDataSnapshot, let snapshotValue = dataSnapshot.value as? [String: Any] else {
                 continue
             }
-            newIdeas.append(idea)
+            if let idea = Idea(snapshotValue: snapshotValue) {
+                ideas.append(idea)
+            }
         }
-        ideas = newIdeas
+        ideas = ideas.sorted{$0.name.caseInsensitiveCompare($1.name) == .orderedAscending}
     }
     
     func addIdea(idea: Idea) {
@@ -56,5 +58,5 @@ class Ideas {
         }
         ideas[index].update(name: name, description: description, mainImage: mainImage, images: images, videoLink: videoLink)
     }
-   
+    
 }
