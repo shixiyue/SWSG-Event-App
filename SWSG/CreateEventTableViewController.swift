@@ -20,9 +20,7 @@ class CreateEventTableViewController: UITableViewController {
     private var containerHeight: CGFloat!
     public var detailCellHeight = CGFloat(60)
     private var timeToEdit = Config.start
-    private var events = Events.sharedInstance()
-    
-
+    private var events = Events.instance
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,7 +91,6 @@ class CreateEventTableViewController: UITableViewController {
         } else if timeToEdit == Config.date {
             dateField.text = dateFormatter.string(from: sender.date)
         }
-        print("\(sender.target(forAction:  #selector(CreateEventTableViewController.datePickerValueChanged), withSender: sender))")
     }
     
     @objc private func addEvent(_ notification: NSNotification) {
@@ -106,7 +103,7 @@ class CreateEventTableViewController: UITableViewController {
         }
         NotificationCenter.default.removeObserver(self)
         let images = (notification.userInfo?["images"] as? [UIImage]) ?? [UIImage]()
-        events.addEvent(event: Event(image: images, name: ttle, start_datetime: strtTime, end_datetime: edTime, venue: ltn, description: description, details: details), to: Date.date(from:dateField.text!))
+        /*events.addEvent(event: Event(images: images, name: ttle, start_datetime: strtTime, end_datetime: edTime, venue: ltn, description: description, details: details), to: Date.date(from:dateField.text!))*/
     
         Utility.onBackButtonClick(tableViewController: self)
     }

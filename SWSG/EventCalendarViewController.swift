@@ -15,15 +15,22 @@ class EventCalendarViewController: BaseViewController {
     // a new color every time a cell is displayed. We do not want a laggy
     // scrolling calendar.
 
-    var events = Events.sharedInstance()
+    var events = Events.instance
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
-
+    @IBOutlet weak var dayList: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         addSlideMenuButton()
         
+        setUpCalendar()
+        setUpDayList()
+        addObservers()
+    }
+    
+    private func setUpCalendar() {
         calendarView.dataSource = self
         calendarView.delegate = self
         calendarView.registerCellViewXib(file: "CalendarCellView") // Registering your cell is manditory
@@ -32,19 +39,20 @@ class EventCalendarViewController: BaseViewController {
         calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
         calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView"])
         
+        calendarView.scrollToDate(Date.init(), triggerScrollToDateDelegate: false)
         calendarView.selectDates([Date.init()])
- 
+    }
+    
+    private func setUpDayList() {
+        dayList.delegate = self
+        dayList.dataSource = self
+    }
+    
+    private func addObservers() {
         view.isUserInteractionEnabled = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
-          NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "events"), object: nil)
-        // Do any additional setup after loading the view.
-
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "events"), object: nil)
     }
     
     // Function to handle the text color of the calendar
@@ -77,8 +85,23 @@ class EventCalendarViewController: BaseViewController {
         if cellState.isSelected {
             cell.selectedView.layer.cornerRadius = 25
             cell.selectedView.isHidden = false
+            cell.dot.backgroundColor = UIColor.white
         } else {
             cell.selectedView.isHidden = true
+            cell.dot.backgroundColor = Config.themeColor
+        }
+    }
+    
+    //MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.showEventDetails, let event = sender as? Event {
+            guard let detailsVC = segue.destination as? EventDetailsTableViewController else {
+                    return
+            }
+            
+            detailsVC.event = event
         }
     }
 
@@ -104,6 +127,7 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
         // Setup Cell text
         cell.dayLabel.text = cellState.text
         cell.dot.layer.cornerRadius = 5
+        cell.dot.backgroundColor = Config.themeColor
         //cell.dot.layer.cornerRadius = cell.frame.width / 2
         
         if events.contains(date: Date.date(from: Date.toString(date: date))) {
@@ -120,15 +144,8 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {
         handleCellSelection(view: cell, cellState: cellState)
         handleCellTextColor(view: cell, cellState: cellState)
-/*
-        let storyboard = UIStoryboard(name: Config.eventSystem, bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "EventListPageViewController") as? EventListPageViewController
-        if events.contains(date: date), let controller = controller {
-            controller.startDate = Date.date(from: Date.toString(date: date))
-            self.navigationController?.pushViewController(controller, animated: true)
-        }
-*/
-      
+        
+        dayList.reloadData()
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {
@@ -149,6 +166,63 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
         let year = Calendar.current.component(.year, from: range.start)
         headerCell?.title.text = monthName + " " + String(year)
     }
+}
+
+// MARK: UITableViewDataSource
+extension EventCalendarViewController: UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let selectedDate = calendarView.selectedDates.first,
+            let eventList = events.retrieveEvent(at: selectedDate) else {
+            return 0
+        }
+        
+        return eventList.count
+    }
     
+    public func tableView(_ tableView: UITableView,
+                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: Config.eventCell, for: indexPath) as? EventScheduleTableViewCell,
+            let selectedDate = calendarView.selectedDates.first,
+            let event = events.retrieveEventAt(index: indexPath.item, at: selectedDate),
+            let id = event.id else {
+                return EventScheduleTableViewCell()
+        }
+        
+        cell.colorBorder.backgroundColor = Config.themeColor
+        cell.eventName.text = event.name
+        
+        cell.eventIV.isHidden = true
+        
+        System.client.getEventImagesURL(for: id, completion: { (images, error) in
+            guard let images = images else {
+                return
+            }
+            
+            cell.eventIV.image = images.first
+            cell.eventIV.isHidden = false
+        })
+        
+        let formatter = Utility.fbTimeFormatter
+        let startTimeString = formatter.string(from: event.startDateTime)
+        let endTimeString = formatter.string(from: event.endDateTime)
+        cell.eventTime.text = "\(startTimeString) - \(endTimeString)"
+        cell.venue.text = "@ \(event.venue)"
+        cell.eventDescription.text = event.shortDesc
+        
+        return cell
+    }
+}
+
+// MARK: UITableViewDelegate
+extension EventCalendarViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let selectedDate = calendarView.selectedDates.first,
+            let event = events.retrieveEventAt(index: indexPath.item, at: selectedDate) else {
+                return
+        }
+        
+        self.performSegue(withIdentifier: Config.showEventDetails, sender: event)
+    }
 }
 

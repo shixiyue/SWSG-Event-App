@@ -11,63 +11,68 @@ import Firebase
 
 class Event {
     
-    var image = [UIImage]()
+    var id: String?
+    var images = [UIImage]()
     var name : String
-    var start_datetime: String
-    var end_datetime: String
+    var startDateTime: Date
+    var endDateTime: Date
+    var shortDesc: String
     var description: String
-    var details: String
     var venue: String
-    init(image: [UIImage], name: String, start_datetime: String, end_datetime: String, venue: String, description: String, details: String) {
-        self.image = image
+    
+    fileprivate let formatter = Utility.fbDateTimeFormatter
+    
+    init(id: String?, images: [UIImage], name: String, startDateTime: Date, endDateTime: Date, venue: String, shortDesc: String, description: String) {
+        self.id = id
+        self.images = images
         self.name = name
-        self.start_datetime = start_datetime
-        self.end_datetime = end_datetime
+        self.startDateTime = startDateTime
+        self.endDateTime = endDateTime
         self.venue = venue
         self.description = description
-        self.details = details
+        self.shortDesc = shortDesc
     }
     
-    init?(snapshot: FIRDataSnapshot) {
+    init?(id: String, snapshot: FIRDataSnapshot) {
         guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
             return nil
         }
-        
+        self.id = id
         guard let name = snapshotValue[Config.name] as? String else {
             return nil
         }
         self.name = name
-        guard let timestamp = snapshotValue[Config.dateTime] as? TimeInterval else {
+        guard let startDateTimeString = snapshotValue[Config.startDateTime] as? String,
+            let startDateTime = formatter.date(from: startDateTimeString) else {
             return nil
         }
-        self.start_datetime = ""
-        self.end_datetime = ""
+        self.startDateTime = startDateTime
+        guard let endDateTimeString = snapshotValue[Config.endDateTime] as? String,
+            let endDateTime = formatter.date(from: endDateTimeString) else {
+                return nil
+        }
+        self.endDateTime = endDateTime
         guard let desc = snapshotValue[Config.desc] as? String else {
             return nil
         }
         self.description = desc
-        guard let details = snapshotValue[Config.details] as? String else {
+        guard let shortDesc = snapshotValue[Config.shortDesc] as? String else {
             return nil
         }
-        self.details = details
+        self.shortDesc = shortDesc
         guard let venue = snapshotValue[Config.venue] as? String else {
             return nil
         }
         self.venue = venue
     }
-  /*
-    public func toAnyObject() -> Any {
-        return [
-            Config.name: name,
-            Config.dateTime: ""
-            Config.desc: description,
-            Config.details: details,
-            Config.venue: venue
-        ]
-    }
-    */
-    public func getDayString() -> String {
-        return start_datetime
+    
+    public func toDictionary() -> [String: String] {
+        return [Config.name: name,
+                Config.startDateTime: formatter.string(from: startDateTime),
+                Config.endDateTime: formatter.string(from: endDateTime),
+                Config.shortDesc: shortDesc,
+                Config.desc: description,
+                Config.venue: venue]
     }
     
 }
