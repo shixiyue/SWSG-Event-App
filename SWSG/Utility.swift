@@ -347,4 +347,12 @@ struct Utility {
         imagePicker.showImageOptions()
     }
     
+    static func popViewController(no: Int, viewController: UIViewController) {
+        if let viewControllers = viewController.navigationController?.viewControllers {
+            let vcIndex = viewControllers.count - (no + 1)
+            viewController.navigationController?.popToViewController(viewControllers[vcIndex], animated: true)
+        }
+        
+    }
+    
 }

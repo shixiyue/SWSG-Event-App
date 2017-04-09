@@ -95,6 +95,12 @@ class ChannelInfoViewController: UIViewController {
         addMember(existingText: "")
     }
     
+    @IBAction func quitChatBtnPressed(_ sender: Any) {
+        self.client.removeMember(from: channel, uid: System.client.getUid())
+        
+        Utility.popViewController(no: 2, viewController: self)
+    }
+    
     func editIcon() {
         Utility.showImagePicker(imagePicker: imagePicker, viewController: self, completion: { (image) in
             if let image = image {

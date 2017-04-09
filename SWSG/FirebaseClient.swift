@@ -403,6 +403,30 @@ class FirebaseClient {
         channelRef.child(Config.members).setValue(members)
     }
     
+    public func removeMember(from channel: Channel, uid: String) {
+        guard let id = channel.id else {
+            return
+        }
+        
+        let channelRef = getChannelRef(for: id)
+        var members = channel.members
+        
+        for (index, child) in members.enumerated() {
+            if child == uid {
+                members.remove(at: index)
+                break
+            }
+        }
+        
+        if members.count > 1 {
+            channelRef.child(Config.members).setValue(members)
+        } else {
+            channelRef.removeValue()
+        }
+        
+        
+    }
+    
     public func saveImage(image: UIImage, completion: @escaping ImageURLCallback) {
         let imageData = image.jpeg(.low)
         let imagePath = auth!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
