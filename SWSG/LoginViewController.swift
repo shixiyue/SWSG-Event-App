@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import FacebookCore
+import FacebookLogin
+import Firebase
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
 
@@ -14,11 +17,35 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private var passwordTextField: UITextField!
     @IBOutlet private var logInButton: RoundCornerButton!
     
+    @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var emailView: UIView!
+    @IBOutlet weak var facebookView: UIView!
+    @IBOutlet weak var googleView: UIView!
+    @IBOutlet weak var signUpView: UIView!
+    
+    var clientArr: [String]?
+    fileprivate let loginButton = LoginButton(readPermissions: [.publicProfile, .email])
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpClients()
         setUpButton()
         setUpTextFields()
         hideKeyboardWhenTappedAround()
+    }
+    
+    private func setUpClients() {
+        if let clientArr = clientArr {
+            if !clientArr.contains(Config.emailIdentifier) {
+                emailView.isHidden = true
+            }
+            
+            if !clientArr.contains(Config.fbIdentifier) {
+                facebookView.isHidden = true
+            }
+            
+            signUpView.isHidden = true
+        }
     }
 
     private func setUpTextFields() {
@@ -29,6 +56,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     private func setUpButton() {
         logInButton.setDisable()
         logInButton.addTarget(self, action: #selector(logIn), for: .touchUpInside)
+        
+        loginButton.center = facebookView.center
+        loginButton.delegate = self
+        self.stackView.addSubview(loginButton)
     }
     
     @objc private func logIn() {
@@ -65,4 +96,41 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return false
     }
     
+}
+
+extension LoginViewController: LoginButtonDelegate {
+    
+    func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult){
+        System.client.getFBProfile(completion: { (user, error) in
+            loginButton.isHidden = true
+            guard let user = user else {
+                return
+            }
+            
+            Utility.attemptRegistration(email: user.email, client: Config.fbIdentifier, viewController: self, completion: { (exists, arr) in
+                
+                if exists {
+                    //Account for FB already Exists
+                    Utility.attemptLogin(client: Config.fbIdentifier, viewController: self, completion: { (success) in
+                        
+                    })
+                } else if let arr = arr {
+                    let title = "Already Exists"
+                    let message = "User with Email already exists, please log in with the original client first."
+                    Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _  in
+                        //self.performSegue(withIdentifier: Config.showLogin, sender: arr)
+                    })
+                    
+                    //TODO: Pass existing login on.
+                } else {
+                    //Account does not exist, proceed with registration
+                    self.performSegue(withIdentifier: Config.initialToSignUp, sender: user)
+                }
+            })
+        })
+    }
+    
+    func loginButtonDidLogOut(_ loginButton: LoginButton){
+        
+    }
 }

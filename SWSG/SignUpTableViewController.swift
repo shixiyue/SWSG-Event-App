@@ -185,21 +185,33 @@ class SignUpTableViewController: UIViewController {
             return
         }
         
-        let type = UserTypes(isParticipant: true, isSpeaker: false, isMentor: false, isOrganizer: false, isAdmin: false)
-        let profile = Profile(name: name, username: username, image: image, job: job, company: company, country: country,
-                              education: education, skills: skills, description: desc)
-        let user = User(profile: profile, type: type, email: email)
-        
-        if let _ = fbUser, let current = AccessToken.current {
-            let credential = FIRFacebookAuthProvider.credential(withAccessToken: current.authenticationToken)
-            System.client.createNewUser(user, credential: credential, completion: { (error) in
-                self.completeSignUp(user: user, error: error)
-            })
-        } else {
-            System.client.createNewUser(user, email: email, password: password, completion: { (error) in
-                self.completeSignUp(user: user, error: error)
-            })
-        }
+        Utility.attemptRegistration(email: email, client: Config.emailIdentifier, viewController: self, completion: { (exists, arr) in
+            
+            if let arr = arr {
+                let title = "Already Exists"
+                let message = "User with Email already exists, please log in with the original client first."
+                Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { () in
+                    self.performSegue(withIdentifier: Config.signUpToLogin, sender: arr)
+                })
+            } else {
+                //Account does not exist, proceed with registration
+                let type = UserTypes(isParticipant: true, isSpeaker: false, isMentor: false, isOrganizer: false, isAdmin: false)
+                let profile = Profile(name: name, username: username, image: image, job: job, company: company, country: country,
+                                      education: education, skills: skills, description: desc)
+                let user = User(profile: profile, type: type, email: email)
+                
+                if let _ = self.fbUser, let current = AccessToken.current {
+                    let credential = FIRFacebookAuthProvider.credential(withAccessToken: current.authenticationToken)
+                    System.client.createNewUser(user, credential: credential, completion: { (error) in
+                        self.completeSignUp(user: user, error: error)
+                    })
+                } else {
+                    System.client.createNewUser(user, email: email, password: password, completion: { (error) in
+                        self.completeSignUp(user: user, error: error)
+                    })
+                }
+            }
+        })
     }
     
     private func completeSignUp(user: User, error: FirebaseError?) {
@@ -207,6 +219,19 @@ class SignUpTableViewController: UIViewController {
             self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
         } else {
             Utility.logInUser(user: user, currentViewController: self)
+        }
+    }
+    
+    // MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.signUpToLogin, let arr = sender as? [String] {
+            guard let loginVC = segue.destination as? LoginViewController else {
+                return
+            }
+            
+            loginVC.clientArr = arr
         }
     }
     

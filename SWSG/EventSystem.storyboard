@@ -46,13 +46,14 @@
                             <constraint firstItem="crH-tg-Wlm" firstAttribute="trailing" secondItem="Qs3-e2-5lC" secondAttribute="trailing" id="mTf-VD-7B4"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="UrB-II-o0b"/>
                     <connections>
                         <outlet property="calendarView" destination="crH-tg-Wlm" id="Byq-gi-8Sm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EhE-Ts-SH1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1722.4000000000001" y="-320.68965517241384"/>
+            <point key="canvasLocation" x="-783.20000000000005" y="-320.68965517241384"/>
         </scene>
         <!--Create Event Table View Controller-->
         <scene sceneID="lZ6-b8-eC4">
@@ -254,7 +255,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eNM-W0-bJe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-871.20000000000005" y="-321.58920539730138"/>
+            <point key="canvasLocation" x="68" y="-321.58920539730138"/>
         </scene>
         <!--Event Schedule View Controller-->
         <scene sceneID="qpd-wA-IOR">
@@ -635,7 +636,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6bD-TH-doI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="760.79999999999995" y="-504.19790104947532"/>
+            <point key="canvasLocation" x="1700" y="-504.19790104947532"/>
         </scene>
         <!--TemplateViewController-->
         <scene sceneID="icv-tw-MJa">
@@ -659,7 +660,25 @@
                 <viewControllerPlaceholder storyboardName="UISupporting" referencedIdentifier="TemplateEditViewController" id="erl-vL-ZHT" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PZ6-Vy-yyD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-198" y="-321"/>
+            <point key="canvasLocation" x="740.79999999999995" y="-321.13943028485761"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="L4m-2T-l3u">
+            <objects>
+                <navigationController storyboardIdentifier="EventNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QBc-dQ-cQX" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="dXP-kp-3JR">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="uBS-Ca-rCQ" kind="relationship" relationship="rootViewController" id="94d-n6-jrG"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9GJ-at-B0d" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1994" y="-322"/>
         </scene>
     </scenes>
     <resources>

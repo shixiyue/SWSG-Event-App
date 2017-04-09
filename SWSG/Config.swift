@@ -114,6 +114,7 @@ struct Config {
     static let signUpTable = "signUpTable"
     static let initialToSignUp = "showSignUp"
     static let initialToLogin = "showLogin"
+    static let signUpToLogin = "showLogin"
     static let mentorToChat = "mentorToChat"
     
     // Parameters for tableView:
@@ -169,6 +170,7 @@ struct Config {
     
     //Parameters for Facebook
     static let fbIdentifier = "facebook.com"
+    static let emailIdentifier = "email"
     
     // Parameters for notification:
     static let fullScreenImage = "fullScreenImage"

@@ -9,6 +9,7 @@
 import UIKit
 import FacebookCore
 import FacebookLogin
+import Firebase
 import EventKit
 
 struct Utility {
@@ -321,22 +322,39 @@ struct Utility {
         }
     }
     
-    static func checkExistingEmail(email: String, client: String, viewController: UIViewController, completion: @escaping ([String]?) -> Void) {
+    static func attemptRegistration(email: String, client: String, viewController: UIViewController, completion: @escaping (Bool, [String]?) -> Void) {
+        
         System.client.checkIfEmailAlreadyExists(email: email, completion: { (arr, error) in
-            if let arr = arr {
-                if arr[0] == client {
-                    completion(arr)
-                } else {
-                    let title = "An error has occured"
-                    let message = "A user with the same email exists, log in from that account and link this account through the settings."
-                    Utility.displayDismissivePopup(title: title, message: message, viewController: viewController, completion: { _  in
-                        completion(arr)
-                    })
-                }
+            if let arr = arr, arr.contains(client) {
+                completion(true, arr)
             } else {
-                completion(nil)
+                completion(false, arr)
             }
         })
+        
+        /*
+        let title = "An error has occured"
+        let message = "A user with the same email exists, log in from that account and link this account through the settings."
+        Utility.displayDismissivePopup(title: title, message: message, viewController: viewController, completion: { _  in
+            completion(arr)
+        })*/
+    }
+    
+    static func attemptLogin(client: String, viewController: UIViewController, completion: @escaping (Bool) -> Void) {
+        
+        switch client {
+        case Config.fbIdentifier:
+            if let current = AccessToken.current {
+                let credential = FIRFacebookAuthProvider.credential(withAccessToken: current.authenticationToken)
+                System.client.signIn(credential: credential, completion: { (error) in
+                    Utility.logUserIn(error: error, current: viewController)
+                    completion(true)
+                })
+            }
+            completion(false)
+        default:
+            completion(false)
+        }
     }
     
     static func showImagePicker(imagePicker: ImagePickerPopoverViewController, viewController: UIViewController, completion: @escaping (UIImage?)->Void) {

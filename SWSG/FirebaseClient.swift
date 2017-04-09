@@ -124,8 +124,6 @@ class FirebaseClient {
     public func alreadySignedIn() -> Bool {
         if let _ = auth?.currentUser {
             return true
-        } else if let _ = AccessToken.current {
-            return true
         } else {
             return false
         }
