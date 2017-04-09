@@ -95,18 +95,18 @@ class ChannelInfoViewController: UIViewController {
         addMember(existingText: "")
     }
     
+    @IBAction func quitChatBtnPressed(_ sender: Any) {
+        self.client.removeMember(from: channel, uid: System.client.getUid())
+        
+        Utility.popViewController(no: 2, viewController: self)
+    }
+    
     func editIcon() {
-        let completionHandler: (UIImage?)->Void = { (image) in
+        Utility.showImagePicker(imagePicker: imagePicker, viewController: self, completion: { (image) in
             if let image = image {
                 self.client.updateChannel(icon: image, for: self.channel)
             }
-        }
-        
-        imagePicker.modalPresentationStyle = .overCurrentContext
-        imagePicker.completionHandler = completionHandler
-        
-        present(imagePicker, animated: true, completion: nil)
-        imagePicker.showImageOptions()
+        })
     }
     
     func editName() {
@@ -141,7 +141,7 @@ class ChannelInfoViewController: UIViewController {
                                          existingText: existingText, viewController: self,
                                          completion: { (name) in
             self.client.getUserWith(username: name, completion: { (user, error) in
-                guard let user = user, let uid = user.uid else {
+                guard let user = user, let _ = user.uid else {
                     Utility.displayDismissivePopup(title: "Error", message: "Username does not exist!", viewController: self, completion: { _ in
                         self.addMember(existingText: name)
                     })

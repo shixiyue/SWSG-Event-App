@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import FacebookCore
+import FacebookLogin
+import Firebase
 import EventKit
 
 struct Utility {
@@ -76,9 +79,13 @@ struct Utility {
     }
     
     static func logOutUser(currentViewController: UIViewController) {
+        System.client.signOut()
+        
+        if let _ = AccessToken.current {
+            LoginManager().logOut()
+        }
         System.activeUser = nil
         showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
-        System.client.signOut()
     }
     
     static func logInUser(user: User, currentViewController: UIViewController) {
@@ -299,6 +306,77 @@ struct Utility {
         //Displays the Save Popup
         viewController.present(createController, animated: true, completion: nil)
 
+    }
+    
+    static func logUserIn(error: FirebaseError?, current viewController: UIViewController) {
+        if let firebaseError = error {
+            viewController.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+        } else {
+            System.client.getCurrentUser(completion: { (user, userError) in
+                if let firebaseError = userError, user == nil {
+                    viewController.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+                } else {
+                    Utility.logInUser(user: user!, currentViewController: viewController)
+                }
+            })
+        }
+    }
+    
+    static func attemptRegistration(email: String, client: String, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool, [String]?) -> Void) {
+        
+        System.client.checkIfEmailAlreadyExists(email: email, completion: { (arr, error) in
+            if let arr = arr, arr.contains(client) {
+                attemptLogin(client: client, newCredential: newCredential, viewController: viewController, completion: { (success)  in
+                    completion(success, arr)
+                })
+            } else {
+                completion(false, arr)
+            }
+        })
+        
+        /*
+        let title = "An error has occured"
+        let message = "A user with the same email exists, log in from that account and link this account through the settings."
+        Utility.displayDismissivePopup(title: title, message: message, viewController: viewController, completion: { _  in
+            completion(arr)
+        })*/
+    }
+    
+    static func attemptLogin(client: String, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool) -> Void) {
+        
+        switch client {
+        case Config.fbIdentifier:
+            if let credential = System.client.getFBCredential() {
+                System.client.signIn(credential: credential, completion: { (error) in
+                    if let newCredential = newCredential {
+                        System.client.addAdditionalAuth(credential: newCredential, completion: { _ in
+                        })
+                    }
+                    
+                    Utility.logUserIn(error: error, current: viewController)
+                    completion(true)
+                })
+            }
+            completion(false)
+        default:
+            completion(false)
+        }
+    }
+    
+    static func showImagePicker(imagePicker: ImagePickerPopoverViewController, viewController: UIViewController, completion: @escaping (UIImage?)->Void) {
+        imagePicker.modalPresentationStyle = .overCurrentContext
+        imagePicker.completionHandler = completion
+        
+        viewController.present(imagePicker, animated: true, completion: nil)
+        imagePicker.showImageOptions()
+    }
+    
+    static func popViewController(no: Int, viewController: UIViewController) {
+        if let viewControllers = viewController.navigationController?.viewControllers {
+            let vcIndex = viewControllers.count - (no + 1)
+            viewController.navigationController?.popToViewController(viewControllers[vcIndex], animated: true)
+        }
+        
     }
     
 }

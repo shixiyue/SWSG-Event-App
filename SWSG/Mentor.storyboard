@@ -421,6 +421,11 @@
                     </view>
                     <navigationItem key="navigationItem" title="Mentor" id="T7v-nL-AhR">
                         <barButtonItem key="backBarButtonItem" title="Back" id="JcI-KA-kL6"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="eKh-r3-jYL">
+                            <connections>
+                                <action selector="composeBtnPressed:" destination="S0B-9p-C9T" id="Uxx-Qz-AnE"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="companyLbl" destination="40q-Ia-GOl" id="gRY-Wg-Js7"/>
@@ -430,11 +435,20 @@
                         <outlet property="positionLbl" destination="iYy-Vg-8ti" id="JqY-SB-MYQ"/>
                         <outlet property="profileImg" destination="U5y-ng-pTX" id="gNB-kY-Cvk"/>
                         <outlet property="relatedMentorCollection" destination="OKC-K1-ZYz" id="1BY-Ep-t71"/>
+                        <segue destination="dOz-DW-2xN" kind="show" identifier="mentorToChat" id="l8I-C2-6vZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dBW-gL-sTj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1704.8" y="106.59670164917542"/>
+        </scene>
+        <!--ChannelViewController-->
+        <scene sceneID="Ckp-tJ-2pz">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="Chat" storyboardName="Chat" referencedIdentifier="ChannelViewController" id="dOz-DW-2xN" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xxO-n9-8ac" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2471" y="-164"/>
         </scene>
     </scenes>
     <resources>
