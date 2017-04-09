@@ -29,6 +29,7 @@ class LoginViewController: UIViewController {
     var clientArr: [String]?
     fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
     fileprivate let googleLoginButton = GIDSignInButton()
+    fileprivate var currentAuth: AuthType?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,15 +92,7 @@ class LoginViewController: UIViewController {
             return
         }
         
-        System.client.signIn(email: email, password: password, completion: { (error) in
-            if let credential = self.newCredential {
-                System.client.addAdditionalAuth(credential: credential, completion: { _ in
-                })
-            }
-            
-            Utility.logUserIn(error: error, current: self)
-            
-        })
+        attemptLogin(email: email, password: password, user: nil, auth: .email)
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -126,20 +119,36 @@ class LoginViewController: UIViewController {
             }
             
             signUpVC.socialUser = user
+        } else if segue.identifier == Config.loginToLogin, let arr = sender as? [String] {
+            guard let loginVC = segue.destination as? LoginViewController,
+                let auth = currentAuth else {
+                    return
+            }
+            
+            switch auth {
+            case .facebook:
+                loginVC.newCredential = System.client.getFBCredential()
+            case .google:
+                loginVC.newCredential = System.client.getGoogleCredential()
+            default:
+                break
+            }
+            
+            loginVC.clientArr = arr
         }
     }
     
-    fileprivate func attemptLogin(email: String, user: SocialUser, auth: AuthType) {
-        Utility.attemptRegistration(email: email, auth: auth, newCredential: self.newCredential, viewController: self, completion: { (exists, arr) in
+    fileprivate func attemptLogin(email: String, password: String?, user: SocialUser?, auth: AuthType) {
+        Utility.attemptRegistration(email: email, password: password, auth: auth, newCredential: self.newCredential, viewController: self, completion: { (exists, arr) in
             
             if !exists, let _ = arr {
                 let title = "Already Exists"
                 let message = "User with Email already exists, please log in with the original client first."
                 Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _  in
-                    //self.performSegue(withIdentifier: Config.showLogin, sender: arr)
+                    self.currentAuth = auth
+                    self.performSegue(withIdentifier: Config.loginToLogin, sender: arr)
                 })
                 
-                //TODO: Pass existing login on.
             } else if arr == nil {
                 //Account does not exist, proceed with registration
                 self.performSegue(withIdentifier: Config.logInSignUp, sender: user)
@@ -165,7 +174,7 @@ extension LoginViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if (error == nil) {
             let user = SocialUser(gUser: user)
-            self.attemptLogin(email: user.email, user: user, auth: .google)
+            self.attemptLogin(email: user.email, password: nil, user: user, auth: .google)
         }
     }
 }
@@ -179,7 +188,7 @@ extension LoginViewController: LoginButtonDelegate {
                 return
             }
             
-            self.attemptLogin(email: user.email, user: user, auth: .facebook)
+            self.attemptLogin(email: user.email, password: nil, user: user, auth: .facebook)
         })
     }
     

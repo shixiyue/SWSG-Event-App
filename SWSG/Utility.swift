@@ -328,10 +328,15 @@ struct Utility {
     }
     
     static func attemptRegistration(email: String, auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool, [String]?) -> Void) {
+        attemptRegistration(email: email, password: nil, auth: auth, newCredential: newCredential,
+                            viewController: viewController, completion: completion)
+    }
+    
+    static func attemptRegistration(email: String, password: String?, auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool, [String]?) -> Void) {
         
         System.client.checkIfEmailAlreadyExists(email: email, completion: { (arr, error) in
             if let arr = arr, arr.contains(auth.rawValue) {
-                attemptLogin(auth: auth, newCredential: newCredential, viewController: viewController, completion: { (success)  in
+                attemptLogin(auth: auth, newCredential: newCredential, email: email, password: password, viewController: viewController, completion: { (success)  in
                     completion(success, arr)
                 })
             } else {
@@ -341,40 +346,43 @@ struct Utility {
     }
     
     static func attemptLogin(auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool) -> Void) {
+        attemptLogin(auth: auth, newCredential: newCredential, email: nil, password: nil,
+                     viewController: viewController, completion: completion)
+    }
+    
+    static func attemptLogin(auth: AuthType, newCredential: FIRAuthCredential?, email: String?, password: String?, viewController: UIViewController, completion: @escaping (Bool) -> Void) {
         
+        var authCredential: FIRAuthCredential?
         switch auth {
         case .facebook:
-            if let credential = System.client.getFBCredential() {
-                System.client.signIn(credential: credential, completion: { (error) in
-                    if let newCredential = newCredential {
-                        System.client.addAdditionalAuth(credential: newCredential, completion: { _ in
-                        })
-                    }
-                    
-                    Utility.logUserIn(error: error, current: viewController)
-                    completion(true)
-                })
-            } else {
-                completion(false)
-            }
+            authCredential = System.client.getFBCredential()
         case .google:
-            if let credential = System.client.getGoogleCredential() {
-                System.client.signIn(credential: credential, completion: { (error) in
-                    if let newCredential = newCredential {
-                        System.client.addAdditionalAuth(credential: newCredential, completion: { _ in
-                        })
-                    }
-                    
-                    Utility.logUserIn(error: error, current: viewController)
-                    print("Test")
-                    completion(true)
-                })
-            } else {
-                completion(false)
-            }
-        default:
+            authCredential = System.client.getGoogleCredential()
+        case .email:
+            authCredential = System.client.getEmailCredential(email: email, password: password)
+        }
+        
+        if let credential = authCredential {
+            loginWithCredential(credential: credential, newCredential: newCredential,
+                                viewController: viewController, completion: completion)
+        } else {
             completion(false)
         }
+    }
+    
+    private static func loginWithCredential(credential: FIRAuthCredential,
+                                            newCredential: FIRAuthCredential?,
+                                            viewController: UIViewController,
+                                            completion: @escaping (Bool) -> Void) {
+        System.client.signIn(credential: credential, completion: { (error) in
+            if let newCredential = newCredential {
+                System.client.addAdditionalAuth(credential: newCredential, completion: { _ in
+                })
+            }
+            
+            Utility.logUserIn(error: error, current: viewController)
+            completion(true)
+        })
     }
     
     static func showImagePicker(imagePicker: ImagePickerPopoverViewController, viewController: UIViewController, completion: @escaping (UIImage?)->Void) {

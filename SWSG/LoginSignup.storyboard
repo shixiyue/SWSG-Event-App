@@ -410,7 +410,7 @@
                                                         <rect key="frame" x="8" y="35" width="359" height="17"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" returnKeyType="next"/>
+                                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
                                                     </textField>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -436,7 +436,7 @@
                                                         <rect key="frame" x="8" y="35" width="359" height="30"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" returnKeyType="next"/>
+                                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
                                                     </textField>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -739,6 +739,13 @@
                                     <constraint firstItem="hhc-qI-Nn3" firstAttribute="leading" secondItem="Jcb-bs-fAG" secondAttribute="leading" id="xr9-Cx-v6u"/>
                                 </constraints>
                             </stackView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5oU-Jc-hgl">
+                                <rect key="frame" x="329" y="637" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <segue destination="edt-Do-spE" kind="show" identifier="showLogin" id="8Co-z9-zKT"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -759,7 +766,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7aX-RR-00x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3908" y="440.32983508245883"/>
+            <point key="canvasLocation" x="3753" y="699"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="phU-oh-981">
@@ -785,7 +792,7 @@
         <image name="startup-weekend-logo" width="722" height="242"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="oMt-Jt-Tjf"/>
         <segue reference="eqo-IT-cRh"/>
+        <segue reference="oMt-Jt-Tjf"/>
     </inferredMetricsTieBreakers>
 </document>

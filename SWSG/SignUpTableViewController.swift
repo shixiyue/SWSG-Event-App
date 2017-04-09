@@ -66,6 +66,8 @@ class SignUpTableViewController: UIViewController {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showImagePicker))
         profileIV.addGestureRecognizer(tapGesture)
+        
+        profileIV = Utility.roundUIImageView(for: profileIV)
     }
     
     private func setUpTextFields() {
@@ -206,6 +208,13 @@ class SignUpTableViewController: UIViewController {
                     switch socialUser.type {
                     case .facebook:
                         guard let credential = System.client.getFBCredential() else {
+                            return
+                        }
+                        System.client.createNewUser(user, credential: credential, completion: { (error) in
+                            self.completeSignUp(user: user, error: error)
+                        })
+                    case .google:
+                        guard let credential = System.client.getGoogleCredential() else {
                             return
                         }
                         System.client.createNewUser(user, credential: credential, completion: { (error) in

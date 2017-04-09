@@ -114,6 +114,7 @@ struct Config {
     static let signUpTable = "signUpTable"
     static let initialToSignUp = "showSignUp"
     static let initialToLogin = "showLogin"
+    static let loginToLogin = "showLogin"
     static let signUpToLogin = "showLogin"
     static let mentorToChat = "mentorToChat"
     

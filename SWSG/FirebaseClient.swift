@@ -119,6 +119,14 @@ class FirebaseClient {
                                                 accessToken: authentication.accessToken)
     }
     
+    public func getEmailCredential(email: String?, password:String?) -> FIRAuthCredential? {
+        guard let email = email, let password = password else {
+            return nil
+        }
+        
+        return FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
+    }
+    
     public func fbSignIn(completion: @escaping SignInCallback){
         guard let credential = getFBCredential() else {
             completion(nil)
