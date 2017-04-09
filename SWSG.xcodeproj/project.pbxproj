@@ -137,14 +137,10 @@
 		E348D57A1E895E8300947B3F /* EventCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D5791E895E8300947B3F /* EventCalendarViewController.swift */; };
 		E348D57E1E8A828900947B3F /* PinkSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */; };
 		E348D5801E8A830900947B3F /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */; };
-
 		E355BB821E94E244002E29DD /* TagCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E355BB811E94E243002E29DD /* TagCell.xib */; };
 		E355BB841E94E399002E29DD /* TagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB831E94E399002E29DD /* TagCell.swift */; };
-		E355BB881E94F6AD002E29DD /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB871E94F6AD002E29DD /* FlowLayout.swift */; };
-
 		E355BB8A1E951A2C002E29DD /* EventListPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB891E951A2C002E29DD /* EventListPageViewController.swift */; };
 		E355BB8C1E97C657002E29DD /* CreateEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */; };
-
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
 		E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */; };
@@ -295,14 +291,10 @@
 		E348D5791E895E8300947B3F /* EventCalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCalendarViewController.swift; sourceTree = "<group>"; };
 		E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PinkSectionHeaderView.xib; sourceTree = "<group>"; };
 		E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarHeaderView.swift; sourceTree = "<group>"; };
-
 		E355BB811E94E243002E29DD /* TagCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagCell.xib; sourceTree = "<group>"; };
 		E355BB831E94E399002E29DD /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
-		E355BB871E94F6AD002E29DD /* FlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
-
 		E355BB891E951A2C002E29DD /* EventListPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventListPageViewController.swift; sourceTree = "<group>"; };
 		E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateEventTableViewController.swift; sourceTree = "<group>"; };
-
 		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137921E827C1700E26394 /* TeamLookingForTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLookingForTableViewCell.swift; sourceTree = "<group>"; };
@@ -639,7 +631,6 @@
 			isa = PBXGroup;
 			children = (
 				E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */,
-				E355BB871E94F6AD002E29DD /* FlowLayout.swift */,
 				E355BB811E94E243002E29DD /* TagCell.xib */,
 				E355BB831E94E399002E29DD /* TagCell.swift */,
 				E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */,
@@ -914,7 +905,6 @@
 				CC1CF8AE1E7C1ED6002224BC /* EditProfileViewController.swift in Sources */,
 				CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */,
 				CCE7DDE01E8B760C0044A863 /* VideoLinkTableViewCell.swift in Sources */,
-				E355BB881E94F6AD002E29DD /* FlowLayout.swift in Sources */,
 				3F97955B1E7A8DBF004BC26C /* SignUpTableViewController.swift in Sources */,
 				E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */,
 				E348D5681E840D6100947B3F /* IdeaDetailsTableViewController.swift in Sources */,

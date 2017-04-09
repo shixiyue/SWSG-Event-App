@@ -8,35 +8,57 @@
 
 import UIKit
 
-class TeamCreateTableViewController: UITableViewController, UICollectionViewDataSource  {
+class TeamCreateTableViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
 
     @IBOutlet weak var teamName: UITextField!
-    @IBOutlet weak var skills: UITextField!
-    @IBOutlet weak var lookingFor: UITextField!
+    @IBOutlet weak var lookingFor: GrayBorderTextView!
     
+    @IBOutlet weak var tag: UITextField!
     private let teamCreateErrorMsg = "Sorry, only participants of SWSG can create a team!"
     private let emptyFieldErrorMsg = "Fields cannot be empty!"
     private let mtplTeamErrorMsg = "You can not join more than 1 team!"
     
     private let teams = Teams.sharedInstance()
     var sizingCell: TagCell?
-    
-    let TAGS = ["Tech", "Design", "Humor", "Travel", "Music", "Writing", "Social Media", "Life", "Education", "Edtech", "Education Reform", "Photography", "Startup", "Poetry", "Women In Tech", "Female Founders", "Business", "Fiction", "Love", "Food", "Sports"]
+    internal var tags = [String]() {
+        didSet {
+           NotificationCenter.default.post(name: Notification.Name(rawValue: "tags"), object: self)
+        }
+    }
+    private var containerHeight = CGFloat(100)
+    internal var lookingForCellHeight = CGFloat(100)
+
     @IBOutlet weak var collectionView: UICollectionView!
     
+    @IBAction func onSaveBtnClick(_ sender: Any) {
+        guard let tagToAdd = tag.text, !tagToAdd.isEmpty else {
+            present(Utility.getFailAlertController(message: "Tag field cannot be empty!"), animated: true, completion: nil)
+            return
+        }
+        tags.append(tagToAdd)
+        tag.text = ""
+        
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.delegate = self
+        lookingFor.setPlaceholder("Skills looking for...")
+        lookingFor.delegate = self
+        tableView.separatorStyle = .none
         let cellNib = UINib(nibName: "TagCell", bundle: nil)
         self.collectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
         self.collectionView.backgroundColor = UIColor.clear
         self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "tags"), object: nil)
     }
+    
     @IBAction func onDoneButtonClick(_ sender: Any) {
         guard let user = System.activeUser, user.type.isParticipant else {
             self.present(Utility.getFailAlertController(message: teamCreateErrorMsg), animated: true, completion: nil)
             return
         }
-        guard teamName.text! != "" , skills.text! != "", lookingFor.text! != "" else {
+        guard let name = teamName.text, !name.isEmpty, let looking = lookingFor.text, !looking.isEmpty else {
             self.present(Utility.getFailAlertController(message: emptyFieldErrorMsg),animated: true, completion: nil)
             return
         }
@@ -45,7 +67,7 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
             return
         }
         
-        let team = Team(members: [user], name: teamName.text!, info: skills.text!, lookingFor: lookingFor.text!, isPrivate: false)
+        let team = Team(members: [user], name: name, lookingFor: looking, isPrivate: false, tags: tags)
         teams.addTeam(team: team)
         user.setTeamIndex(index: teams.count-1)
         System.activeUser = user
@@ -56,10 +78,16 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
     @IBAction func onBackBtnClick(_ sender: Any) {
         Utility.onBackButtonClick(tableViewController: self)
     }
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @objc private func reload() {
+        self.tableView.beginUpdates()
+        if collectionView.contentSize.height > containerHeight {
+            containerHeight = collectionView.contentSize.height
+        }
+        collectionView.reloadData()
+        self.tableView.endUpdates()
     }
+
 
     // MARK: - Table view data source
 
@@ -70,54 +98,62 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 3
+        return 4
     }
     
     
     
     public override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+        if indexPath.item == 0 {
+            return 150
+        }else if indexPath.item == 2 {
+            return CGFloat(containerHeight)
+        } else if indexPath.item == 3 {
+            return lookingForCellHeight
+        }else {
+            return 60
+        }
     }
     
-    public override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-
-
 }
 
 
 extension TeamCreateTableViewController {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return TAGS.count
+        return tags.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TagCell", for: indexPath) as! TagCell
-        cell.tagName.text = TAGS[indexPath.row]
+        self.configureCell(cell: cell, forIndexPath: indexPath)
         
         return cell
     }
     
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let data = TAGS[indexPath.item]
-        let sectionInset = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset
-        let widthToSubtract = sectionInset!.left + sectionInset!.right
-        
-        let requiredWidth = collectionView.bounds.size.width
-        
-        
-        let targetSize = CGSize(width: requiredWidth, height: 0)
-        
-        //sizingCell.configureCell(data, delegate: self)
-        let adequateSize = self.sizingCell?.preferredLayoutSizeFittingSize(targetSize: targetSize)
-        return CGSize(width: (self.collectionView?.bounds.width)! - widthToSubtract, height: adequateSize!.height)
-    }
 
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath)
+       let size = self.sizingCell!.tagName.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+        return CGSize(width: size.width*1.5, height: size.height*2)
+    }
     
+    func configureCell(cell: TagCell, forIndexPath indexPath: IndexPath) {
+        let tag = tags[indexPath.row]
+        cell.tagName.text = tag
+    }
     
    }
+
+extension TeamCreateTableViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        self.tableView.beginUpdates()
+        if textView.contentSize.height > CGFloat(60) {
+            self.lookingForCellHeight = textView.contentSize.height
+        }
+        self.tableView.endUpdates()
+        
+    }
+}
+
 

@@ -49,7 +49,7 @@ class TeamRegistrationTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamItemCell", for: indexPath) as! TeamItemTableViewCell
         let team = teams.retrieveTeamAt(index: indexPath.row)
         cell.teamName.text = team.name
-        cell.teamSkills.text = team.info
+        cell.teamSkills.text = "Place to put tags"
         cell.teamIsLookingFor.text = team.lookingFor
 
         return cell
