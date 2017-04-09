@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FacebookCore
 import FacebookLogin
+import GoogleSignIn
 
 /// `InitialViewController` represents the view controller for initial screen, which will prompt the user to sign up / log in.
 class InitialViewController: UIViewController {
@@ -17,20 +18,28 @@ class InitialViewController: UIViewController {
     @IBOutlet weak var fbView: UIView!
     @IBOutlet weak var googleView: UIView!
     
-    fileprivate let loginButton = LoginButton(readPermissions: [.publicProfile, .email])
+    fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
+    fileprivate let googleLoginButton = GIDSignInButton()
     fileprivate let client = System.client
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loginButton.center = fbView.center
-        loginButton.delegate = self
-        self.stackView.addSubview(loginButton)
+        fbLoginButton.center = fbView.center
+        fbLoginButton.delegate = self
+        
+        googleLoginButton.center = googleView.center
+        
+        self.stackView.addSubview(fbLoginButton)
+        self.stackView.addSubview(googleLoginButton)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.isNavigationBarHidden = true
-        loginButton.isHidden = false
+        fbLoginButton.isHidden = false
+        GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().uiDelegate = self
+        //GIDSignIn.sharedInstance().signIn()
         
         if AccessToken.current != nil {
             LoginManager().logOut()
@@ -53,12 +62,12 @@ class InitialViewController: UIViewController {
             
             loginVC.newCredential = credential
             loginVC.clientArr = arr
-        } else if segue.identifier == Config.initialToSignUp, let user = sender as? FBUser {
+        } else if segue.identifier == Config.initialToSignUp, let user = sender as? SocialUser {
             guard let signUpVC = segue.destination as? SignUpViewController else {
                 return
             }
             
-            signUpVC.fbUser = user
+            signUpVC.socialUser = user
         }
     }
     
@@ -68,34 +77,49 @@ class InitialViewController: UIViewController {
         Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _  in
         })
     }
+    
+    fileprivate func attemptLogin(email: String, user: SocialUser, auth: AuthType) {
+        Utility.attemptRegistration(email: email, auth: .facebook, newCredential: nil, viewController: self, completion: { (exists, arr) in
+            
+            if !exists, let arr = arr {
+                let title = "Already Exists"
+                let message = "User with Email already exists, please log in with the original client first."
+                Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { ()  in
+                    self.performSegue(withIdentifier: Config.initialToLogin, sender: arr)
+                    
+                })
+                
+                //TODO: Pass existing login on.
+            } else {
+                //Account does not exist, proceed with registration
+                self.performSegue(withIdentifier: Config.initialToSignUp, sender: user)
+            }
+        })
+    }
+}
+
+extension InitialViewController: GIDSignInDelegate, GIDSignInUIDelegate {
+    public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if (error == nil) {
+            let user = SocialUser(gUser: user)
+            self.attemptLogin(email: user.email, user: user, auth: .google)
+        } else {
+            self.displayErrorMsg()
+        }
+    }
 }
 
 extension InitialViewController: LoginButtonDelegate {
     
     func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult){
         client.getFBProfile(completion: { (user, error) in
-            loginButton.isHidden = true
+            self.fbLoginButton.isHidden = true
             guard let user = user else {
                 self.displayErrorMsg()
                 return
             }
             
-            Utility.attemptRegistration(email: user.email, client: Config.fbIdentifier, viewController: self, completion: { (exists, arr) in
-                
-                if !exists, let arr = arr {
-                    let title = "Already Exists"
-                    let message = "User with Email already exists, please log in with the original client first."
-                    Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { ()  in
-                        self.performSegue(withIdentifier: Config.initialToLogin, sender: arr)
-                        
-                    })
-                    
-                    //TODO: Pass existing login on.
-                } else {
-                    //Account does not exist, proceed with registration
-                    self.performSegue(withIdentifier: Config.initialToSignUp, sender: user)
-                }
-            })
+            self.attemptLogin(email: user.email, user: user, auth: .facebook)
         })
     }
     

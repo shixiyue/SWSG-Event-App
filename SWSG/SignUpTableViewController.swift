@@ -47,7 +47,7 @@ class SignUpTableViewController: UIViewController {
     fileprivate var activeTextView: UITextView?
     fileprivate var imagePicker = ImagePickerPopoverViewController()
     fileprivate var currentCredential: FIRAuthCredential?
-    public var fbUser: FBUser?
+    public var socialUser: SocialUser?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +57,7 @@ class SignUpTableViewController: UIViewController {
         addKeyboardNotifications()
         setUpTextViews()
         hideKeyboardWhenTappedAround()
-        setUpFBDetails()
+        setUpSocialDetails()
     }
     
     private func setUpButtons() {
@@ -71,7 +71,7 @@ class SignUpTableViewController: UIViewController {
     private func setUpTextFields() {
         textFields = [nameTextField, usernameTextField, emailTextField, countryTextField, jobTextField, companyTextField]
         
-        if fbUser == nil {
+        if socialUser == nil {
             textFields.insert(passwordTextField, at: 3)
         }
         
@@ -147,17 +147,17 @@ class SignUpTableViewController: UIViewController {
         countryTextField.inputAccessoryView = toolBar
     }
     
-    private func setUpFBDetails() {
-        guard let fbUser = fbUser else {
+    private func setUpSocialDetails() {
+        guard let socialUser = socialUser else {
             return
         }
         
-        let fbImage = fbUser.getProfileImage()
-        self.profileIV.image = fbImage
+        let image = socialUser.getProfileImage()
+        self.profileIV.image = image
         
-        nameTextField.text = fbUser.name
+        nameTextField.text = socialUser.name
         nameTextField.isEnabled = false
-        emailTextField.text = fbUser.email
+        emailTextField.text = socialUser.email
         emailTextField.isEnabled = false
         passwordStackView.isHidden = true
         loginStack.isHidden = true
@@ -186,7 +186,7 @@ class SignUpTableViewController: UIViewController {
             return
         }
         
-        Utility.attemptRegistration(email: email, client: Config.emailIdentifier, newCredential: nil, viewController: self, completion: { (exists, arr) in
+        Utility.attemptRegistration(email: email, auth: .email, newCredential: nil, viewController: self, completion: { (exists, arr) in
             
             if let arr = arr {
                 let title = "Already Exists"
@@ -203,11 +203,18 @@ class SignUpTableViewController: UIViewController {
                                       education: education, skills: skills, description: desc)
                 let user = User(profile: profile, type: type, email: email)
                 
-                if let _ = self.fbUser, let current = AccessToken.current {
-                    let credential = FIRFacebookAuthProvider.credential(withAccessToken: current.authenticationToken)
-                    System.client.createNewUser(user, credential: credential, completion: { (error) in
-                        self.completeSignUp(user: user, error: error)
-                    })
+                if let socialUser = self.socialUser {
+                    switch socialUser.type {
+                    case .facebook:
+                        guard let credential = System.client.getFBCredential() else {
+                            return
+                        }
+                        System.client.createNewUser(user, credential: credential, completion: { (error) in
+                            self.completeSignUp(user: user, error: error)
+                        })
+                    default:
+                        return
+                    }
                 } else {
                     System.client.createNewUser(user, email: email, password: password, completion: { (error) in
                         self.completeSignUp(user: user, error: error)

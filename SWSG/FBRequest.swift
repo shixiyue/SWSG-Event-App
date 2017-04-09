@@ -10,7 +10,7 @@ import FacebookCore
 
 struct FBRequest: GraphRequestProtocol {
     struct Response: GraphResponseProtocol {
-        let user: FBUser?
+        let user: SocialUser?
         init(rawResponse: Any?) {
             guard let response = rawResponse as? [String: Any] else {
                 user = nil
@@ -24,7 +24,7 @@ struct FBRequest: GraphRequestProtocol {
                 return
             }
             
-            user = FBUser(id: id, name: name, email: email)
+            user = SocialUser(id: id, name: name, email: email, type: .facebook)
         }
     }
     

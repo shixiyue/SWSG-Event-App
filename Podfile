@@ -13,6 +13,8 @@ platform :ios, '9.0'
   pod 'RSKImageCropper'
   pod 'FacebookCore'
   pod 'FacebookLogin'
+  pod 'Google'
+  pod 'GoogleSignIn'
   pod 'TextFieldEffects'
 
   

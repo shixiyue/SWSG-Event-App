@@ -7,37 +7,26 @@
 //
 
 import Foundation
+import GoogleSignIn
 
-struct FBUser {
+struct SocialUser {
     var id: String
     var name: String
     var email: String
+    var type: AuthType
     
-    init(id: String, name: String, email: String) {
+    init(id: String, name: String, email: String, type: AuthType) {
         self.id = id
         self.name = name
         self.email = email
+        self.type = type
     }
     
-    init?(snapshot: Any) {
-        guard let snapshot = snapshot as? [String: String] else {
-            return nil
-        }
-        
-        guard snapshot.keys.contains(Config.id), let id = snapshot[Config.id] else {
-            return nil
-        }
-        self.id = id
-        
-        guard snapshot.keys.contains(Config.name), let name = snapshot[Config.name] else {
-            return nil
-        }
-        self.name = name
-        
-        guard snapshot.keys.contains(Config.email), let email = snapshot[Config.email] else {
-            return nil
-        }
-        self.email = email
+    init(gUser: GIDGoogleUser) {
+        self.id = gUser.userID
+        self.name = gUser.profile.name
+        self.email = gUser.profile.email
+        self.type = .google
     }
     
     func getProfileImage() -> UIImage? {

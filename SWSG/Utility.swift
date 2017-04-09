@@ -322,11 +322,11 @@ struct Utility {
         }
     }
     
-    static func attemptRegistration(email: String, client: String, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool, [String]?) -> Void) {
+    static func attemptRegistration(email: String, auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool, [String]?) -> Void) {
         
         System.client.checkIfEmailAlreadyExists(email: email, completion: { (arr, error) in
-            if let arr = arr, arr.contains(client) {
-                attemptLogin(client: client, newCredential: newCredential, viewController: viewController, completion: { (success)  in
+            if let arr = arr, arr.contains(auth.rawValue) {
+                attemptLogin(auth: auth, newCredential: newCredential, viewController: viewController, completion: { (success)  in
                     completion(success, arr)
                 })
             } else {
@@ -342,10 +342,10 @@ struct Utility {
         })*/
     }
     
-    static func attemptLogin(client: String, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool) -> Void) {
+    static func attemptLogin(auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool) -> Void) {
         
-        switch client {
-        case Config.fbIdentifier:
+        switch auth {
+        case .facebook:
             if let credential = System.client.getFBCredential() {
                 System.client.signIn(credential: credential, completion: { (error) in
                     if let newCredential = newCredential {
