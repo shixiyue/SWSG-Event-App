@@ -28,6 +28,7 @@ class TemplateViewController: UITableViewController {
     }
     
     func updateImages(images: [UIImage]) {
+        self.images = images
         photoPageViewController.images = images
         photoPageViewController.setUpPageViewController()
         overviewTableView.reloadData()

@@ -102,7 +102,6 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
                 self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
                 return
             }
-            self.ideas.addIdea(idea: idea)
             NotificationCenter.default.removeObserver(self)
         })
     }

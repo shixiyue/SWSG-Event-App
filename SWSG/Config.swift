@@ -75,6 +75,7 @@ struct Config {
     static let downvoteFilled = UIImage(named: "downvote-filled")
     static let placeholderImg = UIImage(named: "Placeholder")!
     static let defaultIdeaImage = UIImage(named: "default-idea-image")!
+    static let loadingImage = UIImage(named: "loading")!
     static let chatIconWidth: CGFloat = 40
     
     // Parameters for Storyboard:

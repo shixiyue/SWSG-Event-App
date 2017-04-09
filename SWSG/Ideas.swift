@@ -24,21 +24,39 @@ class Ideas {
         return ideasInstance
     }
     
-    func update(snapshot: FIRDataSnapshot) {
-        ideas = []
-        for ideaSnapshot in snapshot.children {
-            guard let dataSnapshot = ideaSnapshot as? FIRDataSnapshot, let snapshotValue = dataSnapshot.value as? [String: Any] else {
-                continue
-            }
-            if let idea = Idea(snapshotValue: snapshotValue) {
-                ideas.append(idea)
-            }
+    func add(snapshot: FIRDataSnapshot) {
+        guard let snapshotValue = snapshot.value as? [String: Any] else {
+            return
         }
+        guard let idea = Idea(snapshotValue: snapshotValue), ideas.index(of: idea) == nil else {
+            return
+        }
+        ideas.append(idea)
         ideas = ideas.sorted{$0.name.caseInsensitiveCompare($1.name) == .orderedAscending}
     }
     
-    func addIdea(idea: Idea) {
-        ideas.append(idea)
+    func update(snapshot: FIRDataSnapshot) {
+        guard let snapshotValue = snapshot.value as? [String: Any] else {
+            return
+        }
+        guard let idea = Idea(snapshotValue: snapshotValue), let index = ideas.index(of: idea) else {
+            return
+        }
+        ideas[index] = idea
+        ideas = ideas.sorted{$0.name.caseInsensitiveCompare($1.name) == .orderedAscending}
+    }
+    
+    func remove(snapshot: FIRDataSnapshot) -> Int? {
+        guard let snapshotValue = snapshot.value as? [String: Any], let id = snapshotValue[Config.id] as? String else {
+            return nil
+        }
+        for (index, idea) in ideas.enumerated() {
+            if let ideaId = idea.id, ideaId == id {
+                ideas.remove(at: index)
+                return index
+            }
+        }
+        return nil
     }
     
     func retrieveIdeaAt(index: Int) -> Idea {
@@ -46,10 +64,10 @@ class Ideas {
     }
     
     func removeIdea(idea: Idea) {
-        guard let index = ideas.index(of: idea) else {
+        guard let id = idea.id else {
             return
         }
-        ideas.remove(at: index)
+        System.client.removeIdea(for: id)
     }
     
     func updateIdea(_ idea: Idea, name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
@@ -57,6 +75,7 @@ class Ideas {
             return
         }
         ideas[index].update(name: name, description: description, mainImage: mainImage, images: images, videoLink: videoLink)
+        System.client.updateIdeaContent(for: ideas[index])
     }
     
 }

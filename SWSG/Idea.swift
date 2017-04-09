@@ -26,6 +26,8 @@ class Idea {
     fileprivate var downvotes = Set<String>()
     
     private var done = false
+    private var imagesURL: [String: String]?
+    private var imagesDict = [String: UIImage]()
     
     init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
         self.name = name
@@ -69,49 +71,56 @@ class Idea {
         if let mainImageURL = snapshotValue[Config.mainImage] as? String {
             Utility.getImage(name: mainImageURL, completion: { (image) in
                 guard let image = image else {
-                    self.setImages(snapshotValue: snapshotValue)
                     return
                 }
                 self.mainImage = image
                 NotificationCenter.default.post(name: Notification.Name(rawValue: "refresh"), object: nil)
-                self.setImages(snapshotValue: snapshotValue)
             })
-        } else {
-            self.setImages(snapshotValue: snapshotValue)
         }
-    }
-    
-    private func setImages(snapshotValue: [String: Any]) {
-        guard let imagesURL = snapshotValue[Config.images] as? [String: [String: String]] else {
+        guard let imagesURL = snapshotValue[Config.images] as? [String: String], imagesURL.count > 0 else {
             return
         }
-        var imagesDict = [String: UIImage]()
-        for (index, imageURL) in imagesURL.values.enumerated() {
-            guard let key = imageURL.keys.first, let url = imageURL.values.first else {
+        self.images = [Config.loadingImage]
+        self.imagesURL = imagesURL
+    }
+    
+    func loadImages() {
+        guard let imagesURL = imagesURL else {
+            return
+        }
+        self.setImage(generator: imagesURL.makeIterator())
+    }
+
+    private func setImage(generator: DictionaryIterator<String, String>) {
+        var generator = generator
+        guard let (key, url) = generator.next() else {
+            if done {
                 return
             }
-            Utility.getImage(name: url, completion: { (image) in
-                guard let image = image else {
-                    return
-                }
-                if self.done {
-                    return
-                }
-                imagesDict[key] = image
-                guard index == imagesURL.count - 1 else {
-                    return
-                }
-                self.done = true
-                let array = imagesDict.sorted(by: { $0.0 < $1.0 })
-                for (_, image) in array {
-                    self.images.append(image)
-                }
-                guard let id = self.id else {
-                    return
-                }
-                NotificationCenter.default.post(name: Notification.Name(rawValue: id), object: nil)
-            })
+            self.done = true
+            self.images = []
+            let array = imagesDict.sorted(by: { $0.0 < $1.0 })
+            for (_, image) in array {
+                self.images.append(image)
+            }
+            guard let id = self.id else {
+                return
+            }
+            NotificationCenter.default.post(name: Notification.Name(rawValue: id), object: nil)
+            imagesURL = nil
+            imagesDict.removeAll()
+            return
         }
+        guard !done else {
+            return
+        }
+        Utility.getImage(name: url, completion: { (image) in
+            guard let image = image, !self.done else {
+                return
+            }
+            self.imagesDict[key] = image
+            self.setImage(generator: generator)
+        })
     }
     
     func update(name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
@@ -120,7 +129,6 @@ class Idea {
         self.mainImage = mainImage
         self.images = images
         self.videoLink = videoLink
-        System.client.updateIdeaContent(for: self)
     }
     
     func upvote() {

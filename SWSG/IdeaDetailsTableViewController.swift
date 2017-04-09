@@ -24,6 +24,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        idea.loadImages()
         mainImage.image = idea.mainImage
         ideaNameLabel.text = idea.name
         teamNameLabel.text = idea.teamName
@@ -61,12 +62,14 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     }
     
     @objc func updateImages(_ notification: NSNotification) {
+        mainImage.image = idea.mainImage
         containerViewController.updateImages(images: idea.images)
         DispatchQueue.main.async {
             self.containerViewController.tableView.layoutIfNeeded()
             self.containerHeight = self.containerViewController.tableView.contentSize.height
             self.tableView.reloadData()
         }
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

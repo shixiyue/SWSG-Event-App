@@ -230,6 +230,11 @@ class FirebaseClient {
         ideaRef.child(Config.votes).child(user).setValue(vote)
     }
     
+    func removeIdea(for id: String) {
+        let ideaRef = getIdeaRef(for: id)
+        ideaRef.removeValue()
+    }
+    
     public func createChannel(for channel: Channel, completion: @escaping GetChannelCallback) {
         if channel.type == .directMessage {
             getChannel(with: channel.members, completion: { (existingChannel, error) in
@@ -372,18 +377,19 @@ class FirebaseClient {
                 return
             }
             ref.child(Config.mainImage).setValue(url)
+            System.imageCache[url] = mainImage
             NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
         })
         let imagesRef = ref.child(Config.images)
         imagesRef.removeValue()
-        let startingValue = Int(("A" as UnicodeScalar).value) // 65
-        for (index, image) in images.enumerated() {
+        for image in images {
+            let imageRef = imagesRef.childByAutoId()
             saveImage(image: image, completion: { (imageURL, firError) in
                 guard firError == nil, let url = imageURL else {
                     return
                 }
-                let order = String(UnicodeScalar(index + startingValue)!)
-                imagesRef.childByAutoId().setValue([order: url])
+                imageRef.setValue(url)
+                System.imageCache[url] = image
             })
         }
     }
