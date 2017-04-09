@@ -46,6 +46,7 @@ class SignUpTableViewController: UIViewController {
     fileprivate var activeTextField: UITextField?
     fileprivate var activeTextView: UITextView?
     fileprivate var imagePicker = ImagePickerPopoverViewController()
+    fileprivate var currentCredential: FIRAuthCredential?
     public var fbUser: FBUser?
 
     override func viewDidLoad() {
@@ -185,12 +186,14 @@ class SignUpTableViewController: UIViewController {
             return
         }
         
-        Utility.attemptRegistration(email: email, client: Config.emailIdentifier, viewController: self, completion: { (exists, arr) in
+        Utility.attemptRegistration(email: email, client: Config.emailIdentifier, newCredential: nil, viewController: self, completion: { (exists, arr) in
             
             if let arr = arr {
                 let title = "Already Exists"
                 let message = "User with Email already exists, please log in with the original client first."
                 Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { () in
+                    
+                    self.currentCredential = System.client.getEmailCredential(email: email, password: password)
                     self.performSegue(withIdentifier: Config.signUpToLogin, sender: arr)
                 })
             } else {
@@ -231,6 +234,7 @@ class SignUpTableViewController: UIViewController {
                 return
             }
             
+            loginVC.newCredential = currentCredential
             loginVC.clientArr = arr
         }
     }

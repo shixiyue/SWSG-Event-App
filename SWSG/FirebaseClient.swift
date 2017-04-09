@@ -16,6 +16,7 @@ class FirebaseClient {
     typealias CreateUserCallback = (FirebaseError?) -> Void
     typealias SignInCallback = (FirebaseError?) -> Void
     typealias UserAuthCallback = (FirebaseError?) -> Void
+    typealias CredentialCallback = (FIRAuthCredential?, FirebaseError?) -> Void
     typealias GetFBUserCallback = (FBUser?, FirebaseError?) -> Void
     typealias GetUserCallback = (User?, FirebaseError?) -> Void
     typealias CheckEmailCallback = ([String]?, FirebaseError?) -> Void
@@ -95,12 +96,23 @@ class FirebaseClient {
         completion(nil)
     }
     
-    public func fbSignIn(completion: @escaping SignInCallback){
+    public func getEmailCredential(email: String, password: String) -> FIRAuthCredential? {
+        return FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
+    }
+    
+    public func getFBCredential() -> FIRAuthCredential? {
         guard let token = AccessToken.current else {
-            return
+            return nil
         }
         
-        let credential = FIRFacebookAuthProvider.credential(withAccessToken: token.authenticationToken)
+        return FIRFacebookAuthProvider.credential(withAccessToken: token.authenticationToken)
+    }
+    
+    public func fbSignIn(completion: @escaping SignInCallback){
+        guard let credential = getFBCredential() else {
+            completion(nil)
+            return
+        }
         
         signIn(credential: credential, completion: { (error) in
             completion(error)
@@ -151,6 +163,17 @@ class FirebaseClient {
         user?.reauthenticate(with: credential) { error in
             completion(self.checkError(error))
         }
+    }
+    
+    public func addAdditionalAuth(credential: FIRAuthCredential, completion: @escaping SignInCallback) {
+        guard let user = FIRAuth.auth()?.currentUser else {
+            completion(nil)
+            return
+        }
+        
+        user.link(with: credential, completion: { _ in
+            completion(nil)
+        })
     }
     
     func changePassword(newPassword: String, completion: @escaping UserAuthCallback) {

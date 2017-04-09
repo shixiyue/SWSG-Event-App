@@ -11,7 +11,7 @@ import FacebookCore
 import FacebookLogin
 import Firebase
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class LoginViewController: UIViewController {
 
     @IBOutlet private var emailTextField: UITextField!
     @IBOutlet private var passwordTextField: UITextField!
@@ -23,6 +23,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var googleView: UIView!
     @IBOutlet weak var signUpView: UIView!
     
+    var newCredential: FIRAuthCredential?
     var clientArr: [String]?
     fileprivate let loginButton = LoginButton(readPermissions: [.publicProfile, .email])
     
@@ -68,7 +69,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         
         System.client.signIn(email: email, password: password, completion: { (error) in
+            if let credential = self.newCredential {
+                System.client.addAdditionalAuth(credential: credential, completion: { _ in
+                })
+            }
+            
             Utility.logUserIn(error: error, current: self)
+            
         })
     }
     
@@ -86,6 +93,22 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         logInButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
     
+    // MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.logInSignUp, let user = sender as? FBUser {
+            guard let signUpVC = segue.destination as? SignUpViewController else {
+                return
+            }
+            
+            signUpVC.fbUser = user
+        }
+    }
+    
+}
+
+extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == emailTextField {
             passwordTextField.becomeFirstResponder()
@@ -95,7 +118,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         return false
     }
-    
 }
 
 extension LoginViewController: LoginButtonDelegate {
@@ -107,14 +129,9 @@ extension LoginViewController: LoginButtonDelegate {
                 return
             }
             
-            Utility.attemptRegistration(email: user.email, client: Config.fbIdentifier, viewController: self, completion: { (exists, arr) in
+            Utility.attemptRegistration(email: user.email, client: Config.fbIdentifier, newCredential: newCredential, viewController: self, completion: { (exists, arr) in
                 
-                if exists {
-                    //Account for FB already Exists
-                    Utility.attemptLogin(client: Config.fbIdentifier, viewController: self, completion: { (success) in
-                        
-                    })
-                } else if let arr = arr {
+                if !exists, let arr = arr {
                     let title = "Already Exists"
                     let message = "User with Email already exists, please log in with the original client first."
                     Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _  in
@@ -122,9 +139,9 @@ extension LoginViewController: LoginButtonDelegate {
                     })
                     
                     //TODO: Pass existing login on.
-                } else {
+                } else if !exists {
                     //Account does not exist, proceed with registration
-                    self.performSegue(withIdentifier: Config.initialToSignUp, sender: user)
+                    self.performSegue(withIdentifier: Config.logInSignUp, sender: user)
                 }
             })
         })

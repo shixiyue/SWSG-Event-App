@@ -47,10 +47,11 @@ class InitialViewController: UIViewController {
         super.prepare(for: segue, sender: sender)
         
         if segue.identifier == Config.signUpToLogin, let arr = sender as? [String] {
-            guard let loginVC = segue.destination as? LoginViewController else {
+            guard let loginVC = segue.destination as? LoginViewController, let credential = client.getFBCredential() else {
                 return
             }
             
+            loginVC.newCredential = credential
             loginVC.clientArr = arr
         } else if segue.identifier == Config.initialToSignUp, let user = sender as? FBUser {
             guard let signUpVC = segue.destination as? SignUpViewController else {
@@ -81,16 +82,12 @@ extension InitialViewController: LoginButtonDelegate {
             
             Utility.attemptRegistration(email: user.email, client: Config.fbIdentifier, viewController: self, completion: { (exists, arr) in
                 
-                if exists {
-                    //Account for FB already Exists
-                    Utility.attemptLogin(client: Config.fbIdentifier, viewController: self, completion: { (success) in
-                        
-                    })
-                } else if let arr = arr {
+                if !exists, let arr = arr {
                     let title = "Already Exists"
                     let message = "User with Email already exists, please log in with the original client first."
                     Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { ()  in
                         self.performSegue(withIdentifier: Config.initialToLogin, sender: arr)
+                        
                     })
                     
                     //TODO: Pass existing login on.
