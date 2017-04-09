@@ -77,7 +77,9 @@ class CreateChannelViewController: UIViewController {
         let channel = Channel(id: nil, type: .privateChannel, icon: image, name: name,
                               members: memberUIDs)
         
+        print("test4")
         client.createChannel(for: channel, completion: { (channel, error) in
+            print("test")
             _ = self.navigationController?.popViewController(animated: true)
             
         })

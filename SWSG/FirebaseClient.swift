@@ -309,6 +309,7 @@ class FirebaseClient {
         channelRef.setValue(channel.toDictionary())
         
         guard let icon = channel.icon else {
+            completion(channel, nil)
             return
         }
         

@@ -62,7 +62,7 @@ PODS:
   - JTAppleCalendar (6.1.6)
   - RSKImageCropper (1.6.1)
   - SwiftGifOrigin (1.6.1)
-  - TextFieldEffects (1.3.1)
+  - TextFieldEffects (1.3.2)
 
 DEPENDENCIES:
   - FacebookCore
@@ -96,7 +96,7 @@ SPEC CHECKSUMS:
   JTAppleCalendar: 560fb46421880f53ad54123295072de24bca2b18
   RSKImageCropper: 0df8c99e77a8ea7ca7a8b83ef468556f31584254
   SwiftGifOrigin: d6679d3ebe9df2e049a84bc52582635107b581f6
-  TextFieldEffects: faa47d428ee8eafb781a8413ac4345420d2328c4
+  TextFieldEffects: 9e5cce561ea39c75b86e9d3637601727a67e8b23
 
 PODFILE CHECKSUM: b4e67eb644ead3ef81fd1e4ccf0e49f1632b1a25
 
