@@ -8,31 +8,20 @@
 
 import UIKit
 
-class GrayBorderTextView: UITextView {
+class PlaceholderTextView: UITextView {
     
     var isEmpty: Bool {
-        get {
-            return textColor == UIColor.lightGray || text.isEmpty
-        }
+        return textColor == UIColor.lightGray || text.isEmpty
     }
     
     var content: String! {
-        get {
-            guard !isEmpty, let content = text?.trimTrailingWhiteSpace(), !content.isEmpty else {
-                return Config.defaultContent
-            }
-            return content
+        guard !isEmpty, let content = text?.trimTrailingWhiteSpace(), !content.isEmpty else {
+            return Config.defaultContent
         }
+        return content
     }
     
     private var placeholder: String = ""
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        layer.borderColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
-        layer.borderWidth = 1.0
-        layer.cornerRadius = 5.0
-    }
     
     func setPlaceholder(_ placeholder: String) {
         self.placeholder = placeholder
@@ -40,7 +29,7 @@ class GrayBorderTextView: UITextView {
     }
     
     func setPlaceholder() {
-        textColor = UIColor.lightGray
+        textColor = Config.placeholderColor
         text = placeholder
         selectedTextRange = textRange(from: beginningOfDocument, to: beginningOfDocument)
     }
@@ -48,6 +37,17 @@ class GrayBorderTextView: UITextView {
     func removePlaceholder() {
         text = nil
         textColor = UIColor.black
+    }
+    
+}
+
+class GrayBorderTextView: PlaceholderTextView {
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        layer.borderColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
+        layer.borderWidth = 1.0
+        layer.cornerRadius = 5.0
     }
     
 }

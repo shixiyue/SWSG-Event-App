@@ -70,10 +70,11 @@ struct Config {
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
     static let buttonCornerRadius: CGFloat = 5
     static let themeColor = UIColor(red: 232.0/255.0, green: 43.0/255.0, blue: 49.0/255.0, alpha: CGFloat(1))
+    static let placeholderColor = UIColor(red: 199/255, green: 199/255, blue: 205/255, alpha: 1.0)
     static let disableAlpha: CGFloat = 0.5
     static let enableAlpha: CGFloat = 1
     static let maximumZoomScale: CGFloat = 10
-    static let minimumProfileTextFieldHeight: CGFloat = 49.5
+    static let minimumProfileTextFieldHeight: CGFloat = 125
     static let maxTeamMember: Int = 4
     static let upvoteDefault = UIImage(named: "upvote")
     static let upvoteFilled = UIImage(named: "upvote-filled")

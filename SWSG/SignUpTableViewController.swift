@@ -31,21 +31,22 @@ class SignUpTableViewController: UIViewController {
     @IBOutlet fileprivate var countryTextField: UITextField!
     @IBOutlet private var jobTextField: UITextField!
     @IBOutlet private var companyTextField: UITextField!
-    @IBOutlet fileprivate var educationTextView: GrayBorderTextView!
-    @IBOutlet fileprivate var skillsTextView: GrayBorderTextView!
-    @IBOutlet fileprivate var descTextView: GrayBorderTextView!
+    @IBOutlet fileprivate var educationTextView: PlaceholderTextView!
+    @IBOutlet fileprivate var skillsTextView: PlaceholderTextView!
+    @IBOutlet fileprivate var descTextView: PlaceholderTextView!
     
     @IBOutlet weak var passwordStackView: UIView!
     @IBOutlet fileprivate var educationTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate var skillsTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate var descTextViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet fileprivate var stackViewHeightConstraint: NSLayoutConstraint!
     
     fileprivate var textFields: [UITextField]!
     fileprivate var textViews: [UITextView]!
     fileprivate var toolbar = UIToolbar()
     fileprivate var activeTextField: UITextField?
     fileprivate var activeTextView: UITextView?
-    fileprivate var imagePicker = ImagePickerPopoverViewController()
+    fileprivate var imagePicker = ImagePickCropperPopoverViewController()
     fileprivate var currentCredential: FIRAuthCredential?
     public var socialUser: SocialUser?
 
@@ -319,7 +320,7 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     }
     
     private func updateButtonState() {
-        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || skillsTextView.isEmpty
+        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || educationTextView.isEmpty || skillsTextView.isEmpty
         signUpButton.isEnabled = !isAnyEmpty
         signUpButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
@@ -342,21 +343,20 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
             return
         }
         
-        let size = textView.sizeThatFits(CGSize(width: textView.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
+        let height = textView.sizeThatFits(CGSize(width: textView.frame.size.width, height: CGFloat.greatestFiniteMagnitude)).height + Config.headerBuffer
         
-        guard size.height != constraint.constant, size.height >= Config.minimumProfileTextFieldHeight else {
+        guard height != constraint.constant, height >= Config.minimumProfileTextFieldHeight else {
             return
         }
         
-        constraint.constant = size.height + Config.headerBuffer
+        stackViewHeightConstraint.constant += height - constraint.constant
+        constraint.constant = height
         textView.setContentOffset(CGPoint(), animated: false)
-        UIView.setAnimationsEnabled(false)
-        UIView.setAnimationsEnabled(true)
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
-        guard let textView = textView as? GrayBorderTextView, let currentText = textView.text else {
+        guard let textView = textView as? PlaceholderTextView, let currentText = textView.text else {
             return false
         }
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
@@ -365,7 +365,7 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
             textView.setPlaceholder()
             updateButtonState()
             return false
-        } else if textView.textColor == UIColor.lightGray && !text.isEmpty {
+        } else if textView.textColor == Config.placeholderColor && !text.isEmpty {
             textView.removePlaceholder()
             updateButtonState()
         }
@@ -373,7 +373,7 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     }
     
     func textViewDidChangeSelection(_ textView: UITextView) {
-        guard view.window != nil, textView.textColor == UIColor.lightGray else {
+        guard view.window != nil, textView.textColor == Config.placeholderColor else {
             return
         }
         textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
@@ -464,12 +464,17 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     //When the keyboard closes, shift the UIView Back
     //
     func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey]
-            as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y != 0 {
-                self.view.frame.origin.y += (keyboardSize.height - Config.keyboardOffsetSignUp)
-            }
+        // Changed it to the "hardcoded" value 0 because the previous method is not working when there's a prediction bar on top of the keyboard
+        if self.view.frame.origin.y < 0 {
+            self.view.frame.origin.y = 0
         }
+        /*
+         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey]
+         as? NSValue)?.cgRectValue {
+         if self.view.frame.origin.y != 0 {
+         self.view.frame.origin.y += (keyboardSize.height - Config.keyboardOffsetSignUp)
+         }
+         */
     }
     
 }
