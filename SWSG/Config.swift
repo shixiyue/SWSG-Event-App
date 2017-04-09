@@ -85,6 +85,7 @@ struct Config {
     static let loadingImage = UIImage(named: "loading")!
     static let chatIconWidth: CGFloat = 40
     static let headerBuffer: CGFloat = 45
+    static let scrollViewOffset: CGFloat = 300
     static let keyboardOffsetSignUp: CGFloat = 94
     
     // Parameters for Storyboard:
