@@ -13,11 +13,18 @@ class TeamInfoTableViewController: UITableViewController {
     @IBOutlet weak var buttonLbl: UIButton!
     var team : Team?
     var teamIndex : Int?
+        var sizingCell: TagCell?
     private let teams = Teams.sharedInstance()
     private let joinTeamErrorMsg = "You can not join more than one team"
     private let quitTeamErrorMsg = "You do not belong to this team"
     private let fullTeamErrorMsg = "Team is full"
-    
+    private var containerHeight = CGFloat(100) {
+        didSet {
+        print("setting container view height")
+         NotificationCenter.default.post(name: Notification.Name(rawValue: "reload"), object: self)
+        }
+    }
+
     @IBAction func onBackButtonClick(_ sender: Any) {
         Utility.onBackButtonClick(tableViewController: self)
     }
@@ -36,6 +43,14 @@ class TeamInfoTableViewController: UITableViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
+    }
+    
+    @objc private func reload() {
+        tableView.beginUpdates()
+        print("reloading height")
+        tableView.layoutIfNeeded()
+        tableView.endUpdates()
     }
     
 
@@ -94,8 +109,32 @@ class TeamInfoTableViewController: UITableViewController {
         if section == 0 {
             return team!.members.count+1
         } else {
-            return 2
+            return 4
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            if indexPath.row == 0 {
+                return 44
+            } else {
+                return UITableViewAutomaticDimension
+            }
+        } else {
+            if indexPath.row == 0 {
+                return 44
+            } else if indexPath.row == 1 {
+                return containerHeight
+            } else if indexPath.row == 2 {
+                return 44
+            } else {
+                return UITableViewAutomaticDimension
+            }
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
     
     
@@ -109,14 +148,41 @@ class TeamInfoTableViewController: UITableViewController {
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "teamMemberCell", for: indexPath) as! TeamMemberTableViewCell
                 cell.nameLbl.text = team?.members[indexPath.row - 1].profile.name
+                cell.jobLbl.text = team?.members[indexPath.row-1].profile.job
+                cell.companyLbl.text = team?.members[indexPath.row - 1].profile.company
+                cell.descLbl.text = team?.members[indexPath.row-1].profile.desc
+                cell.profileimage.image = team?.members[indexPath.row - 1].profile.image ?? UIImage(named: "Placeholder")
                 return cell
             }
         } else {
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeaderCell", for: indexPath) as! SectionHeaderTableViewCell
-                cell.sectionHeaderLbl.text = "Looking For:"
+                cell.sectionHeaderLbl.text = "Our skills"
+                return cell
+
+            } else if indexPath.row == 1 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "tagdisplaycell", for: indexPath) as! TagTableViewCell
+                cell.tagCollectionView.delegate = self
+                let cellNib = UINib(nibName: "TagCell", bundle: nil)
+                cell.tagCollectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
+                cell.tagCollectionView.backgroundColor = UIColor.clear
+                self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
+                cell.tagCollectionView.performBatchUpdates({() -> Void in
+                cell.tagCollectionView.reloadData()
+                }, completion: {(_) -> Void in
+                    if cell.tagCollectionView.contentSize.height > self.containerHeight {
+                        self.containerHeight = cell.tagCollectionView.contentSize.height
+                    }
+                    print("containerheight is \(self.containerHeight) while collection height is \(cell.tagCollectionView.contentSize.height)")
+                })
+                return cell
+            }
+            else if indexPath.row == 2 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeaderCell", for: indexPath) as! SectionHeaderTableViewCell
+                cell.sectionHeaderLbl.text = "Looking For Members like..."
                 return cell
             } else {
+                print("loading looking for")
                 let cell = tableView.dequeueReusableCell(withIdentifier: "lookingForCell", for: indexPath) as! TeamLookingForTableViewCell
                 cell.lookingForLbl.text = team?.lookingFor
                 return cell
@@ -125,50 +191,35 @@ class TeamInfoTableViewController: UITableViewController {
         
     }
     
+}
+
+extension TeamInfoTableViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let team = self.team, let tags = team.tags {
+        return tags.count
+        }
+        return 0
+    }
     
-    /*
-     // Override to support conditional editing of the table view.
-     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the specified item to be editable.
-     return true
-     }
-     */
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TagCell", for: indexPath) as! TagCell
+        self.configureCell(cell: cell, forIndexPath: indexPath)
+        return cell
+    }
     
-    /*
-     // Override to support editing the table view.
-     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-     if editingStyle == .delete {
-     // Delete the row from the data source
-     tableView.deleteRows(at: [indexPath], with: .fade)
-     } else if editingStyle == .insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
     
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath)
+        let size = self.sizingCell!.tagName.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+        return CGSize(width: size.width*1.5, height: size.height*2)
+    }
     
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    func configureCell(cell: TagCell, forIndexPath indexPath: IndexPath) {
+        if let team = self.team, let tags = team.tags {
+            let tag = tags[indexPath.row]
+            cell.tagName.text = tag
+        }
+    }
+
     
 }
