@@ -117,6 +117,7 @@ struct Config {
     static let loginToLogin = "showLogin"
     static let signUpToLogin = "showLogin"
     static let mentorToChat = "mentorToChat"
+    static let loginToSignup = "loginToSignUp"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"

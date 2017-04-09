@@ -698,7 +698,7 @@
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
-                                                    <segue destination="BpF-Zz-rqJ" kind="show" id="oMt-Jt-Tjf"/>
+                                                    <segue destination="BpF-Zz-rqJ" kind="show" identifier="loginToSignUp" id="oMt-Jt-Tjf"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Don't have an account?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tee-gm-ZCU">
@@ -773,7 +773,7 @@
             <objects>
                 <navigationController storyboardIdentifier="InitialScreen" automaticallyAdjustsScrollViewInsets="NO" id="bAk-NY-qZm" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="XAz-SO-9it">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="XAz-SO-9it">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

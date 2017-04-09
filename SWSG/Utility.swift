@@ -81,6 +81,12 @@ struct Utility {
     }
     
     static func logOutUser(currentViewController: UIViewController) {
+        signOutAllAccounts()
+        System.activeUser = nil
+        showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
+    }
+    
+    static func signOutAllAccounts() {
         System.client.signOut()
         
         if let _ = AccessToken.current {
@@ -88,9 +94,6 @@ struct Utility {
         }
         
         GIDSignIn.sharedInstance().signOut()
-        
-        System.activeUser = nil
-        showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
     }
     
     static func logInUser(user: User, currentViewController: UIViewController) {

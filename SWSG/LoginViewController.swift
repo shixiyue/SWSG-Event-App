@@ -12,6 +12,7 @@ import FacebookLogin
 import Firebase
 import Google
 import GoogleSignIn
+import SwiftSpinner
 
 class LoginViewController: UIViewController {
 
@@ -38,13 +39,14 @@ class LoginViewController: UIViewController {
         hideKeyboardWhenTappedAround()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        SwiftSpinner.hide()
         
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
         
         setUpClients()
+        Utility.signOutAllAccounts()
     }
     
     private func setUpClients() {
@@ -78,13 +80,15 @@ class LoginViewController: UIViewController {
         let googleCenter = CGPoint(x: googleView.frame.width/2,y: googleView.frame.height/2)
         
         fbLoginButton.center = fbCenter
-        googleLoginButton.center = googleCenter
         
         fbLoginButton.delegate = self
         self.facebookView.addSubview(fbLoginButton)
         
-        googleLoginButton.center = googleView.center
+        googleLoginButton.center = googleCenter
         self.googleView.addSubview(googleLoginButton)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(googleLoginBtnPressed))
+        googleLoginButton.addGestureRecognizer(tapGesture)
     }
     
     @objc fileprivate func logIn() {
@@ -113,7 +117,7 @@ class LoginViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
-        if segue.identifier == Config.logInSignUp, let user = sender as? SocialUser {
+        if segue.identifier == Config.loginToSignup, let user = sender as? SocialUser {
             guard let signUpVC = segue.destination as? SignUpViewController else {
                 return
             }
@@ -130,8 +134,10 @@ class LoginViewController: UIViewController {
                 loginVC.newCredential = System.client.getFBCredential()
             case .google:
                 loginVC.newCredential = System.client.getGoogleCredential()
-            default:
-                break
+            case .email:
+                loginVC.newCredential = System.client
+                    .getEmailCredential(email: emailTextField.text,
+                                        password: passwordTextField.text)
             }
             
             loginVC.clientArr = arr
@@ -151,7 +157,7 @@ class LoginViewController: UIViewController {
                 
             } else if arr == nil {
                 //Account does not exist, proceed with registration
-                self.performSegue(withIdentifier: Config.logInSignUp, sender: user)
+                self.performSegue(withIdentifier: Config.loginToSignup, sender: user)
             }
         })
     }
@@ -171,8 +177,13 @@ extension LoginViewController: UITextFieldDelegate {
 }
 
 extension LoginViewController: GIDSignInDelegate, GIDSignInUIDelegate {
+    func googleLoginBtnPressed(sender: UITapGestureRecognizer) {
+        GIDSignIn.sharedInstance().signIn()
+    }
+    
     public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        if (error == nil) {
+        if error == nil {
+            SwiftSpinner.show("Communicating with Google")
             let user = SocialUser(gUser: user)
             self.attemptLogin(email: user.email, password: nil, user: user, auth: .google)
         }
@@ -183,11 +194,11 @@ extension LoginViewController: LoginButtonDelegate {
     
     func loginButtonDidCompleteLogin(_ fbLoginButton: LoginButton, result: LoginResult){
         System.client.getFBProfile(completion: { (user, error) in
-            fbLoginButton.isHidden = true
             guard let user = user else {
                 return
             }
             
+            SwiftSpinner.show("Communicating with Facebook")
             self.attemptLogin(email: user.email, password: nil, user: user, auth: .facebook)
         })
     }

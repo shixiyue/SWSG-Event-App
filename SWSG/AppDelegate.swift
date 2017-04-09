@@ -12,6 +12,7 @@ import Firebase
 import FacebookCore
 import Google
 import GoogleSignIn
+import SwiftSpinner
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -47,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("test2")
         if System.client.alreadySignedIn() {
             showLaunchScreen()
-            print("test")
+            SwiftSpinner.show("Communicating with Servers...")
             System.client.getCurrentUser(completion: { (user, userError) in
                 if let user = user {
                     System.activeUser = user

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftSpinner
 
 class SignUpViewController: UIViewController {
     
@@ -26,6 +27,10 @@ class SignUpViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        SwiftSpinner.hide()
     }
 
 }
