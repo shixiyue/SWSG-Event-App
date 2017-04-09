@@ -85,20 +85,7 @@ class SignUpTableViewController: UIViewController {
     }
     
     private func setUpToolbar() {
-        toolbar.barStyle = .default
-        toolbar.isTranslucent = true
-        toolbar.sizeToFit()
-        
-        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(donePressed))
-        let flexibleSpaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let fixedSpaceButton = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        
-        let nextButton  = UIBarButtonItem(title: ">", style: .plain, target: self, action: #selector(nextTextField))
-        nextButton.width = 50.0
-        let previousButton  = UIBarButtonItem(title: "<", style: .plain, target: self, action: #selector(previousTextField))
-        
-        toolbar.setItems([fixedSpaceButton, previousButton, nextButton, fixedSpaceButton, flexibleSpaceButton, doneButton], animated: false)
-        toolbar.isUserInteractionEnabled = true
+        toolbar = Utility.getToolbar(previous: #selector(previousTextField), next: #selector(nextTextField), done: #selector(donePressed))
     }
     
     //Sets the Keyboard to push and lower the view when it appears and disappears
@@ -125,7 +112,6 @@ class SignUpTableViewController: UIViewController {
     
     private func setUpCountryTextField() {
         setUpCountryPickerView()
-        setUpCountryToolBar()
     }
     
     private func setUpCountryPickerView() {
@@ -134,19 +120,6 @@ class SignUpTableViewController: UIViewController {
         countryPickerView.dataSource = self
         countryPickerView.selectRow(Utility.defaultCountryIndex, inComponent: 0, animated: true)
         countryTextField.inputView = countryPickerView
-    }
-    
-    private func setUpCountryToolBar() {
-        let toolBar = UIToolbar()
-        toolBar.barStyle = UIBarStyle.default
-        toolBar.isTranslucent = true
-        toolBar.tintColor = Config.themeColor
-        toolBar.sizeToFit()
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        let doneButton = UIBarButtonItem(title: Config.done, style: .done, target: self, action: #selector(donePicker))
-        toolBar.setItems([flexibleSpace, doneButton], animated: false)
-        toolBar.isUserInteractionEnabled = true
-        countryTextField.inputAccessoryView = toolBar
     }
     
     private func setUpSocialDetails() {
@@ -380,68 +353,15 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     }
     
     func previousTextField() {
-        saveSelectedRow()
-        
-        if let activeTextField = activeTextField {
-            var previousTag = activeTextField.tag - 1
-            
-            while previousTag >= 0 {
-                if textFields[previousTag].isEnabled {
-                    textFields[previousTag].becomeFirstResponder()
-                    return
-                } else {
-                    previousTag -= 1
-                }
-            }
-        } else if let activeTextView = activeTextView {
-            var previousTag = activeTextView.tag - 1
-            
-            while previousTag >= 0 {
-                if textViews[previousTag].isEditable {
-                    textViews[previousTag].becomeFirstResponder()
-                    return
-                } else {
-                    previousTag -= 1
-                }
-            }
-            textFields.last?.becomeFirstResponder()
-        }
+        Utility.previousTextField(runFirst: saveSelectedRow, activeTF: activeTextField, tfCollection: textFields, activeTV: activeTextView, tvCollection: textViews)
     }
     
     func nextTextField() {
-        saveSelectedRow()
-        
-        if let activeTextField = activeTextField {
-            var nextTag = activeTextField.tag + 1
-            
-            while nextTag < textFields.count {
-                if textFields[nextTag].isEnabled {
-                    textFields[nextTag].becomeFirstResponder()
-                    return
-                } else {
-                   nextTag += 1
-                }
-            }
-            
-            textViews.first?.becomeFirstResponder()
-        } else if let activeTextView = activeTextView {
-            var nextTag = activeTextView.tag + 1
-            
-            while nextTag < textViews.count {
-                if textViews[nextTag].isEditable {
-                    textViews[nextTag].becomeFirstResponder()
-                    return
-                } else {
-                    nextTag += 1
-                }
-            }
-            donePressed()
-        }
+        Utility.nextTextField(runFirst: saveSelectedRow, runLast: donePressed, activeTF: activeTextField, tfCollection: textFields, activeTV: activeTextView, tvCollection: textViews)
     }
     
     func donePressed() {
-        saveSelectedRow()
-        view.endEditing(true)
+        Utility.donePressed(runFirst:saveSelectedRow, viewController: self)
     }
     
     func saveSelectedRow() {

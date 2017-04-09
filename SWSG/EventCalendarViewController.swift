@@ -15,7 +15,7 @@ class EventCalendarViewController: BaseViewController {
     // a new color every time a cell is displayed. We do not want a laggy
     // scrolling calendar.
 
-    var events = Events.sharedInstance()
+    var events = Events.instance
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var dayList: UITableView!
@@ -184,21 +184,31 @@ extension EventCalendarViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: Config.eventCell, for: indexPath) as? EventScheduleTableViewCell,
             let selectedDate = calendarView.selectedDates.first,
-            let event = events.retrieveEventAt(index: indexPath.item, at: selectedDate) else {
+            let event = events.retrieveEventAt(index: indexPath.item, at: selectedDate),
+            let id = event.id else {
                 return EventScheduleTableViewCell()
         }
         
         cell.colorBorder.backgroundColor = Config.themeColor
         cell.eventName.text = event.name
         
-        if event.images.count > 0 {
-            cell.eventIV.image = event.images.first
-        } else {
-            cell.eventIV.isHidden = true
-        }
+        cell.eventIV.isHidden = true
         
-        //cell.eventTimeVenue.text = event.start_datetime + "-" + event.end_datetime + " @ " + event.venue
-        cell.eventDescription.text = event.description
+        System.client.getEventImagesURL(for: id, completion: { (images, error) in
+            guard let images = images else {
+                return
+            }
+            
+            cell.eventIV.image = images.first
+            cell.eventIV.isHidden = false
+        })
+        
+        let formatter = Utility.fbTimeFormatter
+        let startTimeString = formatter.string(from: event.startDateTime)
+        let endTimeString = formatter.string(from: event.endDateTime)
+        cell.eventTime.text = "\(startTimeString) - \(endTimeString)"
+        cell.venue.text = "@ \(event.venue)"
+        cell.eventDescription.text = event.shortDesc
         
         return cell
     }

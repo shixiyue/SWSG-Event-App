@@ -12,7 +12,7 @@ class EventDetailsTableViewController: UITableViewController {
     
     public var event : Event?
     private var containerHeight: CGFloat!
-    private var events = Events.sharedInstance()
+    private var events = Events.instance
     
 
     @IBOutlet weak var eventDetailsTableView: UITableView!

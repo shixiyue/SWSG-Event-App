@@ -61,6 +61,7 @@
 		3FED30251E77A37300C007AD /* MentorGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30241E77A37300C007AD /* MentorGridViewController.swift */; };
 		3FED30271E77A57600C007AD /* (null) in Sources */ = {isa = PBXBuildFile; };
 		3FED30291E77A5CB00C007AD /* Mentor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30281E77A5CB00C007AD /* Mentor.swift */; };
+		3FF6530A1E9AB08200B9E64F /* CreateEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF653091E9AB08200B9E64F /* CreateEventViewController.swift */; };
 		C28B2ED81E86601300F6DD67 /* FirebaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28B2ED71E86601300F6DD67 /* FirebaseClient.swift */; };
 		C28B2EDA1E86665000F6DD67 /* FirebaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28B2ED91E86665000F6DD67 /* FirebaseError.swift */; };
 		CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */; };
@@ -211,6 +212,7 @@
 		3FED30221E77A2D400C007AD /* MentorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorCell.swift; sourceTree = "<group>"; };
 		3FED30241E77A37300C007AD /* MentorGridViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorGridViewController.swift; sourceTree = "<group>"; };
 		3FED30281E77A5CB00C007AD /* Mentor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mentor.swift; sourceTree = "<group>"; };
+		3FF653091E9AB08200B9E64F /* CreateEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateEventViewController.swift; sourceTree = "<group>"; };
 		47768B1F37EFBCE271E85CCA /* Pods-SWSG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWSG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SWSG/Pods-SWSG.debug.xcconfig"; sourceTree = "<group>"; };
 		54B8245B6BA99CC5301E1F07 /* Pods_SWSG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SWSG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C28B2ED71E86601300F6DD67 /* FirebaseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseClient.swift; sourceTree = "<group>"; };
@@ -498,6 +500,7 @@
 				E348D5731E895CD700947B3F /* CalendarCellView.xib */,
 				E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */,
 				E348D5771E895D7C00947B3F /* CalendarCell.swift */,
+				E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */,
 				E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */,
 				E3220C3A1E7AE387008AFA85 /* EventImageTableViewCell.swift */,
 				E3220C3C1E7AE39D008AFA85 /* EventTimeTableViewCell.swift */,
@@ -644,10 +647,10 @@
 			isa = PBXGroup;
 			children = (
 				E3220C281E796BC0008AFA85 /* EventSystem.storyboard */,
-				E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */,
 				3FF653061E9A720800B9E64F /* UI Calendar Files */,
 				E348D5791E895E8300947B3F /* EventCalendarViewController.swift */,
-				E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */,
+				3FF653091E9AB08200B9E64F /* CreateEventViewController.swift */,
+				E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */,
 				E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */,
 			);
 			name = EventSystem;
@@ -909,6 +912,7 @@
 				CC1AA6C21E77C328004F5F95 /* (null) in Sources */,
 				CC7A4AFA1E87700800BC8A4B /* InformationHeaderTableViewCell.swift in Sources */,
 				E3220C6B1E7D3D25008AFA85 /* Teams.swift in Sources */,
+				3FF6530A1E9AB08200B9E64F /* CreateEventViewController.swift in Sources */,
 				E348D56E1E8415C500947B3F /* SegueFromRight.swift in Sources */,
 				E348D56C1E840F1100947B3F /* IdeaItemTableViewCell.swift in Sources */,
 				E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */,

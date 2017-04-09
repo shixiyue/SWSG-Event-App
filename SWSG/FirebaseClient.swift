@@ -29,9 +29,11 @@ class FirebaseClient {
     typealias GetChannelCallback = (Channel?, FirebaseError?) -> Void
     typealias GetMessageCallback = (Message, FirebaseError?) -> Void
     typealias GetEventCallback = (Event?, FirebaseError?) -> Void
+    typealias GetEventsCallback = ([Date: [Event]], FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
     typealias ImageCallback = (UIImage?, String?) -> Void
+    typealias ImagesCallback = ([UIImage]?, String?) -> Void
     
     var isConnected: Bool = false
     
@@ -281,25 +283,60 @@ class FirebaseClient {
         let eventRef = eventsRef.child(dayString).childByAutoId()
         eventRef.setValue(event.toDictionary())
         
-        var imageURLs = [String]()
-        for image in event.images {
-            saveImage(image: image, completion: { (imageURL, firError) in
-                guard let imageURL = imageURL else {
-                    return
-                }
-                
-                imageURLs.append(imageURL)
-                eventRef.child(Config.image).setValue(imageURLs)
-            })
+        if event.images.count == 0 {
+            completion (nil)
+        } else {
+            var imageURLs = [String]()
+            
+            for (index, image) in event.images.enumerated() {
+                saveImage(image: image, completion: { (imageURL, firError) in
+                    guard let imageURL = imageURL else {
+                        return
+                    }
+                    
+                    imageURLs.append(imageURL)
+                    eventRef.child(Config.image).setValue(imageURLs)
+                    
+                    if index == event.images.count - 1 {
+                        completion (nil)
+                    }
+                })
+            }
         }
     }
     
-    public func getEventWithId(_ id: String, completion: @escaping GetEventCallback) {
+    public func getEvents(completion: @escaping GetEventsCallback) {
+        eventsRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            var eventsByDate = [Date: [Event]]()
+            for dateSnapshot in snapshot.children {
+                guard let dateSnapshot = dateSnapshot as? FIRDataSnapshot,
+                    let date = Utility.fbDateFormatter.date(from: dateSnapshot.key) else {
+                    continue
+                }
+                
+                var events = [Event]()
+                for eventSnapshot in dateSnapshot.children {
+                    guard let eventSnapshot = eventSnapshot as? FIRDataSnapshot,
+                        let event = Event(id: eventSnapshot.key, snapshot: eventSnapshot) else {
+                        continue
+                    }
+                    
+                    events.append(event)
+                }
+                
+                eventsByDate[date] = events
+            }
+            
+            completion(eventsByDate, nil)
+        })
+    }
+    
+    public func getEvent(with id: String, completion: @escaping GetEventCallback) {
         let eventRef = eventsRef.queryOrderedByValue().queryEqual(toValue: id)
         eventRef.observeSingleEvent(of: .value, with: { (snapshot) in
             for child in snapshot.children {
                 if let child = child as? FIRDataSnapshot {
-                    completion(Event(snapshot: child), nil)
+                    completion(Event(id: child.key, snapshot: child), nil)
                     return
                 }
             }
@@ -308,13 +345,13 @@ class FirebaseClient {
         })
     }
     
-    public func getEventByDay(_ day: Date, completion: @escaping GetEventByDayCallback) {
+    public func getEvent(by day: Date, completion: @escaping GetEventByDayCallback) {
         let dayString = Utility.fbDateFormatter.string(from: day)
         let dayRef = eventsRef.child(dayString)
         dayRef.observeSingleEvent(of: .value, with: {(snapshot) in
             var events = [Event]()
             for child in snapshot.children {
-                if let child = child as? FIRDataSnapshot, let event = Event(snapshot: child) {
+                if let child = child as? FIRDataSnapshot, let event = Event(id: child.key, snapshot: child) {
                     events.append(event)
                 }
             }
@@ -531,6 +568,38 @@ class FirebaseClient {
             }
         })
         
+    }
+    
+    public func getEventImagesURL(for id: String, completion: @escaping ImagesCallback) {
+        let eventRef = eventsRef.queryOrderedByValue().queryEqual(toValue: id)
+        eventRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            for child in snapshot.children {
+                if let child = child as? FIRDataSnapshot,
+                    let urls = child.childSnapshot(forPath: Config.image).value as? [String] {
+                    
+                    var images = [UIImage]()
+                    
+                    for (index, url) in urls.enumerated() {
+                        self.fetchImageDataAtURL(url, completion: { (image, error) in
+                            guard let image = image else {
+                                return
+                            }
+                            
+                            images.append(image)
+                            
+                            if index == urls.count - 1 {
+                                completion(images, error)
+                            }
+                        })
+                    }
+                    
+                    completion(nil, nil)
+                    return
+                }
+            }
+            
+            completion(nil, nil)
+        })
     }
     
     public func fetchImageDataAtURL(_ imageURL: String, completion: @escaping ImageCallback) {

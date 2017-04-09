@@ -14,7 +14,8 @@ class EventScheduleTableViewCell: UITableViewCell {
     @IBOutlet weak var colorBorder: UIView!
     @IBOutlet weak var eventIV: UIImageView!
     @IBOutlet weak var eventName: UILabel!
-    @IBOutlet weak var eventTimeVenue: UILabel!
+    @IBOutlet weak var eventTime: UILabel!
+    @IBOutlet weak var venue: UILabel!
     @IBOutlet weak var eventDescription: UITextView!
     
     
