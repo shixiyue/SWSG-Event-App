@@ -10,6 +10,8 @@ import UIKit
 import CoreData
 import Firebase
 import FacebookCore
+import Google
+import GoogleSignIn
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         SDKApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         setNavigationBar()
+        setUpFirebase()
+        setUpGoogleLogin()
         checkLogin()
         return true
     }
@@ -30,20 +34,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().tintColor = UIColor.white
     }
     
+    private func setUpFirebase() {
+        FIRApp.configure()
+    }
+    
+    private func setUpGoogleLogin() {
+        GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
+    }
+    
     //TODO: Automatic Login with Firebase
     private func checkLogin() {
-        FIRApp.configure()
-        print("test")
         if System.client.alreadySignedIn() {
             showLaunchScreen()
-            print("test2")
             System.client.getCurrentUser(completion: { (user, userError) in
                 if let user = user {
-                    print("test3")
                     System.activeUser = user
                     self.showHomeScreen()
                 } else {
-                    print("test4")
                     self.showLogInSignUpScreen()
                 }
             })
@@ -104,9 +111,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     public func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        let handled = SDKApplicationDelegate.shared.application(app, open: url, options: options)
         
-        return handled
+        guard let scheme = url.scheme else {
+            return false
+        }
+        
+        if scheme.hasPrefix("com.googleusercontent.apps.") {
+            return GIDSignIn.sharedInstance().handle(url,
+                                                     sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                                     annotation: [:])
+        } else if scheme.hasPrefix("fb\(SDKSettings.appId)") {
+            let handled = SDKApplicationDelegate.shared.application(app, open: url, options: options)
+            
+            return handled
+        }
+        
+        return false
     }
 }
 

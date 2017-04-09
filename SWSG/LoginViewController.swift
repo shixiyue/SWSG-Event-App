@@ -13,9 +13,9 @@ import Firebase
 
 class LoginViewController: UIViewController {
 
-    @IBOutlet private var emailTextField: UITextField!
-    @IBOutlet private var passwordTextField: UITextField!
-    @IBOutlet private var logInButton: RoundCornerButton!
+    @IBOutlet fileprivate var emailTextField: UITextField!
+    @IBOutlet fileprivate var passwordTextField: UITextField!
+    @IBOutlet fileprivate var logInButton: RoundCornerButton!
     
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var emailView: UIView!
@@ -63,7 +63,7 @@ class LoginViewController: UIViewController {
         self.stackView.addSubview(loginButton)
     }
     
-    @objc private func logIn() {
+    @objc fileprivate func logIn() {
         guard let email = emailTextField.text, let password = passwordTextField.text else {
             return
         }
@@ -97,12 +97,12 @@ class LoginViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
-        if segue.identifier == Config.logInSignUp, let user = sender as? FBUser {
+        if segue.identifier == Config.logInSignUp, let user = sender as? SocialUser {
             guard let signUpVC = segue.destination as? SignUpViewController else {
                 return
             }
             
-            signUpVC.fbUser = user
+            signUpVC.socialUser = user
         }
     }
     
@@ -129,7 +129,7 @@ extension LoginViewController: LoginButtonDelegate {
                 return
             }
             
-            Utility.attemptRegistration(email: user.email, client: Config.fbIdentifier, newCredential: newCredential, viewController: self, completion: { (exists, arr) in
+            Utility.attemptRegistration(email: user.email, auth: .facebook, newCredential: self.newCredential, viewController: self, completion: { (exists, arr) in
                 
                 if !exists, let arr = arr {
                     let title = "Already Exists"

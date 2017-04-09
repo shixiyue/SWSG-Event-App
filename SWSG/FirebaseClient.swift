@@ -17,7 +17,7 @@ class FirebaseClient {
     typealias SignInCallback = (FirebaseError?) -> Void
     typealias UserAuthCallback = (FirebaseError?) -> Void
     typealias CredentialCallback = (FIRAuthCredential?, FirebaseError?) -> Void
-    typealias GetFBUserCallback = (FBUser?, FirebaseError?) -> Void
+    typealias GetFBUserCallback = (SocialUser?, FirebaseError?) -> Void
     typealias GetUserCallback = (User?, FirebaseError?) -> Void
     typealias CheckEmailCallback = ([String]?, FirebaseError?) -> Void
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
