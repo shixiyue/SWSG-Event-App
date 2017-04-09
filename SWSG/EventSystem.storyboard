@@ -24,7 +24,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="crH-tg-Wlm" customClass="JTAppleCalendarView" customModule="JTAppleCalendar">
-                                <rect key="frame" x="0.0" y="50" width="375" height="341"/>
+                                <rect key="frame" x="0.0" y="70" width="375" height="341"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="crH-tg-Wlm" secondAttribute="height" multiplier="375:341" id="fnv-UK-UMY"/>
@@ -42,7 +42,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="crH-tg-Wlm" firstAttribute="leading" secondItem="Qs3-e2-5lC" secondAttribute="leading" id="BfN-Fo-YUz"/>
-                            <constraint firstItem="crH-tg-Wlm" firstAttribute="top" secondItem="Qs3-e2-5lC" secondAttribute="top" constant="50" id="ebY-0b-Vj7"/>
+                            <constraint firstItem="crH-tg-Wlm" firstAttribute="top" secondItem="Qs3-e2-5lC" secondAttribute="top" constant="70" id="ebY-0b-Vj7"/>
                             <constraint firstItem="crH-tg-Wlm" firstAttribute="trailing" secondItem="Qs3-e2-5lC" secondAttribute="trailing" id="mTf-VD-7B4"/>
                         </constraints>
                     </view>

@@ -12,16 +12,20 @@ class Team {
     
     public private (set) var members: [User]
     public private (set) var name: String
-    public private (set) var info: String
     public private (set) var lookingFor: String?
     public private (set) var isPrivate: Bool
+    public private (set) var tags: [String]? {
+        didSet {
+             NotificationCenter.default.post(name: Notification.Name(rawValue: "tags"), object: self)
+        }
+    }
     
-    init(members: [User], name: String, info: String, lookingFor: String?, isPrivate: Bool) {
+    init(members: [User], name: String, lookingFor: String?, isPrivate: Bool, tags: [String]?) {
         self.members = members
         self.name = name
-        self.info = info
         self.lookingFor = lookingFor
         self.isPrivate = isPrivate
+        self.tags = tags
     }
     
     func addMember(member: User) {
@@ -52,7 +56,7 @@ extension Team {
         }
         data.updateValue(member_data, forKey: "members")
         data.updateValue(name, forKey: "teamName")
-        data.updateValue(info, forKey: "info")
+       // data.updateValue(info, forKey: "info")
         data.updateValue(lookingFor ?? "", forKey: "lookingFor")
         data.updateValue(isPrivate, forKey: "isPrivate")
         return data

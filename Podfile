@@ -14,6 +14,7 @@ platform :ios, '9.0'
   pod 'FacebookCore'
   pod 'FacebookLogin'
   pod 'TextFieldEffects'
+
   
 end
 
