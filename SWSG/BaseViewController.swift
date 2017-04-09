@@ -23,15 +23,14 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
     }
     
     private var btnShowMenu: UIButton!
+    private var tapGesture: UITapGestureRecognizer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
+        tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideMenu))
+        tapGesture.isEnabled = false
+        view.addGestureRecognizer(tapGesture)
     }
     
     func slideMenuItemSelectedAtIndex(_ index: Int) {
@@ -124,6 +123,8 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         sender.isEnabled = false
         sender.tag = 10
         
+        tapGesture.isEnabled = true
+        
         let storyboard = UIStoryboard(name: "Menu", bundle: nil)
         let menuVC : MenuViewController = storyboard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
         menuVC.btnMenu = sender
@@ -141,8 +142,9 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         }, completion:nil)
     }
     
-    private func hideMenu() {
+    func hideMenu() {
         btnShowMenu.tag = 0
+        tapGesture.isEnabled = false
         
         let viewMenuBack : UIView = view.subviews.last!
         

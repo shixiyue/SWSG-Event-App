@@ -11,15 +11,15 @@ import UIKit
 class EventDetailsTableViewController: UITableViewController {
     
     public static var event : Event?
+    public var date: Date?
+    private var containerHeight: CGFloat!
+    private var events = Events.sharedInstance()
     
-    @IBOutlet weak var eventDetailsTableView: UITableView! {
-        didSet{
-            let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventScheduleTableViewController.hideNavBarTapHandler))
-            hideNavBarTapGesture.numberOfTapsRequired = 2
-            eventDetailsTableView.addGestureRecognizer(hideNavBarTapGesture)
-            eventDetailsTableView.isUserInteractionEnabled = true
-        }
-    }
+
+    @IBOutlet weak var eventDetailsTableView: UITableView!
+
+    @IBOutlet weak var containerView: UIView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTable()
@@ -41,6 +41,20 @@ class EventDetailsTableViewController: UITableViewController {
         tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
     
+    @IBAction func onAddCalendarBtnClicked(_ sender: Any) {
+        guard let event = EventDetailsTableViewController.event, let date = date else{
+            return
+        }
+
+        let startTimes = Utility.strtok(string: event.start_datetime, delimiter: ": ")
+        var startDate = Calendar.current.date(byAdding: .hour, value: startTimes[0], to: date)
+        startDate = Calendar.current.date(byAdding: .minute, value: startTimes[1], to: startDate!)!
+        let endTimes = Utility.strtok(string: event.end_datetime, delimiter: ": ")
+        var endDate = Calendar.current.date(byAdding: .hour, value: endTimes[0], to: date)
+        endDate = Calendar.current.date(byAdding: .minute, value: endTimes[1], to: endDate!)
+
+        Utility.addEventToCalendar(title: event.name, description: event.description, startDate: startDate!, endDate: endDate!)
+    }
     func update() {
         tableView.reloadData()
     }
@@ -82,19 +96,16 @@ class EventDetailsTableViewController: UITableViewController {
         if indexPath.section == 0 {
             switch indexPath.item {
             case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "EventImage", for: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "EventTime", for: indexPath) as! EventTimeTableViewCell
+               // let timeFormatter = DateFormatter()
+                //timeFormatter.dateFormat = "HH:mm"
+                cell.timeLabel.text = EventDetailsTableViewController.event!.start_datetime
                 return cell
             case 1:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "EventTime", for: indexPath) as! EventTimeTableViewCell
-                let timeFormatter = DateFormatter()
-                timeFormatter.dateFormat = "HH:mm"
-                cell.timeLabel.text = timeFormatter.string(from: EventDetailsTableViewController.event!.date_time)
-                return cell
-            case 2:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "EventVenue", for: indexPath) as! EventVenueTableViewCell
                 cell.venueLabel.text = EventDetailsTableViewController.event?.venue
                 return cell
-            case 3:
+            case 2:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "EventDetail", for: indexPath) as! EventDetailTableViewCell
                 cell.detailsLabel.text = EventDetailsTableViewController.event?.details
                 return cell
@@ -143,6 +154,19 @@ class EventDetailsTableViewController: UITableViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "container", let containerViewController = segue.destination as? TemplateViewController else {
+            return
+        }
+        guard let event = EventDetailsTableViewController.event else {
+            return
+        }
+        containerViewController.presetInfo(desc: "", images: event.image, videoLink: "", isScrollEnabled: false)
+        print("here in preparing for segue \(event.description)")
+        containerViewController.tableView.layoutIfNeeded()
+        containerView.frame = CGRect(x: 0, y: 0, width: tableView.contentSize.width, height: containerViewController.tableView.contentSize.height)
     }
     
 }

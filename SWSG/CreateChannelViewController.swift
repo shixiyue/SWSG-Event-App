@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class CreateChannelViewController: ImagePickerViewController {
+class CreateChannelViewController: UIViewController {
     
     @IBOutlet weak var nameTF: UITextField!
     @IBOutlet weak var memberTF: UITextField!
@@ -22,6 +22,7 @@ class CreateChannelViewController: ImagePickerViewController {
     fileprivate let client = System.client
     fileprivate var members = [User]()
     fileprivate var iconAdded = false
+    fileprivate var imagePicker = ImagePickerPopoverViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,22 +41,19 @@ class CreateChannelViewController: ImagePickerViewController {
         iconIV = Utility.roundUIImageView(for: iconIV)
         iconIV.image = Config.placeholderImg
         
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showImageOptions))
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showImagePicker))
         iconIV.addGestureRecognizer(gestureRecognizer)
-        editBtn.addTarget(self, action: #selector(showImageOptions), for: .touchUpInside)
+        editBtn.addTarget(self, action: #selector(showImagePicker), for: .touchUpInside)
         
         self.hideKeyboardWhenTappedAround()
     }
     
     @IBAction func saveBtnPressed(_ sender: Any) {
-        print("test")
         guard let name = nameTF.text else {
             return
         }
         
-        print("test1")
         guard members.count > 1 else {
-            print("test2")
             Utility.displayDismissivePopup(title: "Not Enough Members", message: "You need at least 1 other member", viewController: self, completion: { _ in })
             return
         }
@@ -80,7 +78,7 @@ class CreateChannelViewController: ImagePickerViewController {
                               members: memberUIDs)
         
         client.createChannel(for: channel, completion: { (channel, error) in
-            _ = self.navigationController?.popViewController(animated: true)
+            Utility.popViewController(no: 1, viewController: self)
             
         })
         
@@ -124,9 +122,13 @@ class CreateChannelViewController: ImagePickerViewController {
         })
     }
     
-    override func updateImage(to image: UIImage) {
-        iconIV.image = image
-        iconAdded = true
+    func showImagePicker() {
+        Utility.showImagePicker(imagePicker: imagePicker, viewController: self, completion: { (image) in
+            if let image = image {
+                self.iconIV.image = image
+                self.iconAdded = true
+            }
+        })
     }
     
     private func btnNotifier(textField: UITextField, button: Any) {

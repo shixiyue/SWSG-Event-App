@@ -56,9 +56,15 @@ struct Config {
     static let consultationDays = "consultationDays"
     static let consultationSlots = "consultationSlots"
     static let consultationStatus = "consultationStatus"
+
+    static let start = "start"
+    static let end = "end"
+    static let date = "date"
+
     static let speakers = "Speakers"
     static let organizers = "Organizing Team"
     static let judges = "Judges"
+
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -77,12 +83,13 @@ struct Config {
     static let defaultIdeaImage = UIImage(named: "default-idea-image")!
     static let loadingImage = UIImage(named: "loading")!
     static let chatIconWidth: CGFloat = 40
+    static let headerBuffer: CGFloat = 45
+    static let keyboardOffsetSignUp: CGFloat = 94
     
     // Parameters for Storyboard:
     static let launchScreen = "LaunchScreen"
     static let logInSignUp = "LoginSignup"
     static let initialScreen = "InitialScreen"
-    static let signUpTable = "signUpTable"
     static let main = "Main"
     static let homeViewController = "HomeViewController"
     static let eventSystem = "EventSystem"
@@ -98,12 +105,20 @@ struct Config {
     static let imageCropperViewController = "ImageCropperViewController"
     static let uiSupporting = "UISupporting"
     
+    static let channelViewController = "ChannelViewController"
+    
     //Parameters for Segues:
     static let channelListToChannel = "showChannel"
     static let channelListToCreateChannel = "showCreateChannel"
     static let mentorGridToMentor = "chosenMentor"
     static let mentorToRelatedMentor = "showRelatedMentor"
     static let channelToChannelInfo = "showChatInfo"
+    static let signUpTable = "signUpTable"
+    static let initialToSignUp = "showSignUp"
+    static let initialToLogin = "showLogin"
+    static let loginToLogin = "showLogin"
+    static let signUpToLogin = "showLogin"
+    static let mentorToChat = "mentorToChat"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
@@ -154,8 +169,13 @@ struct Config {
     
     //Parameters for Firebase Client
     static let users = "users"
+    static let me = "me"
+    
+    //Parameters for Facebook
+    static let fbIdentifier = "facebook.com"
+    static let emailIdentifier = "email"
+    static let googleProfileDimension = UInt(300)
     
     // Parameters for notification:
     static let fullScreenImage = "fullScreenImage"
-    
 }

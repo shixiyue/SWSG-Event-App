@@ -14,6 +14,7 @@ class TeamLookingForTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
+    
     @IBOutlet weak var lookingForLbl: UILabel!
 
     override func setSelected(_ selected: Bool, animated: Bool) {

@@ -15,7 +15,7 @@ class EventCalendarViewController: BaseViewController {
     // a new color every time a cell is displayed. We do not want a laggy
     // scrolling calendar.
 
-    internal var events = Events()
+    var events = Events.sharedInstance()
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
 
@@ -29,23 +29,14 @@ class EventCalendarViewController: BaseViewController {
         calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
         calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView"])
  
-        let hideNavBarTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventCalendarViewController.hideNavBarTapHandler))
-        hideNavBarTapGesture.numberOfTapsRequired = 2
-        
-        view.addGestureRecognizer(hideNavBarTapGesture)
-        
         view.isUserInteractionEnabled = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
+          NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "events"), object: nil)
         // Do any additional setup after loading the view.
 
     }
     
-    func hideNavBarTapHandler(recognizer: UIGestureRecognizer) {
-        if recognizer.state == .ended {
-            self.navigationItem.hidesBackButton = !self.navigationItem.hidesBackButton
-            self.navigationController?.setNavigationBarHidden(self.navigationItem.hidesBackButton, animated: true)
-        }
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -69,6 +60,10 @@ class EventCalendarViewController: BaseViewController {
         }
     }
     
+    @objc private func reload() {
+        calendarView.reloadData()
+    }
+    
     // Function to handle the calendar selection
     func handleCellSelection(view: JTAppleDayCellView?, cellState: CellState) {
         guard let myCustomCell = view as? CalendarCell  else {
@@ -81,25 +76,6 @@ class EventCalendarViewController: BaseViewController {
             myCustomCell.selectedView.isHidden = true
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        let cellTapped = cellSelected
-        if let dateSelected = dateSelected {
-        let dateTapped = Calendar.current.date(byAdding: .day, value: 1, to: dateSelected)
-            if events.contains(date: dateTapped!){
-                print("contains")
-                performSegue(withIdentifier: "calendarSegue", sender: self)
-            }
-        }
-        
-    }
-    */
 
 }
 
@@ -127,10 +103,11 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
         // Setup Cell text
         myCustomCell.dayLabel.text = cellState.text
         myCustomCell.dot.layer.cornerRadius = 5
-        if events.contains(date: date) {
-            print("highlighted date is \(date)")
+        if events.contains(date: Date.date(from: Date.toString(date: date))) {
+            print("highlighted date is \(Date.date(from: Date.toString(date: date)))")
             myCustomCell.dot.isHidden = false
         } else {
+          //  print("does not contain date \(Date.date(from: Date.toString(date: date)))")
             myCustomCell.dot.isHidden = true
         }
         
@@ -143,8 +120,9 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
         handleCellTextColor(view: cell, cellState: cellState)
 
         let storyboard = UIStoryboard(name: Config.eventSystem, bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "EventScheduleTableViewController") as UIViewController
-        if events.contains(date: date){
+        let controller = storyboard.instantiateViewController(withIdentifier: "EventListPageViewController") as? EventListPageViewController
+        if events.contains(date: date), let controller = controller {
+            controller.startDate = Date.date(from: Date.toString(date: date))
             self.navigationController?.pushViewController(controller, animated: true)
         }
 

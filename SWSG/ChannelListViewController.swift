@@ -43,11 +43,23 @@ class ChannelListViewController: BaseViewController {
         })
         
         channelsExistingHandle = channelsRef.observe(.childChanged, with: { (snapshot) in
+            var removedObjects = 0
+            
             for (index, channel) in self.channels.enumerated() {
                 if snapshot.key == channel.id {
                     guard let channel = Channel(id: snapshot.key, snapshot: snapshot) else {
                         return
                     }
+                    
+                    guard channel.members.contains(self.client.getUid()) else {
+                        let indexToRemove = index - removedObjects
+                        self.channels.remove(at: indexToRemove)
+                        self.chatList.reloadData()
+                        removedObjects += 1
+                        
+                        return
+                    }
+                    
                     self.channels[index].name = channel.name
                     
                     let indexPath = IndexPath(row: index, section: 0)
@@ -87,6 +99,7 @@ class ChannelListViewController: BaseViewController {
         })
         
         getLatestMessage(channel: channel, snapshot: channelSnapshot, completion: { _ in
+            self.chatList.reloadData()
         })
         self.channels.append(channel)
         
