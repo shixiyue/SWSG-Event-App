@@ -110,7 +110,7 @@
         <!--Channel View Controller-->
         <scene sceneID="yRU-2v-ep8">
             <objects>
-                <viewController id="sYy-Gm-6aU" customClass="ChannelViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChannelViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="sYy-Gm-6aU" customClass="ChannelViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="SMO-Yh-0Ra"/>
                         <viewControllerLayoutGuide type="bottom" id="DVq-7B-Nz1"/>

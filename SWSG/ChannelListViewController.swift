@@ -99,6 +99,7 @@ class ChannelListViewController: BaseViewController {
         })
         
         getLatestMessage(channel: channel, snapshot: channelSnapshot, completion: { _ in
+            self.chatList.reloadData()
         })
         self.channels.append(channel)
         

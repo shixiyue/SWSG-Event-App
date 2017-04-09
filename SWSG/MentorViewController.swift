@@ -136,12 +136,37 @@ class MentorViewController: UIViewController {
         slotRef.child(Config.team).setValue(System.activeUser?.team)
     }
     
-    @IBAction func backButtonPressed(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
+    @IBAction func composeBtnPressed(_ sender: Any) {
+        
+        guard let mentorAcct = mentorAcct, let uid = mentorAcct.uid else {
+            return
+        }
+        
+        var members = [String]()
+        members.append(System.client.getUid())
+        members.append(uid)
+        
+        let channel = Channel(type: .directMessage, members: members)
+        System.client.createChannel(for: channel, completion: { (channel, error) in
+            guard error == nil else {
+                return
+            }
+            self.performSegue(withIdentifier: Config.mentorToChat, sender: channel)
+        })
     }
     
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Config.mentorToRelatedMentor {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.mentorToChat, let channel = sender as? Channel {
+            guard let chatVc = segue.destination as? ChannelViewController else {
+                return
+            }
+            
+            chatVc.senderDisplayName = System.activeUser?.profile.username
+            chatVc.channel = channel
+        } else if segue.identifier == Config.mentorToRelatedMentor {
             let mentorVC = segue.destination as! MentorViewController
             if let indexPaths = relatedMentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item
@@ -245,7 +270,12 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         let profile = relatedMentors[indexPath.item].profile
         
-        cell.iconIV.image = profile.image
+        cell.iconIV.image = Config.placeholderImg
+        
+        if let img = profile.image {
+            cell.iconIV.image = img
+        }
+        
         cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
         cell.nameLbl.text = profile.name
         cell.positionLbl.text = profile.job

@@ -103,6 +103,8 @@ struct Config {
     static let imageCropperViewController = "ImageCropperViewController"
     static let uiSupporting = "UISupporting"
     
+    static let channelViewController = "ChannelViewController"
+    
     //Parameters for Segues:
     static let channelListToChannel = "showChannel"
     static let channelListToCreateChannel = "showCreateChannel"
@@ -112,6 +114,7 @@ struct Config {
     static let signUpTable = "signUpTable"
     static let initialToSignUp = "showSignUp"
     static let initialToLogin = "showLogin"
+    static let mentorToChat = "mentorToChat"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
