@@ -171,6 +171,7 @@ struct Config {
     //Parameters for Facebook
     static let fbIdentifier = "facebook.com"
     static let emailIdentifier = "email"
+    static let googleProfileDimension = UInt(300)
     
     // Parameters for notification:
     static let fullScreenImage = "fullScreenImage"

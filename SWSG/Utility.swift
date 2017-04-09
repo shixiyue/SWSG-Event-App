@@ -11,6 +11,8 @@ import FacebookCore
 import FacebookLogin
 import Firebase
 import EventKit
+import Google
+import GoogleSignIn
 
 struct Utility {
     
@@ -84,6 +86,9 @@ struct Utility {
         if let _ = AccessToken.current {
             LoginManager().logOut()
         }
+        
+        GIDSignIn.sharedInstance().signOut()
+        
         System.activeUser = nil
         showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
     }
@@ -333,13 +338,6 @@ struct Utility {
                 completion(false, arr)
             }
         })
-        
-        /*
-        let title = "An error has occured"
-        let message = "A user with the same email exists, log in from that account and link this account through the settings."
-        Utility.displayDismissivePopup(title: title, message: message, viewController: viewController, completion: { _  in
-            completion(arr)
-        })*/
     }
     
     static func attemptLogin(auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool) -> Void) {
@@ -356,8 +354,24 @@ struct Utility {
                     Utility.logUserIn(error: error, current: viewController)
                     completion(true)
                 })
+            } else {
+                completion(false)
             }
-            completion(false)
+        case .google:
+            if let credential = System.client.getGoogleCredential() {
+                System.client.signIn(credential: credential, completion: { (error) in
+                    if let newCredential = newCredential {
+                        System.client.addAdditionalAuth(credential: newCredential, completion: { _ in
+                        })
+                    }
+                    
+                    Utility.logUserIn(error: error, current: viewController)
+                    print("Test")
+                    completion(true)
+                })
+            } else {
+                completion(false)
+            }
         default:
             completion(false)
         }

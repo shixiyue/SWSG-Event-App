@@ -156,7 +156,6 @@ class SignUpTableViewController: UIViewController {
         self.profileIV.image = image
         
         nameTextField.text = socialUser.name
-        nameTextField.isEnabled = false
         emailTextField.text = socialUser.email
         emailTextField.isEnabled = false
         passwordStackView.isHidden = true

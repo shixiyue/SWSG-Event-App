@@ -21,6 +21,7 @@ class InitialViewController: UIViewController {
     fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
     fileprivate let googleLoginButton = GIDSignInButton()
     fileprivate let client = System.client
+    fileprivate var currentAuth: AuthType?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +40,6 @@ class InitialViewController: UIViewController {
         fbLoginButton.isHidden = false
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
-        //GIDSignIn.sharedInstance().signIn()
         
         if AccessToken.current != nil {
             LoginManager().logOut()
@@ -56,11 +56,20 @@ class InitialViewController: UIViewController {
         super.prepare(for: segue, sender: sender)
         
         if segue.identifier == Config.signUpToLogin, let arr = sender as? [String] {
-            guard let loginVC = segue.destination as? LoginViewController, let credential = client.getFBCredential() else {
+            guard let loginVC = segue.destination as? LoginViewController,
+                let auth = currentAuth else {
                 return
             }
             
-            loginVC.newCredential = credential
+            switch auth {
+            case .facebook:
+                loginVC.newCredential = client.getFBCredential()
+            case .google:
+                loginVC.newCredential = client.getGoogleCredential()
+            default:
+                break
+            }
+            
             loginVC.clientArr = arr
         } else if segue.identifier == Config.initialToSignUp, let user = sender as? SocialUser {
             guard let signUpVC = segue.destination as? SignUpViewController else {
@@ -79,18 +88,20 @@ class InitialViewController: UIViewController {
     }
     
     fileprivate func attemptLogin(email: String, user: SocialUser, auth: AuthType) {
-        Utility.attemptRegistration(email: email, auth: .facebook, newCredential: nil, viewController: self, completion: { (exists, arr) in
+        Utility.attemptRegistration(email: email, auth: auth, newCredential: nil, viewController: self, completion: { (exists, arr) in
             
+            print(exists)
             if !exists, let arr = arr {
                 let title = "Already Exists"
                 let message = "User with Email already exists, please log in with the original client first."
                 Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { ()  in
+                    self.currentAuth = auth
                     self.performSegue(withIdentifier: Config.initialToLogin, sender: arr)
                     
                 })
                 
                 //TODO: Pass existing login on.
-            } else {
+            } else if arr == nil {
                 //Account does not exist, proceed with registration
                 self.performSegue(withIdentifier: Config.initialToSignUp, sender: user)
             }

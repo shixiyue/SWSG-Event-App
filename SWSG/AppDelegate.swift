@@ -44,8 +44,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //TODO: Automatic Login with Firebase
     private func checkLogin() {
+        print("test2")
         if System.client.alreadySignedIn() {
             showLaunchScreen()
+            print("test")
             System.client.getCurrentUser(completion: { (user, userError) in
                 if let user = user {
                     System.activeUser = user
@@ -53,6 +55,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 } else {
                     self.showLogInSignUpScreen()
                 }
+            })
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0, execute: {
+                self.showLogInSignUpScreen()
             })
         } else {
             showLogInSignUpScreen()

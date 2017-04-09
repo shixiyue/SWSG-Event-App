@@ -14,6 +14,7 @@ struct SocialUser {
     var name: String
     var email: String
     var type: AuthType
+    private var url: URL?
     
     init(id: String, name: String, email: String, type: AuthType) {
         self.id = id
@@ -27,11 +28,22 @@ struct SocialUser {
         self.name = gUser.profile.name
         self.email = gUser.profile.email
         self.type = .google
+        self.url = gUser.profile.imageURL(withDimension: Config.googleProfileDimension)
     }
     
     func getProfileImage() -> UIImage? {
-        let urlString = "https://graph.facebook.com/\(id)/picture?type=large&return_ssl_resources=1"
-        guard let imageURL = URL(string: urlString), let imageData = try? Data(contentsOf: imageURL) else {
+        var url: URL?
+        switch type {
+        case .facebook:
+            let urlString = "https://graph.facebook.com/\(id)/picture?type=large&return_ssl_resources=1"
+            url = URL(string: urlString)
+        case .google:
+            url = self.url
+        default:
+            url = nil
+        }
+        
+        guard let imageURL = url, let imageData = try? Data(contentsOf: imageURL) else {
             return nil
         }
         

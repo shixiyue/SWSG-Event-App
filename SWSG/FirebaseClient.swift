@@ -10,6 +10,8 @@ import Foundation
 import Firebase
 import FacebookCore
 import FacebookLogin
+import Google
+import GoogleSignIn
 
 class FirebaseClient {
     
@@ -106,6 +108,15 @@ class FirebaseClient {
         }
         
         return FIRFacebookAuthProvider.credential(withAccessToken: token.authenticationToken)
+    }
+    
+    public func getGoogleCredential() -> FIRAuthCredential? {
+        guard let authentication = GIDSignIn.sharedInstance().currentUser.authentication else {
+            return nil
+        }
+        
+        return FIRGoogleAuthProvider.credential(withIDToken: authentication.idToken,
+                                                accessToken: authentication.accessToken)
     }
     
     public func fbSignIn(completion: @escaping SignInCallback){

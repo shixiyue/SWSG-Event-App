@@ -10,6 +10,8 @@ import UIKit
 import FacebookCore
 import FacebookLogin
 import Firebase
+import Google
+import GoogleSignIn
 
 class LoginViewController: UIViewController {
 
@@ -25,24 +27,37 @@ class LoginViewController: UIViewController {
     
     var newCredential: FIRAuthCredential?
     var clientArr: [String]?
-    fileprivate let loginButton = LoginButton(readPermissions: [.publicProfile, .email])
+    fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
+    fileprivate let googleLoginButton = GIDSignInButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpClients()
         setUpButton()
         setUpTextFields()
         hideKeyboardWhenTappedAround()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().uiDelegate = self
+        
+        setUpClients()
+    }
+    
     private func setUpClients() {
         if let clientArr = clientArr {
-            if !clientArr.contains(Config.emailIdentifier) {
+            if !clientArr.contains(AuthType.email.rawValue) {
                 emailView.isHidden = true
             }
             
-            if !clientArr.contains(Config.fbIdentifier) {
-                facebookView.isHidden = true
+            if !clientArr.contains(AuthType.facebook.rawValue) {
+                fbLoginButton.isHidden = true
+            }
+            
+            if !clientArr.contains(AuthType.google.rawValue) {
+                googleLoginButton.isHidden = true
             }
             
             signUpView.isHidden = true
@@ -58,9 +73,17 @@ class LoginViewController: UIViewController {
         logInButton.setDisable()
         logInButton.addTarget(self, action: #selector(logIn), for: .touchUpInside)
         
-        loginButton.center = facebookView.center
-        loginButton.delegate = self
-        self.stackView.addSubview(loginButton)
+        let fbCenter = CGPoint(x: facebookView.frame.width/2,y: facebookView.frame.height/2)
+        let googleCenter = CGPoint(x: googleView.frame.width/2,y: googleView.frame.height/2)
+        
+        fbLoginButton.center = fbCenter
+        googleLoginButton.center = googleCenter
+        
+        fbLoginButton.delegate = self
+        self.facebookView.addSubview(fbLoginButton)
+        
+        googleLoginButton.center = googleView.center
+        self.googleView.addSubview(googleLoginButton)
     }
     
     @objc fileprivate func logIn() {
@@ -106,6 +129,24 @@ class LoginViewController: UIViewController {
         }
     }
     
+    fileprivate func attemptLogin(email: String, user: SocialUser, auth: AuthType) {
+        Utility.attemptRegistration(email: email, auth: auth, newCredential: self.newCredential, viewController: self, completion: { (exists, arr) in
+            
+            if !exists, let _ = arr {
+                let title = "Already Exists"
+                let message = "User with Email already exists, please log in with the original client first."
+                Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _  in
+                    //self.performSegue(withIdentifier: Config.showLogin, sender: arr)
+                })
+                
+                //TODO: Pass existing login on.
+            } else if arr == nil {
+                //Account does not exist, proceed with registration
+                self.performSegue(withIdentifier: Config.logInSignUp, sender: user)
+            }
+        })
+    }
+    
 }
 
 extension LoginViewController: UITextFieldDelegate {
@@ -120,34 +161,29 @@ extension LoginViewController: UITextFieldDelegate {
     }
 }
 
+extension LoginViewController: GIDSignInDelegate, GIDSignInUIDelegate {
+    public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if (error == nil) {
+            let user = SocialUser(gUser: user)
+            self.attemptLogin(email: user.email, user: user, auth: .google)
+        }
+    }
+}
+
 extension LoginViewController: LoginButtonDelegate {
     
-    func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult){
+    func loginButtonDidCompleteLogin(_ fbLoginButton: LoginButton, result: LoginResult){
         System.client.getFBProfile(completion: { (user, error) in
-            loginButton.isHidden = true
+            fbLoginButton.isHidden = true
             guard let user = user else {
                 return
             }
             
-            Utility.attemptRegistration(email: user.email, auth: .facebook, newCredential: self.newCredential, viewController: self, completion: { (exists, arr) in
-                
-                if !exists, let arr = arr {
-                    let title = "Already Exists"
-                    let message = "User with Email already exists, please log in with the original client first."
-                    Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _  in
-                        //self.performSegue(withIdentifier: Config.showLogin, sender: arr)
-                    })
-                    
-                    //TODO: Pass existing login on.
-                } else if !exists {
-                    //Account does not exist, proceed with registration
-                    self.performSegue(withIdentifier: Config.logInSignUp, sender: user)
-                }
-            })
+            self.attemptLogin(email: user.email, user: user, auth: .facebook)
         })
     }
     
-    func loginButtonDidLogOut(_ loginButton: LoginButton){
+    func loginButtonDidLogOut(_ fbLoginButton: LoginButton){
         
     }
 }
