@@ -494,6 +494,16 @@
 			name = Mentor;
 			sourceTree = "<group>";
 		};
+		3FF653061E9A720800B9E64F /* UI Calendar Files */ = {
+			isa = PBXGroup;
+			children = (
+				E348D5731E895CD700947B3F /* CalendarCellView.xib */,
+				E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */,
+				E348D5771E895D7C00947B3F /* CalendarCell.swift */,
+			);
+			name = "UI Calendar Files";
+			sourceTree = "<group>";
+		};
 		58B22D75BA81AAF7D81292A5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -611,12 +621,10 @@
 			children = (
 				E3220C281E796BC0008AFA85 /* EventSystem.storyboard */,
 				E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */,
-				E355BB891E951A2C002E29DD /* EventListPageViewController.swift */,
+				3FF653061E9A720800B9E64F /* UI Calendar Files */,
 				E348D5791E895E8300947B3F /* EventCalendarViewController.swift */,
-				E348D57D1E8A828900947B3F /* PinkSectionHeaderView.xib */,
+				E355BB891E951A2C002E29DD /* EventListPageViewController.swift */,
 				E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */,
-				E348D5771E895D7C00947B3F /* CalendarCell.swift */,
-				E348D5731E895CD700947B3F /* CalendarCellView.xib */,
 				E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */,
 				E3220C2A1E796C7B008AFA85 /* EventScheduleViewController.swift */,
 				E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */,

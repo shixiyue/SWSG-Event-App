@@ -177,4 +177,8 @@ struct Config {
     
     // Parameters for notification:
     static let fullScreenImage = "fullScreenImage"
+    
+    //Parameters for Event
+    static let calendarStartDate = Utility.fbDateFormatter.date(from: "01-01-2017")!
+    static let calendarEndDate = Utility.fbDateFormatter.date(from: "31-12-2017")!
 }

@@ -48,18 +48,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("test2")
         if System.client.alreadySignedIn() {
             showLaunchScreen()
+            var requestTimedOut = true
             SwiftSpinner.show("Communicating with Servers...")
             System.client.getCurrentUser(completion: { (user, userError) in
                 if let user = user {
                     System.activeUser = user
+                    requestTimedOut = false
                     self.showHomeScreen()
                 } else {
+                    requestTimedOut = false
                     self.showLogInSignUpScreen()
                 }
             })
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 10.0, execute: {
-                self.showLogInSignUpScreen()
+                if requestTimedOut{
+                    self.showLogInSignUpScreen()
+                }
             })
         } else {
             showLogInSignUpScreen()

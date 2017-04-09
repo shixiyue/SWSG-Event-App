@@ -14,7 +14,7 @@
         <!--Event Calendar View Controller-->
         <scene sceneID="U5x-HU-fDc">
             <objects>
-                <viewController storyboardIdentifier="EventCalendarViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uBS-Ca-rCQ" customClass="EventCalendarViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EventCalendarViewController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uBS-Ca-rCQ" customClass="EventCalendarViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="LmT-4u-tIJ"/>
                         <viewControllerLayoutGuide type="bottom" id="hRg-qF-a6k"/>
@@ -23,13 +23,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="crH-tg-Wlm" customClass="JTAppleCalendarView" customModule="JTAppleCalendar">
-                                <rect key="frame" x="0.0" y="70" width="375" height="341"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="crH-tg-Wlm" secondAttribute="height" multiplier="375:341" id="fnv-UK-UMY"/>
-                                </constraints>
-                            </view>
                             <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PQ4-VS-iZW">
                                 <rect key="frame" x="304" y="399" width="71" height="69"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -38,11 +31,18 @@
                                     <segue destination="VfT-P1-qfU" kind="custom" customClass="SegueFromRight" customModule="SWSG" customModuleProvider="target" id="4Fz-sH-uoc"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="crH-tg-Wlm" customClass="JTAppleCalendarView" customModule="JTAppleCalendar">
+                                <rect key="frame" x="0.0" y="64" width="375" height="375"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="crH-tg-Wlm" secondAttribute="height" multiplier="375:375" id="Tdi-nd-li8"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="crH-tg-Wlm" firstAttribute="leading" secondItem="Qs3-e2-5lC" secondAttribute="leading" id="BfN-Fo-YUz"/>
-                            <constraint firstItem="crH-tg-Wlm" firstAttribute="top" secondItem="Qs3-e2-5lC" secondAttribute="top" constant="70" id="ebY-0b-Vj7"/>
+                            <constraint firstItem="crH-tg-Wlm" firstAttribute="top" secondItem="Qs3-e2-5lC" secondAttribute="top" constant="64" id="ebY-0b-Vj7"/>
                             <constraint firstItem="crH-tg-Wlm" firstAttribute="trailing" secondItem="Qs3-e2-5lC" secondAttribute="trailing" id="mTf-VD-7B4"/>
                         </constraints>
                     </view>
@@ -667,7 +667,7 @@
             <objects>
                 <navigationController storyboardIdentifier="EventNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QBc-dQ-cQX" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="dXP-kp-3JR">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="dXP-kp-3JR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

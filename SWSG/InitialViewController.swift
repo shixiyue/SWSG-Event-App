@@ -41,7 +41,6 @@ class InitialViewController: UIViewController {
         fbLoginButton.isHidden = false
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
-        
         Utility.signOutAllAccounts()
     }
     
