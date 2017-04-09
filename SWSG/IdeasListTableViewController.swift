@@ -20,7 +20,9 @@ class IdeasListTableViewController: BaseViewController {
     @IBOutlet private var ideaListTableView: UITableView!
     
     private var ideasRef: FIRDatabaseReference?
-    private var ideasRefHandle: FIRDatabaseHandle?
+    private var ideasAddRefHandle: FIRDatabaseHandle?
+    private var ideasChangeRefHandle: FIRDatabaseHandle?
+    private var ideasDeleteRefHandle: FIRDatabaseHandle?
     
     private enum ideaCreateErrorMsg: String {
         case notParticipant = "Sorry, only participants of SWSG can create an idea!"
@@ -41,6 +43,7 @@ class IdeasListTableViewController: BaseViewController {
         addSlideMenuButton()
         ideasRef = System.client.getIdeasRef()
         observeIdeas()
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: Notification.Name(rawValue: "refresh"), object: nil)
     }
     
     private func observeIdeas() {
@@ -48,12 +51,35 @@ class IdeasListTableViewController: BaseViewController {
             return
         }
         
-        ideasRefHandle = ideasRef.observe(.value, with: { (snapshot) -> Void in
+        ideasAddRefHandle = ideasRef.observe(.childAdded, with: { (snapshot) -> Void in
+            self.ideas.add(snapshot: snapshot)
+            DispatchQueue.main.async {
+                self.ideaListTableView.reloadData()
+            }
+        })
+        
+        ideasChangeRefHandle = ideasRef.observe(.childChanged, with: { (snapshot) -> Void in
             self.ideas.update(snapshot: snapshot)
             DispatchQueue.main.async {
                 self.ideaListTableView.reloadData()
             }
         })
+        
+        ideasDeleteRefHandle = ideasRef.observe(.childRemoved, with: { (snapshot) in
+            guard let index = self.ideas.remove(snapshot: snapshot) else {
+                return
+            }
+            let indexPath = [IndexPath(row: index, section: 0)]
+            DispatchQueue.main.async {
+                self.ideaListTableView.deleteRows(at: indexPath, with: .none)
+            }
+        })
+    }
+    
+    @objc private func refresh(_ notification: NSNotification) {
+        DispatchQueue.main.async {
+            self.ideaListTableView.reloadData()
+        }
     }
     
     @IBAction func addIdea() {
@@ -69,9 +95,16 @@ class IdeasListTableViewController: BaseViewController {
     }
     
     deinit {
-        if let refHandle = ideasRefHandle {
-            ideasRef?.removeObserver(withHandle: refHandle)
+        if let addHandle = ideasAddRefHandle {
+            ideasRef?.removeObserver(withHandle: addHandle)
         }
+        if let changeHandle = ideasChangeRefHandle {
+            ideasRef?.removeObserver(withHandle: changeHandle)
+        }
+        if let deleteHandle = ideasDeleteRefHandle {
+            ideasRef?.removeObserver(withHandle: deleteHandle)
+        }
+        NotificationCenter.default.removeObserver(self)
     }
     
 }

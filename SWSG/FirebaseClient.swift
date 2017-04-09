@@ -306,7 +306,12 @@ class FirebaseClient {
         idea.id = ideaRef.key
         
         ideaRef.setValue(idea.toDictionary(), withCompletionBlock: { (err, _) in
-            completion(self.checkError(err))
+            guard err == nil else {
+                completion(self.checkError(err))
+                return
+            }
+            self.saveImages(mainImage: idea.mainImage, images: idea.images, ref: ideaRef)
+            completion(nil)
         })
     }
     
@@ -317,11 +322,17 @@ class FirebaseClient {
         
         let ideaRef = getIdeaRef(for: id)
         ideaRef.updateChildValues(idea.toDictionary())
+        saveImages(mainImage: idea.mainImage, images: idea.images, ref: ideaRef)
     }
     
     func updateIdeaVote(for id: String, user: String, vote: Bool) {
         let ideaRef = getIdeaRef(for: id)
         ideaRef.child(Config.votes).child(user).setValue(vote)
+    }
+    
+    func removeIdea(for id: String) {
+        let ideaRef = getIdeaRef(for: id)
+        ideaRef.removeValue()
     }
     
     public func createChannel(for channel: Channel, completion: @escaping GetChannelCallback) {
@@ -481,6 +492,30 @@ class FirebaseClient {
             }
             
             completion("\(Config.appURL)/\(path)", self.checkError(error))
+        }
+    }
+    
+    private func saveImages(mainImage: UIImage, images: [UIImage], ref: FIRDatabaseReference) {
+        saveImage(image: mainImage, completion: { (imageURL, firError) in
+            guard firError == nil, let url = imageURL else {
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+                return
+            }
+            ref.child(Config.mainImage).setValue(url)
+            System.imageCache[url] = mainImage
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+        })
+        let imagesRef = ref.child(Config.images)
+        imagesRef.removeValue()
+        for image in images {
+            let imageRef = imagesRef.childByAutoId()
+            saveImage(image: image, completion: { (imageURL, firError) in
+                guard firError == nil, let url = imageURL else {
+                    return
+                }
+                imageRef.setValue(url)
+                System.imageCache[url] = image
+            })
         }
     }
     
@@ -652,5 +687,6 @@ class FirebaseClient {
     private func databaseReference(for name: String) -> FIRDatabaseReference {
         return FIRDatabase.database().reference().child(name)
     }
+    
 }
 

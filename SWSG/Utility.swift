@@ -231,8 +231,6 @@ struct Utility {
                 completion(image)
             })
         }
-        
-        
     }
     
     static func forceGetChatIcon(id: String, completion: @escaping (UIImage?) -> Void) {
@@ -247,7 +245,17 @@ struct Utility {
         })
     }
     
-    
+    static func getImage(name: String, completion: @escaping (UIImage?) -> Void) {
+        if let image = System.imageCache[name] {
+            completion(image)
+        }
+        System.client.fetchImageDataAtURL(name, completion: { (image, _) in
+            if let image = image {
+                System.imageCache[name] = image
+            }
+            completion(image)
+        })
+    }
     
     static func createPopUpWithTextField(title: String, message: String, btnText: String, placeholderText: String, existingText: String, viewController: UIViewController, completion: @escaping (String) -> Void) {
         //Creating a Alert Popup for Saving
