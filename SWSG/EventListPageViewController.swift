@@ -9,7 +9,7 @@
 //Note: Unused
 
 import UIKit
-
+/*
 class EventListPageViewController: UIPageViewController {
     
     var startDate: Date?
@@ -109,5 +109,5 @@ protocol EventScheduleViewControllerDelegate: class {
     func onRightScrollBtnPressed()
     func hasNextPage() -> Bool
     func hasPrevPage() -> Bool
-}
+}*/
 

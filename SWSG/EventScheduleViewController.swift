@@ -9,7 +9,7 @@
 //Note: Unused
 
 import UIKit
-
+/*
 class EventScheduleViewController: UIViewController {
     var date : Date?
     var events = Events.sharedInstance()
@@ -135,4 +135,4 @@ extension EventScheduleViewController: UITableViewDelegate, UITableViewDataSourc
         return UITableViewAutomaticDimension
     }
     
-}
+}*/
