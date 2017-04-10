@@ -26,6 +26,7 @@ class FirebaseClient {
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
+    typealias AddCommentCallback = (FirebaseError?) -> Void
     typealias GeneralIdeaCallback = (FirebaseError?) -> Void
     typealias GetChannelCallback = (Channel?, FirebaseError?) -> Void
     typealias GetMessageCallback = (Message, FirebaseError?) -> Void
@@ -300,6 +301,31 @@ class FirebaseClient {
         }
     }
     
+    public func addComment(_ event: Event, comment: Comment, completion: @escaping AddCommentCallback) {
+        let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
+        
+        print(dayString)
+        guard let id = event.id else {
+            completion(nil)
+            return
+        }
+        
+        print(id)
+        let eventRef = eventsRef.child(dayString).child(id)
+        
+        var dict = [[String: String]]()
+        
+        for comment in event.comments {
+            dict.append(comment.toDictionary())
+        }
+        dict.append(comment.toDictionary())
+        
+        print(dict)
+        eventRef.child(Config.comments).setValue(dict)
+        completion(nil)
+        print("test6")
+    }
+    
     public func getEvents(completion: @escaping GetEventsCallback) {
         eventsRef.observeSingleEvent(of: .value, with: { (snapshot) in
             var eventsByDate = [Date: [Event]]()
@@ -345,13 +371,17 @@ class FirebaseClient {
     }
     
     public func getEvent(with id: String, completion: @escaping GetEventCallback) {
-        let eventRef = eventsRef.queryOrderedByValue().queryEqual(toValue: id)
-        eventRef.observeSingleEvent(of: .value, with: { (snapshot) in
+        eventsRef.observe(.value, with: { (snapshot) in
+            
             for child in snapshot.children {
-                if let child = child as? FIRDataSnapshot {
-                    completion(Event(id: child.key, snapshot: child), nil)
-                    return
+                guard let child = child as? FIRDataSnapshot, child.hasChild(id) else {
+                    continue
                 }
+                
+                let eventSnapshot = child.childSnapshot(forPath: id)
+                let event = Event(id: eventSnapshot.key, snapshot: eventSnapshot)
+                completion(event, nil)
+                return
             }
             
             completion(nil, nil)
@@ -618,7 +648,6 @@ class FirebaseClient {
                 
                 if event.hasChild(Config.image),
                     let url = event.childSnapshot(forPath: Config.image).value as? String {
-                    print(url)
                     completion(url, nil)
                     return
                 } else {
@@ -781,6 +810,12 @@ class FirebaseClient {
     
     public func getEventsRef() -> FIRDatabaseReference {
         return eventsRef
+    }
+    
+    public func getEventRef(event: Event) -> FIRDatabaseReference {
+        let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
+        
+        return eventsRef.child(dayString).child(event.id!)
     }
     
     public func getMentorsRef() -> FIRDatabaseQuery {

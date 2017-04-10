@@ -517,6 +517,7 @@
 		3FBB4C181E9B402800A45FB3 /* Archive */ = {
 			isa = PBXGroup;
 			children = (
+				E3220C541E7BABA5008AFA85 /* Comments.swift */,
 				E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */,
 				3FBB4C191E9B405800A45FB3 /* EventListPageViewController.swift */,
 				3FBB4C1B1E9B406E00A45FB3 /* EventScheduleViewController.swift */,
@@ -541,7 +542,6 @@
 			isa = PBXGroup;
 			children = (
 				3F178FF11E99068400057929 /* Backend */,
-				3FF653081E9A826B00B9E64F /* Comments */,
 				3FF653071E9A825C00B9E64F /* Events */,
 				CC507F271E96695A006432FC /* Information */,
 				CC6CB12E1E90FC2F00C71793 /* Idea */,
@@ -588,18 +588,10 @@
 		3FF653071E9A825C00B9E64F /* Events */ = {
 			isa = PBXGroup;
 			children = (
+				E3220C521E7BAAC5008AFA85 /* Comment.swift */,
 				E3220C301E7A3B99008AFA85 /* Event.swift */,
 			);
 			name = Events;
-			sourceTree = "<group>";
-		};
-		3FF653081E9A826B00B9E64F /* Comments */ = {
-			isa = PBXGroup;
-			children = (
-				E3220C541E7BABA5008AFA85 /* Comments.swift */,
-				E3220C521E7BAAC5008AFA85 /* Comment.swift */,
-			);
-			name = Comments;
 			sourceTree = "<group>";
 		};
 		58B22D75BA81AAF7D81292A5 /* Frameworks */ = {

@@ -10,36 +10,74 @@ import UIKit
 
 class CommentsInputTableViewCell: UITableViewCell {
     
+    @IBOutlet weak var addBtn: UIButton!
     @IBOutlet weak var commentInputField: GrayBorderTextView!
-   
+    var event: Event?
+    
     @IBAction func onAddCommentButtonClick(_ sender: Any) {
-        /*var comment = Comments.comments[EventDetailsTableViewController.event!.name]
-        if comment != nil {
-            comment!.append(Comment(words: commentInputField.content,username: System.activeUser!.profile.name))
-            
-        } else {
-            comment = [Comment(words: commentInputField.content,username: System.activeUser!.profile.name)]
+        guard let user = System.activeUser, let id = user.uid,
+            let text = commentInputField.text, let event = event else {
+            return
         }
-        Comments.comments.updateValue(comment!, forKey: EventDetailsTableViewController.event!.name)
-        commentInputField.text = ""
+        
+        let comment = Comment(authorID: id, text: text)
+        System.client.addComment(event, comment: comment, completion: { (error) in
+            self.commentInputField.text = ""
+        })
+        
         var size = commentInputField.sizeThatFits(CGSize(width: commentInputField.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
         guard size.height != commentInputField.frame.size.height else {
             return
         }
         size.width = size.width > commentInputField.frame.size.width ? size.width : commentInputField.frame.size.width
-        commentInputField.frame.size = size*/
+        commentInputField.frame.size = size
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
+}
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+extension CommentsInputTableViewCell: UITextViewDelegate {
+    
+    func updateButtonState() {
+        guard var text = commentInputField.text else {
+            return
+        }
+        
+        text = text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        
+        if text.characters.count > 0 {
+            addBtn.isEnabled = true
+        } else {
+            addBtn.isEnabled = false
+        }
     }
     
+    func textViewDidEndEditing(_ textView: UITextView) {
+        updateButtonState()
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        guard let textView = textView as? PlaceholderTextView, let currentText = textView.text else {
+            return false
+        }
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        
+        if updatedText.isEmpty {
+            textView.setPlaceholder()
+            updateButtonState()
+            return false
+        } else if textView.textColor == Config.placeholderColor && !text.isEmpty {
+            textView.removePlaceholder()
+            updateButtonState()
+        }
+        return true
+    }
+    
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        guard textView.textColor == Config.placeholderColor else {
+            return
+        }
+        textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+    }
 }
 

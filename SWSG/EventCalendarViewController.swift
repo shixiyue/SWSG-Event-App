@@ -38,8 +38,9 @@ class EventCalendarViewController: BaseViewController {
         observeEvents()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        calendarView.reloadData()
         dayList.reloadData()
     }
     
@@ -250,6 +251,7 @@ extension EventCalendarViewController: UITableViewDataSource {
                 return
             }
             
+            eventList[indexPath.item].image = image
             cell.eventIV.image = image
             cell.eventIV.isHidden = false
             

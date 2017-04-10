@@ -195,7 +195,6 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
             return 0
         }
         
-        print("test4")
         if collectionView.tag == Config.slotCollectionTag {
             return mentor.days[section].slots.count + 1
         } else if collectionView.tag == Config.relatedCollectionTag {
@@ -296,7 +295,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
             return
         }
         
-        let dayIndex = collectionView.tag
+        let dayIndex = indexPath.section
         let index = indexPath.item - 1
         let slot = mentor.days[dayIndex].slots[index]
         

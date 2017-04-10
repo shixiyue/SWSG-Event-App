@@ -173,16 +173,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <containerView key="tableHeaderView" opaque="NO" contentMode="scaleToFill" id="ZHE-Ee-e9j">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="289"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            <connections>
-                                <segue destination="jky-ye-iCT" kind="embed" identifier="container" id="iAu-Ze-6qZ"/>
-                            </connections>
-                        </containerView>
+                        <imageView key="tableHeaderView" hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="t3u-rh-k4q">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EventTime" id="ZIk-pJ-FvW" customClass="EventTimeTableViewCell" customModule="SWSG" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="317" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="228" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZIk-pJ-FvW" id="bXP-in-dPV">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -213,7 +210,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EventVenue" id="bSz-9P-9jI" customClass="EventVenueTableViewCell" customModule="SWSG" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="361" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="272" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bSz-9P-9jI" id="uU0-op-ZnA">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -244,7 +241,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EventDetail" id="13g-EY-3hD" customClass="EventDetailTableViewCell" customModule="SWSG" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="405" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="316" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="13g-EY-3hD" id="oPT-SN-12W">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -277,7 +274,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Comments" id="SQy-oC-6po" customClass="CommentsTableViewCell" customModule="SWSG" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="449" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="360" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SQy-oC-6po" id="ekw-C2-9xU">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -298,24 +295,35 @@
                                             <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OMU-3e-uUt">
+                                            <rect key="frame" x="10" y="2" width="42" height="42"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="OMU-3e-uUt" secondAttribute="height" multiplier="1:1" id="7C5-af-WQh"/>
+                                                <constraint firstAttribute="height" constant="42" id="pEJ-hd-Rxo"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="iaV-XZ-LqZ" firstAttribute="top" secondItem="ekw-C2-9xU" secondAttribute="top" constant="2" id="8os-07-CvO"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="THy-3H-WAN" secondAttribute="trailing" constant="16" id="HYf-rG-GvQ"/>
+                                        <constraint firstItem="OMU-3e-uUt" firstAttribute="leading" secondItem="ekw-C2-9xU" secondAttribute="leading" constant="10" id="Io0-JK-bqd"/>
                                         <constraint firstItem="THy-3H-WAN" firstAttribute="leading" secondItem="ekw-C2-9xU" secondAttribute="leading" constant="60" id="dyS-SQ-Ywy"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="THy-3H-WAN" secondAttribute="bottom" id="eE3-rs-xgX"/>
                                         <constraint firstItem="iaV-XZ-LqZ" firstAttribute="leading" secondItem="ekw-C2-9xU" secondAttribute="leading" constant="60" id="hWl-wz-FCM"/>
+                                        <constraint firstAttribute="bottom" secondItem="OMU-3e-uUt" secondAttribute="bottom" id="hbW-yk-tlS"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="iaV-XZ-LqZ" secondAttribute="trailing" constant="16" id="hw5-rG-QoG"/>
                                         <constraint firstItem="THy-3H-WAN" firstAttribute="top" secondItem="iaV-XZ-LqZ" secondAttribute="bottom" constant="1.5" id="kfW-fv-ayb"/>
+                                        <constraint firstItem="OMU-3e-uUt" firstAttribute="top" secondItem="ekw-C2-9xU" secondAttribute="top" constant="2" id="uaC-Mo-xMp"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="commentsLabel" destination="THy-3H-WAN" id="gNe-4c-FKH"/>
+                                    <outlet property="profileIV" destination="OMU-3e-uUt" id="CHl-TT-E5u"/>
                                     <outlet property="usernameLabel" destination="iaV-XZ-LqZ" id="JEg-Nr-5sK"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EventHeader" id="kJq-vz-uCd" customClass="EventHeaderTableViewCell" customModule="SWSG" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="493" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="404" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kJq-vz-uCd" id="ukY-WC-3ej">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -346,7 +354,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CommentsHeader" id="rcH-OZ-GFv">
-                                <rect key="frame" x="0.0" y="537" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="448" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rcH-OZ-GFv" id="NnA-ro-yML">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -366,7 +374,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CommentsInput" id="Zbb-Ww-njO" customClass="CommentsInputTableViewCell" customModule="SWSG" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="581" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="492" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zbb-Ww-njO" id="5oB-K1-eqk">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -379,7 +387,7 @@
                                                 <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             </state>
                                             <connections>
-                                                <action selector="onAddCommentButtonClick:" destination="Zbb-Ww-njO" eventType="touchUpInside" id="PvB-Dl-e2j"/>
+                                                <action selector="onAddCommentButtonClick:" destination="Zbb-Ww-njO" eventType="touchUpInside" id="aXA-Uc-gbN"/>
                                             </connections>
                                         </button>
                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="SWi-I6-dAu" customClass="GrayBorderTextView" customModule="SWSG" customModuleProvider="target">
@@ -399,6 +407,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="addBtn" destination="v7a-jo-4TD" id="h5o-wp-W1f"/>
                                     <outlet property="commentInputField" destination="SWi-I6-dAu" id="9A3-1t-e3C"/>
                                 </connections>
                             </tableViewCell>
@@ -409,21 +418,13 @@
                         </connections>
                     </tableView>
                     <connections>
-                        <outlet property="containerView" destination="ZHE-Ee-e9j" id="lOJ-gf-JBV"/>
                         <outlet property="eventDetailsTableView" destination="Wr6-qQ-gTA" id="xUp-PP-PLb"/>
+                        <outlet property="titleImageIV" destination="t3u-rh-k4q" id="mKM-tf-WX3"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6bD-TH-doI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="935" y="-321"/>
-        </scene>
-        <!--TemplateViewController-->
-        <scene sceneID="icv-tw-MJa">
-            <objects>
-                <viewControllerPlaceholder storyboardName="UISupporting" referencedIdentifier="TemplateViewController" id="jky-ye-iCT" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="bAR-Fi-J44" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1259" y="-321"/>
+            <point key="canvasLocation" x="934.5" y="-321.5"/>
         </scene>
         <!--Create Event View Controller-->
         <scene sceneID="JpG-2r-IUf">

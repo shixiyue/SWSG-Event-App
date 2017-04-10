@@ -130,11 +130,13 @@ class CreateEventViewController: UIViewController {
         if activeTextField == startTimeTF {
             let time = sTimePicker.date
             startTimeTF.text = Utility.fbTimeFormatter.string(from: time)
+            eTimePicker.minimumDate = sTimePicker.date
         }
         
         if activeTextField == endTimeTF {
             let time = eTimePicker.date
             endTimeTF.text = Utility.fbTimeFormatter.string(from: time)
+            sTimePicker.maximumDate = eTimePicker.date
         }
     }
     
@@ -157,7 +159,7 @@ class CreateEventViewController: UIViewController {
             return
         }
         
-        let event = Event(id: nil, image: image, name: name, startDateTime: startDateTime, endDateTime: endDateTime, venue: venue, shortDesc: shortDesc, description: fullDesc)
+        let event = Event(id: nil, image: image, name: name, startDateTime: startDateTime, endDateTime: endDateTime, venue: venue, shortDesc: shortDesc, description: fullDesc, comments: [Comment]())
         
         System.client.createEvent(event, completion: { (error) in
             Utility.popViewController(no: 1, viewController: self)
@@ -165,7 +167,7 @@ class CreateEventViewController: UIViewController {
     }
 }
 
-extension CreateEventViewController: UITextViewDelegate, UITextFieldDelegate {
+extension CreateEventViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         nextTextField()
@@ -180,15 +182,6 @@ extension CreateEventViewController: UITextViewDelegate, UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
         activeTextField = nil
-        updateButtonState()
-    }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        activeTextView = textView
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        activeTextView = nil
         updateButtonState()
     }
     
@@ -226,5 +219,41 @@ extension CreateEventViewController: UITextViewDelegate, UITextFieldDelegate {
         self.scrollView.isScrollEnabled = false
     }
 
+}
+
+extension CreateEventViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        activeTextView = textView
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        activeTextView = nil
+        updateButtonState()
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        guard let textView = textView as? PlaceholderTextView, let currentText = textView.text else {
+            return false
+        }
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        
+        if updatedText.isEmpty {
+            textView.setPlaceholder()
+            updateButtonState()
+            return false
+        } else if textView.textColor == Config.placeholderColor && !text.isEmpty {
+            textView.removePlaceholder()
+            updateButtonState()
+        }
+        return true
+    }
+    
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        guard view.window != nil, textView.textColor == Config.placeholderColor else {
+            return
+        }
+        textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+    }
 }
 
