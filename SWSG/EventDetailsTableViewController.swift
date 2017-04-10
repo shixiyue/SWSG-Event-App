@@ -177,7 +177,8 @@ class EventDetailsTableViewController: UITableViewController {
                         return
                     }
                     
-                    cell.usernameLabel.text = user.profile.username
+                    let dateString = Utility.niceDateTimeFormatter.string(from: comment.timestamp)
+                    cell.usernameLabel.text = "\(user.profile.username) on \(dateString)"
                     
                     Utility.getProfileImg(uid: uid, completion: { (image) in
                         guard let image = image else {

@@ -152,6 +152,15 @@ struct Utility {
         return formatter
     }
     
+    static var niceDateTimeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        
+        formatter.dateFormat = "d MMM - h:mma"
+        
+        return formatter
+    }
+    
     static func displayDismissivePopup(title: String, message: String,
                                        viewController: UIViewController,
                                        completion: @escaping () -> Void) {
