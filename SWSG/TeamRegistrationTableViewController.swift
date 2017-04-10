@@ -8,13 +8,16 @@
 
 import UIKit
 
-class TeamRegistrationTableViewController: UITableViewController {
+class TeamRegistrationTableViewController: BaseViewController {
     
-    private let teams = Teams.sharedInstance()
+    @IBOutlet var tableView: UITableView!
+    fileprivate let teams = Teams.sharedInstance()
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        addSlideMenuButton()
         NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "teams"), object: nil)
     }
     
@@ -22,18 +25,30 @@ class TeamRegistrationTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
-  override func numberOfSections(in tableView: UITableView) -> Int {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let targetvc = segue.destination as? TeamInfoTableViewController else {
+            return
+        }
+        if let index = tableView.indexPathForSelectedRow?.row {
+            targetvc.team = teams.retrieveTeamAt(index: index)
+            targetvc.teamIndex = index
+        }
+    }
+}
+
+extension TeamRegistrationTableViewController: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return teams.count
     }
 
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamItemCell", for: indexPath) as! TeamItemTableViewCell
         let team = teams.retrieveTeamAt(index: indexPath.row)
         cell.teamName.text = team.name
@@ -51,23 +66,12 @@ class TeamRegistrationTableViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
     
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let destinationvc = segue.destination as? UINavigationController, let targetvc = destinationvc.topViewController as? TeamInfoTableViewController else {
-             return
-        }
-        if let index = tableView.indexPathForSelectedRow?.row {
-            targetvc.team = teams.retrieveTeamAt(index: index)
-            targetvc.teamIndex = index
-        }
-    }
-    
 
 }
