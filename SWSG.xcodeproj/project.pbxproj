@@ -73,8 +73,6 @@
 		C2A8A6851E9B0EFD008D50BC /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A8A6841E9B0EFD008D50BC /* HttpClient.swift */; };
 		C2A8A6871E9B0F0D008D50BC /* NotiPusher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A8A6861E9B0F0D008D50BC /* NotiPusher.swift */; };
 		C2A8A68A1E9B0F69008D50BC /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A8A6891E9B0F69008D50BC /* PushNotification.swift */; };
-		CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */; };
-		CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC0032941E7CF68500CF190E /* Settings.storyboard */; };
 		CC168B2C1E7E8C5800F8725A /* UISupporting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC168B2B1E7E8C5800F8725A /* UISupporting.storyboard */; };
 		CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */; };
 		CC18E1921E9A722400BE8B67 /* ImagePickCropperPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC18E1911E9A722400BE8B67 /* ImagePickCropperPopoverViewController.swift */; };
@@ -262,8 +260,6 @@
 		C2A8A6861E9B0F0D008D50BC /* NotiPusher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotiPusher.swift; sourceTree = "<group>"; };
 		C2A8A6891E9B0F69008D50BC /* PushNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
 		CA7AA4F9D14A6E7B2876E9AD /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
-		CC0032941E7CF68500CF190E /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		CC168B2B1E7E8C5800F8725A /* UISupporting.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UISupporting.storyboard; sourceTree = "<group>"; };
 		CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCropperViewController.swift; sourceTree = "<group>"; };
 		CC18E1911E9A722400BE8B67 /* ImagePickCropperPopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickCropperPopoverViewController.swift; sourceTree = "<group>"; };
@@ -410,7 +406,6 @@
 				E3220C271E796AD1008AFA85 /* EventSystem */,
 				3F9795641E7A8E48004BC26C /* Login & Sign Up */,
 				CC1CF8A11E7C028D002224BC /* Profile */,
-				CC0032931E7CF66D00CF190E /* Settings */,
 				3FED301D1E779A2100C007AD /* Menu */,
 				3FED302B1E77A5FA00C007AD /* Mentor */,
 				3F9795651E7A8FFE004BC26C /* Utilities */,
@@ -646,15 +641,6 @@
 			name = PushNotification;
 			sourceTree = "<group>";
 		};
-		CC0032931E7CF66D00CF190E /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				CC0032941E7CF68500CF190E /* Settings.storyboard */,
-				CC0032911E7CF65D00CF190E /* SettingsTableViewController.swift */,
-			);
-			name = Settings;
-			sourceTree = "<group>";
-		};
 		CC168B2F1E7FBF4C00F8725A /* UI Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -682,9 +668,9 @@
 		CC1CF8A11E7C028D002224BC /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				CC1CF8A21E7C03DA002224BC /* Profile.storyboard */,
 				CC1CF8A91E7C137A002224BC /* ProfileItems.swift */,
 				CC1CF8A71E7C09CD002224BC /* ProfileViewController.swift */,
-				CC1CF8A21E7C03DA002224BC /* Profile.storyboard */,
 				CC1CF8AF1E7C2009002224BC /* EditProfileTableViewController.swift */,
 				CC1CF8AD1E7C1ED6002224BC /* EditProfileViewController.swift */,
 				CC1CF8AB1E7C178A002224BC /* ProfileTableViewCell.swift */,
@@ -932,7 +918,6 @@
 				CC168B2C1E7E8C5800F8725A /* UISupporting.storyboard in Resources */,
 				E348D5741E895CD700947B3F /* CalendarCellView.xib in Resources */,
 				E355BB821E94E244002E29DD /* TagCell.xib in Resources */,
-				CC0032951E7CF68500CF190E /* Settings.storyboard in Resources */,
 				3F408CC41E83BB8200E2B787 /* GoogleService-Info.plist in Resources */,
 				CC5F1C5B1E863044006A5322 /* Information.storyboard in Resources */,
 				3F97954E1E7A8DBF004BC26C /* LoginSignup.storyboard in Resources */,
@@ -1122,7 +1107,6 @@
 				3F20D4B51E9A37070082146B /* AuthType.swift in Sources */,
 				3FC314601E77DB90009B21AB /* ConsultationDayCell.swift in Sources */,
 				CC1CF8AE1E7C1ED6002224BC /* EditProfileViewController.swift in Sources */,
-				CC0032921E7CF65D00CF190E /* SettingsTableViewController.swift in Sources */,
 				CCE7DDE01E8B760C0044A863 /* VideoLinkTableViewCell.swift in Sources */,
 				C2A8A6851E9B0EFD008D50BC /* HttpClient.swift in Sources */,
 				3F97955B1E7A8DBF004BC26C /* SignUpTableViewController.swift in Sources */,

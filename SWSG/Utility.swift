@@ -106,7 +106,10 @@ struct Utility {
     static func signOutAllAccounts() {
         System.activeUser = nil
         System.client.signOut()
-        
+        signOutSocialMedia()
+    }
+    
+    static func signOutSocialMedia() {
         if let _ = AccessToken.current {
             LoginManager().logOut()
         }
@@ -326,6 +329,13 @@ struct Utility {
     }
     
     static func createPopUpWithTextField(title: String, message: String, btnText: String, placeholderText: String, existingText: String, viewController: UIViewController, completion: @escaping (String) -> Void) {
+        createPopUpWithTextField(title: title, message: message, btnText: btnText,
+                                 placeholderText: placeholderText, existingText: existingText,
+                                 isSecure: false, viewController: viewController,
+                                 completion: completion)
+    }
+    
+    static func createPopUpWithTextField(title: String, message: String, btnText: String, placeholderText: String, existingText: String, isSecure: Bool, viewController: UIViewController, completion: @escaping (String) -> Void) {
         //Creating a Alert Popup for Saving
         let createController = UIAlertController(title: title, message: message,
                                                  preferredStyle: UIAlertControllerStyle.alert)
@@ -353,6 +363,7 @@ struct Utility {
         //Creates a Textfield to enter the Level Name in the Popup
         createController.addTextField(configurationHandler: { (textField) -> Void in
             textField.placeholder = placeholderText
+            textField.isSecureTextEntry = isSecure
             
             if existingText.characters.count > 0 {
                 textField.text = existingText
@@ -389,7 +400,6 @@ struct Utility {
         
         //Displays the Save Popup
         viewController.present(createController, animated: true, completion: nil)
-
     }
     
     static func logUserIn(error: FirebaseError?, current viewController: UIViewController) {

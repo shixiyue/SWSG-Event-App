@@ -200,6 +200,12 @@ class FirebaseClient {
         })
     }
     
+    public func removeAdditionalAuth(authType: AuthType) {
+        print(authType.rawValue)
+        FIRAuth.auth()?.currentUser?.unlink(fromProvider: authType.rawValue) { (user, error) in
+        }
+    }
+    
     func changePassword(newPassword: String, completion: @escaping UserAuthCallback) {
         auth?.currentUser?.updatePassword(newPassword) { error in
             completion(self.checkError(error))

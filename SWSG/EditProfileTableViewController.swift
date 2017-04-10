@@ -7,6 +7,12 @@
 //
 
 import UIKit
+import Firebase
+import Google
+import GoogleSignIn
+import FacebookCore
+import FacebookLogin
+import SwiftSpinner
 
 /// `EditProfileTableViewController` represents the controller for signup table.
 class EditProfileTableViewController: ImagePickerTableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
@@ -23,6 +29,7 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
     @IBOutlet private var profileTableView: UITableView!
     @IBOutlet private var profileImageButton: UIButton!
     @IBOutlet var changeImageButton: UIButton!
+    @IBOutlet weak var usernameTextField: UILabel!
     @IBOutlet private var nameTextField: UITextField!
     @IBOutlet private var countryTextField: UITextField!
     @IBOutlet private var jobTextField: UITextField!
@@ -31,17 +38,41 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
     @IBOutlet fileprivate var skillsTextView: GrayBorderTextView!
     @IBOutlet private var descTextView: GrayBorderTextView!
     
+    @IBOutlet weak var googleView: UIView!
+    @IBOutlet weak var facebookView: UIView!
+    
+    @IBOutlet weak var unlinkFacebookBtn: UIButton!
+    @IBOutlet weak var unlinkGoogleBtn: UIButton!
+    @IBOutlet weak var changePasswordBtn: RoundCornerButton!
+    fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
+    fileprivate let googleLoginButton = GIDSignInButton()
+    
     fileprivate var textFields: [UITextField]!
+    fileprivate var auth: [AuthType]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUser()
-        setUpProfileTableView()
         setUpButton()
+        setUpAuthTypes()
+        setUpProfileTableView()
         setUpProfileImage()
         setUpTextFields()
         setUpTextViews()
         hideKeyboardWhenTappedAround()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        SwiftSpinner.show("Loading Data...")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().uiDelegate = self
     }
     
     private func setUpUser() {
@@ -52,6 +83,69 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
         self.user = user
     }
     
+    fileprivate func setUpAuthTypes() {
+        auth = [AuthType]()
+        
+        System.client.checkIfEmailAlreadyExists(email: user.email, completion: { (arr, error) in
+            guard let arr = arr else {
+                return
+            }
+            
+            for child in arr {
+                guard let authType = AuthType(rawValue: child) else {
+                    continue
+                }
+                
+                self.auth.append(authType)
+            }
+            
+            self.setUpAuthButtons() 
+        })
+    }
+    
+    fileprivate func setUpAuthButtons() {
+        Utility.signOutSocialMedia()
+        print(self.auth)
+        
+        if !auth.contains(.email) {
+            print("Test4")
+            changePasswordBtn.setTitle("Add Password", for: .normal)
+        } else {
+            print("Test3")
+            changePasswordBtn.setTitle("Change Password", for: .normal)
+        }
+        
+        if !auth.contains(.facebook) {
+            print("Test2")
+            fbLoginButton.isHidden = false
+            unlinkFacebookBtn.isHidden = true
+        } else if auth.count > 1 {
+            print("Test1")
+            fbLoginButton.isHidden = true
+            unlinkFacebookBtn.isHidden = false
+        } else {
+            print("Test")
+            fbLoginButton.isHidden = true
+            unlinkFacebookBtn.isHidden = true
+        }
+        
+        if !auth.contains(.google) {
+            print("Test5")
+            googleLoginButton.isHidden = false
+            unlinkGoogleBtn.isHidden = true
+        } else if auth.count > 1 {
+            print("Test6")
+            googleLoginButton.isHidden = true
+            unlinkGoogleBtn.isHidden = false
+        } else {
+            print("Test7")
+            googleLoginButton.isHidden = true
+            unlinkGoogleBtn.isHidden = true
+        }
+        
+        SwiftSpinner.hide()
+    }
+    
     private func setUpProfileTableView() {
         profileTableView.tableFooterView = UIView(frame: CGRect.zero)
         profileTableView.allowsSelection = false
@@ -59,6 +153,21 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
     
     private func setUpButton() {
         doneButton.addTarget(self, action: #selector(update), for: .touchUpInside)
+        
+        let googleCenter = CGPoint(x: googleView.frame.width/2,y: googleView.frame.height/2)
+        
+        googleLoginButton.center = googleCenter
+        self.googleView.addSubview(googleLoginButton)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(googleLoginBtnPressed))
+        googleLoginButton.addGestureRecognizer(tapGesture)
+        
+        let fbCenter = CGPoint(x: facebookView.frame.width/2,y: facebookView.frame.height/2)
+        
+        fbLoginButton.center = fbCenter
+        
+        fbLoginButton.delegate = self
+        self.facebookView.addSubview(fbLoginButton)
     }
     
     private func setUpProfileImage() {
@@ -154,6 +263,141 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
         NotificationCenter.default.removeObserver(self)
     }
     
+    @IBAction func unlinkFBBtnPressed(_ sender: Any) {
+        let title = "Removed Facebook"
+        let message = "Facebook Login has been removed from your account"
+        Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { () in
+            System.client.removeAdditionalAuth(authType: .facebook)
+            SwiftSpinner.show("Loading Data...")
+            
+            for (index, authType) in self.auth.enumerated() {
+                if authType == .facebook {
+                    self.auth.remove(at: index)
+                }
+            }
+            
+            self.setUpAuthButtons()
+        })
+    }
+    
+    @IBAction func unlinkGoogleBtnPressed(_ sender: Any) {
+        let title = "Removed Google"
+        let message = "Google Login has been removed from your account"
+        Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { () in
+            System.client.removeAdditionalAuth(authType: .google)
+            SwiftSpinner.show("Loading Data...")
+            
+            for (index, authType) in self.auth.enumerated() {
+                if authType == .google {
+                    self.auth.remove(at: index)
+                }
+            }
+            
+            self.setUpAuthButtons()
+        })
+    }
+    
+    @IBAction func changeBtnPressed(_ sender: Any) {
+        if !auth.contains(.email) {
+            showAddPassword()
+        } else {
+            showChangePassword()
+        }
+    }
+    
+    fileprivate func showAddPassword() {
+        let title = "Add Password"
+        let message = "Please key in your password:"
+        let btnText = "Add"
+        let placeholderText = "Password"
+        Utility.createPopUpWithTextField(title: title, message: message, btnText: btnText, placeholderText: placeholderText, existingText: "", isSecure: true, viewController: self, completion: { (password) in
+            guard let user = self.user, let credential =
+                System.client.getEmailCredential(email: user.email, password: password) else {
+                return
+            }
+            SwiftSpinner.show("Loading Data...")
+            
+            System.client.addAdditionalAuth(credential: credential, completion: { (error) in
+                self.auth.append(.email)
+                
+                self.setUpAuthButtons()
+            })
+        })
+    }
+    
+    fileprivate func showChangePassword() {
+        let alertController = UIAlertController(title: "Change Password", message: nil, preferredStyle: .alert)
+        
+        let updateAction = UIAlertAction(title: "OK", style: .default) { [weak alertController] _ in
+            guard let alertController = alertController else {
+                return
+            }
+            let currentPasswordTextField = alertController.textFields![0] as UITextField
+            let newPasswordTextField = alertController.textFields![1] as UITextField
+            
+            guard let currentPassword = currentPasswordTextField.text, let newPassword = newPasswordTextField.text else {
+                return
+            }
+            self.changePassword(from: currentPassword, to: newPassword)
+        }
+        updateAction.isEnabled = false
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alertController.addTextField { textField in
+            textField.placeholder = "Current Password"
+            textField.isSecureTextEntry = true
+        }
+        alertController.addTextField { textField in
+            textField.placeholder = "New Password"
+            textField.isSecureTextEntry = true
+        }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name.UITextFieldTextDidChange, object: alertController.textFields?[0], queue: OperationQueue.main) { notification in
+            let currentPasswordTextField = alertController.textFields![0] as UITextField
+            let newPasswordTextField = alertController.textFields![1] as UITextField
+            guard let currentPassword = currentPasswordTextField.text, let newPassword = newPasswordTextField.text else {
+                return
+            }
+            
+            updateAction.isEnabled = !currentPassword.isEmpty && !newPassword.isEmpty
+        }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name.UITextFieldTextDidChange, object: alertController.textFields?[1], queue: OperationQueue.main) { notification in
+            let currentPasswordTextField = alertController.textFields![0] as UITextField
+            let newPasswordTextField = alertController.textFields![1] as UITextField
+            guard let currentPassword = currentPasswordTextField.text, let newPassword = newPasswordTextField.text else {
+                return
+            }
+            
+            updateAction.isEnabled = !currentPassword.isEmpty && !newPassword.isEmpty
+        }
+        
+        alertController.addAction(updateAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    private func changePassword(from currentPassword: String, to newPassword: String) {
+        guard let user = System.activeUser else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        System.client.reauthenticateUser(email: user.email, password: currentPassword, completion: { (error) in
+            if let firebaseError = error {
+                self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+                return
+            }
+            System.client.changePassword(newPassword: newPassword, completion: { (error) in
+                if let firebaseError = error {
+                    self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+                    return
+                }
+                self.present(Utility.getSuccessAlertController(), animated: true, completion: nil)
+            })
+        })
+    }
+
 }
 
 extension EditProfileTableViewController: UITextViewDelegate, UITextFieldDelegate {
@@ -186,4 +430,50 @@ extension EditProfileTableViewController: UITextViewDelegate, UITextFieldDelegat
         doneButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
     
+}
+
+
+extension EditProfileTableViewController: GIDSignInDelegate, GIDSignInUIDelegate {
+    func googleLoginBtnPressed(sender: UITapGestureRecognizer) {
+        GIDSignIn.sharedInstance().signIn()
+    }
+    
+    public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        guard error == nil, let credential = System.client.getGoogleCredential() else {
+            return
+        }
+        
+        System.client.addAdditionalAuth(credential: credential, completion: { (error) in
+            SwiftSpinner.show("Communicating with Google...")
+            
+            self.auth.append(.google)
+            
+            self.setUpAuthButtons()
+        })
+        
+    }
+}
+
+extension EditProfileTableViewController: LoginButtonDelegate {
+    
+    func loginButtonDidCompleteLogin(_ fbLoginButton: LoginButton, result: LoginResult){
+        System.client.getFBProfile(completion: { (user, error) in
+            guard error == nil, let credential = System.client.getFBCredential() else {
+                return
+            }
+            
+            System.client.addAdditionalAuth(credential: credential, completion: { (error) in
+                SwiftSpinner.show("Communicating with Facebook...")
+                
+                self.auth.append(.facebook)
+                
+                self.setUpAuthButtons()
+            })
+            
+        })
+    }
+    
+    func loginButtonDidLogOut(_ fbLoginButton: LoginButton){
+        
+    }
 }
