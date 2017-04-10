@@ -10,6 +10,9 @@ import UIKit
 import FacebookCore
 import FacebookLogin
 import Firebase
+import Google
+import GoogleSignIn
+import SwiftSpinner
 
 class LoginViewController: UIViewController {
 
@@ -25,24 +28,39 @@ class LoginViewController: UIViewController {
     
     var newCredential: FIRAuthCredential?
     var clientArr: [String]?
-    fileprivate let loginButton = LoginButton(readPermissions: [.publicProfile, .email])
+    fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
+    fileprivate let googleLoginButton = GIDSignInButton()
+    fileprivate var currentAuth: AuthType?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpClients()
         setUpButton()
         setUpTextFields()
         hideKeyboardWhenTappedAround()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        SwiftSpinner.hide()
+        
+        GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().uiDelegate = self
+        
+        setUpClients()
+        Utility.signOutAllAccounts()
+    }
+    
     private func setUpClients() {
         if let clientArr = clientArr {
-            if !clientArr.contains(Config.emailIdentifier) {
+            if !clientArr.contains(AuthType.email.rawValue) {
                 emailView.isHidden = true
             }
             
-            if !clientArr.contains(Config.fbIdentifier) {
-                facebookView.isHidden = true
+            if !clientArr.contains(AuthType.facebook.rawValue) {
+                fbLoginButton.isHidden = true
+            }
+            
+            if !clientArr.contains(AuthType.google.rawValue) {
+                googleLoginButton.isHidden = true
             }
             
             signUpView.isHidden = true
@@ -58,9 +76,19 @@ class LoginViewController: UIViewController {
         logInButton.setDisable()
         logInButton.addTarget(self, action: #selector(logIn), for: .touchUpInside)
         
-        loginButton.center = facebookView.center
-        loginButton.delegate = self
-        self.stackView.addSubview(loginButton)
+        let fbCenter = CGPoint(x: facebookView.frame.width/2,y: facebookView.frame.height/2)
+        let googleCenter = CGPoint(x: googleView.frame.width/2,y: googleView.frame.height/2)
+        
+        fbLoginButton.center = fbCenter
+        
+        fbLoginButton.delegate = self
+        self.facebookView.addSubview(fbLoginButton)
+        
+        googleLoginButton.center = googleCenter
+        self.googleView.addSubview(googleLoginButton)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(googleLoginBtnPressed))
+        googleLoginButton.addGestureRecognizer(tapGesture)
     }
     
     @objc fileprivate func logIn() {
@@ -68,15 +96,7 @@ class LoginViewController: UIViewController {
             return
         }
         
-        System.client.signIn(email: email, password: password, completion: { (error) in
-            if let credential = self.newCredential {
-                System.client.addAdditionalAuth(credential: credential, completion: { _ in
-                })
-            }
-            
-            Utility.logUserIn(error: error, current: self)
-            
-        })
+        attemptLogin(email: email, password: password, user: nil, auth: .email)
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -97,13 +117,49 @@ class LoginViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
-        if segue.identifier == Config.logInSignUp, let user = sender as? SocialUser {
+        if segue.identifier == Config.loginToSignup, let user = sender as? SocialUser {
             guard let signUpVC = segue.destination as? SignUpViewController else {
                 return
             }
             
             signUpVC.socialUser = user
+        } else if segue.identifier == Config.loginToLogin, let arr = sender as? [String] {
+            guard let loginVC = segue.destination as? LoginViewController,
+                let auth = currentAuth else {
+                    return
+            }
+            
+            switch auth {
+            case .facebook:
+                loginVC.newCredential = System.client.getFBCredential()
+            case .google:
+                loginVC.newCredential = System.client.getGoogleCredential()
+            case .email:
+                loginVC.newCredential = System.client
+                    .getEmailCredential(email: emailTextField.text,
+                                        password: passwordTextField.text)
+            }
+            
+            loginVC.clientArr = arr
         }
+    }
+    
+    fileprivate func attemptLogin(email: String, password: String?, user: SocialUser?, auth: AuthType) {
+        Utility.attemptRegistration(email: email, password: password, auth: auth, newCredential: self.newCredential, viewController: self, completion: { (exists, arr) in
+            
+            if !exists, let _ = arr {
+                let title = "Already Exists"
+                let message = "User with Email already exists, please log in with the original client first."
+                Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _  in
+                    self.currentAuth = auth
+                    self.performSegue(withIdentifier: Config.loginToLogin, sender: arr)
+                })
+                
+            } else if arr == nil {
+                //Account does not exist, proceed with registration
+                self.performSegue(withIdentifier: Config.loginToSignup, sender: user)
+            }
+        })
     }
     
 }
@@ -120,34 +176,34 @@ extension LoginViewController: UITextFieldDelegate {
     }
 }
 
+extension LoginViewController: GIDSignInDelegate, GIDSignInUIDelegate {
+    func googleLoginBtnPressed(sender: UITapGestureRecognizer) {
+        GIDSignIn.sharedInstance().signIn()
+    }
+    
+    public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if error == nil {
+            SwiftSpinner.show("Communicating with Google")
+            let user = SocialUser(gUser: user)
+            self.attemptLogin(email: user.email, password: nil, user: user, auth: .google)
+        }
+    }
+}
+
 extension LoginViewController: LoginButtonDelegate {
     
-    func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult){
+    func loginButtonDidCompleteLogin(_ fbLoginButton: LoginButton, result: LoginResult){
         System.client.getFBProfile(completion: { (user, error) in
-            loginButton.isHidden = true
             guard let user = user else {
                 return
             }
             
-            Utility.attemptRegistration(email: user.email, auth: .facebook, newCredential: self.newCredential, viewController: self, completion: { (exists, arr) in
-                
-                if !exists, let arr = arr {
-                    let title = "Already Exists"
-                    let message = "User with Email already exists, please log in with the original client first."
-                    Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _  in
-                        //self.performSegue(withIdentifier: Config.showLogin, sender: arr)
-                    })
-                    
-                    //TODO: Pass existing login on.
-                } else if !exists {
-                    //Account does not exist, proceed with registration
-                    self.performSegue(withIdentifier: Config.logInSignUp, sender: user)
-                }
-            })
+            SwiftSpinner.show("Communicating with Facebook")
+            self.attemptLogin(email: user.email, password: nil, user: user, auth: .facebook)
         })
     }
     
-    func loginButtonDidLogOut(_ loginButton: LoginButton){
+    func loginButtonDidLogOut(_ fbLoginButton: LoginButton){
         
     }
 }

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,37 +15,38 @@
             <rect key="frame" x="0.0" y="0.0" width="208" height="202"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ac4-ae-3Uj">
-                    <rect key="frame" x="99.5" y="192" width="10" height="10"/>
-                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="10" id="huf-dm-0va" userLabel="width = 10"/>
-                        <constraint firstAttribute="height" constant="10" id="ksX-iM-KF1" userLabel="height = 10"/>
-                    </constraints>
-                </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eHc-N0-46X">
                     <rect key="frame" x="79" y="76" width="50" height="50"/>
-                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="50" id="a1G-yR-KzM"/>
                         <constraint firstAttribute="height" constant="50" id="sfG-7D-L7x"/>
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eeQ-5Z-gm1">
-                    <rect key="frame" x="83" y="91" width="42" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <nil key="textColor"/>
+                    <rect key="frame" x="82.5" y="90" width="43" height="22.5"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="19"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ac4-ae-3Uj">
+                    <rect key="frame" x="99" y="112" width="10" height="10"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="10" id="huf-dm-0va" userLabel="width = 10"/>
+                        <constraint firstAttribute="height" constant="10" id="ksX-iM-KF1" userLabel="height = 10"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="eHc-N0-46X" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="COM-a3-0Gm"/>
-                <constraint firstItem="Ac4-ae-3Uj" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="HDV-xo-9Sm"/>
                 <constraint firstItem="eHc-N0-46X" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Oag-Gb-thp"/>
-                <constraint firstItem="Ac4-ae-3Uj" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="XvQ-ZH-qH5"/>
                 <constraint firstItem="eeQ-5Z-gm1" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="cfa-jL-y7A"/>
+                <constraint firstItem="Ac4-ae-3Uj" firstAttribute="top" secondItem="eeQ-5Z-gm1" secondAttribute="bottom" constant="-0.5" id="dIh-57-yn7"/>
                 <constraint firstItem="eeQ-5Z-gm1" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="dsf-hn-dqG"/>
+                <constraint firstItem="Ac4-ae-3Uj" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="f2z-8G-E5s"/>
+                <constraint firstItem="Ac4-ae-3Uj" firstAttribute="top" secondItem="eHc-N0-46X" secondAttribute="bottom" constant="-14" id="qxt-yH-NYY"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>

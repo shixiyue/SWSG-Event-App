@@ -9,28 +9,13 @@
 import UIKit
 
 class Events {
-    private static var eventsInstance = Events()
-    private var events = [Date: [Event]]() {
-        didSet {
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "events"), object: self)
-        }
-    }
+    public static var instance = Events()
+    private var events = [Date: [Event]]()
     
     private init() {
-        events = [Date.date(from: "2017 04 05"): [Event(image: [UIImage](), name: "Check-In Registration", start_datetime: "", end_datetime:"", venue: "Outside Meeting Room 1", description: "Please register and collect your breakfast outside Meeting Room 1", details: "Kindly get all your members to register Outside Meeting Room 1 to collect your daily pass and Wi-Fi password. \nPlease bring a photo ID for identification, duplicates are not accepted. Each member has to be present at the registration"),
-                                                  Event(image: [UIImage](), name: "Morning Keynote", start_datetime:  "2017 04 05", end_datetime: "2017 04 05", venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah")],
-                  Date.date(from: "2017 04 06"): [Event(image: [UIImage](), name: "Morning Keynote", start_datetime: "2017 04 05", end_datetime: "2017 04 06", venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah"),
-                                                  Event(image: [UIImage](), name: "Morning Keynote", start_datetime: "2017 04 06", end_datetime: "2017 04 05", venue: "Theatre 3", description: "Mr Saravanan (Google Singapore) will be given a talk on Cloud Computing and Software as a Service", details: "blah blah blah")]]
-    }
-    
-    class func sharedInstance() -> Events {
-        return eventsInstance
-    }
-    
-    public var count: Int {
-        get {
-            return events.count
-        }
+        System.client.getEvents(completion: { (events, error) in
+            self.events = events
+        })
     }
     
     public func addEvent(event: Event, to date: Date) {

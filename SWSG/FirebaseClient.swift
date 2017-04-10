@@ -10,6 +10,9 @@ import Foundation
 import Firebase
 import FacebookCore
 import FacebookLogin
+import Google
+import GoogleSignIn
+import OneSignal
 
 class FirebaseClient {
     
@@ -26,10 +29,12 @@ class FirebaseClient {
     typealias GeneralIdeaCallback = (FirebaseError?) -> Void
     typealias GetChannelCallback = (Channel?, FirebaseError?) -> Void
     typealias GetMessageCallback = (Message, FirebaseError?) -> Void
-    typealias GetEventCallback = (Event, FirebaseError?) -> Void
+    typealias GetEventCallback = (Event?, FirebaseError?) -> Void
+    typealias GetEventsCallback = ([Date: [Event]], FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
     typealias ImageCallback = (UIImage?, String?) -> Void
+    typealias ImagesCallback = ([UIImage]?, String?) -> Void
     
     var isConnected: Bool = false
     
@@ -72,6 +77,7 @@ class FirebaseClient {
     
     public func signIn(email: String, password: String, completion: @escaping SignInCallback) {
         auth?.signIn(withEmail: email, password: password, completion: {(user, err) in
+            OneSignal.syncHashedEmail(email)
             completion(self.checkError(err))
         })
     }
@@ -106,6 +112,23 @@ class FirebaseClient {
         }
         
         return FIRFacebookAuthProvider.credential(withAccessToken: token.authenticationToken)
+    }
+    
+    public func getGoogleCredential() -> FIRAuthCredential? {
+        guard let authentication = GIDSignIn.sharedInstance().currentUser.authentication else {
+            return nil
+        }
+        
+        return FIRGoogleAuthProvider.credential(withIDToken: authentication.idToken,
+                                                accessToken: authentication.accessToken)
+    }
+    
+    public func getEmailCredential(email: String?, password:String?) -> FIRAuthCredential? {
+        guard let email = email, let password = password else {
+            return nil
+        }
+        
+        return FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
     }
     
     public func fbSignIn(completion: @escaping SignInCallback){
@@ -258,25 +281,81 @@ class FirebaseClient {
     }
     
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
-        let dayString = event.getDayString()
-        let eventId = UUID().uuidString
-        let eventRef = eventsRef.child(dayString).child(eventId)
-     //   eventRef.setValue(event.toAnyObject(), withCompletionBlock: { (err, _) in
-       //     completion(self.checkError(err))
-       // })
+        let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
+        let eventRef = eventsRef.child(dayString).childByAutoId()
+        eventRef.setValue(event.toDictionary())
+        
+        if event.images.count == 0 {
+            completion (nil)
+        } else {
+            var imageURLs = [String]()
+            
+            for (index, image) in event.images.enumerated() {
+                saveImage(image: image, completion: { (imageURL, firError) in
+                    guard let imageURL = imageURL else {
+                        return
+                    }
+                    
+                    imageURLs.append(imageURL)
+                    eventRef.child(Config.image).setValue(imageURLs)
+                    
+                    if index == event.images.count - 1 {
+                        completion (nil)
+                    }
+                })
+            }
+        }
     }
     
-    public func getEventWithId(_ eventId: String, completion: @escaping GetEventCallback) {
-        // TODO
+    public func getEvents(completion: @escaping GetEventsCallback) {
+        eventsRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            var eventsByDate = [Date: [Event]]()
+            for dateSnapshot in snapshot.children {
+                guard let dateSnapshot = dateSnapshot as? FIRDataSnapshot,
+                    let date = Utility.fbDateFormatter.date(from: dateSnapshot.key) else {
+                    continue
+                }
+                
+                var events = [Event]()
+                for eventSnapshot in dateSnapshot.children {
+                    guard let eventSnapshot = eventSnapshot as? FIRDataSnapshot,
+                        let event = Event(id: eventSnapshot.key, snapshot: eventSnapshot) else {
+                        continue
+                    }
+                    
+                    events.append(event)
+                }
+                
+                eventsByDate[date] = events
+            }
+            
+            completion(eventsByDate, nil)
+        })
     }
     
-    public func getEventByDay(_ day: Date, completion: @escaping GetEventByDayCallback) {
-        let dayString = day.string(format: Config.dateTimeFormatDayString)
+    public func getEvent(with id: String, completion: @escaping GetEventCallback) {
+        let eventRef = eventsRef.queryOrderedByValue().queryEqual(toValue: id)
+        eventRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            for child in snapshot.children {
+                if let child = child as? FIRDataSnapshot {
+                    completion(Event(id: child.key, snapshot: child), nil)
+                    return
+                }
+            }
+            
+            completion(nil, nil)
+        })
+    }
+    
+    public func getEvent(by day: Date, completion: @escaping GetEventByDayCallback) {
+        let dayString = Utility.fbDateFormatter.string(from: day)
         let dayRef = eventsRef.child(dayString)
         dayRef.observeSingleEvent(of: .value, with: {(snapshot) in
             var events = [Event]()
-            for event in snapshot.children {
-                events.append(Event(snapshot: event as! FIRDataSnapshot)!)
+            for child in snapshot.children {
+                if let child = child as? FIRDataSnapshot, let event = Event(id: child.key, snapshot: child) {
+                    events.append(event)
+                }
             }
             completion(events, nil)
         })
@@ -287,7 +366,12 @@ class FirebaseClient {
         idea.id = ideaRef.key
         
         ideaRef.setValue(idea.toDictionary(), withCompletionBlock: { (err, _) in
-            completion(self.checkError(err))
+            guard err == nil else {
+                completion(self.checkError(err))
+                return
+            }
+            self.saveImages(mainImage: idea.mainImage, images: idea.images, ref: ideaRef)
+            completion(nil)
         })
     }
     
@@ -298,11 +382,17 @@ class FirebaseClient {
         
         let ideaRef = getIdeaRef(for: id)
         ideaRef.updateChildValues(idea.toDictionary())
+        saveImages(mainImage: idea.mainImage, images: idea.images, ref: ideaRef)
     }
     
     func updateIdeaVote(for id: String, user: String, vote: Bool) {
         let ideaRef = getIdeaRef(for: id)
         ideaRef.child(Config.votes).child(user).setValue(vote)
+    }
+    
+    func removeIdea(for id: String) {
+        let ideaRef = getIdeaRef(for: id)
+        ideaRef.removeValue()
     }
     
     public func createChannel(for channel: Channel, completion: @escaping GetChannelCallback) {
@@ -465,6 +555,30 @@ class FirebaseClient {
         }
     }
     
+    private func saveImages(mainImage: UIImage, images: [UIImage], ref: FIRDatabaseReference) {
+        saveImage(image: mainImage, completion: { (imageURL, firError) in
+            guard firError == nil, let url = imageURL else {
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+                return
+            }
+            ref.child(Config.mainImage).setValue(url)
+            System.imageCache[url] = mainImage
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+        })
+        let imagesRef = ref.child(Config.images)
+        imagesRef.removeValue()
+        for image in images {
+            let imageRef = imagesRef.childByAutoId()
+            saveImage(image: image, completion: { (imageURL, firError) in
+                guard firError == nil, let url = imageURL else {
+                    return
+                }
+                imageRef.setValue(url)
+                System.imageCache[url] = image
+            })
+        }
+    }
+    
     public func getProfileImageURL(for uid: String, completion: @escaping ImageURLCallback) {
         let userRef = usersRef.child(uid).child(Config.profile)
         
@@ -491,6 +605,38 @@ class FirebaseClient {
             }
         })
         
+    }
+    
+    public func getEventImagesURL(for id: String, completion: @escaping ImagesCallback) {
+        let eventRef = eventsRef.queryOrderedByValue().queryEqual(toValue: id)
+        eventRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            for child in snapshot.children {
+                if let child = child as? FIRDataSnapshot,
+                    let urls = child.childSnapshot(forPath: Config.image).value as? [String] {
+                    
+                    var images = [UIImage]()
+                    
+                    for (index, url) in urls.enumerated() {
+                        self.fetchImageDataAtURL(url, completion: { (image, error) in
+                            guard let image = image else {
+                                return
+                            }
+                            
+                            images.append(image)
+                            
+                            if index == urls.count - 1 {
+                                completion(images, error)
+                            }
+                        })
+                    }
+                    
+                    completion(nil, nil)
+                    return
+                }
+            }
+            
+            completion(nil, nil)
+        })
     }
     
     public func fetchImageDataAtURL(_ imageURL: String, completion: @escaping ImageCallback) {
@@ -633,5 +779,6 @@ class FirebaseClient {
     private func databaseReference(for name: String) -> FIRDatabaseReference {
         return FIRDatabase.database().reference().child(name)
     }
+    
 }
 

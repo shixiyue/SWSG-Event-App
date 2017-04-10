@@ -9,7 +9,7 @@
 import Foundation
 
 enum AuthType: String {
-    case email = "Email"
+    case email = "password"
     case facebook = "facebook.com"
     case google = "google.com"
 }

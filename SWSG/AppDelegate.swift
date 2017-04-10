@@ -12,6 +12,8 @@ import Firebase
 import FacebookCore
 import Google
 import GoogleSignIn
+import SwiftSpinner
+import OneSignal
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         SDKApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
+        OneSignal.initWithLaunchOptions(launchOptions, appId: Secret.oneSignalAppId)
         setNavigationBar()
         setUpFirebase()
         setUpGoogleLogin()
@@ -44,13 +47,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //TODO: Automatic Login with Firebase
     private func checkLogin() {
+        print("test2")
         if System.client.alreadySignedIn() {
             showLaunchScreen()
+            var requestTimedOut = true
+            SwiftSpinner.show("Communicating with Servers...")
             System.client.getCurrentUser(completion: { (user, userError) in
                 if let user = user {
                     System.activeUser = user
+                    requestTimedOut = false
                     self.showHomeScreen()
                 } else {
+                    requestTimedOut = false
+                    self.showLogInSignUpScreen()
+                }
+            })
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0, execute: {
+                if requestTimedOut{
                     self.showLogInSignUpScreen()
                 }
             })

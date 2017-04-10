@@ -11,6 +11,8 @@ import FacebookCore
 import FacebookLogin
 import Firebase
 import EventKit
+import Google
+import GoogleSignIn
 
 struct Utility {
     
@@ -79,13 +81,19 @@ struct Utility {
     }
     
     static func logOutUser(currentViewController: UIViewController) {
+        signOutAllAccounts()
+        System.activeUser = nil
+        showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
+    }
+    
+    static func signOutAllAccounts() {
         System.client.signOut()
         
         if let _ = AccessToken.current {
             LoginManager().logOut()
         }
-        System.activeUser = nil
-        showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
+        
+        GIDSignIn.sharedInstance().signOut()
     }
     
     static func logInUser(user: User, currentViewController: UIViewController) {
@@ -131,6 +139,15 @@ struct Utility {
         formatter.locale = Locale.current
         
         formatter.dateFormat = "d-MM-yyyy-HH:mm"
+        
+        return formatter
+    }
+    
+    static var fbTimeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        
+        formatter.dateFormat = "HH:mm"
         
         return formatter
     }
@@ -223,8 +240,6 @@ struct Utility {
                 completion(image)
             })
         }
-        
-        
     }
     
     static func forceGetChatIcon(id: String, completion: @escaping (UIImage?) -> Void) {
@@ -239,7 +254,17 @@ struct Utility {
         })
     }
     
-    
+    static func getImage(name: String, completion: @escaping (UIImage?) -> Void) {
+        if let image = System.imageCache[name] {
+            completion(image)
+        }
+        System.client.fetchImageDataAtURL(name, completion: { (image, _) in
+            if let image = image {
+                System.imageCache[name] = image
+            }
+            completion(image)
+        })
+    }
     
     static func createPopUpWithTextField(title: String, message: String, btnText: String, placeholderText: String, existingText: String, viewController: UIViewController, completion: @escaping (String) -> Void) {
         //Creating a Alert Popup for Saving
@@ -323,44 +348,61 @@ struct Utility {
     }
     
     static func attemptRegistration(email: String, auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool, [String]?) -> Void) {
+        attemptRegistration(email: email, password: nil, auth: auth, newCredential: newCredential,
+                            viewController: viewController, completion: completion)
+    }
+    
+    static func attemptRegistration(email: String, password: String?, auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool, [String]?) -> Void) {
         
         System.client.checkIfEmailAlreadyExists(email: email, completion: { (arr, error) in
             if let arr = arr, arr.contains(auth.rawValue) {
-                attemptLogin(auth: auth, newCredential: newCredential, viewController: viewController, completion: { (success)  in
+                attemptLogin(auth: auth, newCredential: newCredential, email: email, password: password, viewController: viewController, completion: { (success)  in
                     completion(success, arr)
                 })
             } else {
                 completion(false, arr)
             }
         })
-        
-        /*
-        let title = "An error has occured"
-        let message = "A user with the same email exists, log in from that account and link this account through the settings."
-        Utility.displayDismissivePopup(title: title, message: message, viewController: viewController, completion: { _  in
-            completion(arr)
-        })*/
     }
     
     static func attemptLogin(auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool) -> Void) {
+        attemptLogin(auth: auth, newCredential: newCredential, email: nil, password: nil,
+                     viewController: viewController, completion: completion)
+    }
+    
+    static func attemptLogin(auth: AuthType, newCredential: FIRAuthCredential?, email: String?, password: String?, viewController: UIViewController, completion: @escaping (Bool) -> Void) {
         
+        var authCredential: FIRAuthCredential?
         switch auth {
         case .facebook:
-            if let credential = System.client.getFBCredential() {
-                System.client.signIn(credential: credential, completion: { (error) in
-                    if let newCredential = newCredential {
-                        System.client.addAdditionalAuth(credential: newCredential, completion: { _ in
-                        })
-                    }
-                    
-                    Utility.logUserIn(error: error, current: viewController)
-                    completion(true)
-                })
-            }
-            completion(false)
-        default:
+            authCredential = System.client.getFBCredential()
+        case .google:
+            authCredential = System.client.getGoogleCredential()
+        case .email:
+            authCredential = System.client.getEmailCredential(email: email, password: password)
+        }
+        
+        if let credential = authCredential {
+            loginWithCredential(credential: credential, newCredential: newCredential,
+                                viewController: viewController, completion: completion)
+        } else {
             completion(false)
         }
+    }
+    
+    private static func loginWithCredential(credential: FIRAuthCredential,
+                                            newCredential: FIRAuthCredential?,
+                                            viewController: UIViewController,
+                                            completion: @escaping (Bool) -> Void) {
+        System.client.signIn(credential: credential, completion: { (error) in
+            if let newCredential = newCredential {
+                System.client.addAdditionalAuth(credential: newCredential, completion: { _ in
+                })
+            }
+            
+            Utility.logUserIn(error: error, current: viewController)
+            completion(true)
+        })
     }
     
     static func showImagePicker(imagePicker: ImagePickerPopoverViewController, viewController: UIViewController, completion: @escaping (UIImage?)->Void) {
@@ -377,6 +419,91 @@ struct Utility {
             viewController.navigationController?.popToViewController(viewControllers[vcIndex], animated: true)
         }
         
+    }
+    
+    static func getToolbar(previous: Selector, next: Selector, done: Selector) -> UIToolbar {
+        let toolbar = UIToolbar()
+        toolbar.barStyle = .default
+        toolbar.isTranslucent = true
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: done)
+        let flexibleSpaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let fixedSpaceButton = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        
+        let nextButton  = UIBarButtonItem(title: ">", style: .plain, target: self, action: next)
+        nextButton.width = 50.0
+        let previousButton  = UIBarButtonItem(title: "<", style: .plain, target: self, action: previous)
+        
+        toolbar.setItems([fixedSpaceButton, previousButton, nextButton, fixedSpaceButton, flexibleSpaceButton, doneButton], animated: false)
+        toolbar.isUserInteractionEnabled = true
+        
+        return toolbar
+    }
+    
+    static func previousTextField(runFirst: () -> Void, activeTF: UITextField?, tfCollection: [UITextField], activeTV: UITextView?, tvCollection: [UITextView]) {
+        runFirst()
+        
+        if let activeTextField = activeTF {
+            var previousTag = activeTextField.tag - 1
+            
+            while previousTag >= 0 {
+                if tfCollection[previousTag].isEnabled {
+                    tfCollection[previousTag].becomeFirstResponder()
+                    return
+                } else {
+                    previousTag -= 1
+                }
+            }
+        } else if let activeTextView = activeTV {
+            var previousTag = activeTextView.tag - 1
+            
+            while previousTag >= 0 {
+                if tvCollection[previousTag].isEditable {
+                    tvCollection[previousTag].becomeFirstResponder()
+                    return
+                } else {
+                    previousTag -= 1
+                }
+            }
+            tfCollection.last?.becomeFirstResponder()
+        }
+    }
+    
+    static func nextTextField(runFirst: () -> Void, runLast: () -> Void, activeTF: UITextField?, tfCollection: [UITextField], activeTV: UITextView?, tvCollection: [UITextView]) {
+        runFirst()
+        
+        if let activeTextField = activeTF {
+            var nextTag = activeTextField.tag + 1
+            
+            while nextTag < tfCollection.count {
+                if tfCollection[nextTag].isEnabled {
+                    tfCollection[nextTag].becomeFirstResponder()
+                    return
+                } else {
+                    nextTag += 1
+                }
+            }
+            
+            tvCollection.first?.becomeFirstResponder()
+        } else if let activeTextView = activeTV {
+            var nextTag = activeTextView.tag + 1
+            
+            while nextTag < tvCollection.count {
+                if tvCollection[nextTag].isEditable {
+                    tvCollection[nextTag].becomeFirstResponder()
+                    return
+                } else {
+                    nextTag += 1
+                }
+            }
+            runLast()
+        }
+    }
+    
+    static func donePressed(runFirst: () -> Void, viewController: UIViewController) {
+        runFirst()
+        viewController.view.endEditing(true)
     }
     
 }

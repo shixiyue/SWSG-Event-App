@@ -8,6 +8,7 @@ struct System {
     
     static var profileImageCache = [String: (image: UIImage, url: String)]()
     static var chatIconCache = [String: (image: UIImage, url: String)]()
+    static var imageCache = [String: UIImage]()
     
     static var mentors: [User] = {
         var users = [User]()

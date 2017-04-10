@@ -46,10 +46,10 @@ struct Config {
     static let details = "details"
     static let venue = "venue"
     static let id = "id"
-    static let ideaName = "ideaName"
-    static let ideaTeam = "ideaTeam"
-    static let ideaDescription = "ideaDescription"
-    static let ideaVideo = "ideaVideo"
+    static let description = "description"
+    static let videoLink = "videoLink"
+    static let mainImage = "mainImage"
+    static let images = "images"
     static let votes = "votes"
     static let mentor = "mentor"
     static let field = "field"
@@ -70,16 +70,19 @@ struct Config {
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
     static let buttonCornerRadius: CGFloat = 5
     static let themeColor = UIColor(red: 232.0/255.0, green: 43.0/255.0, blue: 49.0/255.0, alpha: CGFloat(1))
+    static let placeholderColor = UIColor(red: 199/255, green: 199/255, blue: 205/255, alpha: 1.0)
     static let disableAlpha: CGFloat = 0.5
     static let enableAlpha: CGFloat = 1
     static let maximumZoomScale: CGFloat = 10
-    static let minimumProfileTextFieldHeight: CGFloat = 49.5
+    static let minimumProfileTextFieldHeight: CGFloat = 125
     static let maxTeamMember: Int = 4
     static let upvoteDefault = UIImage(named: "upvote")
     static let upvoteFilled = UIImage(named: "upvote-filled")
     static let downvoteDefault = UIImage(named: "downvote")
     static let downvoteFilled = UIImage(named: "downvote-filled")
     static let placeholderImg = UIImage(named: "Placeholder")!
+    static let defaultIdeaImage = UIImage(named: "default-idea-image")!
+    static let loadingImage = UIImage(named: "loading")!
     static let chatIconWidth: CGFloat = 40
     static let headerBuffer: CGFloat = 45
     static let keyboardOffsetSignUp: CGFloat = 94
@@ -114,8 +117,11 @@ struct Config {
     static let signUpTable = "signUpTable"
     static let initialToSignUp = "showSignUp"
     static let initialToLogin = "showLogin"
+    static let loginToLogin = "showLogin"
     static let signUpToLogin = "showLogin"
     static let mentorToChat = "mentorToChat"
+    static let loginToSignup = "loginToSignUp"
+    static let showEventDetails = "showEventDetails"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
@@ -171,7 +177,16 @@ struct Config {
     //Parameters for Facebook
     static let fbIdentifier = "facebook.com"
     static let emailIdentifier = "email"
+    static let googleProfileDimension = UInt(300)
     
     // Parameters for notification:
     static let fullScreenImage = "fullScreenImage"
+    
+    //Parameters for Event
+    static let calendarStartDate = Utility.fbDateFormatter.date(from: "01-01-2017")!
+    static let calendarEndDate = Utility.fbDateFormatter.date(from: "31-12-2017")!
+    static let eventCell = "eventCell"
+    static let startDateTime = "startDateTime"
+    static let endDateTime = "endDateTime"
+    static let shortDesc = "shortDesc"
 }

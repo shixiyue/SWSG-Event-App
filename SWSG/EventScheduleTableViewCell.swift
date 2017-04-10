@@ -10,19 +10,19 @@ import UIKit
 
 class EventScheduleTableViewCell: UITableViewCell {
     
+    @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var colorBorder: UIView!
+    @IBOutlet weak var eventIV: UIImageView!
     @IBOutlet weak var eventName: UILabel!
-    @IBOutlet weak var eventTimeVenue: UILabel!
-    @IBOutlet weak var eventDescription: UILabel!
+    @IBOutlet weak var eventTime: UILabel!
+    @IBOutlet weak var venue: UILabel!
+    @IBOutlet weak var eventDescription: UITextView!
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+        self.eventDescription.textContainer.lineFragmentPadding = 0
+        self.eventDescription.textContainerInset = UIEdgeInsets.zero
     }
 
 }
