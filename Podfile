@@ -17,7 +17,10 @@ platform :ios, '9.0'
   pod 'GoogleSignIn'
   pod "SwiftSpinner"
   pod 'TextFieldEffects'
-
+  pod 'OneSignal', '~> 2.0'
   
 end
 
+target 'OneSignalNotificationServiceExtension' do
+  pod 'OneSignal', '~> 2.0'
+end
