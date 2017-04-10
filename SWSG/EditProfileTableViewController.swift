@@ -108,37 +108,29 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
         print(self.auth)
         
         if !auth.contains(.email) {
-            print("Test4")
             changePasswordBtn.setTitle("Add Password", for: .normal)
         } else {
-            print("Test3")
             changePasswordBtn.setTitle("Change Password", for: .normal)
         }
         
         if !auth.contains(.facebook) {
-            print("Test2")
             fbLoginButton.isHidden = false
             unlinkFacebookBtn.isHidden = true
         } else if auth.count > 1 {
-            print("Test1")
             fbLoginButton.isHidden = true
             unlinkFacebookBtn.isHidden = false
         } else {
-            print("Test")
             fbLoginButton.isHidden = true
             unlinkFacebookBtn.isHidden = true
         }
         
         if !auth.contains(.google) {
-            print("Test5")
             googleLoginButton.isHidden = false
             unlinkGoogleBtn.isHidden = true
         } else if auth.count > 1 {
-            print("Test6")
             googleLoginButton.isHidden = true
             unlinkGoogleBtn.isHidden = false
         } else {
-            print("Test7")
             googleLoginButton.isHidden = true
             unlinkGoogleBtn.isHidden = true
         }
@@ -184,6 +176,7 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
             textField.tag = index
         }
         nameTextField.text = user.profile.name
+        usernameTextField.text = "@\(user.profile.username)"
         countryTextField.text = user.profile.country
         jobTextField.text = user.profile.job
         companyTextField.text = user.profile.company
@@ -255,7 +248,8 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
         user.profile.updateProfile(username: user.profile.username, name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         // Error handling?
         System.client.updateUser(newUser: user)
-        dismiss(animated: false, completion: nil)
+        
+        Utility.popViewController(no: 1, viewController: self)
     }
     
     override func updateImage(to image: UIImage) {

@@ -119,7 +119,7 @@ struct Utility {
     
     static func logInUser(user: User, currentViewController: UIViewController) {
         System.activeUser = user
-        showStoryboard(storyboard: Config.main, destinationViewController: Config.navigationController, currentViewController: currentViewController)
+        showStoryboard(storyboard: Config.mainStoryboard, destinationViewController: Config.navigationController, currentViewController: currentViewController)
     }
     
     static func getFailAlertController(message: String) -> UIAlertController {

@@ -19,16 +19,12 @@ struct ProfileItems {
         case description = "Description"
     }
     
-    static var items: [(String, String)] {
-        get {
-            guard let user = System.activeUser else {
-                let defaultContent = Config.defaultContent
-                return [(Fields.country.rawValue, defaultContent), (Fields.job.rawValue, defaultContent), (Fields.company.rawValue, defaultContent), (Fields.education.rawValue, defaultContent), (Fields.skills.rawValue, defaultContent), (Fields.description.rawValue, defaultContent)]
-            }
-            return [(Fields.country.rawValue, user.profile.country), (Fields.job.rawValue, user.profile.job), (Fields.company.rawValue, user.profile.company), (Fields.education.rawValue, user.profile.education), (Fields.skills.rawValue, user.profile.skills), (Fields.description.rawValue, user.profile.desc)]
+    static func getItems(user: User?) -> [(String, String)] {
+        guard let user = user else {
+            let defaultContent = Config.defaultContent
+            return [(Fields.country.rawValue, defaultContent), (Fields.job.rawValue, defaultContent), (Fields.company.rawValue, defaultContent), (Fields.education.rawValue, defaultContent), (Fields.skills.rawValue, defaultContent), (Fields.description.rawValue, defaultContent)]
         }
+        return [(Fields.country.rawValue, user.profile.country), (Fields.job.rawValue, user.profile.job), (Fields.company.rawValue, user.profile.company), (Fields.education.rawValue, user.profile.education), (Fields.skills.rawValue, user.profile.skills), (Fields.description.rawValue, user.profile.desc)]
     }
-    
-    static let count = items.count
     
 }

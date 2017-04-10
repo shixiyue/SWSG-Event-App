@@ -15,6 +15,7 @@ class MentorViewController: UIViewController {
     @IBOutlet weak var positionLbl: UILabel!
     @IBOutlet weak var companyLbl: UILabel!
     @IBOutlet weak var descriptionTB: UITextView!
+    @IBOutlet weak var mentorView: UIView!
     
     @IBOutlet weak var consultationSlotCollection: UICollectionView!
     @IBOutlet weak var relatedMentorCollection: UICollectionView!
@@ -32,24 +33,40 @@ class MentorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        profileImg = Utility.roundUIImageView(for: profileImg)
         
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
-        
+        setUpCollections()
+        setUpView()
+        setUpDescription()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        observeSlots()
+        getRelatedMentors()
+    }
+    
+    private func setUpCollections() {
         consultationSlotCollection.delegate = self
         consultationSlotCollection.dataSource = self
         consultationSlotCollection.collectionViewLayout = cvLayout
         
         relatedMentorCollection.delegate = self
         relatedMentorCollection.dataSource = self
+    }
+    
+    private func setUpView() {
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
         
-        setUpDescription()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(goToProfile))
+        mentorView.addGestureRecognizer(tapGesture)
         
         guard let mentorAcct = mentorAcct, let uid = mentorAcct.uid else {
             return
         }
         
+        profileImg = Utility.roundUIImageView(for: profileImg)
         profileImg.image = Config.placeholderImg
+        
         Utility.getProfileImg(uid: uid, completion: { (image) in
             if let image = image {
                 self.profileImg.image = image
@@ -57,12 +74,7 @@ class MentorViewController: UIViewController {
         })
         
         mentorRef = System.client.getUserRef(for: uid)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        observeSlots()
-        getRelatedMentors()
+        
     }
     
     deinit {
@@ -136,6 +148,10 @@ class MentorViewController: UIViewController {
         slotRef.child(Config.team).setValue(System.activeUser?.team)
     }
     
+    func goToProfile(_ sender: UITapGestureRecognizer) {
+        performSegue(withIdentifier: Config.mentorToProfile, sender: nil)
+    }
+    
     @IBAction func composeBtnPressed(_ sender: Any) {
         
         guard let mentorAcct = mentorAcct, let uid = mentorAcct.uid else {
@@ -166,12 +182,16 @@ class MentorViewController: UIViewController {
             
             chatVc.senderDisplayName = System.activeUser?.profile.username
             chatVc.channel = channel
-        } else if segue.identifier == Config.mentorToRelatedMentor {
-            let mentorVC = segue.destination as! MentorViewController
+        } else if segue.identifier == Config.mentorToRelatedMentor,
+            let mentorVC = segue.destination as? MentorViewController {
             if let indexPaths = relatedMentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item
                 mentorVC.mentorAcct = relatedMentors[index]
             }
+        } else if Config.mentorToProfile == Config.mentorToProfile,
+            let profileVC = segue.destination as? ProfileViewController,
+            let mentorAcct = mentorAcct {
+            profileVC.user = mentorAcct
         }
     }
 }

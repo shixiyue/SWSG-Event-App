@@ -9,7 +9,7 @@
 import UIKit
 
 struct MenuItems {
-    static let items = ["Home", "Information", "Schedule", "Mentors", "Teams", "Chat", "Ideas", "Logout"]
+    static let items = ["Home", "Information", "Schedule", "Mentors", "Teams", "Chat", "Ideas",  "People", "Logout"]
     
     static var count: Int {
         return items.count
@@ -23,7 +23,8 @@ struct MenuItems {
         case teams = 4
         case chat = 5
         case ideas = 6
-        case logout = 7
+        case people = 7
+        case logout = 8
     }
 
 }

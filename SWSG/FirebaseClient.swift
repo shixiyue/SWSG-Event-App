@@ -287,6 +287,40 @@ class FirebaseClient {
         }
     }
     
+    public func addFavourite(uid: String) {
+        guard let activeUID = auth?.currentUser?.uid else {
+            return
+        }
+        
+        let userRef = usersRef.child(activeUID)
+        var favourites = [String]()
+        if let existingFavourites = System.activeUser?.favourites {
+            favourites += existingFavourites
+        }
+        favourites.append(uid)
+        userRef.child(Config.favourites).setValue(favourites)
+        System.activeUser?.setFavourites(favourites: favourites)
+    }
+    
+    public func removeFavourte(uid: String) {
+        guard let activeUID = auth?.currentUser?.uid,
+            var favourites = System.activeUser?.favourites else {
+            return
+        }
+        
+        for (index, favourite) in favourites.enumerated() {
+            if favourite == uid {
+                favourites.remove(at: index)
+                break
+            }
+        }
+        
+        let userRef = usersRef.child(activeUID)
+        userRef.child(Config.favourites).setValue(favourites)
+        System.activeUser?.setFavourites(favourites: favourites)
+        
+    }
+    
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
         let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
         let eventRef = eventsRef.child(dayString).childByAutoId()
@@ -329,7 +363,6 @@ class FirebaseClient {
         print(dict)
         eventRef.child(Config.comments).setValue(dict)
         completion(nil)
-        print("test6")
     }
     
     public func getEvents(completion: @escaping GetEventsCallback) {

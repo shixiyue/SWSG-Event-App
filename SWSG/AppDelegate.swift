@@ -86,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// Shows HomeScreen fter Firebase loads
     private func showHomeScreen() {
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        let storyboard = UIStoryboard(name: Config.main, bundle: nil)
+        let storyboard = UIStoryboard(name: Config.mainStoryboard, bundle: nil)
         let initialViewController = storyboard.instantiateViewController(withIdentifier: Config.navigationController)
         self.window?.rootViewController = initialViewController
         self.window?.makeKeyAndVisible()

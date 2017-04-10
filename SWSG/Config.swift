@@ -24,6 +24,7 @@ struct Config {
     static let profile = "profile"
     static let email = "email"
     static let password = "password"
+    static let favourites = "favourites"
     static let team = "team"
     static let name = "name"
     static let username = "username"
@@ -83,24 +84,34 @@ struct Config {
     static let placeholderImg = UIImage(named: "Placeholder")!
     static let defaultIdeaImage = UIImage(named: "default-idea-image")!
     static let loadingImage = UIImage(named: "loading")!
+    static let emptyStar = UIImage(named: "Star-Empty")!
+    static let fullStar = UIImage(named: "Star-Full")!
     static let chatIconWidth: CGFloat = 40
     static let headerBuffer: CGFloat = 45
     static let keyboardOffsetSignUp: CGFloat = 94
     
     // Parameters for Storyboard:
     static let launchScreen = "LaunchScreen"
+    static let navigationController = "NavigationController"
     static let logInSignUp = "LoginSignup"
     static let initialScreen = "InitialScreen"
-    static let main = "Main"
+    static let mainStoryboard = "Main"
     static let homeViewController = "HomeViewController"
-    static let eventSystem = "EventSystem"
-    static let navigationController = "NavigationController"
-
-    static let teamRegistration = "TeamRegistration"
-    static let ideasVotingPlatform = "Ideas"
-
-    static let profileScreen = "Profile"
+    static let informationStoryboard = "Information"
+    static let informationViewController = "InformationViewController"
+    static let mentorStoryboard = "Mentor"
+    static let mentorViewController = "MentorViewController"
+    static let eventStoryboard = "EventSystem"
+    static let eventViewController = "EventCalendarViewController"
+    static let teamStoryboard = "TeamRegistration"
+    static let teamRegistrationViewController = "TeamRegistrationTableViewController"
+    static let chatStoryboard = "Chat"
+    static let chatViewController = "ChatViewController"
+    static let ideasStoryboard = "Ideas"
+    static let ideasViewController = "ideaslist"
+    static let profileStoryboard = "Profile"
     static let profileViewController = "ProfileViewController"
+    static let profileListViewController = "ProfileListViewController"
     static let editProfileTable = "EditProfileTable"
     static let imageCropper = "ImageCropper"
     static let imageCropperViewController = "ImageCropperViewController"
@@ -122,6 +133,10 @@ struct Config {
     static let mentorToChat = "mentorToChat"
     static let loginToSignup = "loginToSignUp"
     static let showEventDetails = "showEventDetails"
+    static let profileListToProfile = "profileListToProfile"
+    static let profileToEditProfile = "profileToEditProfile"
+    static let chatToProfile = "chatToProfile"
+    static let mentorToProfile = "mentorToProfile"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
