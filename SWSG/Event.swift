@@ -12,7 +12,7 @@ import Firebase
 class Event {
     
     var id: String?
-    var images = [UIImage]()
+    var image: UIImage?
     var name : String
     var startDateTime: Date
     var endDateTime: Date
@@ -22,9 +22,9 @@ class Event {
     
     fileprivate let formatter = Utility.fbDateTimeFormatter
     
-    init(id: String?, images: [UIImage], name: String, startDateTime: Date, endDateTime: Date, venue: String, shortDesc: String, description: String) {
+    init(id: String?, image: UIImage?, name: String, startDateTime: Date, endDateTime: Date, venue: String, shortDesc: String, description: String) {
         self.id = id
-        self.images = images
+        self.image = image
         self.name = name
         self.startDateTime = startDateTime
         self.endDateTime = endDateTime

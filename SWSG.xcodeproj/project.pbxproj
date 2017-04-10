@@ -517,8 +517,10 @@
 		3FBB4C181E9B402800A45FB3 /* Archive */ = {
 			isa = PBXGroup;
 			children = (
+				E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */,
 				3FBB4C191E9B405800A45FB3 /* EventListPageViewController.swift */,
 				3FBB4C1B1E9B406E00A45FB3 /* EventScheduleViewController.swift */,
+				E3220C321E7A62F9008AFA85 /* Events.swift */,
 			);
 			name = Archive;
 			sourceTree = "<group>";
@@ -586,7 +588,6 @@
 		3FF653071E9A825C00B9E64F /* Events */ = {
 			isa = PBXGroup;
 			children = (
-				E3220C321E7A62F9008AFA85 /* Events.swift */,
 				E3220C301E7A3B99008AFA85 /* Event.swift */,
 			);
 			name = Events;
@@ -757,7 +758,6 @@
 				3FF653061E9A720800B9E64F /* UI Calendar Files */,
 				E348D5791E895E8300947B3F /* EventCalendarViewController.swift */,
 				3FF653091E9AB08200B9E64F /* CreateEventViewController.swift */,
-				E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */,
 				E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */,
 			);
 			name = EventSystem;

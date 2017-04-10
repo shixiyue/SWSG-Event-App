@@ -285,25 +285,18 @@ class FirebaseClient {
         let eventRef = eventsRef.child(dayString).childByAutoId()
         eventRef.setValue(event.toDictionary())
         
-        if event.images.count == 0 {
-            completion (nil)
+        if let image = event.image {
+            saveImage(image: image, completion: { (imageURL, firError) in
+                guard let imageURL = imageURL else {
+                    return
+                }
+                
+                eventRef.child(Config.image).setValue(imageURL)
+                
+                completion (nil)
+            })
         } else {
-            var imageURLs = [String]()
-            
-            for (index, image) in event.images.enumerated() {
-                saveImage(image: image, completion: { (imageURL, firError) in
-                    guard let imageURL = imageURL else {
-                        return
-                    }
-                    
-                    imageURLs.append(imageURL)
-                    eventRef.child(Config.image).setValue(imageURLs)
-                    
-                    if index == event.images.count - 1 {
-                        completion (nil)
-                    }
-                })
-            }
+            completion (nil)
         }
     }
     
@@ -331,6 +324,24 @@ class FirebaseClient {
             
             completion(eventsByDate, nil)
         })
+    }
+    
+    public func getEvents(snapshot: Any?) -> [Event]? {
+        guard let dateSnapshot = snapshot as? FIRDataSnapshot else {
+                return nil
+        }
+        
+        var events = [Event]()
+        for eventSnapshot in dateSnapshot.children {
+            guard let eventSnapshot = eventSnapshot as? FIRDataSnapshot,
+                let event = Event(id: eventSnapshot.key, snapshot: eventSnapshot) else {
+                    continue
+            }
+            
+            events.append(event)
+        }
+        
+        return events
     }
     
     public func getEvent(with id: String, completion: @escaping GetEventCallback) {
@@ -595,6 +606,28 @@ class FirebaseClient {
         })
     }
     
+    public func getEventImageURL(with id: String, completion: @escaping ImageURLCallback) {
+        eventsRef.observe(.value, with: { (snapshot) in
+            
+            for child in snapshot.children {
+                guard let child = child as? FIRDataSnapshot, child.hasChild(id) else {
+                    continue
+                }
+                
+                let event = child.childSnapshot(forPath: id)
+                
+                if event.hasChild(Config.image),
+                    let url = event.childSnapshot(forPath: Config.image).value as? String {
+                    print(url)
+                    completion(url, nil)
+                    return
+                } else {
+                    completion(nil, nil)
+                }
+            }
+        })
+    }
+    
     private func getImageURL(for ref: FIRDatabaseReference, completion: @escaping ImageURLCallback) {
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.hasChild(Config.image),
@@ -607,41 +640,9 @@ class FirebaseClient {
         
     }
     
-    public func getEventImagesURL(for id: String, completion: @escaping ImagesCallback) {
-        let eventRef = eventsRef.queryOrderedByValue().queryEqual(toValue: id)
-        eventRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            for child in snapshot.children {
-                if let child = child as? FIRDataSnapshot,
-                    let urls = child.childSnapshot(forPath: Config.image).value as? [String] {
-                    
-                    var images = [UIImage]()
-                    
-                    for (index, url) in urls.enumerated() {
-                        self.fetchImageDataAtURL(url, completion: { (image, error) in
-                            guard let image = image else {
-                                return
-                            }
-                            
-                            images.append(image)
-                            
-                            if index == urls.count - 1 {
-                                completion(images, error)
-                            }
-                        })
-                    }
-                    
-                    completion(nil, nil)
-                    return
-                }
-            }
-            
-            completion(nil, nil)
-        })
-    }
-    
     public func fetchImageDataAtURL(_ imageURL: String, completion: @escaping ImageCallback) {
-        guard (imageURL.hasPrefix("gs://") || imageURL.hasPrefix("http://")
-            || imageURL.hasPrefix("https://")) else {
+        guard imageURL.hasPrefix("gs://") else {
+            completion(nil, nil)
             return
         }
         
@@ -650,6 +651,7 @@ class FirebaseClient {
         storageRef.data(withMaxSize: INT64_MAX){ (data, error) in
             if let error = error {
                 print("Error downloading image data: \(error)")
+                completion(nil, nil)
                 return
             }
             
@@ -675,6 +677,19 @@ class FirebaseClient {
     public func fetchChannelIcon(for id: String, completion: @escaping ImageCallback) {
         fetchImage(for: getChannelsRef().child(id), completion: { (image, url) in
             completion(image, url)
+        })
+    }
+    
+    public func fetchEventImage(for id: String, completion: @escaping ImageCallback) {
+        getEventImageURL(with: id, completion: { (url, error) in
+            if let url = url {
+                self.fetchImageDataAtURL(url, completion: { (image, url)  in
+                    completion(image, url)
+                })
+            } else {
+                completion(nil, nil)
+            }
+            
         })
     }
     
@@ -762,6 +777,10 @@ class FirebaseClient {
     
     public func getStorageRef() -> FIRStorageReference {
         return storageRef
+    }
+    
+    public func getEventsRef() -> FIRDatabaseReference {
+        return eventsRef
     }
     
     public func getMentorsRef() -> FIRDatabaseQuery {

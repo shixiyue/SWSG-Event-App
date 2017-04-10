@@ -16,14 +16,14 @@ class CreateEventViewController: UIViewController {
     @IBOutlet weak var startTimeTF: UITextField!
     @IBOutlet weak var endTimeTF: UITextField!
     @IBOutlet weak var venueTF: UITextField!
-    @IBOutlet weak var shortDescTV: GrayBorderTextView!
-    @IBOutlet weak var fullDescTV: GrayBorderTextView!
+    @IBOutlet weak var shortDescTV: PlaceholderTextView!
+    @IBOutlet weak var fullDescTV: PlaceholderTextView!
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var createBtn: RoundCornerButton!
     
     var textFields: [UITextField]!
-    var textViews: [GrayBorderTextView]!
+    var textViews: [PlaceholderTextView]!
     
     fileprivate let datePicker = UIDatePicker()
     fileprivate let sTimePicker = UIDatePicker()
@@ -147,17 +147,17 @@ class CreateEventViewController: UIViewController {
     @IBAction func saveBtnPressed(_ sender: Any) {
         let startDateTime = Date.dateTime(forDate: datePicker.date, forTime: sTimePicker.date)
         let endDateTime = Date.dateTime(forDate: datePicker.date, forTime: eTimePicker.date)
-        var images = [UIImage]()
+        var image: UIImage? = nil
         
-        if imageChanged, let image = imageIV.image {
-            images.append(image)
+        if imageChanged, let img = imageIV.image {
+            image = img
         }
         
         guard let name = nameTF.text, let venue = venueTF.text, let shortDesc = shortDescTV.text, let fullDesc = fullDescTV.text else {
             return
         }
         
-        let event = Event(id: nil, images: images, name: name, startDateTime: startDateTime, endDateTime: endDateTime, venue: venue, shortDesc: shortDesc, description: fullDesc)
+        let event = Event(id: nil, image: image, name: name, startDateTime: startDateTime, endDateTime: endDateTime, venue: venue, shortDesc: shortDesc, description: fullDesc)
         
         System.client.createEvent(event, completion: { (error) in
             Utility.popViewController(no: 1, viewController: self)

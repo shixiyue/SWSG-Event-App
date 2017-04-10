@@ -162,7 +162,13 @@ class EventDetailsTableViewController: UITableViewController {
         guard let event = self.event else {
             return
         }
-        containerViewController.presetInfo(desc: "", images: event.images, videoLink: "", isScrollEnabled: false)
+        
+        var images = [UIImage]()
+        if let img = event.image {
+            images.append(img)
+        }
+        
+        containerViewController.presetInfo(desc: "", images: images, videoLink: "", isScrollEnabled: false)
         print("here in preparing for segue \(event.description)")
         containerViewController.tableView.layoutIfNeeded()
         containerView.frame = CGRect(x: 0, y: 0, width: tableView.contentSize.width, height: containerViewController.tableView.contentSize.height)

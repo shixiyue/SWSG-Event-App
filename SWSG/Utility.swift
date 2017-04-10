@@ -195,6 +195,7 @@ struct Utility {
         let values = string.components(separatedBy: delimiter).flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
         return values
     }
+    
     static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
         if System.profileImageCache.keys.contains(uid) {
             System.client.getProfileImageURL(for: uid, completion: { (url, error) in
@@ -249,6 +250,37 @@ struct Utility {
             }
             
             System.chatIconCache[id] = (image: image, url: url)
+            completion(image)
+            
+        })
+    }
+    
+    static func getEventIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        if System.eventIconCache.keys.contains(id) {
+            System.client.getEventImageURL(with: id, completion: { (url, error) in
+                if System.eventIconCache[id]?.url == url {
+                    completion(System.eventIconCache[id]?.image)
+                } else {
+                    forceGetEventIcon(id: id, completion: { (image) in
+                        completion(image)
+                    })
+                }
+                
+            })
+        } else {
+            forceGetEventIcon(id: id, completion: { (image) in
+                completion(image)
+            })
+        }
+    }
+    
+    static func forceGetEventIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        System.client.fetchEventImage(for: id, completion: { (image,url) in
+            guard let image = image, let url = url else {
+                return
+            }
+            
+            System.eventIconCache[id] = (image: image, url: url)
             completion(image)
             
         })

@@ -45,21 +45,21 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="75"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zyb-mE-yc3">
-                                                            <rect key="frame" x="0.0" y="0.0" width="10" height="75"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="5" height="75"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="10" id="Vgy-aG-P7X"/>
+                                                                <constraint firstAttribute="width" constant="5" id="Vgy-aG-P7X"/>
                                                             </constraints>
                                                         </view>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aWo-3p-nkr">
-                                                            <rect key="frame" x="10" y="0.0" width="75" height="75"/>
+                                                            <rect key="frame" x="5" y="0.0" width="75" height="75"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="75" id="DIp-PQ-yRN"/>
                                                                 <constraint firstAttribute="width" constant="75" id="qlD-tX-mPZ"/>
                                                             </constraints>
                                                         </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0IB-1x-C4n">
-                                                            <rect key="frame" x="85" y="0.0" width="290" height="75"/>
+                                                            <rect key="frame" x="80" y="0.0" width="295" height="75"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Check-In Registration" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HMh-YU-Hcl">
                                                                     <rect key="frame" x="8" y="8" width="161.5" height="22.5"/>
@@ -68,7 +68,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9.00am @ Outside Meeting Room 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JNf-C1-p71">
-                                                                    <rect key="frame" x="8" y="27" width="274" height="21"/>
+                                                                    <rect key="frame" x="8" y="27" width="279" height="21"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="21" id="5Yg-Qz-rzL"/>
                                                                     </constraints>
@@ -77,13 +77,13 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Please register and collect your breakfast." textAlignment="natural" adjustsFontForContentSizeCategory="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Dq-aW-SSa">
-                                                                    <rect key="frame" x="8" y="48" width="274" height="27"/>
+                                                                    <rect key="frame" x="8" y="48" width="279" height="27"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="9"/>
                                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                                 </textView>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:30 - 13:30" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="frE-f6-bEV">
-                                                                    <rect key="frame" x="193" y="8" width="89" height="18"/>
+                                                                    <rect key="frame" x="198" y="8" width="89" height="18"/>
                                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="15"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -575,7 +575,7 @@
                                                         <rect key="frame" x="8" y="25" width="359" height="30"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits"/>
+                                                        <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                     </textField>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -598,7 +598,7 @@
                                                         <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ogR-UN-7IX" customClass="GrayBorderTextView" customModule="SWSG" customModuleProvider="target">
+                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ogR-UN-7IX" customClass="PlaceholderTextView" customModule="SWSG" customModuleProvider="target">
                                                         <rect key="frame" x="8" y="34" width="359" height="46"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -619,7 +619,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="91v-wo-PeH">
                                                 <rect key="frame" x="0.0" y="405" width="375" height="142"/>
                                                 <subviews>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="YIz-Fl-WzV" customClass="GrayBorderTextView" customModule="SWSG" customModuleProvider="target">
+                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="YIz-Fl-WzV" customClass="PlaceholderTextView" customModule="SWSG" customModuleProvider="target">
                                                         <rect key="frame" x="8" y="38" width="359" height="96"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
