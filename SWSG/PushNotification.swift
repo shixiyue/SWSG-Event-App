@@ -11,12 +11,12 @@ import Foundation
 class PushNotification {
     
     public let type: PushNotificationType
-    public let data: Any?
+    public let additionData: [String: Any]
     public let message: String
     
-    init(type: PushNotificationType, data: Any?, message: String) {
+    init(type: PushNotificationType, additionData: [String: Any], message: String) {
         self.type = type
-        self.data = data
+        self.additionData = additionData
         self.message = message
     }
     
@@ -24,7 +24,17 @@ class PushNotification {
         var result = [String: Any]()
         result["aps"] = ["body": message]
         result["type"] = type.rawValue
-        result["data"] = data
+        result["addition_data"] = additionData
+        return result
+    }
+    
+    public func toSendableDict() -> [String: Any] {
+        var result = [String: Any]()
+        result["contents"] = ["en": message]
+        var toBeSentData = [String: Any]()
+        toBeSentData["type"] = type.rawValue
+        toBeSentData["addition_data"] = additionData
+        result["data"] = toBeSentData
         return result
     }
     

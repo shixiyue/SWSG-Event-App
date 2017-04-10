@@ -61,6 +61,7 @@ class FirebaseClient {
         auth?.createUser(withEmail: email, password: password, completion: {(firUser, err) in
             if err == nil, let uid = firUser?.uid {
                 self.createUserAccount(uid: uid, user: user, completion: completion)
+                OneSignal.sendTag(Config.uid, value: uid)
             }
             completion(self.checkError(err))
         })

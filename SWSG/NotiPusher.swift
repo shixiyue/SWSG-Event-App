@@ -7,25 +7,33 @@
 //
 
 import Foundation
+import OneSignal
 
 class NotiPusher {
     
     public func pushToAll(noti: PushNotification) {
-        let data = ["app_id": Secret.oneSignalAppId,
-                    "included_segments": ["All"],
-                    "contents": noti.toDictionary()] as [String : Any]
+        var data = noti.toSendableDict()
+        data["app_id"] = Secret.oneSignalAppId
+        data["included_segments"] = ["All"]
         let http = HttpClient()
         http.post(urlString: "https://onesignal.com/api/v1/notifications", jsonData: data, authHeaderValue: Secret.oneSignalAuthHeaderValue, completion: nil)
         
     }
     
+    public func push(noti: PushNotification, toUserWithUid uid: String) {
+        var data = noti.toSendableDict()
+        data["app_id"] = Secret.oneSignalAppId
+        //data["included_segments"] = ["All"]
+        data["filters"] = [["field": "tag", "key": "uid", "relation": "=", "value": uid]]
+        let http = HttpClient()
+        http.post(urlString: "https://onesignal.com/api/v1/notifications", jsonData: data, authHeaderValue: Secret.oneSignalAuthHeaderValue, completion: nil)
+    }
+    
     public func push(noti: PushNotification, toUserWithEmail: String) {
-        let data = ["app_id": Secret.oneSignalAppId,
-                    "included_segments": ["All"],
-                    "filters": [
-                        ["field": "email", "value": toUserWithEmail]
-            ],
-                    "contents": noti.toDictionary()] as [String : Any]
+        var data = noti.toSendableDict()
+        data["app_id"] = Secret.oneSignalAppId
+        //data["included_segments"] = ["All"]
+        data["filters"] = [["field": "email", "relation": "=", "value": toUserWithEmail]]
         let http = HttpClient()
         http.post(urlString: "https://onesignal.com/api/v1/notifications", jsonData: data, authHeaderValue: Secret.oneSignalAuthHeaderValue, completion: nil)
     }
@@ -40,4 +48,15 @@ enum UserGroup {
     case organizer
     case speak
     case participant
+}
+
+class NotiHandler {
+    
+    public func handleNoti(_ noti: OSNotification) {
+        print("body")
+        print(noti.payload.body)
+        print("data")
+        print(noti.payload.additionalData)
+    }
+    
 }
