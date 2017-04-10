@@ -40,6 +40,8 @@
 		3F9795631E7A8DBF004BC26C /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9795421E7A8DBF004BC26C /* Utility.swift */; };
 		3F9795691E7A932D004BC26C /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9795681E7A932D004BC26C /* System.swift */; };
 		3F97956B1E7A98AC004BC26C /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F97956A1E7A98AC004BC26C /* Field.swift */; };
+		3FBB4C1A1E9B405800A45FB3 /* EventListPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBB4C191E9B405800A45FB3 /* EventListPageViewController.swift */; };
+		3FBB4C1C1E9B406E00A45FB3 /* EventScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBB4C1B1E9B406E00A45FB3 /* EventScheduleViewController.swift */; };
 		3FC314601E77DB90009B21AB /* ConsultationDayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3145F1E77DB90009B21AB /* ConsultationDayCell.swift */; };
 		3FC314621E77DBAD009B21AB /* ConsultationSlotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC314611E77DBAD009B21AB /* ConsultationSlotCell.swift */; };
 		3FC314641E77DD22009B21AB /* ConsultationSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC314631E77DD21009B21AB /* ConsultationSlot.swift */; };
@@ -224,6 +226,8 @@
 		3F9795421E7A8DBF004BC26C /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		3F9795681E7A932D004BC26C /* System.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = System.swift; sourceTree = "<group>"; };
 		3F97956A1E7A98AC004BC26C /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
+		3FBB4C191E9B405800A45FB3 /* EventListPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventListPageViewController.swift; sourceTree = "<group>"; };
+		3FBB4C1B1E9B406E00A45FB3 /* EventScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScheduleViewController.swift; sourceTree = "<group>"; };
 		3FC3145F1E77DB90009B21AB /* ConsultationDayCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationDayCell.swift; sourceTree = "<group>"; };
 		3FC314611E77DBAD009B21AB /* ConsultationSlotCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationSlotCell.swift; sourceTree = "<group>"; };
 		3FC314631E77DD21009B21AB /* ConsultationSlot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsultationSlot.swift; sourceTree = "<group>"; };
@@ -510,6 +514,15 @@
 			name = Users;
 			sourceTree = "<group>";
 		};
+		3FBB4C181E9B402800A45FB3 /* Archive */ = {
+			isa = PBXGroup;
+			children = (
+				3FBB4C191E9B405800A45FB3 /* EventListPageViewController.swift */,
+				3FBB4C1B1E9B406E00A45FB3 /* EventScheduleViewController.swift */,
+			);
+			name = Archive;
+			sourceTree = "<group>";
+		};
 		3FED301D1E779A2100C007AD /* Menu */ = {
 			isa = PBXGroup;
 			children = (
@@ -740,6 +753,7 @@
 			isa = PBXGroup;
 			children = (
 				E3220C281E796BC0008AFA85 /* EventSystem.storyboard */,
+				3FBB4C181E9B402800A45FB3 /* Archive */,
 				3FF653061E9A720800B9E64F /* UI Calendar Files */,
 				E348D5791E895E8300947B3F /* EventCalendarViewController.swift */,
 				3FF653091E9AB08200B9E64F /* CreateEventViewController.swift */,
@@ -1082,6 +1096,7 @@
 				CC1AA6C21E77C328004F5F95 /* (null) in Sources */,
 				CC7A4AFA1E87700800BC8A4B /* InformationHeaderTableViewCell.swift in Sources */,
 				E3220C6B1E7D3D25008AFA85 /* Teams.swift in Sources */,
+				3FBB4C1A1E9B405800A45FB3 /* EventListPageViewController.swift in Sources */,
 				3FF6530A1E9AB08200B9E64F /* CreateEventViewController.swift in Sources */,
 				E348D56E1E8415C500947B3F /* SegueFromRight.swift in Sources */,
 				E348D56C1E840F1100947B3F /* IdeaItemTableViewCell.swift in Sources */,
@@ -1094,6 +1109,7 @@
 				3F408CD21E83E50D00E2B787 /* CreateChannelViewController.swift in Sources */,
 				CC507F2D1E967124006432FC /* Person.swift in Sources */,
 				E3220C6F1E7D7B2D008AFA85 /* TeamInfoTableViewController.swift in Sources */,
+				3FBB4C1C1E9B406E00A45FB3 /* EventScheduleViewController.swift in Sources */,
 				E3220C431E7AE40B008AFA85 /* CommentsTableViewCell.swift in Sources */,
 				CC1AA6C61E77C328004F5F95 /* (null) in Sources */,
 				E3220C351E7A8D0B008AFA85 /* EventDetailsTableViewController.swift in Sources */,
