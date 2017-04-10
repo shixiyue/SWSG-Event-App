@@ -81,12 +81,30 @@ struct Utility {
     }
     
     static func logOutUser(currentViewController: UIViewController) {
-        signOutAllAccounts()
-        System.activeUser = nil
-        showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
+        let title = "Log Out"
+        let message = "Do you want to log out?"
+        
+        let logoutController = UIAlertController(title: title, message: message,
+                                                  preferredStyle: UIAlertControllerStyle.alert)
+        
+        //Add an Action to Confirm quitting with the Destructive Style
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { _ in
+        }
+        logoutController.addAction(cancelAction)
+        
+        //Add an Action to Confirm quitting with the Destructive Style
+        let logoutAction = UIAlertAction(title: "Log Out", style: .destructive) { _ in
+            signOutAllAccounts()
+            showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
+        }
+        logoutController.addAction(logoutAction)
+        
+        //Present the Popup
+        currentViewController.present(logoutController, animated: true, completion: nil)
     }
     
     static func signOutAllAccounts() {
+        System.activeUser = nil
         System.client.signOut()
         
         if let _ = AccessToken.current {

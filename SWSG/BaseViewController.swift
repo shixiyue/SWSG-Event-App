@@ -40,30 +40,21 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         }
         switch(item){
         case .home:
-            print("Home\n", terminator: "")
             self.open(viewController: "HomeViewController", from: "Main")
         case .information:
-            print("Information\n", terminator: "")
             self.open(viewController: "InformationViewController", from: "Information")
         case .schedule:
-            print("EventScheduleVC\n", terminator: "")
-           // self.open(viewController: "EventScheduleTableViewController",from: Config.eventSystem)
             self.open(viewController: "EventCalendarViewController", from: Config.eventSystem)
         case .mentors:
-            print("Mentor\n", terminator: "")
             self.open(viewController: "MentorViewController", from: "Mentor")
         case .teams:
-            print("Teams\n",terminator: "")
             self.open(viewController: "TeamRegistrationTableViewController", from: Config.teamRegistration)
         case .chat:
-            print("Chat\n", terminator: "")
             self.open(viewController: "ChatViewController", from: "Chat")
         case .ideas:
-            print("Ideas\n",terminator:"")
             self.open(viewController: "ideaslist", from: Config.ideasVotingPlatform)
-        case .settings:
-            print("Settings\n", terminator: "")
-            self.open(viewController: "SettingsViewController", from: "Settings")
+        case .logout:
+            Utility.logOutUser(currentViewController: self)
         }
     }
     
