@@ -16,6 +16,7 @@ import OneSignal
 
 class FirebaseClient {
     
+    typealias GeneralErrorCallback = (FirebaseError?) -> Void
     typealias CreateUserCallback = (FirebaseError?) -> Void
     typealias SignInCallback = (FirebaseError?) -> Void
     typealias UserAuthCallback = (FirebaseError?) -> Void
@@ -26,7 +27,6 @@ class FirebaseClient {
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
-    typealias GeneralIdeaCallback = (FirebaseError?) -> Void
     typealias GetChannelCallback = (Channel?, FirebaseError?) -> Void
     typealias GetMessageCallback = (Message, FirebaseError?) -> Void
     typealias GetEventCallback = (Event?, FirebaseError?) -> Void
@@ -42,6 +42,7 @@ class FirebaseClient {
     private let teamsRef = FIRDatabase.database().reference(withPath: "teams")
     private let eventsRef = FIRDatabase.database().reference(withPath: "events")
     private let ideasRef = FIRDatabase.database().reference(withPath: "ideas")
+    private let informationRef = FIRDatabase.database().reference(withPath: "information")
     private let storageRef = FIRStorage.storage().reference(forURL: Config.appURL)
     private let auth = FIRAuth.auth()
     
@@ -361,7 +362,7 @@ class FirebaseClient {
         })
     }
     
-    func createIdea(idea: Idea, completion: @escaping GeneralIdeaCallback) {
+    func createIdea(idea: Idea, completion: @escaping GeneralErrorCallback) {
         let ideaRef = ideasRef.childByAutoId()
         idea.id = ideaRef.key
         
@@ -370,19 +371,39 @@ class FirebaseClient {
                 completion(self.checkError(err))
                 return
             }
-            self.saveImages(mainImage: idea.mainImage, images: idea.images, ref: ideaRef)
-            completion(nil)
+            self.saveIdeaImages(idea: idea, ideaRef: ideaRef, completion: { (error) in
+                completion(self.checkError(error))
+            })
         })
     }
     
-    func updateIdeaContent(for idea: Idea) {
+    func updateIdeaContent(for idea: Idea, completion: @escaping GeneralErrorCallback) {
         guard let id = idea.id else {
             return
         }
         
         let ideaRef = getIdeaRef(for: id)
-        ideaRef.updateChildValues(idea.toDictionary())
-        saveImages(mainImage: idea.mainImage, images: idea.images, ref: ideaRef)
+        ideaRef.updateChildValues(idea.toDictionary(), withCompletionBlock: { (err, _) in
+            guard err == nil else {
+                completion(self.checkError(err))
+                return
+            }
+            self.saveIdeaImages(idea: idea, ideaRef: ideaRef, completion: { (error) in
+                completion(self.checkError(error))
+            })
+        })
+    }
+    
+    private func saveIdeaImages(idea: Idea, ideaRef: FIRDatabaseReference, completion: @escaping GeneralErrorCallback) {
+        guard !idea.isDefaultMainImage else {
+            completion(nil)
+            self.saveDetailImages(images: idea.images, ref: ideaRef.child(Config.images))
+            return
+        }
+        self.saveMainImage(mainImage: idea.mainImage, ref: ideaRef, completion: { (error) in
+            completion(self.checkError(error))
+            self.saveDetailImages(images: idea.images, ref: ideaRef.child(Config.images))
+        })
     }
     
     func updateIdeaVote(for id: String, user: String, vote: Bool) {
@@ -534,8 +555,27 @@ class FirebaseClient {
         } else {
             channelRef.removeValue()
         }
+    }
+    
+    func saveInformation(person: Person, category: String, completion: @escaping GeneralErrorCallback) {
+        let personRef = getPeopleRef(for: category).childByAutoId()
+        person.id = personRef.key
         
-        
+        personRef.setValue(person.toDictionary(), withCompletionBlock: { (error, _) in
+            guard error == nil else {
+                completion(self.checkError(error))
+                return
+            }
+            self.saveImage(image: person.photo, completion: { (photoURL, error) in
+                guard error == nil, let url = photoURL else {
+                    completion(self.checkError(error))
+                    return
+                }
+                personRef.child(Config.photo).setValue(url)
+                System.imageCache[url] = person.photo
+                completion(nil)
+            })
+        })
     }
     
     public func saveImage(image: UIImage, completion: @escaping ImageURLCallback) {
@@ -555,21 +595,23 @@ class FirebaseClient {
         }
     }
     
-    private func saveImages(mainImage: UIImage, images: [UIImage], ref: FIRDatabaseReference) {
-        saveImage(image: mainImage, completion: { (imageURL, firError) in
-            guard firError == nil, let url = imageURL else {
-                NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+    private func saveMainImage(mainImage: UIImage, ref: FIRDatabaseReference, completion: @escaping GeneralErrorCallback) {
+        saveImage(image: mainImage, completion: { (imageURL, error) in
+            completion(error)
+            guard error == nil, let url = imageURL else {
                 return
             }
             ref.child(Config.mainImage).setValue(url)
             System.imageCache[url] = mainImage
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
         })
-        let imagesRef = ref.child(Config.images)
-        imagesRef.removeValue()
+    }
+    
+    private func saveDetailImages(images: [UIImage], ref: FIRDatabaseReference) {
+        ref.removeValue()
         for image in images {
-            let imageRef = imagesRef.childByAutoId()
+            let imageRef = ref.childByAutoId()
             saveImage(image: image, completion: { (imageURL, firError) in
+                print(true)
                 guard firError == nil, let url = imageURL else {
                     return
                 }
@@ -774,6 +816,10 @@ class FirebaseClient {
     
     public func getIdeaRef(for ideaID: String) -> FIRDatabaseReference {
         return ideasRef.child(ideaID)
+    }
+    
+    public func getPeopleRef(for category: String) -> FIRDatabaseReference {
+        return informationRef.child("people").child(category)
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {

@@ -15,6 +15,8 @@ class Idea {
     
     var id: String?
     
+    var isDefaultMainImage: Bool { return mainImage == Config.defaultIdeaImage }
+    
     public private(set) var name: String
     public private(set) var team: Int
     public private(set) var description: String
@@ -26,6 +28,7 @@ class Idea {
     fileprivate var downvotes = Set<String>()
     
     private var done = false
+    private var mainImageURL: String?
     private var imagesURL: [String: String]?
     private var imagesDict = [String: UIImage]()
     
@@ -69,19 +72,29 @@ class Idea {
             }
         }
         if let mainImageURL = snapshotValue[Config.mainImage] as? String {
-            Utility.getImage(name: mainImageURL, completion: { (image) in
-                guard let image = image else {
-                    return
-                }
-                self.mainImage = image
-                NotificationCenter.default.post(name: Notification.Name(rawValue: "refresh"), object: nil)
-            })
+            self.mainImageURL = mainImageURL
         }
         guard let imagesURL = snapshotValue[Config.images] as? [String: String], imagesURL.count > 0 else {
             return
         }
         self.images = [Config.loadingImage]
         self.imagesURL = imagesURL
+    }
+    
+    func loadMainImage(completion: @escaping (Bool) -> Void) {
+        guard let mainImageURL = mainImageURL else {
+            completion(false)
+            return
+        }
+        Utility.getImage(name: mainImageURL, completion: { (image) in
+            self.mainImageURL = nil
+            guard let image = image else {
+                completion(false)
+                return
+            }
+            self.mainImage = image
+            completion(true)
+        })
     }
     
     func loadImages() {

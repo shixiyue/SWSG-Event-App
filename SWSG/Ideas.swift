@@ -63,19 +63,15 @@ class Ideas {
         return ideas[index]
     }
     
+    func getAllIdeas() -> [Idea] {
+        return ideas
+    }
+    
     func removeIdea(idea: Idea) {
         guard let id = idea.id else {
             return
         }
         System.client.removeIdea(for: id)
-    }
-    
-    func updateIdea(_ idea: Idea, name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
-        guard let index = ideas.index(of: idea) else {
-            return
-        }
-        ideas[index].update(name: name, description: description, mainImage: mainImage, images: images, videoLink: videoLink)
-        System.client.updateIdeaContent(for: ideas[index])
     }
     
 }

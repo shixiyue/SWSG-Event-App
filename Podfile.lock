@@ -75,6 +75,7 @@ PODS:
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - JTAppleCalendar (6.1.6)
+  - OneSignal (2.5.1)
   - RSKImageCropper (1.6.1)
   - SwiftGifOrigin (1.6.1)
   - SwiftSpinner (1.2.1)
@@ -90,6 +91,7 @@ DEPENDENCIES:
   - GoogleSignIn
   - JSQMessagesViewController
   - JTAppleCalendar (~> 6.1)
+  - OneSignal (~> 2.0)
   - RSKImageCropper
   - SwiftGifOrigin
   - SwiftSpinner
@@ -116,11 +118,12 @@ SPEC CHECKSUMS:
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTAppleCalendar: 560fb46421880f53ad54123295072de24bca2b18
+  OneSignal: b8e3d70a393e78b07da7849448345ae1055b0561
   RSKImageCropper: 0df8c99e77a8ea7ca7a8b83ef468556f31584254
   SwiftGifOrigin: d6679d3ebe9df2e049a84bc52582635107b581f6
   SwiftSpinner: 62a28bbb4035f252a1e91b0e17fc40bdbbfa0aab
   TextFieldEffects: 9e5cce561ea39c75b86e9d3637601727a67e8b23
 
-PODFILE CHECKSUM: 3d802df408f0d2dbb1ced179f2c3334425587e05
+PODFILE CHECKSUM: 3239dbe8f54585bae3c486d3c41ac5310d60640c
 
 COCOAPODS: 1.2.0

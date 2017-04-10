@@ -7,17 +7,50 @@
 //
 
 import UIKit
+import Firebase
 
-class PeopleViewController: FullScreenImageViewController, UITableViewDataSource, UITableViewDelegate {
+class PeopleViewController: FullScreenImageViewController {
     
-    var people: [Person]!
-    var header: String!
+    fileprivate var people = People.getPeopleInstance()
+    var category: String!
+    var peopleInCategory: [Person]!
 
     @IBOutlet var peopleTableView: UITableView!
+    private var peopleRef: FIRDatabaseReference?
+    private var peopleAddRefHandle: FIRDatabaseHandle?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        peopleRef = System.client.getPeopleRef(for: category)
+        observePeople()
         setUpTableView()
+    }
+    
+    private func observePeople() {
+        guard let peopleRef = peopleRef else {
+            return
+        }
+        
+        peopleAddRefHandle = peopleRef.observe(.childAdded, with: { (snapshot) -> Void in
+            DispatchQueue.main.async {
+                self.people.add(category: self.category, snapshot: snapshot)
+                self.peopleTableView.reloadData()
+                self.loadImages()
+            }
+        })
+    }
+    
+    private func loadImages() {
+        for person in people.retrievePerson(category: category) {
+            person.loadImage(completion: { (needRefresh) in
+                guard needRefresh else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    self.peopleTableView.reloadData()
+                }
+            })
+        }
     }
     
     private func setUpTableView() {
@@ -26,13 +59,17 @@ class PeopleViewController: FullScreenImageViewController, UITableViewDataSource
         peopleTableView.tableFooterView = UIView(frame: CGRect.zero)
         peopleTableView.allowsSelection = false
     }
+}
+
+extension PeopleViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return people.count + 1
+        peopleInCategory = people.retrievePerson(category: category)
+        return peopleInCategory.count + 1
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -49,14 +86,14 @@ class PeopleViewController: FullScreenImageViewController, UITableViewDataSource
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "informationHeaderCell", for: indexPath) as? InformationHeaderTableViewCell else {
                 return InformationHeaderTableViewCell()
             }
-            cell.informationHeader.text = header
+            cell.informationHeader.text = category
             return cell
         }
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "personCell", for: indexPath) as? PeopleTableViewCell else {
             return PeopleTableViewCell()
         }
-        let person = people[index - 1]
+        let person = peopleInCategory[index - 1]
         cell.setUp(person: person)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullScreenImage as (UITapGestureRecognizer) -> Void))
         cell.addGestureRecognizer(tapGesture)

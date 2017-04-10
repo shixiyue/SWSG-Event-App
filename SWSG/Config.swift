@@ -64,7 +64,9 @@ struct Config {
     static let speakers = "Speakers"
     static let organizers = "Organizing Team"
     static let judges = "Judges"
-
+    static let title = "title"
+    static let intro = "intro"
+    static let photo = "photo"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -83,6 +85,7 @@ struct Config {
     static let placeholderImg = UIImage(named: "Placeholder")!
     static let defaultIdeaImage = UIImage(named: "default-idea-image")!
     static let loadingImage = UIImage(named: "loading")!
+    static let defaultPersonImage = UIImage(named: "Profile")!
     static let chatIconWidth: CGFloat = 40
     static let headerBuffer: CGFloat = 45
     static let scrollViewOffset: CGFloat = 300
