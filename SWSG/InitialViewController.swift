@@ -11,6 +11,7 @@ import Firebase
 import FacebookCore
 import FacebookLogin
 import GoogleSignIn
+import SwiftSpinner
 
 /// `InitialViewController` represents the view controller for initial screen, which will prompt the user to sign up / log in.
 class InitialViewController: UIViewController {
@@ -40,10 +41,7 @@ class InitialViewController: UIViewController {
         fbLoginButton.isHidden = false
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
-        
-        if AccessToken.current != nil {
-            LoginManager().logOut()
-        }
+        Utility.signOutAllAccounts()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -80,42 +78,44 @@ class InitialViewController: UIViewController {
         }
     }
     
-    fileprivate func displayErrorMsg() {
-        let title = "An error has occured"
-        let message = "Please try again"
-        Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _  in
-        })
-    }
-    
     fileprivate func attemptLogin(email: String, user: SocialUser, auth: AuthType) {
         Utility.attemptRegistration(email: email, auth: auth, newCredential: nil, viewController: self, completion: { (exists, arr) in
             
             print(exists)
             if !exists, let arr = arr {
-                let title = "Already Exists"
-                let message = "User with Email already exists, please log in with the original client first."
-                Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { ()  in
-                    self.currentAuth = auth
-                    self.performSegue(withIdentifier: Config.initialToLogin, sender: arr)
-                    
-                })
-                
-                //TODO: Pass existing login on.
+                let title = "Email already exists"
+                let message = "Please log in with the original client first."
+                SwiftSpinner.show(title, animated: false).addTapHandler({
+                    SwiftSpinner.hide({
+                        self.currentAuth = auth
+                        self.performSegue(withIdentifier: Config.initialToLogin, sender: arr)
+                    })
+                }, subtitle: message)
             } else if arr == nil {
                 //Account does not exist, proceed with registration
                 self.performSegue(withIdentifier: Config.initialToSignUp, sender: user)
             }
         })
     }
+    
+    fileprivate func showErrorMsg() {
+        let title = "An unexpected error has occured"
+        let message = "Please try again"
+        SwiftSpinner.show(title, animated: false).addTapHandler({
+            SwiftSpinner.hide({
+            })
+        }, subtitle: message)
+    }
 }
 
 extension InitialViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        if (error == nil) {
+        if error == nil {
+            SwiftSpinner.show("Communicating with Google")
             let user = SocialUser(gUser: user)
             self.attemptLogin(email: user.email, user: user, auth: .google)
         } else {
-            self.displayErrorMsg()
+            self.showErrorMsg()
         }
     }
 }
@@ -123,10 +123,10 @@ extension InitialViewController: GIDSignInDelegate, GIDSignInUIDelegate {
 extension InitialViewController: LoginButtonDelegate {
     
     func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult){
+        SwiftSpinner.show("Communicating with Facebook")
         client.getFBProfile(completion: { (user, error) in
-            self.fbLoginButton.isHidden = true
             guard let user = user else {
-                self.displayErrorMsg()
+                self.showErrorMsg()
                 return
             }
             

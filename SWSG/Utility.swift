@@ -81,6 +81,12 @@ struct Utility {
     }
     
     static func logOutUser(currentViewController: UIViewController) {
+        signOutAllAccounts()
+        System.activeUser = nil
+        showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
+    }
+    
+    static func signOutAllAccounts() {
         System.client.signOut()
         
         if let _ = AccessToken.current {
@@ -88,9 +94,6 @@ struct Utility {
         }
         
         GIDSignIn.sharedInstance().signOut()
-        
-        System.activeUser = nil
-        showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
     }
     
     static func logInUser(user: User, currentViewController: UIViewController) {
@@ -136,6 +139,15 @@ struct Utility {
         formatter.locale = Locale.current
         
         formatter.dateFormat = "d-MM-yyyy-HH:mm"
+        
+        return formatter
+    }
+    
+    static var fbTimeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        
+        formatter.dateFormat = "HH:mm"
         
         return formatter
     }
@@ -407,6 +419,91 @@ struct Utility {
             viewController.navigationController?.popToViewController(viewControllers[vcIndex], animated: true)
         }
         
+    }
+    
+    static func getToolbar(previous: Selector, next: Selector, done: Selector) -> UIToolbar {
+        let toolbar = UIToolbar()
+        toolbar.barStyle = .default
+        toolbar.isTranslucent = true
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: done)
+        let flexibleSpaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let fixedSpaceButton = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        
+        let nextButton  = UIBarButtonItem(title: ">", style: .plain, target: self, action: next)
+        nextButton.width = 50.0
+        let previousButton  = UIBarButtonItem(title: "<", style: .plain, target: self, action: previous)
+        
+        toolbar.setItems([fixedSpaceButton, previousButton, nextButton, fixedSpaceButton, flexibleSpaceButton, doneButton], animated: false)
+        toolbar.isUserInteractionEnabled = true
+        
+        return toolbar
+    }
+    
+    static func previousTextField(runFirst: () -> Void, activeTF: UITextField?, tfCollection: [UITextField], activeTV: UITextView?, tvCollection: [UITextView]) {
+        runFirst()
+        
+        if let activeTextField = activeTF {
+            var previousTag = activeTextField.tag - 1
+            
+            while previousTag >= 0 {
+                if tfCollection[previousTag].isEnabled {
+                    tfCollection[previousTag].becomeFirstResponder()
+                    return
+                } else {
+                    previousTag -= 1
+                }
+            }
+        } else if let activeTextView = activeTV {
+            var previousTag = activeTextView.tag - 1
+            
+            while previousTag >= 0 {
+                if tvCollection[previousTag].isEditable {
+                    tvCollection[previousTag].becomeFirstResponder()
+                    return
+                } else {
+                    previousTag -= 1
+                }
+            }
+            tfCollection.last?.becomeFirstResponder()
+        }
+    }
+    
+    static func nextTextField(runFirst: () -> Void, runLast: () -> Void, activeTF: UITextField?, tfCollection: [UITextField], activeTV: UITextView?, tvCollection: [UITextView]) {
+        runFirst()
+        
+        if let activeTextField = activeTF {
+            var nextTag = activeTextField.tag + 1
+            
+            while nextTag < tfCollection.count {
+                if tfCollection[nextTag].isEnabled {
+                    tfCollection[nextTag].becomeFirstResponder()
+                    return
+                } else {
+                    nextTag += 1
+                }
+            }
+            
+            tvCollection.first?.becomeFirstResponder()
+        } else if let activeTextView = activeTV {
+            var nextTag = activeTextView.tag + 1
+            
+            while nextTag < tvCollection.count {
+                if tvCollection[nextTag].isEditable {
+                    tvCollection[nextTag].becomeFirstResponder()
+                    return
+                } else {
+                    nextTag += 1
+                }
+            }
+            runLast()
+        }
+    }
+    
+    static func donePressed(runFirst: () -> Void, viewController: UIViewController) {
+        runFirst()
+        viewController.view.endEditing(true)
     }
     
 }

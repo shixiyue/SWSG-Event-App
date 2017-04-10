@@ -15,31 +15,44 @@ class EventCalendarViewController: BaseViewController {
     // a new color every time a cell is displayed. We do not want a laggy
     // scrolling calendar.
 
-    var events = Events.sharedInstance()
+    var events = Events.instance
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
-
+    @IBOutlet weak var dayList: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         addSlideMenuButton()
+        
+        setUpCalendar()
+        setUpDayList()
+        addObservers()
+    }
+    
+    private func setUpCalendar() {
         calendarView.dataSource = self
         calendarView.delegate = self
         calendarView.registerCellViewXib(file: "CalendarCellView") // Registering your cell is manditory
+        
         calendarView.cellInset = CGPoint(x: 0, y: 0)
         calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
         calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView"])
- 
+        
+        calendarView.scrollToDate(Date.init(), triggerScrollToDateDelegate: false)
+        calendarView.selectDates([Date.init()])
+    }
+    
+    private func setUpDayList() {
+        dayList.delegate = self
+        dayList.dataSource = self
+    }
+    
+    private func addObservers() {
         view.isUserInteractionEnabled = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
-          NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "events"), object: nil)
-        // Do any additional setup after loading the view.
-
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "events"), object: nil)
     }
     
     // Function to handle the text color of the calendar
@@ -66,14 +79,29 @@ class EventCalendarViewController: BaseViewController {
     
     // Function to handle the calendar selection
     func handleCellSelection(view: JTAppleDayCellView?, cellState: CellState) {
-        guard let myCustomCell = view as? CalendarCell  else {
+        guard let cell = view as? CalendarCell  else {
             return
         }
         if cellState.isSelected {
-            myCustomCell.selectedView.layer.cornerRadius =  25
-            myCustomCell.selectedView.isHidden = false
+            cell.selectedView.layer.cornerRadius = 25
+            cell.selectedView.isHidden = false
+            cell.dot.backgroundColor = UIColor.white
         } else {
-            myCustomCell.selectedView.isHidden = true
+            cell.selectedView.isHidden = true
+            cell.dot.backgroundColor = Config.themeColor
+        }
+    }
+    
+    //MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.showEventDetails, let event = sender as? Event {
+            guard let detailsVC = segue.destination as? EventDetailsTableViewController else {
+                    return
+            }
+            
+            detailsVC.event = event
         }
     }
 
@@ -81,34 +109,32 @@ class EventCalendarViewController: BaseViewController {
 
 extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
     func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy MM dd"
-        
-        let start = Date().string(format: formatter.dateFormat)// You can use date generated from a formatter
-        let startDate = formatter.date(from: start)!
-        let endDate = formatter.date(from: "2019 03 27")!                              // You can also use dates created from this function
-        let parameters = ConfigurationParameters(startDate: startDate,
-                                                 endDate: endDate,
+        let parameters = ConfigurationParameters(startDate: Config.calendarStartDate,
+                                                 endDate: Config.calendarEndDate,
                                                  numberOfRows: 6, // Only 1, 2, 3, & 6 are allowed
             calendar: Calendar.current,
             generateInDates: .forAllMonths,
-            generateOutDates: .tillEndOfGrid,
-            firstDayOfWeek: .sunday)
-        
+            generateOutDates: .tillEndOfRow,
+            firstDayOfWeek: .monday)
         return parameters
     }
+    
     func calendar(_ calendar: JTAppleCalendarView, willDisplayCell cell: JTAppleDayCellView, date: Date, cellState: CellState) {
-        let myCustomCell = cell as! CalendarCell
+        guard let cell = cell as? CalendarCell else {
+            return
+        }
         
         // Setup Cell text
-        myCustomCell.dayLabel.text = cellState.text
-        myCustomCell.dot.layer.cornerRadius = 5
+        cell.dayLabel.text = cellState.text
+        cell.dot.layer.cornerRadius = 5
+        cell.dot.backgroundColor = Config.themeColor
+        //cell.dot.layer.cornerRadius = cell.frame.width / 2
+        
         if events.contains(date: Date.date(from: Date.toString(date: date))) {
-            print("highlighted date is \(Date.date(from: Date.toString(date: date)))")
-            myCustomCell.dot.isHidden = false
+            cell.dot.isHidden = false
         } else {
-          //  print("does not contain date \(Date.date(from: Date.toString(date: date)))")
-            myCustomCell.dot.isHidden = true
+            //  print("does not contain date \(Date.date(from: Date.toString(date: date)))")
+            cell.dot.isHidden = true
         }
         
         handleCellTextColor(view: cell, cellState: cellState)
@@ -118,15 +144,8 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {
         handleCellSelection(view: cell, cellState: cellState)
         handleCellTextColor(view: cell, cellState: cellState)
-
-        let storyboard = UIStoryboard(name: Config.eventSystem, bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "EventListPageViewController") as? EventListPageViewController
-        if events.contains(date: date), let controller = controller {
-            controller.startDate = Date.date(from: Date.toString(date: date))
-            self.navigationController?.pushViewController(controller, animated: true)
-        }
-
-      
+        
+        dayList.reloadData()
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {
@@ -138,6 +157,7 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
     func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeFor range: (start: Date, end: Date), belongingTo month: Int) -> CGSize {
         return CGSize(width: 200, height: 70)
     }
+    
     // This setups the display of your header
     func calendar(_ calendar: JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, range: (start: Date, end: Date), identifier: String) {
         let headerCell = (header as? CalendarHeaderView)
@@ -146,6 +166,63 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
         let year = Calendar.current.component(.year, from: range.start)
         headerCell?.title.text = monthName + " " + String(year)
     }
+}
+
+// MARK: UITableViewDataSource
+extension EventCalendarViewController: UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let selectedDate = calendarView.selectedDates.first,
+            let eventList = events.retrieveEvent(at: selectedDate) else {
+            return 0
+        }
+        
+        return eventList.count
+    }
     
+    public func tableView(_ tableView: UITableView,
+                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: Config.eventCell, for: indexPath) as? EventScheduleTableViewCell,
+            let selectedDate = calendarView.selectedDates.first,
+            let event = events.retrieveEventAt(index: indexPath.item, at: selectedDate),
+            let id = event.id else {
+                return EventScheduleTableViewCell()
+        }
+        
+        cell.colorBorder.backgroundColor = Config.themeColor
+        cell.eventName.text = event.name
+        
+        cell.eventIV.isHidden = true
+        
+        System.client.getEventImagesURL(for: id, completion: { (images, error) in
+            guard let images = images else {
+                return
+            }
+            
+            cell.eventIV.image = images.first
+            cell.eventIV.isHidden = false
+        })
+        
+        let formatter = Utility.fbTimeFormatter
+        let startTimeString = formatter.string(from: event.startDateTime)
+        let endTimeString = formatter.string(from: event.endDateTime)
+        cell.eventTime.text = "\(startTimeString) - \(endTimeString)"
+        cell.venue.text = "@ \(event.venue)"
+        cell.eventDescription.text = event.shortDesc
+        
+        return cell
+    }
+}
+
+// MARK: UITableViewDelegate
+extension EventCalendarViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let selectedDate = calendarView.selectedDates.first,
+            let event = events.retrieveEventAt(index: indexPath.item, at: selectedDate) else {
+                return
+        }
+        
+        self.performSegue(withIdentifier: Config.showEventDetails, sender: event)
+    }
 }
 

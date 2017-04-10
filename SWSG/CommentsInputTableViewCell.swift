@@ -13,7 +13,7 @@ class CommentsInputTableViewCell: UITableViewCell {
     @IBOutlet weak var commentInputField: GrayBorderTextView!
    
     @IBAction func onAddCommentButtonClick(_ sender: Any) {
-        var comment = Comments.comments[EventDetailsTableViewController.event!.name]
+        /*var comment = Comments.comments[EventDetailsTableViewController.event!.name]
         if comment != nil {
             comment!.append(Comment(words: commentInputField.content,username: System.activeUser!.profile.name))
             
@@ -27,7 +27,7 @@ class CommentsInputTableViewCell: UITableViewCell {
             return
         }
         size.width = size.width > commentInputField.frame.size.width ? size.width : commentInputField.frame.size.width
-        commentInputField.frame.size = size
+        commentInputField.frame.size = size*/
     }
     
     override func awakeFromNib() {
