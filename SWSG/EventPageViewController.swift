@@ -28,8 +28,6 @@ class EventPageViewController: UIPageViewController {
         dataSource = self
         delegate = self
         
-        eventDelegate?.eventPageViewController(self, didUpdatePageCount: eventViewControllers.count)
-        
         observeDayEvents()
     }
     
@@ -52,7 +50,7 @@ class EventPageViewController: UIPageViewController {
             return
         }
         
-        print("test")
+        eventDelegate?.eventPageViewController(self, didUpdatePageCount: eventViewControllers.count)
         self.setViewControllers([eventViewControllers[index]],
                                 direction: .forward,
                                 animated: true,
@@ -77,7 +75,7 @@ class EventPageViewController: UIPageViewController {
 
         viewController.venueLbl.text = "@\(event.venue)"
         viewController.descTV.text = event.shortDesc
-        viewController.imageIV.isHidden = true
+        viewController.imageView.isHidden = true
         
         Utility.getEventIcon(id: id, completion: { (image) in
             guard let image = image else {
@@ -85,7 +83,7 @@ class EventPageViewController: UIPageViewController {
             }
             
             viewController.imageIV.image = image
-            viewController.imageIV.isHidden = false
+            viewController.imageView.isHidden = false
         })
         
         return viewController
@@ -93,7 +91,7 @@ class EventPageViewController: UIPageViewController {
 }
 
 // MARK: UIPageViewControllerDataSource
-extension EventPageViewController: UIPageViewControllerDataSource {
+extension EventPageViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
     func pageViewController(_ pageViewController: UIPageViewController,
                             viewControllerBefore viewController: UIViewController) -> UIViewController? {
@@ -103,6 +101,8 @@ extension EventPageViewController: UIPageViewControllerDataSource {
         
         let previousIndex = viewControllerIndex - 1
         
+        eventDelegate?.eventPageViewController(self,
+                                               didUpdatePageIndex: previousIndex)
         guard previousIndex >= 0, eventViewControllers.count > previousIndex else {
             return nil
         }
@@ -119,6 +119,8 @@ extension EventPageViewController: UIPageViewControllerDataSource {
         
         let nextIndex = viewControllerIndex + 1
         
+        eventDelegate?.eventPageViewController(self,
+                                               didUpdatePageIndex: nextIndex)
         guard nextIndex >= 0, eventViewControllers.count > nextIndex else {
             return nil
         }
@@ -126,18 +128,6 @@ extension EventPageViewController: UIPageViewControllerDataSource {
         index = viewControllerIndex
         return eventViewControllers[nextIndex]
     }
-
-}
-
-extension EventPageViewController: UIPageViewControllerDelegate {
-    
-    func pageViewController(_ pageViewController: UIPageViewController,
-                            didFinishAnimating finished: Bool,
-                            previousViewControllers: [UIViewController],
-                            transitionCompleted completed: Bool) {
-        eventDelegate?.eventPageViewController(self, didUpdatePageIndex: index)
-    }
-    
 }
 
 protocol EventPageViewControllerDelegate: class {

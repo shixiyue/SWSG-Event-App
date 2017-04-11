@@ -71,12 +71,7 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
         teams.addTeam(team: team)
         user.setTeamIndex(index: teams.count-1)
         System.activeUser = user
-        dismiss(animated: true, completion: nil)
-        Utility.onBackButtonClick(tableViewController: self)
-    }
-
-    @IBAction func onBackBtnClick(_ sender: Any) {
-        Utility.onBackButtonClick(tableViewController: self)
+        Utility.popViewController(no: 1, viewController: self)
     }
     
     @objc private func reload() {

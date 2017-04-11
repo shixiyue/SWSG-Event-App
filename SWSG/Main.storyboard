@@ -45,18 +45,11 @@
                                     <segue destination="ieK-F1-cJS" kind="embed" identifier="eventPageEmbed" id="TbZ-RA-WmO"/>
                                 </connections>
                             </containerView>
-                            <pageControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="aOt-6f-Lxx">
-                                <rect key="frame" x="168" y="128" width="39" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="pageIndicatorTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="currentPageIndicatorTintColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </pageControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Home" id="rOe-MP-MyG"/>
                     <connections>
-                        <outlet property="eventPageControl" destination="aOt-6f-Lxx" id="45P-qw-bmo"/>
                         <outlet property="eventsView" destination="quM-4g-mj3" id="XGI-ze-Hhf"/>
                     </connections>
                 </viewController>
@@ -195,6 +188,7 @@
                         <outlet property="colorBorder" destination="BGf-mB-oaD" id="6fe-bu-RoP"/>
                         <outlet property="descTV" destination="Xi2-zm-f0g" id="SlX-yq-ZOS"/>
                         <outlet property="imageIV" destination="RoU-pD-oM7" id="L0d-d7-kuc"/>
+                        <outlet property="imageView" destination="x5U-b5-lOs" id="rw2-QM-Ys4"/>
                         <outlet property="nameLbl" destination="QRW-UP-FO5" id="c14-tI-fya"/>
                         <outlet property="timeLbl" destination="WPF-MH-ZHO" id="dLq-ZL-Z3z"/>
                         <outlet property="venueLbl" destination="d25-GQ-EFx" id="3PV-Vx-GVt"/>
