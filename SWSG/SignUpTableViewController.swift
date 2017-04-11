@@ -18,6 +18,7 @@ class SignUpTableViewController: UIViewController {
     var signUpButton: RoundCornerButton!
     var loginStack: UIStackView!
     
+    @IBOutlet fileprivate var scrollView: UIScrollView!
     fileprivate let countryPickerView = UIPickerView()
     private let educationPlaceholder = "(e.g. Computer Science at National University of Singapore)"
     private let skillsPlaceholder = "(e.g. UI/UX Designer)"
@@ -153,6 +154,7 @@ class SignUpTableViewController: UIViewController {
             if let image = image {
                 self.profileIV.image = image
             }
+            self.textFields.first?.becomeFirstResponder()
         })
     }
     
@@ -264,7 +266,7 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
-        
+        adjustOffset(minY: textField.superview?.frame.minY)
         updateButtonState()
     }
     
@@ -281,6 +283,7 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         activeTextView = textView
+        adjustOffset(minY: textView.superview?.frame.minY)
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -290,6 +293,14 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     func textViewDidChange(_ textView: UITextView) {
         updateButtonState()
         updateTextViewHeight(textView)
+    }
+    
+    private func adjustOffset(minY: CGFloat?) {
+        guard let minY = minY else {
+            return
+        }
+        let offset = scrollView.contentOffset
+        scrollView.contentOffset = CGPoint(x: offset.x, y: minY - Config.scrollViewOffset)
     }
     
     private func updateButtonState() {
@@ -385,8 +396,15 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     //
     func keyboardWillHide(notification: NSNotification) {
         // Changed it to the "hardcoded" value 0 because the previous method is not working when there's a prediction bar on top of the keyboard
-        if self.view.frame.origin.y < 0 {
+        if self.view.frame.origin.y != 0 {
             self.view.frame.origin.y = 0
+        }
+        let minOffset: CGFloat = 0
+        let maxOffset = scrollView.contentSize.height - scrollView.bounds.size.height
+        if scrollView.contentOffset.y < minOffset {
+            scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: minOffset)
+        } else if scrollView.contentOffset.y > maxOffset {
+            scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: maxOffset)
         }
         /*
          if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey]

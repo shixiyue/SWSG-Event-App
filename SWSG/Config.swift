@@ -65,7 +65,11 @@ struct Config {
     static let speakers = "Speakers"
     static let organizers = "Organizing Team"
     static let judges = "Judges"
-
+    static let title = "title"
+    static let intro = "intro"
+    static let photo = "photo"
+    static let question = "question"
+    static let answer = "answer"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -84,10 +88,12 @@ struct Config {
     static let placeholderImg = UIImage(named: "Placeholder")!
     static let defaultIdeaImage = UIImage(named: "default-idea-image")!
     static let loadingImage = UIImage(named: "loading")!
+    static let defaultPersonImage = UIImage(named: "Profile")!
     static let emptyStar = UIImage(named: "Star-Empty")!
     static let fullStar = UIImage(named: "Star-Full")!
     static let chatIconWidth: CGFloat = 40
     static let headerBuffer: CGFloat = 45
+    static let scrollViewOffset: CGFloat = 300
     static let keyboardOffsetSignUp: CGFloat = 94
     
     // Parameters for Storyboard:
@@ -149,6 +155,7 @@ struct Config {
     static let done = "Done"
     static let noTeamLabel = "No Team yet"
     static let defaultContent = " "
+    static let emptyString = ""
     
     static let passwordMinLength = 6
     

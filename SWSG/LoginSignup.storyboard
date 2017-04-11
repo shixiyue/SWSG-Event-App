@@ -584,6 +584,7 @@
                         <outlet property="passwordStackView" destination="Jti-m0-MK6" id="hnL-kW-jxK"/>
                         <outlet property="passwordTextField" destination="RPl-ec-0Nz" id="Sq6-Ar-K0c"/>
                         <outlet property="profileIV" destination="2Vi-aK-ucq" id="pv4-2h-AI0"/>
+                        <outlet property="scrollView" destination="1SP-lv-7PC" id="xOd-HE-Ud9"/>
                         <outlet property="skillsTextView" destination="AKe-mn-6OY" id="wqv-cE-EEG"/>
                         <outlet property="skillsTextViewHeightConstraint" destination="UiK-sF-rRO" id="0O0-VU-eTb"/>
                         <outlet property="stackViewHeightConstraint" destination="u9k-BZ-fcO" id="1rl-2e-Er6"/>

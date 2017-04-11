@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,20 +28,19 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HDR-Q4-jMo">
-                                            <rect key="frame" x="20" y="15" width="80" height="80"/>
+                                            <rect key="frame" x="20" y="12" width="90" height="90"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="80" id="j2M-RY-e9D"/>
-                                                <constraint firstAttribute="height" constant="80" id="jpH-ab-2ay"/>
+                                                <constraint firstAttribute="width" secondItem="HDR-Q4-jMo" secondAttribute="height" multiplier="1:1" id="bb5-ti-U5O"/>
                                             </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XWp-of-Ztb">
-                                            <rect key="frame" x="108" y="8" width="234" height="21"/>
+                                        <label autoresizesSubviews="NO" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XWp-of-Ztb">
+                                            <rect key="frame" x="118" y="8" width="224" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.90980392160000001" green="0.16862745100000001" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Two lines of description hello how are you" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Txy-OI-rb1">
-                                            <rect key="frame" x="108" y="28.5" width="193" height="41"/>
+                                            <rect key="frame" x="118" y="28.5" width="183" height="41"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="41" id="xFG-wd-0m3"/>
                                             </constraints>
@@ -49,7 +49,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="by Team" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R2X-XT-pvF">
-                                            <rect key="frame" x="108" y="84" width="234" height="18"/>
+                                            <rect key="frame" x="118" y="84" width="224" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" red="0.90980392160000001" green="0.16862745100000001" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -77,11 +77,10 @@
                                             </connections>
                                         </button>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lqe-i6-Q0L">
-                                            <rect key="frame" x="8" y="15" width="4" height="80"/>
+                                            <rect key="frame" x="8" y="12" width="4" height="90"/>
                                             <color key="backgroundColor" red="0.90980392160000001" green="0.16862745100000001" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="4" id="1aW-FU-Yh1"/>
-                                                <constraint firstAttribute="height" constant="80" id="8e0-qz-rBo"/>
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7TS-K5-Ojq">
@@ -96,18 +95,20 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="XWp-of-Ztb" secondAttribute="trailing" id="0NR-uY-F9y"/>
-                                        <constraint firstItem="Lqe-i6-Q0L" firstAttribute="centerY" secondItem="y4P-mL-I4z" secondAttribute="centerY" id="2aE-7k-hOK"/>
+                                        <constraint firstItem="HDR-Q4-jMo" firstAttribute="bottom" secondItem="R2X-XT-pvF" secondAttribute="bottom" id="1xw-nQ-Ggn"/>
+                                        <constraint firstItem="HDR-Q4-jMo" firstAttribute="top" secondItem="XWp-of-Ztb" secondAttribute="top" constant="4" id="2cf-er-Yr0"/>
                                         <constraint firstItem="7TS-K5-Ojq" firstAttribute="centerX" secondItem="RD7-HY-WiN" secondAttribute="centerX" id="5uI-Ns-8gn"/>
+                                        <constraint firstItem="Lqe-i6-Q0L" firstAttribute="top" secondItem="HDR-Q4-jMo" secondAttribute="top" id="5uW-yd-A8S"/>
                                         <constraint firstItem="Lqe-i6-Q0L" firstAttribute="leading" secondItem="y4P-mL-I4z" secondAttribute="leadingMargin" id="6ab-eK-BRS"/>
                                         <constraint firstItem="7TS-K5-Ojq" firstAttribute="top" secondItem="RD7-HY-WiN" secondAttribute="bottom" constant="-4" id="AAL-2t-gDw"/>
                                         <constraint firstItem="Txy-OI-rb1" firstAttribute="leading" secondItem="HDR-Q4-jMo" secondAttribute="trailing" constant="8" id="DNZ-Lp-5vk"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="Ytn-gu-E2h" secondAttribute="trailing" id="GE9-Kv-uGQ"/>
-                                        <constraint firstItem="HDR-Q4-jMo" firstAttribute="centerY" secondItem="y4P-mL-I4z" secondAttribute="centerY" id="QMX-J3-qIP"/>
                                         <constraint firstItem="R2X-XT-pvF" firstAttribute="leading" secondItem="HDR-Q4-jMo" secondAttribute="trailing" constant="8" id="Qdx-Mn-JQs"/>
                                         <constraint firstItem="Txy-OI-rb1" firstAttribute="top" secondItem="XWp-of-Ztb" secondAttribute="bottom" id="Qmm-eU-Fep"/>
                                         <constraint firstItem="XWp-of-Ztb" firstAttribute="leading" secondItem="HDR-Q4-jMo" secondAttribute="trailing" constant="8" id="QuG-z7-6BW"/>
                                         <constraint firstItem="XWp-of-Ztb" firstAttribute="top" secondItem="y4P-mL-I4z" secondAttribute="topMargin" id="Sv5-Vt-Em8"/>
                                         <constraint firstItem="7TS-K5-Ojq" firstAttribute="centerY" secondItem="y4P-mL-I4z" secondAttribute="centerY" id="WQC-j3-lWC"/>
+                                        <constraint firstItem="Lqe-i6-Q0L" firstAttribute="bottom" secondItem="HDR-Q4-jMo" secondAttribute="bottom" id="arA-zp-gbz"/>
                                         <constraint firstItem="Ytn-gu-E2h" firstAttribute="top" secondItem="7TS-K5-Ojq" secondAttribute="bottom" constant="-4" id="dxy-BH-pOy"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="RD7-HY-WiN" secondAttribute="trailing" id="g6C-HN-GPK"/>
                                         <constraint firstItem="HDR-Q4-jMo" firstAttribute="leading" secondItem="Lqe-i6-Q0L" secondAttribute="trailing" constant="8" id="hlL-Pp-GqN"/>
@@ -302,7 +303,7 @@
             <objects>
                 <navigationController storyboardIdentifier="IdealistNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hW2-vi-5iS" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="KbK-5A-I7D">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="KbK-5A-I7D">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

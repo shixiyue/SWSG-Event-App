@@ -43,7 +43,6 @@ class IdeasListTableViewController: BaseViewController {
         addSlideMenuButton()
         ideasRef = System.client.getIdeasRef()
         observeIdeas()
-        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: Notification.Name(rawValue: "refresh"), object: nil)
     }
     
     private func observeIdeas() {
@@ -55,6 +54,7 @@ class IdeasListTableViewController: BaseViewController {
             self.ideas.add(snapshot: snapshot)
             DispatchQueue.main.async {
                 self.ideaListTableView.reloadData()
+                self.loadMainImages()
             }
         })
         
@@ -62,6 +62,7 @@ class IdeasListTableViewController: BaseViewController {
             self.ideas.update(snapshot: snapshot)
             DispatchQueue.main.async {
                 self.ideaListTableView.reloadData()
+                self.loadMainImages()
             }
         })
         
@@ -76,9 +77,16 @@ class IdeasListTableViewController: BaseViewController {
         })
     }
     
-    @objc private func refresh(_ notification: NSNotification) {
-        DispatchQueue.main.async {
-            self.ideaListTableView.reloadData()
+    private func loadMainImages() {
+        for idea in ideas.getAllIdeas() {
+            idea.loadMainImage(completion: { (needRefresh) in
+                guard needRefresh else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    self.ideaListTableView.reloadData()
+                }
+            })
         }
     }
     
@@ -104,7 +112,6 @@ class IdeasListTableViewController: BaseViewController {
         if let deleteHandle = ideasDeleteRefHandle {
             ideasRef?.removeObserver(withHandle: deleteHandle)
         }
-        NotificationCenter.default.removeObserver(self)
     }
     
 }
