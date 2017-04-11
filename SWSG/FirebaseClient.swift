@@ -347,6 +347,7 @@ class FirebaseClient {
         completion(nil)
         })
     }
+    /*
     public func getTeams(completion: @escaping GetTeamsCallback) {
         teamsRef.observeSingleEvent(of: .value, with: { (snapshot) in
               var teams = [Team]()
@@ -360,23 +361,26 @@ class FirebaseClient {
             }
             completion(teams, nil)
         })
-    }
+    }*/
     public func getTeams(snapshot: Any?) -> [Team]? {
-        
+        print("inside getTeams method")
         guard let snapshot = snapshot as? FIRDataSnapshot else {
+            print("snapshot is nil")
             return nil
         }
         var teams = [Team]()
         for teamsSnapshot in snapshot.children {
+            print("inside teamsnapshot")
             guard let teamsSnapshot = teamsSnapshot as? FIRDataSnapshot else {
                 continue
             }
-            for teamSnapShot in teamsSnapshot.children {
-                guard let team = Team(id: (teamSnapShot as AnyObject).key, snapshot: teamSnapShot as! FIRDataSnapshot) else {
+        
+                guard let team = Team(id: teamsSnapshot.key, snapshot: teamsSnapshot) else {
+                    print("about to continue")
                     continue
                 }
                 teams.append(team)
-            }
+            
         }
         
         return teams

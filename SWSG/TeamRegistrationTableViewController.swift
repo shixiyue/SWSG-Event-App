@@ -21,14 +21,18 @@ class TeamRegistrationTableViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        tableView.delegate = self
         addSlideMenuButton()
-        NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "teams"), object: nil)
-       // observeEvents()
+       // NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "teams"), object: nil)
+        observeEvents()
     }
     
     func update() {
-        tableView.reloadData()
+        print("updating")
+        print("\(teams.count)")
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     
@@ -89,23 +93,28 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamItemCell", for: indexPath) as! TeamItemTableViewCell
         let team = teams.retrieveTeamAt(index: indexPath.row)
+        print("loading table view")
         cell.teamName.text = team.name
         cell.teamIsLookingFor.text = team.lookingFor
         for i in 0..<team.members.count {
             switch i {
             case 0:
+                print("1st user")
                 if let user = System.client.getUserWith(uid: team.members[0]) {
                 cell.mmbrImage1.image = user.profile.image ?? UIImage(named: "Placeholder")!
                 }
             case 1:
+                print("2nd user")
                 if let user = System.client.getUserWith(uid: team.members[1]) {
                 cell.mmbrImage2.image = user.profile.image ?? UIImage(named: "Placeholder")
                 }
             case 2:
+                print("3rd user")
                  if let user = System.client.getUserWith(uid: team.members[2]) {
                 cell.mmbrImage3.image = user.profile.image ?? UIImage(named: "Placeholder")
                 }
             case 3:
+                print("4th user")
                  if let user = System.client.getUserWith(uid: team.members[3]) {
                 cell.mmbrImage4.image = user.profile.image ?? UIImage(named: "Placeholder")
                 }

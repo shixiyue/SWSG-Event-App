@@ -68,19 +68,20 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
         }
         
         let team = Team(id: "", members: [user.uid!], name: name, lookingFor: looking, isPrivate: false, tags: tags)
-        /*
+        
         System.client.createTeam(_team: team, completion: { (error) in
             if let firebaseError = error {
                 print("firebase error")
                 self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
                 return
             }
-        })*/
+        })
         teams.addTeam(team: team)
         print("preparing to set user index")
         user.setTeamIndex(index: teams.count-1)
         System.activeUser = user
-        Utility.onBackButtonClick(tableViewController: self)
+        Utility.popViewController(no: 1, viewController: self)
+       // Utility.onBackButtonClick(tableViewController: self)
     }
 
     @IBAction func onBackBtnClick(_ sender: Any) {

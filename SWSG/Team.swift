@@ -33,27 +33,34 @@ class Team {
     }
     
     init?(id: String, snapshot: FIRDataSnapshot) {
-        guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
+        print("\(snapshot.value)")
+        guard let snapshotValue = snapshot.value as? [String: Any] else {
+            print("snapshot value is nil")
             return nil
         }
         self.id = id
         guard let name = snapshotValue["teamName"] as? String else {
+            print("name is nil")
             return nil
         }
         self.name = name
         guard let members = snapshotValue["members"] as? [uid] else {
+            print("member is nil")
             return nil
         }
         self.members = members
         guard let lookingFor = snapshotValue["lookingFor"] as? String else {
+            print("looking for is nil")
             return nil
         }
         self.lookingFor = lookingFor
         guard let isPrivate = snapshotValue["isPrivate"] as? Bool else {
+            print("is private is nil")
             return nil
         }
         self.isPrivate = isPrivate
         guard let tags = snapshotValue["tags"] as? [String] else {
+            print("tags is nil")
             return nil
         }
        // tags = tags.sort(by: {$0.timestamp < $1.timestamp})

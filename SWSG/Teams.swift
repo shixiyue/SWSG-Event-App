@@ -13,7 +13,7 @@ class Teams {
     private static var teamsInstance = Teams()
     private var teams : [Team] {
         didSet {
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "teams"), object: self)
+          //  NotificationCenter.default.post(name: Notification.Name(rawValue: "teams"), object: self)
             //Storage.saveTeams(data: teams, fileName: "Teams")
         }
     }
