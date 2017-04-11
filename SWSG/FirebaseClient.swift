@@ -603,6 +603,14 @@ class FirebaseClient {
         })
     }
     
+    func saveInformation(faq: Faq, completion: @escaping GeneralErrorCallback) {
+        let faqRef = getFaqRef().childByAutoId()
+        
+        faqRef.setValue(faq.toDictionary(), withCompletionBlock: { (error, _) in
+            completion(self.checkError(error))
+        })
+    }
+    
     public func saveImage(image: UIImage, completion: @escaping ImageURLCallback) {
         let imagePath = auth!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
         
@@ -869,6 +877,10 @@ class FirebaseClient {
     
     public func getOverviewRef() -> FIRDatabaseReference {
         return informationRef.child("overview")
+    }
+    
+    public func getFaqRef() -> FIRDatabaseReference {
+        return informationRef.child("faq")
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {

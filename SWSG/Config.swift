@@ -67,6 +67,8 @@ struct Config {
     static let title = "title"
     static let intro = "intro"
     static let photo = "photo"
+    static let question = "question"
+    static let answer = "answer"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
