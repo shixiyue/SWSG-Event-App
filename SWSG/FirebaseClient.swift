@@ -27,6 +27,7 @@ class FirebaseClient {
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
+    typealias EventExistsCallback = (Bool, FirebaseError?) -> Void
     typealias AddCommentCallback = (FirebaseError?) -> Void
     typealias GeneralIdeaCallback = (FirebaseError?) -> Void
     typealias GetChannelCallback = (Channel?, FirebaseError?) -> Void
@@ -437,6 +438,15 @@ class FirebaseClient {
                 }
             }
             completion(events, nil)
+        })
+    }
+    
+    public func checkHasEventsOn(by day: Date, completion: @escaping EventExistsCallback) {
+        let dayString = Utility.fbDateFormatter.string(from: day)
+        
+        let dayRef = eventsRef.child(dayString)
+        dayRef.observeSingleEvent(of: .value, with: {(snapshot) in
+            completion(snapshot.exists(), nil)
         })
     }
     

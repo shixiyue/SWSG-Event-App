@@ -43,6 +43,18 @@ class EventPageViewController: UIPageViewController {
             self.eventViewControllers.append(self.getViewController(event: event))
             self.setViewController()
         })
+        
+        System.client.checkHasEventsOn(by: Date.init(), completion: { (exists, error) in
+            if !exists {
+                let storyboard = UIStoryboard(name: Config.mainStoryboard, bundle: nil)
+                let viewController = storyboard.instantiateViewController(withIdentifier: Config.emptyEventView)
+                
+                self.setViewControllers([viewController],
+                                        direction: .forward,
+                                        animated: true,
+                                        completion: nil)
+            }
+        })
     }
     
     fileprivate func setViewController() {
@@ -55,7 +67,6 @@ class EventPageViewController: UIPageViewController {
                                 direction: .forward,
                                 animated: true,
                                 completion: nil)
-        print("test2")
     }
     
     fileprivate func getViewController(event: Event) -> UIViewController {

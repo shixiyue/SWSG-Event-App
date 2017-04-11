@@ -124,6 +124,7 @@ struct Config {
     static let imageCropperViewController = "ImageCropperViewController"
     static let uiSupporting = "UISupporting"
     static let eventPageCellView = "eventPageCellView"
+    static let emptyEventView = "emptyEventView"
     
     static let channelViewController = "ChannelViewController"
     

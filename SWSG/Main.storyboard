@@ -198,5 +198,34 @@
             </objects>
             <point key="canvasLocation" x="682.39999999999998" y="-546.9265367316342"/>
         </scene>
+        <!--Event Page Cell View Controller-->
+        <scene sceneID="NVD-3f-Ldo">
+            <objects>
+                <viewController storyboardIdentifier="emptyEventView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qfb-82-yja" customClass="EventPageCellViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Xv7-EV-DXE"/>
+                        <viewControllerLayoutGuide type="bottom" id="MDs-Xh-YkG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ZyE-M1-m0P">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Events For Today" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YQU-9D-yKv">
+                                <rect key="frame" x="91" y="40" width="192" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="22"/>
+                                <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="375" height="100"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hSx-oS-7Ys" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="680.79999999999995" y="-382.3088455772114"/>
+        </scene>
     </scenes>
 </document>
