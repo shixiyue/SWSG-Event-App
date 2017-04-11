@@ -123,11 +123,20 @@
                     <navigationItem key="navigationItem" id="Ww0-2n-Fzo"/>
                     <connections>
                         <segue destination="Kuj-mk-lze" kind="show" identifier="showChatInfo" id="TBM-1D-OzA"/>
+                        <segue destination="W50-dQ-wBY" kind="show" identifier="chatToProfile" id="SY2-8b-o0K"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qcM-XF-5Ns" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1852" y="848"/>
+        </scene>
+        <!--ProfileViewController-->
+        <scene sceneID="nCm-dU-Llg">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Profile" referencedIdentifier="ProfileViewController" id="W50-dQ-wBY" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pkR-oW-BhC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2474" y="433"/>
         </scene>
         <!--Info-->
         <scene sceneID="2TJ-9q-j8j">
@@ -447,7 +456,7 @@
             <objects>
                 <navigationController storyboardIdentifier="ChatNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Lmb-sv-L2p" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="quO-pt-kxx">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="quO-pt-kxx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

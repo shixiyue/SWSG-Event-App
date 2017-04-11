@@ -18,6 +18,7 @@ class User {
     public private (set) var team = Config.noTeam
     public private (set) var mentor: Mentor?
     public private (set) var uid: String?
+    public private (set) var favourites: [String]?
     
     init(profile: Profile, type: UserTypes, team: Int, email: String) {
         self.type = type
@@ -55,6 +56,9 @@ class User {
         if let mentorSnapshot = snapshotValue[Config.mentor] as? [String: Any], let mentor = Mentor(snapshot: mentorSnapshot) {
             self.mentor = mentor
         }
+        if let favourites = snapshotValue[Config.favourites] as? [String] {
+            self.favourites = favourites
+        }
     }
     
     var hasTeam: Bool {
@@ -79,12 +83,23 @@ class User {
         self.uid = uid
     }
     
+    func setFavourites(favourites: [String]?) {
+        self.favourites = favourites
+    }
+    
     func toDictionary() -> [String: Any] {
-        guard let mentor = mentor else {
-            return [Config.userType: type.toDictionary(), Config.team: team, Config.email: email, Config.profile: profile.toDictionary(), Config.mentor: ""]
+        var dict: [String: Any] = [Config.userType: type.toDictionary(), Config.team: team, Config.email: email, Config.profile: profile.toDictionary()]
+        
+        
+        if let mentor = mentor {
+            dict[Config.mentor] = mentor.toDictionary()
         }
         
-        return [Config.userType: type.toDictionary(), Config.team: team, Config.email: email, Config.profile: profile.toDictionary(), Config.mentor: mentor.toDictionary()]
+        if let favourites = favourites {
+            dict[Config.favourites] = favourites
+        }
+        
+        return dict
     }
     
     internal func _checkRep() {

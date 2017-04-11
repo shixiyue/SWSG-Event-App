@@ -81,14 +81,35 @@ struct Utility {
     }
     
     static func logOutUser(currentViewController: UIViewController) {
-        signOutAllAccounts()
-        System.activeUser = nil
-        showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
+        let title = "Log Out"
+        let message = "Do you want to log out?"
+        
+        let logoutController = UIAlertController(title: title, message: message,
+                                                  preferredStyle: UIAlertControllerStyle.alert)
+        
+        //Add an Action to Confirm quitting with the Destructive Style
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { _ in
+        }
+        logoutController.addAction(cancelAction)
+        
+        //Add an Action to Confirm quitting with the Destructive Style
+        let logoutAction = UIAlertAction(title: "Log Out", style: .destructive) { _ in
+            signOutAllAccounts()
+            showStoryboard(storyboard: Config.logInSignUp, destinationViewController: Config.initialScreen, currentViewController: currentViewController)
+        }
+        logoutController.addAction(logoutAction)
+        
+        //Present the Popup
+        currentViewController.present(logoutController, animated: true, completion: nil)
     }
     
     static func signOutAllAccounts() {
+        System.activeUser = nil
         System.client.signOut()
-        
+        signOutSocialMedia()
+    }
+    
+    static func signOutSocialMedia() {
         if let _ = AccessToken.current {
             LoginManager().logOut()
         }
@@ -98,7 +119,7 @@ struct Utility {
     
     static func logInUser(user: User, currentViewController: UIViewController) {
         System.activeUser = user
-        showStoryboard(storyboard: Config.main, destinationViewController: Config.navigationController, currentViewController: currentViewController)
+        showStoryboard(storyboard: Config.mainStoryboard, destinationViewController: Config.navigationController, currentViewController: currentViewController)
     }
     
     static func getFailAlertController(message: String) -> UIAlertController {
@@ -152,6 +173,15 @@ struct Utility {
         return formatter
     }
     
+    static var niceDateTimeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        
+        formatter.dateFormat = "d MMM - h:mma"
+        
+        return formatter
+    }
+    
     static func displayDismissivePopup(title: String, message: String,
                                        viewController: UIViewController,
                                        completion: @escaping () -> Void) {
@@ -195,6 +225,7 @@ struct Utility {
         let values = string.components(separatedBy: delimiter).flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
         return values
     }
+    
     static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
         if System.profileImageCache.keys.contains(uid) {
             System.client.getProfileImageURL(for: uid, completion: { (url, error) in
@@ -254,6 +285,37 @@ struct Utility {
         })
     }
     
+    static func getEventIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        if System.eventIconCache.keys.contains(id) {
+            System.client.getEventImageURL(with: id, completion: { (url, error) in
+                if System.eventIconCache[id]?.url == url {
+                    completion(System.eventIconCache[id]?.image)
+                } else {
+                    forceGetEventIcon(id: id, completion: { (image) in
+                        completion(image)
+                    })
+                }
+                
+            })
+        } else {
+            forceGetEventIcon(id: id, completion: { (image) in
+                completion(image)
+            })
+        }
+    }
+    
+    static func forceGetEventIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        System.client.fetchEventImage(for: id, completion: { (image,url) in
+            guard let image = image, let url = url else {
+                return
+            }
+            
+            System.eventIconCache[id] = (image: image, url: url)
+            completion(image)
+            
+        })
+    }
+    
     static func getImage(name: String, completion: @escaping (UIImage?) -> Void) {
         if let image = System.imageCache[name] {
             completion(image)
@@ -267,6 +329,13 @@ struct Utility {
     }
     
     static func createPopUpWithTextField(title: String, message: String, btnText: String, placeholderText: String, existingText: String, viewController: UIViewController, completion: @escaping (String) -> Void) {
+        createPopUpWithTextField(title: title, message: message, btnText: btnText,
+                                 placeholderText: placeholderText, existingText: existingText,
+                                 isSecure: false, viewController: viewController,
+                                 completion: completion)
+    }
+    
+    static func createPopUpWithTextField(title: String, message: String, btnText: String, placeholderText: String, existingText: String, isSecure: Bool, viewController: UIViewController, completion: @escaping (String) -> Void) {
         //Creating a Alert Popup for Saving
         let createController = UIAlertController(title: title, message: message,
                                                  preferredStyle: UIAlertControllerStyle.alert)
@@ -294,6 +363,7 @@ struct Utility {
         //Creates a Textfield to enter the Level Name in the Popup
         createController.addTextField(configurationHandler: { (textField) -> Void in
             textField.placeholder = placeholderText
+            textField.isSecureTextEntry = isSecure
             
             if existingText.characters.count > 0 {
                 textField.text = existingText
@@ -330,7 +400,6 @@ struct Utility {
         
         //Displays the Save Popup
         viewController.present(createController, animated: true, completion: nil)
-
     }
     
     static func logUserIn(error: FirebaseError?, current viewController: UIViewController) {

@@ -75,7 +75,7 @@ PODS:
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - JTAppleCalendar (6.1.6)
-  - OneSignal (2.5.1)
+  - OneSignal (2.5.2)
   - RSKImageCropper (1.6.1)
   - SwiftGifOrigin (1.6.1)
   - SwiftSpinner (1.2.1)
@@ -118,7 +118,7 @@ SPEC CHECKSUMS:
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTAppleCalendar: 560fb46421880f53ad54123295072de24bca2b18
-  OneSignal: b8e3d70a393e78b07da7849448345ae1055b0561
+  OneSignal: 66d08b6b1e3c3858cbf28207ed20f1fa865ab2a2
   RSKImageCropper: 0df8c99e77a8ea7ca7a8b83ef468556f31584254
   SwiftGifOrigin: d6679d3ebe9df2e049a84bc52582635107b581f6
   SwiftSpinner: 62a28bbb4035f252a1e91b0e17fc40bdbbfa0aab

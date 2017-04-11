@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 import JTAppleCalendar
 
 class EventCalendarViewController: BaseViewController {
@@ -15,10 +16,16 @@ class EventCalendarViewController: BaseViewController {
     // a new color every time a cell is displayed. We do not want a laggy
     // scrolling calendar.
 
-    var events = Events.instance
+    var events = [Date: [Event]]()
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var dayList: UITableView!
+    
+    //MARK: Firebase References
+    private var eventRef: FIRDatabaseReference!
+    private var eventAddedHandle: FIRDatabaseHandle?
+    private var eventChangedHandle: FIRDatabaseHandle?
+    private var eventDeletedHandle: FIRDatabaseHandle?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +35,13 @@ class EventCalendarViewController: BaseViewController {
         setUpCalendar()
         setUpDayList()
         addObservers()
+        observeEvents()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        calendarView.reloadData()
+        dayList.reloadData()
     }
     
     private func setUpCalendar() {
@@ -92,6 +106,39 @@ class EventCalendarViewController: BaseViewController {
         }
     }
     
+    // MARK: Firebase related methods
+    private func observeEvents() {
+        // Use the observe method to listen for new
+        // channels being written to the Firebase DB
+        eventRef = System.client.getEventsRef()
+        eventAddedHandle = eventRef.observe(.childAdded, with: { (snapshot) -> Void in
+            print(snapshot)
+            guard let date = Utility.fbDateFormatter.date(from: snapshot.key) else {
+                return
+            }
+            self.events[date] = System.client.getEvents(snapshot: snapshot)
+            self.calendarView.reloadData()
+        })
+        
+        eventChangedHandle = eventRef.observe(.childChanged, with: { (snapshot) -> Void in
+            print(snapshot)
+            guard let date = Utility.fbDateFormatter.date(from: snapshot.key) else {
+                return
+            }
+            self.events[date] = System.client.getEvents(snapshot: snapshot)
+            self.calendarView.reloadData()
+        })
+        
+        eventDeletedHandle = eventRef.observe(.childRemoved, with: { (snapshot) -> Void in
+            guard let date = Utility.fbDateFormatter.date(from: snapshot.key) else {
+                return
+            }
+            self.events[date] = nil
+            self.calendarView.reloadData()
+        })
+        
+    }
+    
     //MARK: Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
@@ -129,8 +176,7 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
         cell.dot.layer.cornerRadius = 5
         cell.dot.backgroundColor = Config.themeColor
         //cell.dot.layer.cornerRadius = cell.frame.width / 2
-        
-        if events.contains(date: Date.date(from: Date.toString(date: date))) {
+        if events.keys.contains(date) {
             cell.dot.isHidden = false
         } else {
             //  print("does not contain date \(Date.date(from: Date.toString(date: date)))")
@@ -172,7 +218,8 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
 extension EventCalendarViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let selectedDate = calendarView.selectedDates.first,
-            let eventList = events.retrieveEvent(at: selectedDate) else {
+            events.keys.contains(selectedDate),
+            let eventList = events[selectedDate] else {
             return 0
         }
         
@@ -184,9 +231,16 @@ extension EventCalendarViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: Config.eventCell, for: indexPath) as? EventScheduleTableViewCell,
             let selectedDate = calendarView.selectedDates.first,
-            let event = events.retrieveEventAt(index: indexPath.item, at: selectedDate),
-            let id = event.id else {
+            events.keys.contains(selectedDate),
+            let eventList = events[selectedDate] else {
                 return EventScheduleTableViewCell()
+        }
+        
+        let event = eventList[indexPath.item]
+        
+        guard let id = event.id else {
+            return EventScheduleTableViewCell()
+            
         }
         
         cell.colorBorder.backgroundColor = Config.themeColor
@@ -194,13 +248,15 @@ extension EventCalendarViewController: UITableViewDataSource {
         
         cell.eventIV.isHidden = true
         
-        System.client.getEventImagesURL(for: id, completion: { (images, error) in
-            guard let images = images else {
+        Utility.getEventIcon(id: id, completion: { (image) in
+            guard let image = image else {
                 return
             }
             
-            cell.eventIV.image = images.first
+            eventList[indexPath.item].image = image
+            cell.eventIV.image = image
             cell.eventIV.isHidden = false
+            
         })
         
         let formatter = Utility.fbTimeFormatter
@@ -218,9 +274,11 @@ extension EventCalendarViewController: UITableViewDataSource {
 extension EventCalendarViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let selectedDate = calendarView.selectedDates.first,
-            let event = events.retrieveEventAt(index: indexPath.item, at: selectedDate) else {
+            events.keys.contains(selectedDate),
+            let eventsList = events[selectedDate] else {
                 return
         }
+        let event = eventsList[indexPath.item]
         
         self.performSegue(withIdentifier: Config.showEventDetails, sender: event)
     }

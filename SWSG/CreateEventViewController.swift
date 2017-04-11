@@ -16,14 +16,14 @@ class CreateEventViewController: UIViewController {
     @IBOutlet weak var startTimeTF: UITextField!
     @IBOutlet weak var endTimeTF: UITextField!
     @IBOutlet weak var venueTF: UITextField!
-    @IBOutlet weak var shortDescTV: GrayBorderTextView!
-    @IBOutlet weak var fullDescTV: GrayBorderTextView!
+    @IBOutlet weak var shortDescTV: PlaceholderTextView!
+    @IBOutlet weak var fullDescTV: PlaceholderTextView!
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var createBtn: RoundCornerButton!
     
     var textFields: [UITextField]!
-    var textViews: [GrayBorderTextView]!
+    var textViews: [PlaceholderTextView]!
     
     fileprivate let datePicker = UIDatePicker()
     fileprivate let sTimePicker = UIDatePicker()
@@ -130,11 +130,13 @@ class CreateEventViewController: UIViewController {
         if activeTextField == startTimeTF {
             let time = sTimePicker.date
             startTimeTF.text = Utility.fbTimeFormatter.string(from: time)
+            eTimePicker.minimumDate = sTimePicker.date
         }
         
         if activeTextField == endTimeTF {
             let time = eTimePicker.date
             endTimeTF.text = Utility.fbTimeFormatter.string(from: time)
+            sTimePicker.maximumDate = eTimePicker.date
         }
     }
     
@@ -147,17 +149,17 @@ class CreateEventViewController: UIViewController {
     @IBAction func saveBtnPressed(_ sender: Any) {
         let startDateTime = Date.dateTime(forDate: datePicker.date, forTime: sTimePicker.date)
         let endDateTime = Date.dateTime(forDate: datePicker.date, forTime: eTimePicker.date)
-        var images = [UIImage]()
+        var image: UIImage? = nil
         
-        if imageChanged, let image = imageIV.image {
-            images.append(image)
+        if imageChanged, let img = imageIV.image {
+            image = img
         }
         
         guard let name = nameTF.text, let venue = venueTF.text, let shortDesc = shortDescTV.text, let fullDesc = fullDescTV.text else {
             return
         }
         
-        let event = Event(id: nil, images: images, name: name, startDateTime: startDateTime, endDateTime: endDateTime, venue: venue, shortDesc: shortDesc, description: fullDesc)
+        let event = Event(id: nil, image: image, name: name, startDateTime: startDateTime, endDateTime: endDateTime, venue: venue, shortDesc: shortDesc, description: fullDesc, comments: [Comment]())
         
         System.client.createEvent(event, completion: { (error) in
             Utility.popViewController(no: 1, viewController: self)
@@ -165,7 +167,7 @@ class CreateEventViewController: UIViewController {
     }
 }
 
-extension CreateEventViewController: UITextViewDelegate, UITextFieldDelegate {
+extension CreateEventViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         nextTextField()
@@ -180,15 +182,6 @@ extension CreateEventViewController: UITextViewDelegate, UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
         activeTextField = nil
-        updateButtonState()
-    }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        activeTextView = textView
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        activeTextView = nil
         updateButtonState()
     }
     
@@ -226,5 +219,41 @@ extension CreateEventViewController: UITextViewDelegate, UITextFieldDelegate {
         self.scrollView.isScrollEnabled = false
     }
 
+}
+
+extension CreateEventViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        activeTextView = textView
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        activeTextView = nil
+        updateButtonState()
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        guard let textView = textView as? PlaceholderTextView, let currentText = textView.text else {
+            return false
+        }
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        
+        if updatedText.isEmpty {
+            textView.setPlaceholder()
+            updateButtonState()
+            return false
+        } else if textView.textColor == Config.placeholderColor && !text.isEmpty {
+            textView.removePlaceholder()
+            updateButtonState()
+        }
+        return true
+    }
+    
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        guard view.window != nil, textView.textColor == Config.placeholderColor else {
+            return
+        }
+        textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+    }
 }
 

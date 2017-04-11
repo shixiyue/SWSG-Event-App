@@ -22,9 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         SDKApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
-        OneSignal.initWithLaunchOptions(launchOptions, appId: Secret.oneSignalAppId)
         setNavigationBar()
         setUpFirebase()
+        setUpOneSignal(launchOptions: launchOptions)
         setUpGoogleLogin()
         checkLogin()
         return true
@@ -40,6 +40,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setUpFirebase() {
         FIRApp.configure()
     }
+    
+    private func setUpOneSignal(launchOptions: [UIApplicationLaunchOptionsKey: Any]?) {
+        let notificationReceivedBlock: OSHandleNotificationReceivedBlock = { notification in
+            let handler = NotiHandler()
+            if let notification = notification {
+                handler.handleNoti(notification)
+            }
+        }
+        let notificationOpenedBlock: OSHandleNotificationActionBlock = { result in
+            // This block gets called when the user reacts to a notification received
+            // TODO
+        }
+        OneSignal.initWithLaunchOptions(launchOptions, appId: Secret.oneSignalAppId, handleNotificationReceived: notificationReceivedBlock, handleNotificationAction: notificationOpenedBlock, settings: nil)
+        OneSignal.inFocusDisplayType = .notification
+        }
     
     private func setUpGoogleLogin() {
         GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
@@ -86,7 +101,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// Shows HomeScreen fter Firebase loads
     private func showHomeScreen() {
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        let storyboard = UIStoryboard(name: Config.main, bundle: nil)
+        let storyboard = UIStoryboard(name: Config.mainStoryboard, bundle: nil)
         let initialViewController = storyboard.instantiateViewController(withIdentifier: Config.navigationController)
         self.window?.rootViewController = initialViewController
         self.window?.makeKeyAndVisible()

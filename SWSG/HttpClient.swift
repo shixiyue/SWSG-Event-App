@@ -39,6 +39,8 @@ class HttpClient {
         request.httpMethod = "POST"
         request.addValue(authHeaderValue, forHTTPHeaderField: "Authorization")
         request.httpBody = data
+        print("http body")
+        print(jsonData)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             // check for fundamental networking error

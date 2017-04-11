@@ -35,35 +35,28 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
     
     func slideMenuItemSelectedAtIndex(_ index: Int) {
         guard let item = MenuItems.MenuOrder(rawValue: index) else {
-            print("default\n", terminator: "")
             return
         }
         switch(item){
         case .home:
-            print("Home\n", terminator: "")
-            self.open(viewController: "HomeViewController", from: "Main")
+            self.open(viewController: Config.homeViewController, from: Config.mainStoryboard)
         case .information:
-            print("Information\n", terminator: "")
-            self.open(viewController: "InformationViewController", from: "Information")
+            self.open(viewController: Config.informationViewController,
+                      from: Config.informationStoryboard)
         case .schedule:
-            print("EventScheduleVC\n", terminator: "")
-           // self.open(viewController: "EventScheduleTableViewController",from: Config.eventSystem)
-            self.open(viewController: "EventCalendarViewController", from: Config.eventSystem)
+            self.open(viewController: Config.eventViewController, from: Config.eventStoryboard)
         case .mentors:
-            print("Mentor\n", terminator: "")
-            self.open(viewController: "MentorViewController", from: "Mentor")
+            self.open(viewController: Config.mentorViewController, from: Config.mentorStoryboard)
         case .teams:
-            print("Teams\n",terminator: "")
-            self.open(viewController: "TeamRegistrationTableViewController", from: Config.teamRegistration)
+            self.open(viewController: Config.teamRegistrationViewController, from: Config.teamStoryboard)
         case .chat:
-            print("Chat\n", terminator: "")
-            self.open(viewController: "ChatViewController", from: "Chat")
+            self.open(viewController: Config.chatViewController, from: Config.chatStoryboard)
         case .ideas:
-            print("Ideas\n",terminator:"")
-            self.open(viewController: "ideaslist", from: Config.ideasVotingPlatform)
-        case .settings:
-            print("Settings\n", terminator: "")
-            self.open(viewController: "SettingsViewController", from: "Settings")
+            self.open(viewController: Config.ideasViewController, from: Config.ideasStoryboard)
+        case .people:
+            self.open(viewController: Config.profileListViewController, from: Config.profileStoryboard)
+        case .logout:
+            Utility.logOutUser(currentViewController: self)
         }
     }
     
