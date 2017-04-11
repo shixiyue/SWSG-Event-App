@@ -16,6 +16,7 @@ import OneSignal
 
 class FirebaseClient {
     
+    typealias GeneralErrorCallback = (FirebaseError?) -> Void
     typealias CreateUserCallback = (FirebaseError?) -> Void
     typealias SignInCallback = (FirebaseError?) -> Void
     typealias UserAuthCallback = (FirebaseError?) -> Void
@@ -26,6 +27,7 @@ class FirebaseClient {
     typealias GetMentorsCallback = ([User], FirebaseError?) -> Void
     typealias CreateTeamCallback = (FirebaseError?) -> Void
     typealias CreateEventCallback = (FirebaseError?) -> Void
+    typealias EventExistsCallback = (Bool, FirebaseError?) -> Void
     typealias AddCommentCallback = (FirebaseError?) -> Void
     typealias GeneralIdeaCallback = (FirebaseError?) -> Void
     typealias GetChannelCallback = (Channel?, FirebaseError?) -> Void
@@ -43,6 +45,7 @@ class FirebaseClient {
     private let teamsRef = FIRDatabase.database().reference(withPath: "teams")
     private let eventsRef = FIRDatabase.database().reference(withPath: "events")
     private let ideasRef = FIRDatabase.database().reference(withPath: "ideas")
+    private let informationRef = FIRDatabase.database().reference(withPath: "information")
     private let storageRef = FIRStorage.storage().reference(forURL: Config.appURL)
     private let auth = FIRAuth.auth()
     
@@ -201,6 +204,11 @@ class FirebaseClient {
         })
     }
     
+    public func removeAdditionalAuth(authType: AuthType) {
+        FIRAuth.auth()?.currentUser?.unlink(fromProvider: authType.rawValue) { (user, error) in
+        }
+    }
+    
     func changePassword(newPassword: String, completion: @escaping UserAuthCallback) {
         auth?.currentUser?.updatePassword(newPassword) { error in
             completion(self.checkError(error))
@@ -282,6 +290,40 @@ class FirebaseClient {
         }
     }
     
+    public func addFavourite(uid: String) {
+        guard let activeUID = auth?.currentUser?.uid else {
+            return
+        }
+        
+        let userRef = usersRef.child(activeUID)
+        var favourites = [String]()
+        if let existingFavourites = System.activeUser?.favourites {
+            favourites += existingFavourites
+        }
+        favourites.append(uid)
+        userRef.child(Config.favourites).setValue(favourites)
+        System.activeUser?.setFavourites(favourites: favourites)
+    }
+    
+    public func removeFavourte(uid: String) {
+        guard let activeUID = auth?.currentUser?.uid,
+            var favourites = System.activeUser?.favourites else {
+            return
+        }
+        
+        for (index, favourite) in favourites.enumerated() {
+            if favourite == uid {
+                favourites.remove(at: index)
+                break
+            }
+        }
+        
+        let userRef = usersRef.child(activeUID)
+        userRef.child(Config.favourites).setValue(favourites)
+        System.activeUser?.setFavourites(favourites: favourites)
+        
+    }
+    
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
         let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
         let eventRef = eventsRef.child(dayString).childByAutoId()
@@ -305,13 +347,11 @@ class FirebaseClient {
     public func addComment(_ event: Event, comment: Comment, completion: @escaping AddCommentCallback) {
         let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
         
-        print(dayString)
         guard let id = event.id else {
             completion(nil)
             return
         }
         
-        print(id)
         let eventRef = eventsRef.child(dayString).child(id)
         
         var dict = [[String: String]]()
@@ -321,10 +361,8 @@ class FirebaseClient {
         }
         dict.append(comment.toDictionary())
         
-        print(dict)
         eventRef.child(Config.comments).setValue(dict)
         completion(nil)
-        print("test6")
     }
     
     public func getEvents(completion: @escaping GetEventsCallback) {
@@ -389,7 +427,7 @@ class FirebaseClient {
         })
     }
     
-    public func getEvent(by day: Date, completion: @escaping GetEventByDayCallback) {
+    public func getEvents(by day: Date, completion: @escaping GetEventByDayCallback) {
         let dayString = Utility.fbDateFormatter.string(from: day)
         let dayRef = eventsRef.child(dayString)
         dayRef.observeSingleEvent(of: .value, with: {(snapshot) in
@@ -403,7 +441,16 @@ class FirebaseClient {
         })
     }
     
-    func createIdea(idea: Idea, completion: @escaping GeneralIdeaCallback) {
+    public func checkHasEventsOn(by day: Date, completion: @escaping EventExistsCallback) {
+        let dayString = Utility.fbDateFormatter.string(from: day)
+        
+        let dayRef = eventsRef.child(dayString)
+        dayRef.observeSingleEvent(of: .value, with: {(snapshot) in
+            completion(snapshot.exists(), nil)
+        })
+    }
+    
+    func createIdea(idea: Idea, completion: @escaping GeneralErrorCallback) {
         let ideaRef = ideasRef.childByAutoId()
         idea.id = ideaRef.key
         
@@ -412,19 +459,40 @@ class FirebaseClient {
                 completion(self.checkError(err))
                 return
             }
-            self.saveImages(mainImage: idea.mainImage, images: idea.images, ref: ideaRef)
-            completion(nil)
+            self.saveIdeaImages(idea: idea, ideaRef: ideaRef, completion: { (error) in
+                completion(self.checkError(error))
+            })
         })
     }
     
-    func updateIdeaContent(for idea: Idea) {
+    func updateIdeaContent(for idea: Idea, completion: @escaping GeneralErrorCallback) {
         guard let id = idea.id else {
             return
         }
         
         let ideaRef = getIdeaRef(for: id)
-        ideaRef.updateChildValues(idea.toDictionary())
-        saveImages(mainImage: idea.mainImage, images: idea.images, ref: ideaRef)
+        ideaRef.updateChildValues(idea.toDictionary(), withCompletionBlock: { (err, _) in
+            guard err == nil else {
+                completion(self.checkError(err))
+                return
+            }
+            self.saveIdeaImages(idea: idea, ideaRef: ideaRef, completion: { (error) in
+                completion(self.checkError(error))
+            })
+        })
+    }
+    
+    private func saveIdeaImages(idea: Idea, ideaRef: FIRDatabaseReference, completion: @escaping GeneralErrorCallback) {
+        if idea.imagesState.mainImageHasChanged {
+            saveMainImage(mainImage: idea.mainImage, ref: ideaRef, completion: { (error) in
+                completion(self.checkError(error))
+            })
+        } else {
+            completion(nil)
+        }
+        if idea.imagesState.imagesHasChanged {
+            saveDetailImages(images: idea.images, ref: ideaRef.child(Config.images))
+        }
     }
     
     func updateIdeaVote(for id: String, user: String, vote: Bool) {
@@ -576,18 +644,75 @@ class FirebaseClient {
         } else {
             channelRef.removeValue()
         }
+    }
+    
+    func saveInformation(person: Person, category: String, completion: @escaping GeneralErrorCallback) {
+        let personRef = getPeopleRef(for: category).childByAutoId()
+        person.id = personRef.key
         
+        personRef.setValue(person.toDictionary(), withCompletionBlock: { (error, _) in
+            guard error == nil else {
+                completion(self.checkError(error))
+                return
+            }
+            self.saveImage(path: "information/\(category)/\(person.name.trim()).jpg", image: person.photo, completion: { (photoURL, error) in
+                guard error == nil, let url = photoURL else {
+                    completion(self.checkError(error))
+                    return
+                }
+                personRef.child(Config.photo).setValue(url)
+                System.imageCache[url] = person.photo
+                completion(nil)
+            })
+        })
+    }
+    
+    func saveInformation(overview: OverviewContent, completion: @escaping GeneralErrorCallback) {
+        let overviewRef = getOverviewRef()
         
+        overviewRef.setValue(overview.toDictionary(), withCompletionBlock: { (error, _) in
+            completion(self.checkError(error))
+            guard error == nil else {
+                return
+            }
+            self.saveDetailImages(path: "information/overview", images: overview.images, ref: overviewRef.child(Config.images))
+        })
+    }
+    
+    func updateInformation(overview: OverviewContent, completion: @escaping GeneralErrorCallback) {
+        let overviewRef = getOverviewRef()
+        
+        overviewRef.updateChildValues(overview.toDictionary(), withCompletionBlock: { (error, _) in
+            completion(self.checkError(error))
+            guard error == nil, overview.imagesState.imagesHasChanged else {
+                return
+            }
+            self.saveDetailImages(path: "information/overview", images: overview.images, ref: overviewRef.child(Config.images))
+        })
+    }
+    
+    func saveInformation(faq: Faq, completion: @escaping GeneralErrorCallback) {
+        let faqRef = getFaqRef().childByAutoId()
+        
+        faqRef.setValue(faq.toDictionary(), withCompletionBlock: { (error, _) in
+            completion(self.checkError(error))
+        })
     }
     
     public func saveImage(image: UIImage, completion: @escaping ImageURLCallback) {
-        let imageData = image.jpeg(.low)
         let imagePath = auth!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
         
+        saveImage(path: imagePath, image: image, completion: { (metadata, error) in
+            completion(metadata, error)
+        })
+    }
+    
+    func saveImage(path: String, image: UIImage, completion: @escaping ImageURLCallback) {
+        let imageData = image.jpeg(.low)
         let metadata = FIRStorageMetadata()
         metadata.contentType = "image/jpeg"
         
-        self.storageRef.child(imagePath).put(imageData!, metadata: metadata) { (metadata, error) in
+        self.storageRef.child(path).put(imageData!, metadata: metadata) { (metadata, error) in
             guard let metadata = metadata, let path = metadata.path else {
                 completion(nil, self.checkError(error))
                 return
@@ -597,20 +722,36 @@ class FirebaseClient {
         }
     }
     
-    private func saveImages(mainImage: UIImage, images: [UIImage], ref: FIRDatabaseReference) {
-        saveImage(image: mainImage, completion: { (imageURL, firError) in
-            guard firError == nil, let url = imageURL else {
-                NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+    private func saveMainImage(mainImage: UIImage, ref: FIRDatabaseReference, completion: @escaping GeneralErrorCallback) {
+        saveImage(image: mainImage, completion: { (imageURL, error) in
+            completion(error)
+            guard error == nil, let url = imageURL else {
                 return
             }
             ref.child(Config.mainImage).setValue(url)
             System.imageCache[url] = mainImage
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
         })
-        let imagesRef = ref.child(Config.images)
-        imagesRef.removeValue()
+    }
+    
+    private func saveDetailImages(path: String, images: [UIImage], ref: FIRDatabaseReference) {
+        ref.removeValue()
         for image in images {
-            let imageRef = imagesRef.childByAutoId()
+            let imageRef = ref.childByAutoId()
+            let imagePath = path + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
+            saveImage(path: imagePath, image: image, completion: { (imageURL, firError) in
+                guard firError == nil, let url = imageURL else {
+                    return
+                }
+                imageRef.setValue(url)
+                System.imageCache[url] = image
+            })
+        }
+    }
+    
+    private func saveDetailImages(images: [UIImage], ref: FIRDatabaseReference) {
+        ref.removeValue()
+        for image in images {
+            let imageRef = ref.childByAutoId()
             saveImage(image: image, completion: { (imageURL, firError) in
                 guard firError == nil, let url = imageURL else {
                     return
@@ -819,6 +960,12 @@ class FirebaseClient {
         return eventsRef.child(dayString).child(event.id!)
     }
     
+    public func getEventRef(date: Date) -> FIRDatabaseReference {
+        let dayString = Utility.fbDateFormatter.string(from: date)
+        
+        return eventsRef.child(dayString)
+    }
+    
     public func getMentorsRef() -> FIRDatabaseQuery {
         return usersRef.queryOrdered(byChild: "userType/isMentor").queryEqual(toValue: true)
     }
@@ -829,6 +976,18 @@ class FirebaseClient {
     
     public func getIdeaRef(for ideaID: String) -> FIRDatabaseReference {
         return ideasRef.child(ideaID)
+    }
+    
+    public func getPeopleRef(for category: String) -> FIRDatabaseReference {
+        return informationRef.child("people").child(category)
+    }
+    
+    public func getOverviewRef() -> FIRDatabaseReference {
+        return informationRef.child("overview")
+    }
+    
+    public func getFaqRef() -> FIRDatabaseReference {
+        return informationRef.child("faq")
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {

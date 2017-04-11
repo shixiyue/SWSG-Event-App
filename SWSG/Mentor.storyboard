@@ -15,7 +15,7 @@
         <scene sceneID="aPH-Pc-Joz">
             <objects>
                 <navigationController storyboardIdentifier="MentorNavigationController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fhd-Ha-a8F" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="1Su-kD-68X">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="1Su-kD-68X">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -431,16 +431,26 @@
                         <outlet property="companyLbl" destination="40q-Ia-GOl" id="gRY-Wg-Js7"/>
                         <outlet property="consultationSlotCollection" destination="64f-Q2-th1" id="aoq-Ho-2cz"/>
                         <outlet property="descriptionTB" destination="n3R-ux-J5b" id="3It-oM-0BJ"/>
+                        <outlet property="mentorView" destination="siW-pE-mmV" id="DQD-I3-1O4"/>
                         <outlet property="nameLbl" destination="OCi-5D-8q2" id="7yr-KX-kFu"/>
                         <outlet property="positionLbl" destination="iYy-Vg-8ti" id="JqY-SB-MYQ"/>
                         <outlet property="profileImg" destination="U5y-ng-pTX" id="gNB-kY-Cvk"/>
                         <outlet property="relatedMentorCollection" destination="OKC-K1-ZYz" id="1BY-Ep-t71"/>
                         <segue destination="dOz-DW-2xN" kind="show" identifier="mentorToChat" id="l8I-C2-6vZ"/>
+                        <segue destination="ynG-OB-VPo" kind="show" identifier="mentorToProfile" id="hKY-GH-IrY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dBW-gL-sTj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1704.8" y="106.59670164917542"/>
+        </scene>
+        <!--ProfileViewController-->
+        <scene sceneID="93m-pf-SkL">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Profile" referencedIdentifier="ProfileViewController" id="ynG-OB-VPo" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lTC-Uj-yCv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2509" y="23"/>
         </scene>
         <!--ChannelViewController-->
         <scene sceneID="Ckp-tJ-2pz">

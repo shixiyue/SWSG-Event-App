@@ -67,7 +67,7 @@
                                                                     <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9.00am @ Outside Meeting Room 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JNf-C1-p71">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@Outside Meeting Room 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JNf-C1-p71">
                                                                     <rect key="frame" x="8" y="27" width="279" height="21"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="21" id="5Yg-Qz-rzL"/>
@@ -164,6 +164,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EhE-Ts-SH1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-783.20000000000005" y="-320.68965517241384"/>
+        </scene>
+        <!--ProfileViewController-->
+        <scene sceneID="FUd-JA-p06">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Profile" referencedIdentifier="ProfileViewController" id="Uh1-m4-pzK" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KHM-gb-joY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="933" y="121"/>
         </scene>
         <!--Event Details Table View Controller-->
         <scene sceneID="1jA-9A-kQJ">
@@ -420,6 +428,7 @@
                     <connections>
                         <outlet property="eventDetailsTableView" destination="Wr6-qQ-gTA" id="xUp-PP-PLb"/>
                         <outlet property="titleImageIV" destination="t3u-rh-k4q" id="mKM-tf-WX3"/>
+                        <segue destination="Uh1-m4-pzK" kind="show" identifier="eventToProfile" id="HSi-1O-B2D"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6bD-TH-doI" userLabel="First Responder" sceneMemberID="firstResponder"/>

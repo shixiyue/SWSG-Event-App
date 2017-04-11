@@ -17,6 +17,7 @@ final class ChannelViewController: JSQMessagesViewController {
     //MARK: Class Variables
     var channel: Channel?
     fileprivate var client = System.client
+    fileprivate var otherUser: User?
     fileprivate var imagePicker = ImagePickerPopoverViewController()
     fileprivate var iconIV = UIImageView()
     fileprivate var avatarCache = [String: UIImage]()
@@ -80,6 +81,9 @@ final class ChannelViewController: JSQMessagesViewController {
             let dest = segue.destination as? ChannelInfoViewController,
             let channel = channel {
             dest.channel = channel
+        } else if segue.identifier == Config.chatToProfile,
+            let user = sender as? User, let dest = segue.destination as? ProfileViewController {
+            dest.user = user
         }
     }
     
@@ -119,6 +123,7 @@ final class ChannelViewController: JSQMessagesViewController {
                 if memberId != senderId {
                     client.getUserWith(uid: memberId, completion: { (user, error) in
                         self.title = user?.profile.name
+                        self.otherUser = user
                     })
                     
                     Utility.getProfileImg(uid: memberId, completion: { (image) in
@@ -146,6 +151,12 @@ final class ChannelViewController: JSQMessagesViewController {
     func iconIVTapped(sender: UIGestureRecognizer) {
         if channel?.type != .directMessage {
             performSegue(withIdentifier: Config.channelToChannelInfo, sender: self)
+        } else {
+            guard let otherUser = otherUser else {
+                return
+            }
+            
+            performSegue(withIdentifier: Config.chatToProfile, sender: otherUser)
         }
     }
     
