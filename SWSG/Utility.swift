@@ -221,9 +221,28 @@ struct Utility {
             }
         })
     }
+    
     static func strtok(string: String, delimiter: String) -> [Int] {
         let values = string.components(separatedBy: delimiter).flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
         return values
+    }
+    
+    static func channelsSortedByLatestMessage(channels: [Channel]) -> [Channel] {
+        let sortedChannels = channels.sorted(by: {
+            guard let msgFirst = $0.latestMessage, let msgSecond = $1.latestMessage else {
+                if let _ = $0.latestMessage {
+                    return true
+                } else if let _ = $1.latestMessage {
+                    return false
+                } else {
+                    return $0.id! < $1.id!
+                }
+            }
+            
+            return msgFirst.timestamp > msgSecond.timestamp
+        })
+        
+        return sortedChannels
     }
     
     static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
@@ -471,6 +490,45 @@ struct Utility {
             
             Utility.logUserIn(error: error, current: viewController)
             completion(true)
+        })
+    }
+    
+    static func validChannel(_ channel: Channel) -> Bool {
+        if channel.type != .publicChannel {
+            if !channel.members.contains(System.client.getUid()) {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    static func getOtherUser(in channel: Channel, completion: @escaping (User?) -> Void) {
+        for memberID in channel.members {
+            if memberID != System.client.getUid() {
+                System.client.getUserWith(uid: memberID, completion: { (user, error) in
+                    completion(user)
+                })
+                return
+            }
+        }
+        
+        completion(nil)
+    }
+    
+    static func getLatestMessage(channel: Channel, snapshot: FIRDataSnapshot,
+                                  completion: @escaping () -> Void) {
+        let query = System.client.getLatestMessageQuery(for: snapshot.key)
+        query.observe(.value, with: { (snapshot) in
+            for child in snapshot.children {
+                guard let mentorSnapshot = child as? FIRDataSnapshot,
+                    let message = Message(snapshot: mentorSnapshot) else {
+                        continue
+                }
+                channel.latestMessage = message
+            }
+            completion()
+            
         })
     }
     

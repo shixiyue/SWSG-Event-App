@@ -64,7 +64,8 @@ class ChannelListViewController: BaseViewController {
                     
                     let indexPath = IndexPath(row: index, section: 0)
                     
-                    self.getLatestMessage(channel: channel, snapshot: snapshot, completion: { _ in
+                    Utility.getLatestMessage(channel: channel, snapshot: snapshot, completion: { _ in
+                        self.channels = Utility.channelsSortedByLatestMessage(channels: self.channels)
                         self.chatList.reloadRows(at: [indexPath], with: .automatic)
                     })
                     self.chatList.reloadRows(at: [indexPath], with: .automatic)
@@ -87,7 +88,7 @@ class ChannelListViewController: BaseViewController {
     private func addNewChannel(snapshot: Any) {
         guard let channelSnapshot = snapshot as? FIRDataSnapshot,
             let channel = Channel(id: channelSnapshot.key, snapshot: channelSnapshot),
-            validChannel(channel) else {
+            Utility.validChannel(channel) else {
                 return
         }
         
@@ -98,40 +99,12 @@ class ChannelListViewController: BaseViewController {
             }
         })
         
-        getLatestMessage(channel: channel, snapshot: channelSnapshot, completion: { _ in
+        Utility.getLatestMessage(channel: channel, snapshot: channelSnapshot, completion: { _ in
             self.chatList.reloadData()
         })
         self.channels.append(channel)
-        
     }
     
-    private func validChannel(_ channel: Channel) -> Bool {
-        if channel.type != .publicChannel {
-            if !channel.members.contains(client.getUid()) {
-                return false
-            }
-        }
-        
-        return true
-    }
-    
-    private func getLatestMessage(channel: Channel, snapshot: FIRDataSnapshot,
-                                  completion: @escaping () -> Void) {
-        let query = self.client.getLatestMessageQuery(for: snapshot.key)
-        query.observe(.value, with: { (snapshot) in
-            for child in snapshot.children {
-                guard let mentorSnapshot = child as? FIRDataSnapshot,
-                    let message = Message(snapshot: mentorSnapshot) else {
-                        continue
-                }
-                channel.latestMessage = message
-                completion()
-            }
-            completion()
-            
-        })
-        
-    }
     
     @IBAction func composeBtnPressed(_ sender: Any) {
         let composeController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -238,29 +211,16 @@ extension ChannelListViewController: UITableViewDataSource {
         cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
         
         if channel.type == .directMessage {
-            var otherUID: String?
-            
-            for member in channel.members {
-                if member != client.getUid() {
-                    otherUID = member
-                    break
+            Utility.getOtherUser(in: channel, completion: { (user) in
+                if let user = user, let uid = user.uid {
+                    cell.nameLbl.text = user.profile.name
+                    
+                    Utility.getProfileImg(uid: uid, completion: { (image) in
+                        if let image = image {
+                            cell.iconIV.image = image
+                        }
+                    })
                 }
-            }
-            
-            guard let uid = otherUID else {
-                return ChannelCell()
-            }
-            
-            cell.iconIV.image = Config.placeholderImg
-            
-            Utility.getProfileImg(uid: uid, completion: { (image) in
-                if let image = image {
-                    cell.iconIV.image = image
-                }
-            })
-            
-            client.getUserWith(uid: uid, completion: { (user, error) in
-                cell.nameLbl.text = user?.profile.name
             })
         } else if channel.type != .directMessage {
             
