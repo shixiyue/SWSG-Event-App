@@ -33,6 +33,8 @@ class FirebaseClient {
     typealias GetEventCallback = (Event?, FirebaseError?) -> Void
     typealias GetEventsCallback = ([Date: [Event]], FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
+    typealias GetTeamCallback = (Team?, FirebaseError?) -> Void
+    typealias GetTeamsCallback = ([Team], FirebaseError?) -> Void
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
     typealias ImageCallback = (UIImage?, String?) -> Void
     typealias ImagesCallback = ([UIImage]?, String?) -> Void
@@ -251,6 +253,19 @@ class FirebaseClient {
         })
     }
     
+    public func getUserWith(uid: String) -> User? {
+        let userRef = usersRef.child(uid)
+        var userInstance: User?
+        userRef.observeSingleEvent(of: .value, with: {(snapshot) in
+            guard let user = User(snapshot: snapshot) else {
+                return
+            }
+            user.setUid(uid: uid)
+            userInstance = user
+        })
+        return userInstance
+    }
+    
     public func getUserWith(username: String, completion: @escaping GetUserCallback) {
         let userRef = usersRef
             .queryOrdered(byChild: "\(Config.profile)/\(Config.username)").queryEqual(toValue: username)
@@ -321,6 +336,54 @@ class FirebaseClient {
         System.activeUser?.setFavourites(favourites: favourites)
         
     }
+    
+    public func createTeam(_team: Team, completion: @escaping CreateTeamCallback) {
+        let teamRef = teamsRef.child(_team.name).childByAutoId()
+        teamRef.setValue(_team.toDictionary(), withCompletionBlock: { (err, _) in
+            guard err == nil else {
+                completion(self.checkError(err))
+                return
+            }
+        completion(nil)
+        })
+    }
+    public func getTeams(completion: @escaping GetTeamsCallback) {
+        teamsRef.observeSingleEvent(of: .value, with: { (snapshot) in
+              var teams = [Team]()
+            for teamNameSnapshot in snapshot.children {
+                for teamSnapShot in (teamNameSnapshot as AnyObject).children {
+                    guard let team = Team(id: (teamSnapShot as AnyObject).key, snapshot: teamSnapShot as! FIRDataSnapshot) else {
+                        continue
+                    }
+                    teams.append(team)
+                }
+            }
+            completion(teams, nil)
+        })
+    }
+    public func getTeams(snapshot: Any?) -> [Team]? {
+        
+        guard let snapshot = snapshot as? FIRDataSnapshot else {
+            return nil
+        }
+        var teams = [Team]()
+        for teamsSnapshot in snapshot.children {
+            guard let teamsSnapshot = teamsSnapshot as? FIRDataSnapshot else {
+                continue
+            }
+            for teamSnapShot in teamsSnapshot.children {
+                guard let team = Team(id: (teamSnapShot as AnyObject).key, snapshot: teamSnapShot as! FIRDataSnapshot) else {
+                    continue
+                }
+                teams.append(team)
+            }
+        }
+        
+        return teams
+
+    }
+    //public func getTeam(with id: String, completion: @escaping GetTeamCallback) {
+    //}
     
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
         let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
@@ -850,6 +913,10 @@ class FirebaseClient {
     
     public func getEventsRef() -> FIRDatabaseReference {
         return eventsRef
+    }
+    
+    public func getTeamsRef() -> FIRDatabaseReference {
+        return teamsRef
     }
     
     public func getEventRef(event: Event) -> FIRDatabaseReference {

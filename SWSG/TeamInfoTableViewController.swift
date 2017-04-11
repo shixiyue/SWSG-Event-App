@@ -147,11 +147,17 @@ class TeamInfoTableViewController: UITableViewController {
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "teamMemberCell", for: indexPath) as! TeamMemberTableViewCell
-                cell.nameLbl.text = team?.members[indexPath.row - 1].profile.name
-                cell.jobLbl.text = team?.members[indexPath.row-1].profile.job
-                cell.companyLbl.text = team?.members[indexPath.row - 1].profile.company
-                cell.descLbl.text = team?.members[indexPath.row-1].profile.desc
-                cell.profileimage.image = team?.members[indexPath.row - 1].profile.image ?? UIImage(named: "Placeholder")
+                guard let team = team else {
+                    return cell
+                }
+                guard let user = System.client.getUserWith(uid: team.members[indexPath.row-1]) else {
+                    return cell
+                }
+                cell.nameLbl.text = user.profile.name
+                cell.jobLbl.text = user.profile.job
+                cell.companyLbl.text = user.profile.company
+                cell.descLbl.text = user.profile.desc
+                cell.profileimage.image = user.profile.image ?? UIImage(named: "Placeholder")
                 return cell
             }
         } else {

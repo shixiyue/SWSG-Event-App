@@ -7,25 +7,28 @@
 //
 
 import Foundation
+import Firebase
 
 class Teams {
     private static var teamsInstance = Teams()
     private var teams : [Team] {
         didSet {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "teams"), object: self)
-            print("saving teams")
             //Storage.saveTeams(data: teams, fileName: "Teams")
         }
     }
     
     private init() {
-        print("reading from storage for teams")
         teams = [Team]()
-        //self.teams = Storage.readTeams(fileName: "Teams") ?? [Team]()
+        
     }
     
     class func sharedInstance() -> Teams {
         return teamsInstance
+    }
+    
+    public func replaceTeams(teams: [Team]) {
+         self.teams = teams
     }
     
     public func addTeam(team: Team) {
