@@ -11,16 +11,16 @@ import Firebase
 
 class EventPageViewController: UIPageViewController {
     
-    weak var eventDelegate: EventPageViewControllerDelegate?
-    
     fileprivate var events = [Event]()
     fileprivate var eventViewControllers = [UIViewController]()
+    
+    fileprivate var firstLoaded = false
     
     fileprivate var eventsRef: FIRDatabaseReference?
     private var eventsAddedHandle: FIRDatabaseHandle?
     private var eventsRemovedHandle: FIRDatabaseHandle?
     
-    fileprivate var index = 1
+    fileprivate var index = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,13 +28,12 @@ class EventPageViewController: UIPageViewController {
         dataSource = self
         delegate = self
         
-        eventDelegate?.eventPageViewController(self, didUpdatePageCount: eventViewControllers.count)
-        
         observeDayEvents()
     }
     
     private func observeDayEvents() {
-        eventsRef = System.client.getEventRef(date: Date.init())
+        let currentDateTime = Date.init()
+        eventsRef = System.client.getEventRef(date: currentDateTime)
         
         eventsAddedHandle = eventsRef?.observe(.childAdded, with: { (snapshot) in
             guard let event = Event(id: snapshot.key, snapshot: snapshot) else {
@@ -42,22 +41,43 @@ class EventPageViewController: UIPageViewController {
             }
             
             self.events.append(event)
-            self.eventViewControllers.append(self.getViewController(event: event))
-            self.setViewController()
+            let viewController = self.getViewController(event: event)
+            self.eventViewControllers.append(viewController)
+            
+            if !self.firstLoaded {
+                self.setViewController()
+                self.firstLoaded = true
+            } else if currentDateTime < event.startDateTime {
+                self.setViewController(viewController: viewController)
+            }
+        })
+        
+        System.client.checkHasEventsOn(by: Date.init(), completion: { (exists, error) in
+            if !exists {
+                let storyboard = UIStoryboard(name: Config.mainStoryboard, bundle: nil)
+                let viewController = storyboard.instantiateViewController(withIdentifier: Config.emptyEventView)
+                
+                self.setViewControllers([viewController],
+                                        direction: .forward,
+                                        animated: true,
+                                        completion: nil)
+            }
         })
     }
     
     fileprivate func setViewController() {
-        guard index > 0, index < eventViewControllers.count else {
+        guard index >= 0, index < eventViewControllers.count else {
             return
         }
         
-        print("test")
-        self.setViewControllers([eventViewControllers[index]],
+        setViewController(viewController: eventViewControllers[index])
+    }
+    
+    fileprivate func setViewController(viewController: UIViewController) {
+        self.setViewControllers([viewController],
                                 direction: .forward,
                                 animated: true,
                                 completion: nil)
-        print("test2")
     }
     
     fileprivate func getViewController(event: Event) -> UIViewController {
@@ -77,7 +97,7 @@ class EventPageViewController: UIPageViewController {
 
         viewController.venueLbl.text = "@\(event.venue)"
         viewController.descTV.text = event.shortDesc
-        viewController.imageIV.isHidden = true
+        viewController.imageView.isHidden = true
         
         Utility.getEventIcon(id: id, completion: { (image) in
             guard let image = image else {
@@ -85,7 +105,7 @@ class EventPageViewController: UIPageViewController {
             }
             
             viewController.imageIV.image = image
-            viewController.imageIV.isHidden = false
+            viewController.imageView.isHidden = false
         })
         
         return viewController
@@ -93,68 +113,37 @@ class EventPageViewController: UIPageViewController {
 }
 
 // MARK: UIPageViewControllerDataSource
-extension EventPageViewController: UIPageViewControllerDataSource {
+extension EventPageViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
     func pageViewController(_ pageViewController: UIPageViewController,
                             viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        let previousIndex = index - 1
-        print("previous: \(previousIndex)")
-        print(eventViewControllers.count)
-        
-        guard previousIndex > 0, eventViewControllers.count > previousIndex else {
+        guard let viewControllerIndex = eventViewControllers.index(of: viewController) else {
             return nil
         }
         
-        index = previousIndex
-        print("load \(index)")
+        let previousIndex = viewControllerIndex - 1
+        
+        guard previousIndex >= 0, eventViewControllers.count > previousIndex else {
+            return nil
+        }
+        
+        index = viewControllerIndex
         return eventViewControllers[previousIndex]
     }
     
     func pageViewController(_ pageViewController: UIPageViewController,
                             viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        let nextIndex = index + 1
-        print("current: \(index)")
-        print("next: \(nextIndex)")
-        print(eventViewControllers.count)
-        guard nextIndex > 0, eventViewControllers.count > nextIndex else {
+        guard let viewControllerIndex = eventViewControllers.index(of: viewController) else {
             return nil
         }
         
-        index = nextIndex
-        print("load \(index)")
+        let nextIndex = viewControllerIndex + 1
+        
+        guard nextIndex >= 0, eventViewControllers.count > nextIndex else {
+            return nil
+        }
+        
+        index = viewControllerIndex
         return eventViewControllers[nextIndex]
     }
-
-}
-
-extension EventPageViewController: UIPageViewControllerDelegate {
-    
-    func pageViewController(_ pageViewController: UIPageViewController,
-                            didFinishAnimating finished: Bool,
-                            previousViewControllers: [UIViewController],
-                            transitionCompleted completed: Bool) {
-        eventDelegate?.eventPageViewController(self, didUpdatePageIndex: index)
-    }
-    
-}
-
-protocol EventPageViewControllerDelegate: class {
-    /**
-     Called when the number of pages is updated.
-     
-     - parameter tutorialPageViewController: the TutorialPageViewController instance
-     - parameter count: the total number of pages.
-     */
-    func eventPageViewController(_ eventPageViewController: EventPageViewController,
-                                    didUpdatePageCount count: Int)
-    
-    /**
-     Called when the current index is updated.
-     
-     - parameter tutorialPageViewController: the TutorialPageViewController instance
-     - parameter index: the index of the currently visible page.
-     */
-    func eventPageViewController(_ eventPageViewController: EventPageViewController,
-                                    didUpdatePageIndex index: Int)
-    
 }

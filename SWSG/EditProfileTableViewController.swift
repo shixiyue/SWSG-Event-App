@@ -153,6 +153,7 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(googleLoginBtnPressed))
         googleLoginButton.addGestureRecognizer(tapGesture)
+        googleLoginButton.backgroundColor = Config.greenColor
         
         let fbCenter = CGPoint(x: facebookView.frame.width/2,y: facebookView.frame.height/2)
         
