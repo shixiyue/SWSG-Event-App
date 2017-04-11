@@ -70,6 +70,7 @@ struct Config {
     static let photo = "photo"
     static let question = "question"
     static let answer = "answer"
+    static let link = "link"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 20)
@@ -91,6 +92,7 @@ struct Config {
     static let defaultPersonImage = UIImage(named: "Profile")!
     static let emptyStar = UIImage(named: "Star-Empty")!
     static let fullStar = UIImage(named: "Star-Full")!
+    static let defaultSponsorImage = UIImage(named: "default-sponsor-image")!
     static let chatIconWidth: CGFloat = 40
     static let headerBuffer: CGFloat = 45
     static let scrollViewOffset: CGFloat = 300

@@ -6,17 +6,14 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
-import Foundation
 import Firebase
 
 class People {
     
-    private var people: [String: [Person]]
+    private var people = [String: [Person]]()
     private static var sharedInstance = People()
     
-    private init() {
-        people = [String: [Person]]()
-    }
+    private init() { }
     
     static func getPeopleInstance() -> People {
         return sharedInstance
@@ -35,13 +32,6 @@ class People {
         }
         peopleInSameCategory.append(person)
         people[category] = peopleInSameCategory.sorted(by: {$0.name < $1.name})
-    }
-    
-    func retrievePerson(category: String, index: Int) -> Person? {
-        guard let array = people[category], array.count - 1 >= index else {
-            return nil
-        }
-        return array[index]
     }
     
     func retrievePerson(category: String) -> [Person] {

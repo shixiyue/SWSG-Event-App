@@ -77,6 +77,8 @@
 		C2A8A6851E9B0EFD008D50BC /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A8A6841E9B0EFD008D50BC /* HttpClient.swift */; };
 		C2A8A6871E9B0F0D008D50BC /* NotiPusher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A8A6861E9B0F0D008D50BC /* NotiPusher.swift */; };
 		C2A8A68A1E9B0F69008D50BC /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A8A6891E9B0F69008D50BC /* PushNotification.swift */; };
+		CC1251871E9D0C7300289139 /* Sponsor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1251861E9D0C7300289139 /* Sponsor.swift */; };
+		CC1251891E9D214700289139 /* SponsorsInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1251881E9D214700289139 /* SponsorsInfo.swift */; };
 		CC168B2C1E7E8C5800F8725A /* UISupporting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC168B2B1E7E8C5800F8725A /* UISupporting.storyboard */; };
 		CC168B2E1E7E8E4600F8725A /* ImageCropperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */; };
 		CC18E1921E9A722400BE8B67 /* ImagePickCropperPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC18E1911E9A722400BE8B67 /* ImagePickCropperPopoverViewController.swift */; };
@@ -106,7 +108,7 @@
 		CC7A4B101E88A78C00BC8A4B /* SponsorsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7A4B0F1E88A78C00BC8A4B /* SponsorsTableViewCell.swift */; };
 		CC7A4B121E88A85F00BC8A4B /* SponsorsTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7A4B111E88A85F00BC8A4B /* SponsorsTitleTableViewCell.swift */; };
 		CC7A4B141E88B0D800BC8A4B /* SponsorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7A4B131E88B0D800BC8A4B /* SponsorsViewController.swift */; };
-		CC7A4B161E88BB6600BC8A4B /* SponsorsInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7A4B151E88BB6600BC8A4B /* SponsorsInfo.swift */; };
+		CC7A4B161E88BB6600BC8A4B /* Sponsors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7A4B151E88BB6600BC8A4B /* Sponsors.swift */; };
 		CC7F4C8F1E9CB3FD00106D63 /* Faq.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7F4C8E1E9CB3FD00106D63 /* Faq.swift */; };
 		CC8A4E121E8CB5C3005E2AC5 /* ImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8A4E111E8CB5C3005E2AC5 /* ImagePickerViewController.swift */; };
 		CC9500891E86398F00EC871F /* TemplateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9500881E86398F00EC871F /* TemplateViewController.swift */; };
@@ -271,6 +273,8 @@
 		C2A8A6861E9B0F0D008D50BC /* NotiPusher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotiPusher.swift; sourceTree = "<group>"; };
 		C2A8A6891E9B0F69008D50BC /* PushNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
 		CA7AA4F9D14A6E7B2876E9AD /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC1251861E9D0C7300289139 /* Sponsor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sponsor.swift; sourceTree = "<group>"; };
+		CC1251881E9D214700289139 /* SponsorsInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SponsorsInfo.swift; sourceTree = "<group>"; };
 		CC168B2B1E7E8C5800F8725A /* UISupporting.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UISupporting.storyboard; sourceTree = "<group>"; };
 		CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCropperViewController.swift; sourceTree = "<group>"; };
 		CC18E1911E9A722400BE8B67 /* ImagePickCropperPopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickCropperPopoverViewController.swift; sourceTree = "<group>"; };
@@ -299,7 +303,7 @@
 		CC7A4B0F1E88A78C00BC8A4B /* SponsorsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SponsorsTableViewCell.swift; sourceTree = "<group>"; };
 		CC7A4B111E88A85F00BC8A4B /* SponsorsTitleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SponsorsTitleTableViewCell.swift; sourceTree = "<group>"; };
 		CC7A4B131E88B0D800BC8A4B /* SponsorsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SponsorsViewController.swift; sourceTree = "<group>"; };
-		CC7A4B151E88BB6600BC8A4B /* SponsorsInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SponsorsInfo.swift; sourceTree = "<group>"; };
+		CC7A4B151E88BB6600BC8A4B /* Sponsors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sponsors.swift; sourceTree = "<group>"; };
 		CC7F4C8E1E9CB3FD00106D63 /* Faq.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Faq.swift; sourceTree = "<group>"; };
 		CC8A4E111E8CB5C3005E2AC5 /* ImagePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerViewController.swift; sourceTree = "<group>"; };
 		CC9500881E86398F00EC871F /* TemplateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemplateViewController.swift; sourceTree = "<group>"; };
@@ -712,7 +716,9 @@
 				CC507F2C1E967124006432FC /* Person.swift */,
 				CC7A4B0B1E888C5D00BC8A4B /* Faqs.swift */,
 				CC7F4C8E1E9CB3FD00106D63 /* Faq.swift */,
-				CC7A4B151E88BB6600BC8A4B /* SponsorsInfo.swift */,
+				CC7A4B151E88BB6600BC8A4B /* Sponsors.swift */,
+				CC1251861E9D0C7300289139 /* Sponsor.swift */,
+				CC1251881E9D214700289139 /* SponsorsInfo.swift */,
 			);
 			name = Information;
 			sourceTree = "<group>";
@@ -1072,7 +1078,7 @@
 				E348D56A1E840D8B00947B3F /* IdeaPostTableViewController.swift in Sources */,
 				E348D5701E841E2900947B3F /* Idea.swift in Sources */,
 				CC7A4B141E88B0D800BC8A4B /* SponsorsViewController.swift in Sources */,
-				CC7A4B161E88BB6600BC8A4B /* SponsorsInfo.swift in Sources */,
+				CC7A4B161E88BB6600BC8A4B /* Sponsors.swift in Sources */,
 				CCE7DDE21E8BF5030044A863 /* LPRTableView.swift in Sources */,
 				3F178FF31E99069E00057929 /* FBRequest.swift in Sources */,
 				E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */,
@@ -1083,6 +1089,7 @@
 				E3220C551E7BABA5008AFA85 /* Comments.swift in Sources */,
 				E3220C3F1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift in Sources */,
 				CC7A4B0C1E888C5E00BC8A4B /* Faqs.swift in Sources */,
+				CC1251871E9D0C7300289139 /* Sponsor.swift in Sources */,
 				CC1CF8A81E7C09CD002224BC /* ProfileViewController.swift in Sources */,
 				E3220C3D1E7AE39D008AFA85 /* EventTimeTableViewCell.swift in Sources */,
 				3F3284231E92185B0062490D /* MultiDirectionCollectionViewLayout.swift in Sources */,
@@ -1121,6 +1128,7 @@
 				3FBB4C1C1E9B406E00A45FB3 /* EventScheduleViewController.swift in Sources */,
 				E3220C431E7AE40B008AFA85 /* CommentsTableViewCell.swift in Sources */,
 				CC1AA6C61E77C328004F5F95 /* (null) in Sources */,
+				CC1251891E9D214700289139 /* SponsorsInfo.swift in Sources */,
 				E3220C351E7A8D0B008AFA85 /* EventDetailsTableViewController.swift in Sources */,
 				CC507F2F1E96908B006432FC /* FullScreenImageViewController.swift in Sources */,
 				CC95008D1E8639CB00EC871F /* PhotoContentViewController.swift in Sources */,

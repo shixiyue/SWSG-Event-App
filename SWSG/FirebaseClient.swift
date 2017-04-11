@@ -683,6 +683,7 @@ class FirebaseClient {
     
     func saveInformation(faq: Faq, completion: @escaping GeneralErrorCallback) {
         let faqRef = getFaqRef().childByAutoId()
+        faq.id = faqRef.key
         
         faqRef.setValue(faq.toDictionary(), withCompletionBlock: { (error, _) in
             completion(self.checkError(error))

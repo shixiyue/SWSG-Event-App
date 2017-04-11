@@ -6,7 +6,6 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
-import UIKit
 import Firebase
 
 class OverviewContent: ImagesContent {
