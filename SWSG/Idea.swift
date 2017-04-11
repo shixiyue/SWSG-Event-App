@@ -8,37 +8,33 @@
 
 import UIKit
 
-class Idea {
+class Idea: ImagesContent {
     
     var votes: Int { return upvotes.count - downvotes.count }
     var teamName: String { return "by Team \(Teams.sharedInstance().retrieveTeamAt(index: team).name)" }
     
     var id: String?
-    
-    var isDefaultMainImage: Bool { return mainImage == Config.defaultIdeaImage }
-    
+
     public private(set) var name: String
     public private(set) var team: Int
     public private(set) var description: String
     public private(set) var mainImage: UIImage = Config.defaultIdeaImage
-    public private(set) var images: [UIImage] = []
+    public internal(set) var images: [UIImage] = []
     public private(set) var videoLink: String
+    
+    public internal(set) var imagesState = ImagesState()
     
     fileprivate var upvotes = Set<String>()
     fileprivate var downvotes = Set<String>()
     
-    private var done = false
-    private var mainImageURL: String?
-    private var imagesURL: [String: String]?
-    private var imagesDict = [String: UIImage]()
-    
-    init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
+    init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String, id: String? = nil) {
         self.name = name
         self.team = team
         self.description = description
         self.mainImage = mainImage
         self.images = images
         self.videoLink = videoLink
+        self.id = id
     }
     
     init?(snapshotValue: [String: Any]) {
@@ -72,68 +68,39 @@ class Idea {
             }
         }
         if let mainImageURL = snapshotValue[Config.mainImage] as? String {
-            self.mainImageURL = mainImageURL
+            imagesState.mainImageURL = mainImageURL
+        } else {
+            imagesState.mainImageHasFetched = true
         }
         guard let imagesURL = snapshotValue[Config.images] as? [String: String], imagesURL.count > 0 else {
+            imagesState.imagesHasFetched = true
             return
         }
         self.images = [Config.loadingImage]
-        self.imagesURL = imagesURL
+        imagesState.imagesURL = imagesURL
     }
     
     func loadMainImage(completion: @escaping (Bool) -> Void) {
-        guard let mainImageURL = mainImageURL else {
+        guard let mainImageURL = imagesState.mainImageURL, !imagesState.mainImageHasFetched else {
             completion(false)
             return
         }
         Utility.getImage(name: mainImageURL, completion: { (image) in
-            self.mainImageURL = nil
             guard let image = image else {
                 completion(false)
                 return
             }
             self.mainImage = image
+            self.imagesState.mainImageHasFetched = true
             completion(true)
         })
     }
     
-    func loadImages() {
-        guard let imagesURL = imagesURL else {
-            return
-        }
-        self.setImage(generator: imagesURL.makeIterator())
-    }
-
-    private func setImage(generator: DictionaryIterator<String, String>) {
-        var generator = generator
-        guard let (key, url) = generator.next() else {
-            if done {
-                return
-            }
-            self.done = true
-            self.images = []
-            let array = imagesDict.sorted(by: { $0.0 < $1.0 })
-            for (_, image) in array {
-                self.images.append(image)
-            }
-            guard let id = self.id else {
-                return
-            }
-            NotificationCenter.default.post(name: Notification.Name(rawValue: id), object: nil)
-            imagesURL = nil
-            imagesDict.removeAll()
-            return
-        }
-        guard !done else {
-            return
-        }
-        Utility.getImage(name: url, completion: { (image) in
-            guard let image = image, !self.done else {
-                return
-            }
-            self.imagesDict[key] = image
-            self.setImage(generator: generator)
-        })
+    func getUpdatedIdea(name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) -> Idea {
+        let idea = Idea(name: name, team: team, description: description, mainImage: mainImage, images: images, videoLink: videoLink, id: id)
+        idea.imagesState.mainImageHasChanged = self.mainImage != mainImage
+        idea.imagesState.imagesHasChanged = self.images != images
+        return idea
     }
     
     func update(name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {

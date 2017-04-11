@@ -395,15 +395,16 @@ class FirebaseClient {
     }
     
     private func saveIdeaImages(idea: Idea, ideaRef: FIRDatabaseReference, completion: @escaping GeneralErrorCallback) {
-        guard !idea.isDefaultMainImage else {
+        if idea.imagesState.mainImageHasChanged {
+            saveMainImage(mainImage: idea.mainImage, ref: ideaRef, completion: { (error) in
+                completion(self.checkError(error))
+            })
+        } else {
             completion(nil)
-            self.saveDetailImages(images: idea.images, ref: ideaRef.child(Config.images))
-            return
         }
-        self.saveMainImage(mainImage: idea.mainImage, ref: ideaRef, completion: { (error) in
-            completion(self.checkError(error))
-            self.saveDetailImages(images: idea.images, ref: ideaRef.child(Config.images))
-        })
+        if idea.imagesState.imagesHasChanged {
+            saveDetailImages(images: idea.images, ref: ideaRef.child(Config.images))
+        }
     }
     
     func updateIdeaVote(for id: String, user: String, vote: Bool) {
@@ -566,7 +567,7 @@ class FirebaseClient {
                 completion(self.checkError(error))
                 return
             }
-            self.saveImage(image: person.photo, completion: { (photoURL, error) in
+            self.saveImage(path: "information/\(category)/\(person.name.trim()).jpg", image: person.photo, completion: { (photoURL, error) in
                 guard error == nil, let url = photoURL else {
                     completion(self.checkError(error))
                     return
@@ -578,14 +579,44 @@ class FirebaseClient {
         })
     }
     
+    func saveInformation(overview: OverviewContent, completion: @escaping GeneralErrorCallback) {
+        let overviewRef = getOverviewRef()
+        
+        overviewRef.setValue(overview.toDictionary(), withCompletionBlock: { (error, _) in
+            completion(self.checkError(error))
+            guard error == nil else {
+                return
+            }
+            self.saveDetailImages(path: "information/overview", images: overview.images, ref: overviewRef.child(Config.images))
+        })
+    }
+    
+    func updateInformation(overview: OverviewContent, completion: @escaping GeneralErrorCallback) {
+        let overviewRef = getOverviewRef()
+        
+        overviewRef.updateChildValues(overview.toDictionary(), withCompletionBlock: { (error, _) in
+            completion(self.checkError(error))
+            guard error == nil, overview.imagesState.imagesHasChanged else {
+                return
+            }
+            self.saveDetailImages(path: "information/overview", images: overview.images, ref: overviewRef.child(Config.images))
+        })
+    }
+    
     public func saveImage(image: UIImage, completion: @escaping ImageURLCallback) {
-        let imageData = image.jpeg(.low)
         let imagePath = auth!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
         
+        saveImage(path: imagePath, image: image, completion: { (metadata, error) in
+            completion(metadata, error)
+        })
+    }
+    
+    func saveImage(path: String, image: UIImage, completion: @escaping ImageURLCallback) {
+        let imageData = image.jpeg(.low)
         let metadata = FIRStorageMetadata()
         metadata.contentType = "image/jpeg"
         
-        self.storageRef.child(imagePath).put(imageData!, metadata: metadata) { (metadata, error) in
+        self.storageRef.child(path).put(imageData!, metadata: metadata) { (metadata, error) in
             guard let metadata = metadata, let path = metadata.path else {
                 completion(nil, self.checkError(error))
                 return
@@ -606,12 +637,26 @@ class FirebaseClient {
         })
     }
     
+    private func saveDetailImages(path: String, images: [UIImage], ref: FIRDatabaseReference) {
+        ref.removeValue()
+        for image in images {
+            let imageRef = ref.childByAutoId()
+            let imagePath = path + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
+            saveImage(path: imagePath, image: image, completion: { (imageURL, firError) in
+                guard firError == nil, let url = imageURL else {
+                    return
+                }
+                imageRef.setValue(url)
+                System.imageCache[url] = image
+            })
+        }
+    }
+    
     private func saveDetailImages(images: [UIImage], ref: FIRDatabaseReference) {
         ref.removeValue()
         for image in images {
             let imageRef = ref.childByAutoId()
             saveImage(image: image, completion: { (imageURL, firError) in
-                print(true)
                 guard firError == nil, let url = imageURL else {
                     return
                 }
@@ -820,6 +865,10 @@ class FirebaseClient {
     
     public func getPeopleRef(for category: String) -> FIRDatabaseReference {
         return informationRef.child("people").child(category)
+    }
+    
+    public func getOverviewRef() -> FIRDatabaseReference {
+        return informationRef.child("overview")
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {

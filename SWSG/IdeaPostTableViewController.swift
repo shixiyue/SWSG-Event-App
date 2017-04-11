@@ -92,8 +92,11 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
         if let idea = currentIdea {
-            idea.update(name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
-            System.client.updateIdeaContent(for: idea, completion: { (error) in
+            let updatedIdea = idea.getUpdatedIdea(name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
+            System.client.updateIdeaContent(for: updatedIdea, completion: { (error) in
+                if error == nil {
+                    idea.update(name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
+                }
                 self.getResult(error: error)
             })
             return

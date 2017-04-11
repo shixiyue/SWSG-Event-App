@@ -11,10 +11,10 @@ import Foundation
 class Person {
     
     var id: String?
-    var photo: UIImage = Config.defaultPersonImage
-    var name: String
-    var title: String
-    var intro: String
+    public private(set) var photo: UIImage = Config.defaultPersonImage
+    public private(set) var name: String
+    public private(set) var title: String
+    public private(set) var intro: String
     
     private var photoURL: String?
     

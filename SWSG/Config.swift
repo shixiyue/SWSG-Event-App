@@ -135,6 +135,7 @@ struct Config {
     static let done = "Done"
     static let noTeamLabel = "No Team yet"
     static let defaultContent = " "
+    static let emptyString = ""
     
     static let passwordMinLength = 6
     
