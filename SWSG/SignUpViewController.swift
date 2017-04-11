@@ -27,6 +27,9 @@ class SignUpViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let noti = PushNotification(type: .announcement, additionData: ["foo": "bar"], message: "one to rule")
+        let pusher = NotiPusher()
+        pusher.pushToAll(noti: noti)
     }
     
     override func viewWillAppear(_ animated: Bool) {

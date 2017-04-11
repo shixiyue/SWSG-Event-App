@@ -12,10 +12,12 @@ class HttpClient {
     
     typealias PostCallback = (String?, HttpClientError?) -> Void
     
-    public func get(urlString: String) {
-        let url = URL(string: urlString)
-        
-        let task = URLSession.shared.dataTask(with: url!) { data, response, error in
+    public func get(urlString: String, authHeaderValue: String) {
+        let url = URL(string: urlString)!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue(authHeaderValue, forHTTPHeaderField: "Authorization")
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard error == nil else {
                 print(error!)
                 return
