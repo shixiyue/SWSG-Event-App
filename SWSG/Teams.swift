@@ -28,17 +28,14 @@ class Teams {
         teams.append(team)
     }
     
-    public func retrieveTeamWith(id: String) -> Team? {
+    public func retrieveTeamWith(id: String, completion: @escaping (Team?) -> Void) {
         //return Team(members: [], name: "", lookingFor: nil, isPrivate: false, tags: nil)
-        var teamRetrieved: Team?
         print("id is \(id)")
         System.client.getTeam(with: id, completion: {
             (team, error) in
             print("team is \(team)")
-            teamRetrieved = team
+            completion(team)
         })
-        print("team retrieved is \(teamRetrieved)")
-        return teamRetrieved
     }
     
     public func retrieveTeamWith(index: Int) -> Team? {
@@ -47,6 +44,20 @@ class Teams {
     
     public func replaceTeamAt(index: Int, with team: Team) {
         teams[index] = team
+    }
+    
+    func replaceTeam(for team: Team) {
+        guard let index = teams.index(of: team) else {
+            return
+        }
+        teams[index] = team
+    }
+    
+    func removeTeam(team: Team) {
+        guard let index = teams.index(of: team) else {
+            return
+        }
+        teams.remove(at: index)
     }
     
     public var count: Int {

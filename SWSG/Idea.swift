@@ -11,7 +11,7 @@ import UIKit
 class Idea {
     
     var votes: Int { return upvotes.count - downvotes.count }
-    var teamName: String { return "by Team \(Teams.sharedInstance().retrieveTeamWith(id: team)!.name)" }
+    var teamName: String { return "by Team "/*\(Teams.sharedInstance().retrieveTeamWith(id: team)!.name)"*/ }
     
     var id: String?
     

@@ -350,13 +350,12 @@ class FirebaseClient {
             completion(teams, nil)
         })
     }*/
-    public func getTeams(snapshot: Any?) -> [Team]? {
+    public func getTeam(snapshot: Any?) -> Team? {
         print("inside getTeams method")
         guard let snapshot = snapshot as? FIRDataSnapshot else {
             print("snapshot is nil")
             return nil
         }
-        var teams = [Team]()
        // for teamsSnapshot in snapshot.children {
             //print("inside teamsnapshot")
             //print("\(teamsSnapshot)")
@@ -364,17 +363,7 @@ class FirebaseClient {
             //    continue
         //}
         print("team id is \(snapshot.key)")
-                guard let team = Team(id: snapshot.key, snapshot: snapshot) else {
-                    print("about to continue")
-                  //  continue
-                    return nil
-                }
-                teams.append(team)
-            
-        //}
-        
-        return teams
-
+        return Team(id: snapshot.key, snapshot: snapshot)
     }
     
 
@@ -391,7 +380,7 @@ class FirebaseClient {
                     return
                 }
                 print("team is not nil")
-                team.setId(id: id)
+                //team.setId(id: id)
                 completion(team, nil)
             })
         

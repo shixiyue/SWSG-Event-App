@@ -59,12 +59,13 @@ class Team {
             return nil
         }
         self.isPrivate = isPrivate
-        guard let tags = snapshotValue["tags"] as? [String] else {
-            print("tags is nil")
-            return nil
+        if let tags = snapshotValue["tags"] as? [String] {
+            self.tags = tags
+        } else {
+            self.tags = []
         }
        // tags = tags.sort(by: {$0.timestamp < $1.timestamp})
-        self.tags = tags
+        
         
     }
     
@@ -101,7 +102,9 @@ class Team {
 extension Team {
     func toDictionary() -> [String: Any] {
         var data = [String: Any]()
-        data.updateValue(id, forKey: "id")
+        if let id = id {
+            data.updateValue(id, forKey: "id")
+        }
         data.updateValue(members, forKey: "members")
         data.updateValue(name, forKey: "teamName")
         data.updateValue(tags ?? [String](), forKey: "tags")
@@ -109,4 +112,14 @@ extension Team {
         data.updateValue(isPrivate, forKey: "isPrivate")
         return data
     }
+}
+
+extension Team: Equatable { }
+
+func ==(lhs: Team, rhs: Team) -> Bool {
+    
+    if let lhsId = lhs.id, let rhsId = rhs.id {
+        return lhsId == rhsId
+    }
+    return false
 }

@@ -50,25 +50,25 @@ class TeamRegistrationTableViewController: BaseViewController {
         // channels being written to the Firebase DB
         teamRef = System.client.getTeamsRef()
         teamAddedHandle = teamRef.observe(.childAdded, with: { (snapshot) -> Void in
-            if let teams = System.client.getTeams(snapshot: snapshot) {
+            if let team = System.client.getTeam(snapshot: snapshot) {
                 print("team added")
-                self.teams.replaceTeams(teams: teams)
+                self.teams.addTeam(team: team)
                 self.update()
             }
         })
         
         teamChangedHandle = teamRef.observe(.childChanged, with: { (snapshot) -> Void in
-            if let teams = System.client.getTeams(snapshot: snapshot) {
+            if let team = System.client.getTeam(snapshot: snapshot) {
                 print("team changed")
-                self.teams.replaceTeams(teams: teams)
+                self.teams.replaceTeam(for: team)
                 self.update()
             }
         })
         
         teamDeletedHandle = teamRef.observe(.childChanged, with: { (snapshot) -> Void in
-            if let teams = System.client.getTeams(snapshot: snapshot) {
+            if let team = System.client.getTeam(snapshot: snapshot) {
                 print("team deleted")
-                self.teams.replaceTeams(teams: teams)
+                self.teams.removeTeam(team: team)
                 self.update()
             }
         })
