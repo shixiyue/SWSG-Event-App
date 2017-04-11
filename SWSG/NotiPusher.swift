@@ -43,9 +43,16 @@ class NotiPusher {
         http.get(urlString: "https://onesignal.com/api/v1/notifications?app_id=\(Secret.oneSignalAppId)&limit=limit&offset=offset", authHeaderValue: Secret.oneSignalAuthHeaderValue)
     }
     
-    public func sendMessageNoti(fromUsername: String, toUid: String) {
-        let noti = PushNotification(type: .message, additionData: ["fromUserName": fromUsername], message: fromUsername + " sends you a private message")
-        push(noti: noti, toUserWithUid: toUid)
+    public func sendMessageNoti(fromUsername: String, fromUserId: String, toChannel: Channel) {
+        guard let id = toChannel.id else {
+            return
+        }
+        let noti = PushNotification(type: .message, additionData: [Config.channelId: id], message: fromUsername + " sends you a message")
+        for member in toChannel.members {
+            if member != fromUserId {
+                push(noti: noti, toUserWithUid: member)
+            }
+        }
     }
     
 }
@@ -60,34 +67,3 @@ enum UserGroup {
     case participant
 }
 
-class NotiHandler {
-    
-    public func handleNoti(_ osNoti: OSNotification) {
-        print("body")
-        print(osNoti.payload.body)
-        print("data")
-        print(osNoti.payload.additionalData)
-        guard let noti = PushNotification(noti: osNoti) else {
-            return
-        }
-        print("noti obj")
-        print(noti)
-        switch noti.type {
-        case .announcement:
-            handleAnnouncement(noti)
-        case .message:
-            handleMessage(noti)
-        default:
-            break
-        }
-    }
-    
-    private func handleAnnouncement(_ noti: PushNotification) {
-        
-    }
-    
-    private func handleMessage(_ noti: PushNotification) {
-        
-    }
-    
-}

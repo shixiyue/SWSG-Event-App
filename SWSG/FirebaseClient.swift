@@ -46,6 +46,7 @@ class FirebaseClient {
     private let eventsRef = FIRDatabase.database().reference(withPath: "events")
     private let ideasRef = FIRDatabase.database().reference(withPath: "ideas")
     private let informationRef = FIRDatabase.database().reference(withPath: "information")
+    private let notiRef = FIRDatabase.database().reference(withPath: "notifications")
     private let storageRef = FIRStorage.storage().reference(forURL: Config.appURL)
     private let auth = FIRAuth.auth()
     

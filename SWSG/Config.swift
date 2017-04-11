@@ -57,6 +57,10 @@ struct Config {
     static let consultationDays = "consultationDays"
     static let consultationSlots = "consultationSlots"
     static let consultationStatus = "consultationStatus"
+    static let channelId = "channel_id"
+    static let notiType = "type"
+    static let notiAdditionData = "addition_data"
+    static let notiMessage = "message"
 
     static let start = "start"
     static let end = "end"

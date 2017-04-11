@@ -23,6 +23,7 @@ final class ChannelViewController: JSQMessagesViewController {
     fileprivate var avatarCache = [String: UIImage]()
     fileprivate let imageURLNotSetKey = "NOTSET"
     fileprivate var localTyping = false
+    fileprivate let notiPusher = NotiPusher()
     var isTyping: Bool {
         get {
             return localTyping
@@ -200,7 +201,7 @@ final class ChannelViewController: JSQMessagesViewController {
             ]
         
         itemRef.setValue(messageItem)
-        
+        notiPusher.sendMessageNoti(fromUsername: senderDisplayName, fromUserId: senderId, toChannel: channel!)
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
         isTyping = false
         finishSendingMessage()

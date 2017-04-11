@@ -68,9 +68,9 @@ class PushNotification {
     
     public func toDictionary() -> [String: Any] {
         var result = [String: Any]()
-        result["aps"] = ["body": message]
-        result["type"] = type.rawValue
-        result["addition_data"] = additionData
+        result[Config.notiType] = self.type
+        result[Config.notiAdditionData] = self.additionData
+        result[Config.notiMessage] = self.message
         return result
     }
     
