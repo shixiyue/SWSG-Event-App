@@ -20,7 +20,7 @@ class EventPageViewController: UIPageViewController {
     private var eventsAddedHandle: FIRDatabaseHandle?
     private var eventsRemovedHandle: FIRDatabaseHandle?
     
-    fileprivate var index = 1
+    fileprivate var index = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +48,7 @@ class EventPageViewController: UIPageViewController {
     }
     
     fileprivate func setViewController() {
-        guard index > 0, index < eventViewControllers.count else {
+        guard index >= 0, index < eventViewControllers.count else {
             return
         }
         
@@ -97,31 +97,33 @@ extension EventPageViewController: UIPageViewControllerDataSource {
     
     func pageViewController(_ pageViewController: UIPageViewController,
                             viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        let previousIndex = index - 1
-        print("previous: \(previousIndex)")
-        print(eventViewControllers.count)
-        
-        guard previousIndex > 0, eventViewControllers.count > previousIndex else {
+        guard let viewControllerIndex = eventViewControllers.index(of: viewController) else {
             return nil
         }
         
-        index = previousIndex
-        print("load \(index)")
+        let previousIndex = viewControllerIndex - 1
+        
+        guard previousIndex >= 0, eventViewControllers.count > previousIndex else {
+            return nil
+        }
+        
+        index = viewControllerIndex
         return eventViewControllers[previousIndex]
     }
     
     func pageViewController(_ pageViewController: UIPageViewController,
                             viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        let nextIndex = index + 1
-        print("current: \(index)")
-        print("next: \(nextIndex)")
-        print(eventViewControllers.count)
-        guard nextIndex > 0, eventViewControllers.count > nextIndex else {
+        guard let viewControllerIndex = eventViewControllers.index(of: viewController) else {
             return nil
         }
         
-        index = nextIndex
-        print("load \(index)")
+        let nextIndex = viewControllerIndex + 1
+        
+        guard nextIndex >= 0, eventViewControllers.count > nextIndex else {
+            return nil
+        }
+        
+        index = viewControllerIndex
         return eventViewControllers[nextIndex]
     }
 
