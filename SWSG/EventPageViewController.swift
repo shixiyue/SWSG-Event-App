@@ -11,10 +11,10 @@ import Firebase
 
 class EventPageViewController: UIPageViewController {
     
-    weak var eventDelegate: EventPageViewControllerDelegate?
-    
     fileprivate var events = [Event]()
     fileprivate var eventViewControllers = [UIViewController]()
+    
+    fileprivate var firstLoaded = false
     
     fileprivate var eventsRef: FIRDatabaseReference?
     private var eventsAddedHandle: FIRDatabaseHandle?
@@ -32,7 +32,8 @@ class EventPageViewController: UIPageViewController {
     }
     
     private func observeDayEvents() {
-        eventsRef = System.client.getEventRef(date: Date.init())
+        let currentDateTime = Date.init()
+        eventsRef = System.client.getEventRef(date: currentDateTime)
         
         eventsAddedHandle = eventsRef?.observe(.childAdded, with: { (snapshot) in
             guard let event = Event(id: snapshot.key, snapshot: snapshot) else {
@@ -40,8 +41,15 @@ class EventPageViewController: UIPageViewController {
             }
             
             self.events.append(event)
-            self.eventViewControllers.append(self.getViewController(event: event))
-            self.setViewController()
+            let viewController = self.getViewController(event: event)
+            self.eventViewControllers.append(viewController)
+            
+            if !self.firstLoaded {
+                self.setViewController()
+                self.firstLoaded = true
+            } else if currentDateTime < event.startDateTime {
+                self.setViewController(viewController: viewController)
+            }
         })
         
         System.client.checkHasEventsOn(by: Date.init(), completion: { (exists, error) in
@@ -62,8 +70,11 @@ class EventPageViewController: UIPageViewController {
             return
         }
         
-        eventDelegate?.eventPageViewController(self, didUpdatePageCount: eventViewControllers.count)
-        self.setViewControllers([eventViewControllers[index]],
+        setViewController(viewController: eventViewControllers[index])
+    }
+    
+    fileprivate func setViewController(viewController: UIViewController) {
+        self.setViewControllers([viewController],
                                 direction: .forward,
                                 animated: true,
                                 completion: nil)
@@ -112,8 +123,6 @@ extension EventPageViewController: UIPageViewControllerDataSource, UIPageViewCon
         
         let previousIndex = viewControllerIndex - 1
         
-        eventDelegate?.eventPageViewController(self,
-                                               didUpdatePageIndex: previousIndex)
         guard previousIndex >= 0, eventViewControllers.count > previousIndex else {
             return nil
         }
@@ -130,8 +139,6 @@ extension EventPageViewController: UIPageViewControllerDataSource, UIPageViewCon
         
         let nextIndex = viewControllerIndex + 1
         
-        eventDelegate?.eventPageViewController(self,
-                                               didUpdatePageIndex: nextIndex)
         guard nextIndex >= 0, eventViewControllers.count > nextIndex else {
             return nil
         }
@@ -139,25 +146,4 @@ extension EventPageViewController: UIPageViewControllerDataSource, UIPageViewCon
         index = viewControllerIndex
         return eventViewControllers[nextIndex]
     }
-}
-
-protocol EventPageViewControllerDelegate: class {
-    /**
-     Called when the number of pages is updated.
-     
-     - parameter tutorialPageViewController: the TutorialPageViewController instance
-     - parameter count: the total number of pages.
-     */
-    func eventPageViewController(_ eventPageViewController: EventPageViewController,
-                                    didUpdatePageCount count: Int)
-    
-    /**
-     Called when the current index is updated.
-     
-     - parameter tutorialPageViewController: the TutorialPageViewController instance
-     - parameter index: the index of the currently visible page.
-     */
-    func eventPageViewController(_ eventPageViewController: EventPageViewController,
-                                    didUpdatePageIndex index: Int)
-    
 }
