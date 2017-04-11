@@ -198,60 +198,59 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Wfg-N5-K6l">
-                                        <rect key="frame" x="0.0" y="130" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="65" id="Wfg-N5-K6l">
+                                        <rect key="frame" x="0.0" y="130" width="375" height="65"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Wfg-N5-K6l" id="J6Y-Do-CsY">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Idea Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yts-bp-t1e">
-                                                    <rect key="frame" x="16" y="8" width="85" height="18"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="85" id="lfV-WE-hWT"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <rect key="frame" x="8" y="8" width="359" height="26"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="22"/>
                                                     <color key="textColor" red="0.90980392160000001" green="0.16862745100000001" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lQl-kW-Kfm">
-                                                    <rect key="frame" x="111" y="8" width="248" height="30"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Idea Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lQl-kW-Kfm">
+                                                    <rect key="frame" x="8" y="42" width="367" height="23"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="lQl-kW-Kfm" secondAttribute="trailing" constant="16" id="R9F-O9-87d"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Yts-bp-t1e" secondAttribute="trailing" id="LAX-bC-g1x"/>
+                                                <constraint firstAttribute="trailing" secondItem="lQl-kW-Kfm" secondAttribute="trailing" id="R9F-O9-87d"/>
+                                                <constraint firstItem="lQl-kW-Kfm" firstAttribute="top" secondItem="Yts-bp-t1e" secondAttribute="bottom" constant="8" id="TkF-Nb-TvD"/>
+                                                <constraint firstItem="lQl-kW-Kfm" firstAttribute="leading" secondItem="J6Y-Do-CsY" secondAttribute="leading" constant="8" id="Xxz-PB-kLo"/>
                                                 <constraint firstItem="Yts-bp-t1e" firstAttribute="top" secondItem="J6Y-Do-CsY" secondAttribute="topMargin" id="dh1-1b-BkW"/>
-                                                <constraint firstItem="Yts-bp-t1e" firstAttribute="leading" secondItem="J6Y-Do-CsY" secondAttribute="leadingMargin" constant="8" id="gKu-vo-A9C"/>
-                                                <constraint firstItem="lQl-kW-Kfm" firstAttribute="top" secondItem="Yts-bp-t1e" secondAttribute="top" id="oIK-Kj-nVv"/>
-                                                <constraint firstItem="lQl-kW-Kfm" firstAttribute="leading" secondItem="Yts-bp-t1e" secondAttribute="trailing" constant="10" id="vfB-hc-j9c"/>
+                                                <constraint firstItem="Yts-bp-t1e" firstAttribute="leading" secondItem="J6Y-Do-CsY" secondAttribute="leadingMargin" id="gKu-vo-A9C"/>
+                                                <constraint firstAttribute="bottom" secondItem="lQl-kW-Kfm" secondAttribute="bottom" id="nLE-Ml-rR9"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="z1u-pD-qjT">
-                                        <rect key="frame" x="0.0" y="174" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="44" id="z1u-pD-qjT">
+                                        <rect key="frame" x="0.0" y="195" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="z1u-pD-qjT" id="T8K-S7-pdg">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2vm-tz-2iL">
-                                                    <rect key="frame" x="16" y="13" width="82" height="18"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <rect key="frame" x="8" y="9.5" width="114" height="26"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="22"/>
                                                     <color key="textColor" red="0.90980392160000001" green="0.16862745100000001" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="2vm-tz-2iL" firstAttribute="leading" secondItem="T8K-S7-pdg" secondAttribute="leadingMargin" constant="8" id="gdc-bM-nkY"/>
+                                                <constraint firstItem="2vm-tz-2iL" firstAttribute="leading" secondItem="T8K-S7-pdg" secondAttribute="leadingMargin" id="gdc-bM-nkY"/>
                                                 <constraint firstItem="2vm-tz-2iL" firstAttribute="centerY" secondItem="T8K-S7-pdg" secondAttribute="centerY" id="wqH-QD-T2L"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="guJ-K2-DKj">
-                                        <rect key="frame" x="0.0" y="218" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="239" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="guJ-K2-DKj" id="Vlw-JW-n1R">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -385,8 +384,8 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Idea Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rV4-6i-ATU">
-                                                    <rect key="frame" x="16" y="11" width="343" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <rect key="frame" x="16" y="8.5" width="343" height="26"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="22"/>
                                                     <color key="textColor" red="0.90980392160000001" green="0.16862745100000001" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -406,8 +405,8 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="by Team" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pVM-sW-Ggw">
-                                                    <rect key="frame" x="16" y="11" width="343" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <rect key="frame" x="16" y="9" width="343" height="26"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="22"/>
                                                     <color key="textColor" red="0.90980392160000001" green="0.16862745100000001" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -497,6 +496,6 @@
         <image name="upvote" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="l3Y-uz-a3N"/>
+        <segue reference="AtR-m3-JxD"/>
     </inferredMetricsTieBreakers>
 </document>
