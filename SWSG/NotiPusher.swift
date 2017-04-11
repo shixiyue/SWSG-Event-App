@@ -43,6 +43,11 @@ class NotiPusher {
         http.get(urlString: "https://onesignal.com/api/v1/notifications?app_id=\(Secret.oneSignalAppId)&limit=limit&offset=offset", authHeaderValue: Secret.oneSignalAuthHeaderValue)
     }
     
+    public func sendMessageNoti(fromUsername: String, toUid: String) {
+        let noti = PushNotification(type: .message, additionData: ["fromUserName": fromUsername], message: fromUsername + " sends you a private message")
+        push(noti: noti, toUserWithUid: toUid)
+    }
+    
 }
 
 enum UserGroup {
@@ -70,8 +75,10 @@ class NotiHandler {
         switch noti.type {
         case .announcement:
             handleAnnouncement(noti)
-        default:
+        case .message:
             handleMessage(noti)
+        default:
+            break
         }
     }
     
