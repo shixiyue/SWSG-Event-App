@@ -150,17 +150,24 @@ class TeamInfoTableViewController: UITableViewController {
                 guard let team = team else {
                     return cell
                 }
-                guard let user = System.client.getUserWith(uid: team.members[indexPath.row-1]) else {
-                    return cell
-                }
-                cell.nameLbl.text = user.profile.name
-                cell.jobLbl.text = user.profile.job
-                cell.companyLbl.text = user.profile.company
-                cell.descLbl.text = user.profile.desc
-                cell.profileimage.image = user.profile.image ?? UIImage(named: "Placeholder")
+                System.client.getUserWith(uid: team.members[indexPath.row-1], completion: {
+                    (user, error) in
+                    if let user = user {
+                        cell.nameLbl.text = user.profile.name
+                        cell.jobLbl.text = user.profile.job
+                        cell.companyLbl.text = user.profile.company
+                        cell.descLbl.text = user.profile.desc
+                    } else {
+                        print("error reading user")
+                    }
+                })
+                    Utility.getProfileImg(uid: team.members[indexPath.row - 1], completion: {(image) in
+                        cell.profileimage.image = image
+                    })
+                
                 return cell
             }
-        } else {
+        }else {
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeaderCell", for: indexPath) as! SectionHeaderTableViewCell
                 cell.sectionHeaderLbl.text = "Our skills"

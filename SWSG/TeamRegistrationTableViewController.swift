@@ -100,24 +100,24 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
             switch i {
             case 0:
                 print("1st user")
-                if let user = System.client.getUserWith(uid: team.members[0]) {
-                cell.mmbrImage1.image = user.profile.image ?? UIImage(named: "Placeholder")!
-                }
+                Utility.getProfileImg(uid: team.members[0], completion: {(image) in
+                    cell.mmbrImage1.image = image
+                })
             case 1:
                 print("2nd user")
-                if let user = System.client.getUserWith(uid: team.members[1]) {
-                cell.mmbrImage2.image = user.profile.image ?? UIImage(named: "Placeholder")
-                }
+                Utility.getProfileImg(uid: team.members[1], completion: {(image) in
+                    cell.mmbrImage1.image = image
+                })
             case 2:
                 print("3rd user")
-                 if let user = System.client.getUserWith(uid: team.members[2]) {
-                cell.mmbrImage3.image = user.profile.image ?? UIImage(named: "Placeholder")
-                }
+                Utility.getProfileImg(uid: team.members[2], completion: {(image) in
+                    cell.mmbrImage1.image = image
+                })
             case 3:
                 print("4th user")
-                 if let user = System.client.getUserWith(uid: team.members[3]) {
-                cell.mmbrImage4.image = user.profile.image ?? UIImage(named: "Placeholder")
-                }
+                Utility.getProfileImg(uid: team.members[3], completion: {(image) in
+                    cell.mmbrImage1.image = image
+                })
             default: break
             }
         }

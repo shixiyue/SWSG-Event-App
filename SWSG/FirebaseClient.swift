@@ -253,19 +253,6 @@ class FirebaseClient {
         })
     }
     
-    public func getUserWith(uid: String) -> User? {
-        let userRef = usersRef.child(uid)
-        var userInstance: User?
-        userRef.observeSingleEvent(of: .value, with: {(snapshot) in
-            guard let user = User(snapshot: snapshot) else {
-                return
-            }
-            user.setUid(uid: uid)
-            userInstance = user
-        })
-        return userInstance
-    }
-    
     public func getUserWith(username: String, completion: @escaping GetUserCallback) {
         let userRef = usersRef
             .queryOrdered(byChild: "\(Config.profile)/\(Config.username)").queryEqual(toValue: username)
