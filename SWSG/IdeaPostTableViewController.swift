@@ -92,17 +92,18 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
         if let idea = currentIdea {
-            ideas.updateIdea(idea, name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
-            NotificationCenter.default.removeObserver(self)
+            let updatedIdea = idea.getUpdatedIdea(name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
+            System.client.updateIdeaContent(for: updatedIdea, completion: { (error) in
+                if error == nil {
+                    idea.update(name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
+                }
+                self.getResult(error: error)
+            })
             return
         }
         let idea = Idea(name: name, team: user.team, description: description, mainImage: image, images: images, videoLink: videoLink)
         System.client.createIdea(idea: idea, completion: { (error) in
-            if let firebaseError = error {
-                self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
-                return
-            }
-            NotificationCenter.default.removeObserver(self)
+            self.getResult(error: error)
         })
     }
     
@@ -112,6 +113,15 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         }
         self.containerHeight = containerHeight
         tableView.reloadData()
+    }
+    
+    private func getResult(error: FirebaseError?) {
+        if let firebaseError = error {
+            present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+            return
+        }
+        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
     }
 
 }

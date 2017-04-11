@@ -9,16 +9,25 @@
 import UIKit
 
 class OverviewEditViewController: UIViewController {
+    
+    var overview: OverviewContent!
 
     func updateOverviewContent(_ notification: NSNotification) {
         guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String else {
             return
         }
-        NotificationCenter.default.removeObserver(self)
         
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
-        OverviewContent.update(description: description, images: images, videoLink: videoLink)
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+        let updatedOverview = overview.getUpdatedOverview(description: description, images: images, videoLink: videoLink)
+        System.client.updateInformation(overview: updatedOverview, completion: { (error) in
+            if let error = error {
+                self.present(Utility.getFailAlertController(message: error.errorMessage), animated: true, completion: nil)
+                return
+            }
+            self.overview.update(description: description, images: images, videoLink: videoLink)
+            NotificationCenter.default.removeObserver(self)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+        })
     }
     
     override func viewDidLoad() {
@@ -30,9 +39,9 @@ class OverviewEditViewController: UIViewController {
         guard segue.identifier == "container", let containerViewController = segue.destination as? TemplateEditViewController else {
             return
         }
-        let substring = OverviewContent.videoLink.components(separatedBy: "https://www.youtube.com/embed/")
+        let substring = overview.videoLink.components(separatedBy: "https://www.youtube.com/embed/")
         let videoId = substring.count > 1 ? substring[1] : ""
-        containerViewController.presetInfo(desc: OverviewContent.description, images: OverviewContent.images, videoId: videoId, isScrollEnabled: true)
+        containerViewController.presetInfo(desc: overview.description, images: overview.images, videoId: videoId, isScrollEnabled: true)
     }
     
 }

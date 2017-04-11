@@ -35,24 +35,26 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
     
     func slideMenuItemSelectedAtIndex(_ index: Int) {
         guard let item = MenuItems.MenuOrder(rawValue: index) else {
-            print("default\n", terminator: "")
             return
         }
         switch(item){
         case .home:
-            self.open(viewController: "HomeViewController", from: "Main")
+            self.open(viewController: Config.homeViewController, from: Config.mainStoryboard)
         case .information:
-            self.open(viewController: "InformationViewController", from: "Information")
+            self.open(viewController: Config.informationViewController,
+                      from: Config.informationStoryboard)
         case .schedule:
-            self.open(viewController: "EventCalendarViewController", from: Config.eventSystem)
+            self.open(viewController: Config.eventViewController, from: Config.eventStoryboard)
         case .mentors:
-            self.open(viewController: "MentorViewController", from: "Mentor")
+            self.open(viewController: Config.mentorViewController, from: Config.mentorStoryboard)
         case .teams:
-            self.open(viewController: "TeamRegistrationTableViewController", from: Config.teamRegistration)
+            self.open(viewController: Config.teamRegistrationViewController, from: Config.teamStoryboard)
         case .chat:
-            self.open(viewController: "ChatViewController", from: "Chat")
+            self.open(viewController: Config.chatViewController, from: Config.chatStoryboard)
         case .ideas:
-            self.open(viewController: "ideaslist", from: Config.ideasVotingPlatform)
+            self.open(viewController: Config.ideasViewController, from: Config.ideasStoryboard)
+        case .people:
+            self.open(viewController: Config.profileListViewController, from: Config.profileStoryboard)
         case .logout:
             Utility.logOutUser(currentViewController: self)
         }
@@ -124,11 +126,11 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         self.addChildViewController(menuVC)
         menuVC.view.layoutIfNeeded()
         
-        
-        menuVC.view.frame=CGRect(x: 0 - UIScreen.main.bounds.size.width, y: menuYOffset, width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height);
+        let heightOffset = navigationController?.navigationBar.frame.size.height ?? 0
+        menuVC.view.frame=CGRect(x: 0 - UIScreen.main.bounds.size.width, y: menuYOffset, width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height - heightOffset);
         
         UIView.animate(withDuration: 0.3, animations: { () -> Void in
-            menuVC.view.frame=CGRect(x: 0, y: self.menuYOffset, width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height);
+            menuVC.view.frame=CGRect(x: 0, y: self.menuYOffset, width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height - heightOffset);
             sender.isEnabled = true
         }, completion:nil)
     }

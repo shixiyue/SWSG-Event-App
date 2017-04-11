@@ -11,7 +11,7 @@ import UIKit
 class FaqViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet var faqTableView: UITableView!
-    var faq: [(question: String, answer: String)]  { return FaqInfo.faq }
+    var faq = Faqs().faq
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,14 +50,14 @@ class FaqViewController: UIViewController, UITableViewDataSource, UITableViewDel
             cell.informationHeader.text = "Frequently Asked Questions"
             return cell
         }
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "faqCell", for: indexPath) as? FaqTableViewCell else {
+        return FaqTableViewCell()
+        /*guard let cell = tableView.dequeueReusableCell(withIdentifier: "faqCell", for: indexPath) as? FaqTableViewCell else {
             return FaqTableViewCell()
         }
         let questionAnswer = faq[index - 1]
         cell.question.text = questionAnswer.question
         cell.answer.text = questionAnswer.answer
-        return cell
+        return cell*/
     }
     
 }

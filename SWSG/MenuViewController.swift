@@ -97,7 +97,12 @@ class MenuViewController: UIViewController {
     }
 
     @IBAction func onProfileClick(_ sender: UIButton) {
-        Utility.showStoryboard(storyboard: Config.profileScreen, destinationViewController: Config.profileViewController, currentViewController: self)
+        let storyboard = UIStoryboard(name: "Profile", bundle: nil)
+        if let destViewController = storyboard.instantiateViewController(withIdentifier: Config.profileViewController) as? ProfileViewController {
+            destViewController.user = System.activeUser
+            
+            self.navigationController?.pushViewController(destViewController, animated: true)
+        }
     }
     
     @IBAction func onCloseMenuClick(_ button:UIButton!){

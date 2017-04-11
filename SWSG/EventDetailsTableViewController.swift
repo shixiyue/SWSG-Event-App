@@ -14,7 +14,7 @@ class EventDetailsTableViewController: UITableViewController {
     public var event : Event?
     private var containerHeight: CGFloat!
     private var events = Events.instance
-    
+    fileprivate var commenters = [Int: User]()
 
     @IBOutlet weak var eventDetailsTableView: UITableView!
 
@@ -39,6 +39,19 @@ class EventDetailsTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         setUpImageView()
+    }
+    
+    //MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.eventToProfile, let user = sender as? User {
+            guard let profileVC = segue.destination as? ProfileViewController else {
+                return
+            }
+            
+            profileVC.user = user
+        }
     }
     
     private func setUpTable() {
@@ -171,12 +184,18 @@ class EventDetailsTableViewController: UITableViewController {
                 cell.usernameLabel.text = ""
                 cell.profileIV = Utility.roundUIImageView(for: cell.profileIV)
                 cell.profileIV.image = Config.placeholderImg
+                cell.profileIV.tag = indexPath.row
+                cell.profileIV.isUserInteractionEnabled = true
+                
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showProfile))
+                cell.profileIV.addGestureRecognizer(tapGesture)
                 
                 System.client.getUserWith(uid: comment.authorID, completion: { (user, error) in
                     guard let user = user, let uid = user.uid else {
                         return
                     }
                     
+                    self.commenters[indexPath.row] = user
                     let dateString = Utility.niceDateTimeFormatter.string(from: comment.timestamp)
                     cell.usernameLabel.text = "\(user.profile.username) on \(dateString)"
                     
@@ -193,6 +212,16 @@ class EventDetailsTableViewController: UITableViewController {
                 return cell
             }
         }
+    }
+    
+    func showProfile(_ sender: UITapGestureRecognizer) {
+        guard let view = sender.view else {
+            return
+        }
+        
+        let tag = view.tag
+        
+        performSegue(withIdentifier: Config.eventToProfile, sender: commenters[tag])
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

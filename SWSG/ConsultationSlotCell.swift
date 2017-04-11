@@ -23,10 +23,10 @@ class ConsultationSlotCell: UICollectionViewCell {
         switch status {
         case .booked:
             outerFrame.backgroundColor = UIColor.red
-            timeLbl.textColor = UIColor.red
+            timeLbl.textColor = Config.themeColor
         case .vacant:
             outerFrame.backgroundColor = UIColor.green
-            timeLbl.textColor = UIColor.green
+            timeLbl.textColor = Config.greenColor
         case .unavailable:
             outerFrame.backgroundColor = UIColor.gray
             timeLbl.textColor = UIColor.gray

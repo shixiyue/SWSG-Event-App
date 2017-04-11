@@ -7,18 +7,57 @@
 //
 
 import UIKit
+import Firebase
 
-struct OverviewContent {
+class OverviewContent: ImagesContent {
     
-    static var description = "Startup Weekend Singapore (SWSG) is an annual entrepreneurship event where over 150 attendees would gather  together and within 54 hours pitch a business proposal towards a panel of judges. The event is targetted at technologically-enabled startup enthusiasts and people who want to network with like-minded individuals. Throughout the 3 day event, participants would be  involved in idea creation, peer voting, keynote speeches, mentor consultations and finally presenting their own idea."
-    static var images: [UIImage] = [UIImage(named: "event-image1")!, UIImage(named: "event-image2")!]
-    static var videoLink = "https://www.youtube.com/embed/Lye_NuMugKQ"
+    var id: String? = "overview" // To conform the protocol
+    public private(set) var description: String = Config.defaultContent
+    public private(set) var videoLink: String = Config.emptyString
     
-    static func update(description: String, images: [UIImage], videoLink: String) {
-        // Need to communicate with backend 
+    public internal(set) var images: [UIImage] = []
+    public internal(set) var imagesState = ImagesState()
+    
+    init() {}
+    
+    init(description: String, images: [UIImage], videoLink: String) {
         self.description = description
         self.images = images
         self.videoLink = videoLink
+    }
+    
+    init(snapshot: FIRDataSnapshot) {
+        guard let snapshotValue = snapshot.value as? [String: Any] else {
+            return
+        }
+        if let description = snapshotValue[Config.description] as? String {
+            self.description = description
+        }
+        if let videoLink = snapshotValue[Config.videoLink] as? String {
+            self.videoLink = videoLink
+        }
+        guard let imagesURL = snapshotValue[Config.images] as? [String: String], imagesURL.count > 0 else {
+            imagesState.imagesHasFetched = true
+            return
+        }
+        self.images = [Config.loadingImage]
+        imagesState.imagesURL = imagesURL
+    }
+
+    func getUpdatedOverview(description: String, images: [UIImage], videoLink: String) -> OverviewContent {
+        let updatedOverview = OverviewContent(description: description, images: images, videoLink: videoLink)
+        updatedOverview.imagesState.imagesHasChanged = self.images != images
+        return updatedOverview
+    }
+    
+    func update(description: String, images: [UIImage], videoLink: String) {
+        self.description = description
+        self.images = images
+        self.videoLink = videoLink
+    }
+    
+    func toDictionary() -> [String: String] {
+        return [Config.description: description, Config.videoLink: videoLink]
     }
     
 }
