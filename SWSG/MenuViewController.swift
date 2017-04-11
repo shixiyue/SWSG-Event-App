@@ -89,8 +89,8 @@ class MenuViewController: UIViewController {
             return
         }
         
-        if user.team != -1 && teams.count != 0 {
-            teamLbl.text = teams.retrieveTeamAt(index: user.team).name
+        if user.team != Config.noTeam {
+            teamLbl.text = teams.retrieveTeamWith(id: user.team)!.name
         } else {
             teamLbl.text = Config.noTeamLabel
         }

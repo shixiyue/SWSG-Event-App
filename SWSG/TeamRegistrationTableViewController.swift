@@ -41,8 +41,7 @@ class TeamRegistrationTableViewController: BaseViewController {
             return
         }
         if let index = tableView.indexPathForSelectedRow?.row {
-            targetvc.team = teams.retrieveTeamAt(index: index)
-            targetvc.teamIndex = index
+            targetvc.team = teams.retrieveTeamWith(index: index)
         }
     }
     
@@ -92,7 +91,9 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamItemCell", for: indexPath) as! TeamItemTableViewCell
-        let team = teams.retrieveTeamAt(index: indexPath.row)
+        guard let team = teams.retrieveTeamWith(index: indexPath.row) else {
+            return cell
+        }
         print("loading table view")
         cell.teamName.text = team.name
         cell.teamIsLookingFor.text = team.lookingFor

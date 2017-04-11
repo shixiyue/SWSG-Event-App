@@ -11,16 +11,9 @@ import Firebase
 
 class Teams {
     private static var teamsInstance = Teams()
-    private var teams : [Team] {
-        didSet {
-          //  NotificationCenter.default.post(name: Notification.Name(rawValue: "teams"), object: self)
-            //Storage.saveTeams(data: teams, fileName: "Teams")
-        }
-    }
-    
+    private var teams : [Team]
     private init() {
         teams = [Team]()
-        
     }
     
     class func sharedInstance() -> Teams {
@@ -35,8 +28,20 @@ class Teams {
         teams.append(team)
     }
     
-    public func retrieveTeamAt(index: Int) -> Team {
+    public func retrieveTeamWith(id: String) -> Team? {
         //return Team(members: [], name: "", lookingFor: nil, isPrivate: false, tags: nil)
+        var teamRetrieved: Team?
+        print("id is \(id)")
+        System.client.getTeam(with: id, completion: {
+            (team, error) in
+            print("team is \(team)")
+            teamRetrieved = team
+        })
+        print("team retrieved is \(teamRetrieved)")
+        return teamRetrieved
+    }
+    
+    public func retrieveTeamWith(index: Int) -> Team? {
         return teams[index]
     }
     

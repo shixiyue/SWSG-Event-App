@@ -12,8 +12,8 @@ class TeamInfoTableViewController: UITableViewController {
     
     @IBOutlet weak var buttonLbl: UIButton!
     var team : Team?
-    var teamIndex : Int?
-        var sizingCell: TagCell?
+    var teamId : String?
+    var sizingCell: TagCell?
     private let teams = Teams.sharedInstance()
     private let joinTeamErrorMsg = "You can not join more than one team"
     private let quitTeamErrorMsg = "You do not belong to this team"
@@ -73,24 +73,24 @@ class TeamInfoTableViewController: UITableViewController {
             return
         }
         if (sender as! UIButton).currentTitle == Config.joinTeam {
-            if user.team != -1 {
+            if user.team != Config.noTeam {
                 self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
                 return
             }
-            print("in TeamInfoTableViewController, set team index to \(teamIndex!), current team is \(user.team)")
-            user.setTeamIndex(index: teamIndex!)
+            //print("in TeamInfoTableViewController, set team index to \(teamIndex!), current team is \(user.team)")
+            user.setTeamId(id: team!.id!)
             System.activeUser = user
             
             team?.addMember(member: user)
             print("member added")
-            teams.replaceTeamAt(index: teamIndex!, with: team!)
+          //  teams.replaceTeamAt(index: teamIndex!, with: team!)
             buttonLbl.setTitle(Config.quitTeam, for: .normal)
         } else if (sender as! UIButton).currentTitle == Config.quitTeam {
-            if user.team != teamIndex {
+            if user.team != Config.noTeam {
                 self.present(Utility.getFailAlertController(message: quitTeamErrorMsg), animated: true, completion: nil)
                 return
             }
-            user.setTeamIndex(index: -1)
+            user.setTeamId(id: Config.noTeam)
             System.activeUser = user
             team?.removeMember(member: user)
             print("member deleted")

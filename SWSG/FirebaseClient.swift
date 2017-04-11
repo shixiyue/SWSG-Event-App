@@ -325,7 +325,8 @@ class FirebaseClient {
     }
     
     public func createTeam(_team: Team, completion: @escaping CreateTeamCallback) {
-        let teamRef = teamsRef.child(_team.name).childByAutoId()
+        let teamRef = teamsRef.childByAutoId()
+        _team.id = teamRef.key
         teamRef.setValue(_team.toDictionary(), withCompletionBlock: { (err, _) in
             guard err == nil else {
                 completion(self.checkError(err))
@@ -356,25 +357,45 @@ class FirebaseClient {
             return nil
         }
         var teams = [Team]()
-        for teamsSnapshot in snapshot.children {
-            print("inside teamsnapshot")
-            guard let teamsSnapshot = teamsSnapshot as? FIRDataSnapshot else {
-                continue
-            }
-        
-                guard let team = Team(id: teamsSnapshot.key, snapshot: teamsSnapshot) else {
+       // for teamsSnapshot in snapshot.children {
+            //print("inside teamsnapshot")
+            //print("\(teamsSnapshot)")
+          //  guard let teamsSnapshot = teamsSnapshot as? FIRDataSnapshot else {
+            //    continue
+        //}
+        print("team id is \(snapshot.key)")
+                guard let team = Team(id: snapshot.key, snapshot: snapshot) else {
                     print("about to continue")
-                    continue
+                  //  continue
+                    return nil
                 }
                 teams.append(team)
             
-        }
+        //}
         
         return teams
 
     }
-    //public func getTeam(with id: String, completion: @escaping GetTeamCallback) {
-    //}
+    
+
+    public func getTeam(with id: String, completion: @escaping GetTeamCallback) {
+            let teamRef = teamsRef.child(id)
+            // TODO: handle error
+            print("inside get Team method")
+            print("team ref is \(teamRef)")
+            teamRef.observeSingleEvent(of: .value, with: {(snapshot) in
+                print("wowowwowo")
+                guard let team = Team(id: id, snapshot: snapshot) else {
+                    print("team retrieved in getTeam is nil")
+                    completion(nil, nil)
+                    return
+                }
+                print("team is not nil")
+                team.setId(id: id)
+                completion(team, nil)
+            })
+        
+    }
     
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
         let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)

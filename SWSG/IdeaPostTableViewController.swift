@@ -27,7 +27,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
             return
         }
         cropMode = .square
-        teamName.text = "by Team \(teams.retrieveTeamAt(index: user.team).name)"
+        teamName.text = "by Team \(teams.retrieveTeamWith(id: user.team)?.name)"
         preset()
         NotificationCenter.default.addObserver(self, selector: #selector(addIdea), name: Notification.Name(rawValue: "update"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)

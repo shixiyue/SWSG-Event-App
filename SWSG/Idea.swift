@@ -11,12 +11,12 @@ import UIKit
 class Idea {
     
     var votes: Int { return upvotes.count - downvotes.count }
-    var teamName: String { return "by Team \(Teams.sharedInstance().retrieveTeamAt(index: team).name)" }
+    var teamName: String { return "by Team \(Teams.sharedInstance().retrieveTeamWith(id: team)!.name)" }
     
     var id: String?
     
     public private(set) var name: String
-    public private(set) var team: Int
+    public private(set) var team: String
     public private(set) var description: String
     public private(set) var mainImage: UIImage = Config.defaultIdeaImage
     public private(set) var images: [UIImage] = []
@@ -29,7 +29,7 @@ class Idea {
     private var imagesURL: [String: String]?
     private var imagesDict = [String: UIImage]()
     
-    init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
+    init(name: String, team: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
         self.name = name
         self.team = team
         self.description = description
@@ -47,7 +47,7 @@ class Idea {
             return nil
         }
         self.name = name
-        guard let team = snapshotValue[Config.team] as? Int else {
+        guard let team = snapshotValue[Config.team] as? String else {
             return nil
         }
         self.team = team

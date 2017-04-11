@@ -10,7 +10,7 @@ import UIKit
 
 struct Config {
     
-    static let noTeam = -1
+    static let noTeam = ""
     static let defaultCountry = "Singapore"
     static let joinTeam = "Request to Join"
     static let quitTeam = "Quit Team"

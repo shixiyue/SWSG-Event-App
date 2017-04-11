@@ -78,7 +78,7 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
         })
         teams.addTeam(team: team)
         print("preparing to set user index")
-        user.setTeamIndex(index: teams.count-1)
+        user.setTeamId(id: team.id!)
         System.activeUser = user
         Utility.popViewController(no: 1, viewController: self)
        // Utility.onBackButtonClick(tableViewController: self)
