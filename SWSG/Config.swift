@@ -116,6 +116,7 @@ struct Config {
     static let imageCropper = "ImageCropper"
     static let imageCropperViewController = "ImageCropperViewController"
     static let uiSupporting = "UISupporting"
+    static let eventPageCellView = "eventPageCellView"
     
     static let channelViewController = "ChannelViewController"
     
@@ -137,6 +138,8 @@ struct Config {
     static let profileToEditProfile = "profileToEditProfile"
     static let chatToProfile = "chatToProfile"
     static let mentorToProfile = "mentorToProfile"
+    static let eventToProfile = "eventToProfile"
+    static let eventPageEmbed = "eventPageEmbed"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"

@@ -676,13 +676,23 @@
                                                                 <constraint firstAttribute="height" constant="100" id="hcl-Lb-aBv"/>
                                                             </constraints>
                                                         </view>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="st3-gC-vvV">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Htf-Qk-TEA">
                                                             <rect key="frame" x="5" y="0.0" width="100" height="100"/>
+                                                            <subviews>
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="st3-gC-vvV">
+                                                                    <rect key="frame" x="5" y="5" width="90" height="90"/>
+                                                                </imageView>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="100" id="7xT-x7-Red"/>
-                                                                <constraint firstAttribute="width" constant="100" id="MKm-O5-wAh"/>
+                                                                <constraint firstItem="st3-gC-vvV" firstAttribute="leading" secondItem="Htf-Qk-TEA" secondAttribute="leading" constant="5" id="61e-3x-vkc"/>
+                                                                <constraint firstAttribute="height" constant="100" id="89h-r4-Dhf"/>
+                                                                <constraint firstAttribute="bottom" secondItem="st3-gC-vvV" secondAttribute="bottom" constant="5" id="8qA-DB-ODm"/>
+                                                                <constraint firstAttribute="trailing" secondItem="st3-gC-vvV" secondAttribute="trailing" constant="5" id="F83-4y-bQr"/>
+                                                                <constraint firstAttribute="width" constant="100" id="FAo-o9-3IO"/>
+                                                                <constraint firstItem="st3-gC-vvV" firstAttribute="top" secondItem="Htf-Qk-TEA" secondAttribute="top" constant="5" id="NNF-zF-Ow7"/>
                                                             </constraints>
-                                                        </imageView>
+                                                        </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gBv-LE-K9p">
                                                             <rect key="frame" x="105" y="0.0" width="270" height="100"/>
                                                             <subviews>
@@ -737,15 +747,14 @@
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstItem="gBv-LE-K9p" firstAttribute="top" secondItem="MS3-VN-Xci" secondAttribute="top" id="01t-4Y-fea"/>
-                                                        <constraint firstAttribute="bottom" secondItem="st3-gC-vvV" secondAttribute="bottom" id="A0m-70-0g8"/>
-                                                        <constraint firstItem="gBv-LE-K9p" firstAttribute="leading" secondItem="st3-gC-vvV" secondAttribute="trailing" id="Elx-ol-4Kt"/>
                                                         <constraint firstAttribute="trailing" secondItem="gBv-LE-K9p" secondAttribute="trailing" id="K4I-FE-9K1"/>
-                                                        <constraint firstItem="st3-gC-vvV" firstAttribute="leading" secondItem="Twt-dl-Rzq" secondAttribute="trailing" id="Lb3-AI-y80"/>
                                                         <constraint firstAttribute="bottom" secondItem="Twt-dl-Rzq" secondAttribute="bottom" id="R1i-Rv-P1z"/>
                                                         <constraint firstAttribute="height" constant="100" id="aH0-hB-Ig1"/>
                                                         <constraint firstItem="Twt-dl-Rzq" firstAttribute="leading" secondItem="MS3-VN-Xci" secondAttribute="leading" id="bda-xI-zVK"/>
-                                                        <constraint firstItem="st3-gC-vvV" firstAttribute="top" secondItem="MS3-VN-Xci" secondAttribute="top" id="h5O-ZT-Ami"/>
+                                                        <constraint firstItem="Htf-Qk-TEA" firstAttribute="leading" secondItem="Twt-dl-Rzq" secondAttribute="trailing" id="mJf-L4-RGS"/>
+                                                        <constraint firstItem="Htf-Qk-TEA" firstAttribute="top" secondItem="MS3-VN-Xci" secondAttribute="top" id="muW-vY-mpd"/>
                                                         <constraint firstAttribute="bottom" secondItem="gBv-LE-K9p" secondAttribute="bottom" id="nPu-jS-tFd"/>
+                                                        <constraint firstAttribute="bottom" secondItem="Htf-Qk-TEA" secondAttribute="bottom" id="tsB-EN-Zlv"/>
                                                         <constraint firstItem="Twt-dl-Rzq" firstAttribute="top" secondItem="MS3-VN-Xci" secondAttribute="top" id="xwf-cg-aWj"/>
                                                     </constraints>
                                                 </stackView>

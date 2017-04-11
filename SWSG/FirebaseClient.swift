@@ -202,7 +202,6 @@ class FirebaseClient {
     }
     
     public func removeAdditionalAuth(authType: AuthType) {
-        print(authType.rawValue)
         FIRAuth.auth()?.currentUser?.unlink(fromProvider: authType.rawValue) { (user, error) in
         }
     }
@@ -345,13 +344,11 @@ class FirebaseClient {
     public func addComment(_ event: Event, comment: Comment, completion: @escaping AddCommentCallback) {
         let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
         
-        print(dayString)
         guard let id = event.id else {
             completion(nil)
             return
         }
         
-        print(id)
         let eventRef = eventsRef.child(dayString).child(id)
         
         var dict = [[String: String]]()
@@ -361,7 +358,6 @@ class FirebaseClient {
         }
         dict.append(comment.toDictionary())
         
-        print(dict)
         eventRef.child(Config.comments).setValue(dict)
         completion(nil)
     }
@@ -428,7 +424,7 @@ class FirebaseClient {
         })
     }
     
-    public func getEvent(by day: Date, completion: @escaping GetEventByDayCallback) {
+    public func getEvents(by day: Date, completion: @escaping GetEventByDayCallback) {
         let dayString = Utility.fbDateFormatter.string(from: day)
         let dayRef = eventsRef.child(dayString)
         dayRef.observeSingleEvent(of: .value, with: {(snapshot) in
@@ -856,6 +852,12 @@ class FirebaseClient {
         let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
         
         return eventsRef.child(dayString).child(event.id!)
+    }
+    
+    public func getEventRef(date: Date) -> FIRDatabaseReference {
+        let dayString = Utility.fbDateFormatter.string(from: date)
+        
+        return eventsRef.child(dayString)
     }
     
     public func getMentorsRef() -> FIRDatabaseQuery {
