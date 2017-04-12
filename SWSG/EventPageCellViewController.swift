@@ -10,6 +10,7 @@ import UIKit
 
 class EventPageCellViewController: UIViewController {
     
+    @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var imageView: UIView!
     @IBOutlet weak var colorBorder: UIView!
     @IBOutlet weak var imageIV: UIImageView!

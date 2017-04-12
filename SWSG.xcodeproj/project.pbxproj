@@ -26,6 +26,8 @@
 		3F408CD01E83C27E00E2B787 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F408CCF1E83C27E00E2B787 /* Message.swift */; };
 		3F408CD21E83E50D00E2B787 /* CreateChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F408CD11E83E50D00E2B787 /* CreateChannelViewController.swift */; };
 		3F408CD41E83FEDA00E2B787 /* ChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F408CD31E83FEDA00E2B787 /* ChannelViewController.swift */; };
+		3F85320E1E9D41E600D01C26 /* ChannelPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F85320D1E9D41E600D01C26 /* ChannelPageViewController.swift */; };
+		3F8532101E9D41F700D01C26 /* ChannelPageCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F85320F1E9D41F700D01C26 /* ChannelPageCellController.swift */; };
 		3F9482B21E7E3DDC00016259 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9482B01E7E3DDC00016259 /* Profile.swift */; };
 		3F9482B31E7E3DDC00016259 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9482B11E7E3DDC00016259 /* User.swift */; };
 		3F97951F1E7A6A58004BC26C /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F97951E1E7A6A58004BC26C /* Team.swift */; };
@@ -221,6 +223,8 @@
 		3F408CCF1E83C27E00E2B787 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		3F408CD11E83E50D00E2B787 /* CreateChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateChannelViewController.swift; sourceTree = "<group>"; };
 		3F408CD31E83FEDA00E2B787 /* ChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelViewController.swift; sourceTree = "<group>"; };
+		3F85320D1E9D41E600D01C26 /* ChannelPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelPageViewController.swift; sourceTree = "<group>"; };
+		3F85320F1E9D41F700D01C26 /* ChannelPageCellController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelPageCellController.swift; sourceTree = "<group>"; };
 		3F9482B01E7E3DDC00016259 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		3F9482B11E7E3DDC00016259 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		3F97951E1E7A6A58004BC26C /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
@@ -547,6 +551,8 @@
 				3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */,
 				3FBB4C221E9C814300A45FB3 /* EventPageViewController.swift */,
 				3FBB4C241E9C8D4C00A45FB3 /* EventPageCellViewController.swift */,
+				3F85320D1E9D41E600D01C26 /* ChannelPageViewController.swift */,
+				3F85320F1E9D41F700D01C26 /* ChannelPageCellController.swift */,
 			);
 			name = Home;
 			sourceTree = "<group>";
@@ -1116,6 +1122,7 @@
 				CC1AA6C21E77C328004F5F95 /* (null) in Sources */,
 				CC7A4AFA1E87700800BC8A4B /* InformationHeaderTableViewCell.swift in Sources */,
 				E3220C6B1E7D3D25008AFA85 /* Teams.swift in Sources */,
+				3F8532101E9D41F700D01C26 /* ChannelPageCellController.swift in Sources */,
 				3FBB4C1A1E9B405800A45FB3 /* EventListPageViewController.swift in Sources */,
 				3FF6530A1E9AB08200B9E64F /* CreateEventViewController.swift in Sources */,
 				E348D56E1E8415C500947B3F /* SegueFromRight.swift in Sources */,
@@ -1170,6 +1177,7 @@
 				E3220C531E7BAAC5008AFA85 /* Comment.swift in Sources */,
 				E3220C4F1E7B99CF008AFA85 /* UISubclasses.swift in Sources */,
 				3FBB4C251E9C8D4C00A45FB3 /* EventPageCellViewController.swift in Sources */,
+				3F85320E1E9D41E600D01C26 /* ChannelPageViewController.swift in Sources */,
 				CC507F2B1E96697F006432FC /* People.swift in Sources */,
 				CC7A4AFE1E87807700BC8A4B /* PeopleViewController.swift in Sources */,
 				3FED30181E76FBCE00C007AD /* MenuItems.swift in Sources */,

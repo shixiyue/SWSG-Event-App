@@ -119,20 +119,18 @@ final class ChannelViewController: JSQMessagesViewController {
         iconIV.addGestureRecognizer(tapGesture)
         
         if let channel = channel, channel.type == .directMessage {
-            for memberId in channel.members {
-                if memberId != senderId {
-                    client.getUserWith(uid: memberId, completion: { (user, error) in
-                        self.title = user?.profile.name
-                        self.otherUser = user
-                    })
+            Utility.getOtherUser(in: channel, completion: { (user) in
+                if let user = user, let uid = user.uid {
+                    self.title = user.profile.name
+                    self.otherUser = user
                     
-                    Utility.getProfileImg(uid: memberId, completion: { (image) in
+                    Utility.getProfileImg(uid: uid, completion: { (image) in
                         if let image = image {
                             self.iconIV.image = image
                         }
                     })
                 }
-            }
+            })
         } else {
             title = channel?.name
             

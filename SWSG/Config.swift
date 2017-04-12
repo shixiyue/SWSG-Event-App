@@ -10,7 +10,7 @@ import UIKit
 
 struct Config {
     
-    static let noTeam = -1
+    static let noTeam = ""
     static let defaultCountry = "Singapore"
     static let joinTeam = "Request to Join"
     static let quitTeam = "Quit Team"
@@ -127,7 +127,9 @@ struct Config {
     static let uiSupporting = "UISupporting"
     static let eventPageCellView = "eventPageCellView"
     static let emptyEventView = "emptyEventView"
-    
+    static let emptyChatView = "emptyChatView"
+    static let eventDetailsTableViewController = "EventDetailsTableViewController"
+    static let channelPageCellView = "channelPageCellView"
     static let channelViewController = "ChannelViewController"
     
     //Parameters for Segues:
@@ -150,6 +152,8 @@ struct Config {
     static let mentorToProfile = "mentorToProfile"
     static let eventToProfile = "eventToProfile"
     static let eventPageEmbed = "eventPageEmbed"
+    static let homeToEventDetails = "homeToEventDetails"
+    static let homeToChat = "homeToChat"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"

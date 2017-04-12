@@ -11,12 +11,12 @@ import UIKit
 class Idea: ImagesContent, TemplateContent {
     
     var votes: Int { return upvotes.count - downvotes.count }
-    var teamName: String { return "by Team \(Teams.sharedInstance().retrieveTeamAt(index: team).name)" }
+    var teamName: String { return "by Team "/*\(Teams.sharedInstance().retrieveTeamWith(id: team)!.name)"*/ }
     
     var id: String?
 
     public private(set) var name: String
-    public private(set) var team: Int
+    public private(set) var team: String
     public private(set) var description: String
     public private(set) var mainImage: UIImage = Config.defaultIdeaImage
     public internal(set) var images: [UIImage] = []
@@ -26,8 +26,13 @@ class Idea: ImagesContent, TemplateContent {
     
     fileprivate var upvotes = Set<String>()
     fileprivate var downvotes = Set<String>()
-    
-    init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String, id: String? = nil) {
+
+    private var done = false
+    private var imagesURL: [String: String]?
+    private var imagesDict = [String: UIImage]()
+
+    init(name: String, team: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String, id: String? = nil) {
+
         self.name = name
         self.team = team
         self.description = description
@@ -50,7 +55,7 @@ class Idea: ImagesContent, TemplateContent {
             return nil
         }
         self.name = name
-        guard let team = snapshotValue[Config.team] as? Int else {
+        guard let team = snapshotValue[Config.team] as? String else {
             return nil
         }
         self.team = team

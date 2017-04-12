@@ -19,7 +19,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     private var containerHeight: CGFloat!
 
     private var ideas = Ideas.sharedInstance()
-    private var teams = Teams.sharedInstance()
+    private var teams = Teams()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +27,13 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
             return
         }
         cropMode = .square
-        teamName.text = "by Team \(teams.retrieveTeamAt(index: user.team).name)"
+        teams.retrieveTeamWith(id: user.team, completion: { (team) in
+            guard let team = team else {
+                self.teamName.text = Config.noTeam
+                return
+            }
+            self.teamName.text = "by Team \(team.name)"
+        })
         preset()
         NotificationCenter.default.addObserver(self, selector: #selector(addIdea), name: Notification.Name(rawValue: "update"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)

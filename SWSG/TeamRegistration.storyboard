@@ -121,6 +121,10 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="Kal-pg-07J" id="NOh-3x-hja"/>
+                                    <outlet property="delegate" destination="Kal-pg-07J" id="a0H-YS-geo"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -183,10 +187,13 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="teamName" translatesAutoresizingMaskIntoConstraints="NO" id="2HB-NP-iuq">
-                                                    <rect key="frame" x="8" y="47" width="50" height="54"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QOG-dY-Fxr">
+                                                    <rect key="frame" x="8" y="64" width="52" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="Txl-pS-SBz" firstAttribute="trailing" secondItem="jaC-lD-TD7" secondAttribute="trailingMargin" constant="-15" id="98t-sh-73b"/>
@@ -235,8 +242,8 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Skills" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RJu-v2-mhf">
                                                     <rect key="frame" x="8" y="0.0" width="60" height="59"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="17"/>
-                                                    <color key="textColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -305,8 +312,8 @@
                                                 </textView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Our team is looking for..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RXZ-Rh-hGm">
                                                     <rect key="frame" x="38" y="0.0" width="307" height="30"/>
-                                                    <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="15"/>
-                                                    <color key="textColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -340,7 +347,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="74r-o2-M3M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3398" y="-93"/>
+            <point key="canvasLocation" x="3397.5999999999999" y="-93.103448275862078"/>
         </scene>
         <!--Team Info Table View Controller-->
         <scene sceneID="mBc-tA-2eb">
@@ -551,7 +558,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="U5F-XB-rEF" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Juz-0D-uFh">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Juz-0D-uFh">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -565,7 +572,4 @@
             <point key="canvasLocation" x="383" y="357"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="teamName" width="50" height="50"/>
-    </resources>
 </document>

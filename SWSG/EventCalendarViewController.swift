@@ -44,6 +44,11 @@ class EventCalendarViewController: BaseViewController {
         dayList.reloadData()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        dayList.reloadData()
+    }
+    
     private func setUpCalendar() {
         calendarView.dataSource = self
         calendarView.delegate = self
@@ -116,7 +121,7 @@ class EventCalendarViewController: BaseViewController {
             guard let date = Utility.fbDateFormatter.date(from: snapshot.key) else {
                 return
             }
-            self.events[date] = System.client.getEvents(snapshot: snapshot)
+            self.events[date] = System.client.getEvents(snapshot: snapshot)?.sorted(by: { $0.startDateTime < $1.startDateTime} )
             self.calendarView.reloadData()
         })
         
@@ -125,7 +130,7 @@ class EventCalendarViewController: BaseViewController {
             guard let date = Utility.fbDateFormatter.date(from: snapshot.key) else {
                 return
             }
-            self.events[date] = System.client.getEvents(snapshot: snapshot)
+            self.events[date] = System.client.getEvents(snapshot: snapshot)?.sorted(by: { $0.startDateTime < $1.startDateTime} )
             self.calendarView.reloadData()
         })
         
