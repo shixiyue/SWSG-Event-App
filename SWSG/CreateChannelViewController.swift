@@ -46,6 +46,17 @@ class CreateChannelViewController: UIViewController {
         editBtn.addTarget(self, action: #selector(showImagePicker), for: .touchUpInside)
         
         self.hideKeyboardWhenTappedAround()
+        
+        addDoneToolbar(textField: nameTF)
+        addDoneToolbar(textField: memberTF)
+    }
+    
+    func addDoneToolbar(textField: UITextField) {
+        textField.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
     }
     
     @IBAction func saveBtnPressed(_ sender: Any) {

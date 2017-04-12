@@ -52,6 +52,16 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
         self.collectionView.backgroundColor = UIColor.clear
         self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "tags"), object: nil)
+        
+        self.hideKeyboardWhenTappedAround()
+        
+        teamName.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+        tag.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+        lookingFor.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
     }
     
     @IBAction func onDoneButtonClick(_ sender: Any) {

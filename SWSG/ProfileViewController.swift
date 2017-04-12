@@ -18,6 +18,7 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
     @IBOutlet fileprivate var profileList: UITableView!
     @IBOutlet private var changeProfileImageToolbar: UIToolbar!
     
+    @IBOutlet weak var composeBtn: UIImageView!
     @IBOutlet weak var topRightBtn: UIBarButtonItem!
     private var fullScreenImageView: UIImageView!
 
@@ -41,11 +42,25 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         
         
         setUpTopRightBtn()
+        setUpChatButton() 
     }
     
     override func viewWillAppear(_ animated: Bool) {
         profileList.reloadData()
         setUpUserInfo()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.profileToChannel, let channel = sender as? Channel {
+            guard let chatVc = segue.destination as? ChannelViewController else {
+                return
+            }
+            
+            chatVc.senderDisplayName = System.activeUser?.profile.username
+            chatVc.channel = channel
+        }
     }
     
     // MARK: Firebase related methods
@@ -68,6 +83,24 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
                     self.profileImgButton.setImage(image, for: .normal)
                 }
             })
+        })
+    }
+    
+    func composeBtnPressed() {
+        guard let currentUID = System.client.getUid(), let user = user, let userUID = user.uid else {
+            return
+        }
+        
+        var members = [String]()
+        members.append(currentUID)
+        members.append(userUID)
+        
+        let channel = Channel(type: .directMessage, members: members)
+        System.client.createChannel(for: channel, completion: { (channel, error) in
+            guard error == nil else {
+                return
+            }
+            self.performSegue(withIdentifier: Config.profileToChannel, sender: channel)
         })
     }
     
@@ -130,6 +163,14 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
             topRightBtn.customView = button
         } else {
             isActiveUser = true
+        }
+    }
+    
+    private func setUpChatButton() {
+        if !isActiveUser {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(composeBtnPressed))
+            composeBtn.addGestureRecognizer(tapGesture)
+            composeBtn.isHidden = false
         }
     }
     

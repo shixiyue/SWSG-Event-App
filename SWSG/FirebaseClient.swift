@@ -391,6 +391,24 @@ class FirebaseClient {
         teamRef.removeValue { (error, ref) in
         }
     }
+    
+    public func getTeamChannel(for team: Team, completion: @escaping GetChannelCallback) {
+        guard let id = team.id else {
+            return
+        }
+        
+        let teamRef = getTeamRef(for: id)
+        teamRef.updateChildValues(team.toDictionary())
+        
+        teamRef.child(Config.channelID).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let channelID = snapshot.value as? String {
+                self.getChannel(with: channelID, completion: completion)
+            } else {
+                completion(nil, nil)
+            }
+        })
+    }
+    
     /*
     public func getTeams(completion: @escaping GetTeamsCallback) {
         teamsRef.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -714,6 +732,16 @@ class FirebaseClient {
         let channelRef = channelsRef.child(id)
         channelRef.removeValue { (error, ref) in
         }
+    }
+    
+    private func getChannel(with id: String, completion: @escaping GetChannelCallback) {
+        let channelRef = getChannelsRef().child(id)
+        
+        channelRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            let channel = Channel(id: snapshot.key, snapshot: snapshot)
+            
+            completion(channel, nil)
+        })
     }
     
     private func getChannel(with members: [String], completion: @escaping GetChannelCallback) {

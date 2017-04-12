@@ -544,21 +544,45 @@
                             <outlet property="delegate" destination="Hkw-3O-A1T" id="DQi-KV-vrg"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="HyL-ta-e9f"/>
+                    <navigationItem key="navigationItem" id="HyL-ta-e9f">
+                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="iAn-25-ChU">
+                            <connections>
+                                <action selector="chatBtnPressed:" destination="Hkw-3O-A1T" id="lcM-yU-65J"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="buttonLbl" destination="HKr-Vg-hCw" id="mw8-tL-aI7"/>
+                        <segue destination="Hxq-T1-EcM" kind="show" identifier="teamToChannel" id="vnf-vu-r6s"/>
+                        <segue destination="Kjg-kh-WCM" kind="show" identifier="teamToProfile" id="MNg-2t-KEk"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FTz-Hv-Kqe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3398.5" y="590.5"/>
         </scene>
+        <!--ProfileViewController-->
+        <scene sceneID="LCb-bt-7FY">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Profile" referencedIdentifier="ProfileViewController" id="Kjg-kh-WCM" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zi7-6A-XeW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4141" y="464"/>
+        </scene>
+        <!--ChannelViewController-->
+        <scene sceneID="2OV-iu-gPa">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Chat" referencedIdentifier="ChannelViewController" id="Hxq-T1-EcM" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l2a-YR-Rao" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4168" y="589"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="TdE-mW-C4I">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="U5F-XB-rEF" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Juz-0D-uFh">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Juz-0D-uFh">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

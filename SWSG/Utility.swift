@@ -606,6 +606,21 @@ struct Utility {
         return toolbar
     }
     
+    static func getDoneToolbar(done: Selector) -> UIToolbar {
+        let toolbar = UIToolbar()
+        toolbar.barStyle = .default
+        toolbar.isTranslucent = true
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: done)
+        let flexibleSpaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        toolbar.setItems([flexibleSpaceButton, doneButton], animated: false)
+        toolbar.isUserInteractionEnabled = true
+        
+        return toolbar
+    }
+    
     static func previousTextField(runFirst: () -> Void, activeTF: UITextField?, tfCollection: [UITextField], activeTV: UITextView?, tvCollection: [UITextView]) {
         runFirst()
         

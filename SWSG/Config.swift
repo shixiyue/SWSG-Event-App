@@ -157,6 +157,9 @@ struct Config {
     static let eventPageEmbed = "eventPageEmbed"
     static let homeToEventDetails = "homeToEventDetails"
     static let homeToChat = "homeToChat"
+    static let teamToChat = "teamToChannel"
+    static let teamToProfile = "teamToProfile"
+    static let profileToChannel = "profileToChannel"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"

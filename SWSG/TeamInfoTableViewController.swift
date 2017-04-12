@@ -47,6 +47,22 @@ class TeamInfoTableViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.teamToChat, let channel = sender as? Channel {
+            guard let chatVc = segue.destination as? ChannelViewController else {
+                return
+            }
+            
+            chatVc.senderDisplayName = System.activeUser?.profile.username
+            chatVc.channel = channel
+        } else if segue.identifier == Config.teamToProfile, let user = sender as? User,
+            let profileVC = segue.destination as? ProfileViewController {
+            profileVC.user = user
+        }
+    }
+    
     @objc private func reload() {
         tableView.beginUpdates()
         print("reloading height")
@@ -54,6 +70,15 @@ class TeamInfoTableViewController: UITableViewController {
         tableView.endUpdates()
     }
     
+    @IBAction func chatBtnPressed(_ sender: Any) {
+        guard let team = team else {
+            return
+        }
+        
+        System.client.getTeamChannel(for: team, completion: { (channel, error) in
+            self.performSegue(withIdentifier: Config.teamToChat, sender: channel)
+        })
+    }
 
     
     // MARK: - Table view data source
@@ -209,6 +234,21 @@ class TeamInfoTableViewController: UITableViewController {
         
     }
     
+    override func tableView(_ tableView: UITableView,
+                            didSelectRowAt indexPath: IndexPath){
+        print("test")
+        guard let team = team else {
+            return
+        }
+        
+        System.client.getUserWith(uid: team.members[indexPath.row-1], completion: {
+            (user, error) in
+            if let user = user {
+                self.performSegue(withIdentifier: Config.teamToProfile, sender: user)
+            }
+        })
+    }
+    
 }
 
 extension TeamInfoTableViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -238,6 +278,5 @@ extension TeamInfoTableViewController: UICollectionViewDataSource, UICollectionV
             cell.tagName.text = tag
         }
     }
-
     
 }
