@@ -22,7 +22,7 @@ class CreateChannelViewController: UIViewController {
     fileprivate let client = System.client
     fileprivate var members = [User]()
     fileprivate var iconAdded = false
-    fileprivate var imagePicker = ImagePickerPopoverViewController()
+    fileprivate var imagePicker = ImagePickCropperPopoverViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()

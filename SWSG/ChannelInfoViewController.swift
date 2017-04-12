@@ -17,7 +17,7 @@ class ChannelInfoViewController: UIViewController {
     var channel: Channel!
     var members = [User]()
     fileprivate let client = System.client
-    fileprivate var imagePicker = ImagePickerPopoverViewController()
+    fileprivate var imagePicker = ImagePickCropperPopoverViewController()
     
     fileprivate var channelRef: FIRDatabaseReference?
     private var channelExistingHandle: FIRDatabaseHandle?

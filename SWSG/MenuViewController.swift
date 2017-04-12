@@ -39,12 +39,13 @@ class MenuViewController: UIViewController {
         menuList.delegate = self
         menuList.dataSource = self
         menuList.tableFooterView = UIView(frame: CGRect.zero)
-        setUpUserInfo()
-        observeImage()
         
-        userRef = System.client.getUserRef(for: System.client.getUid())
         profileImg = Utility.roundUIImageView(for: profileImg)
         profileImg.image = Config.placeholderImg
+        
+        setUpUserInfo()
+        userRef = System.client.getUserRef(for: System.client.getUid())
+        observeImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {

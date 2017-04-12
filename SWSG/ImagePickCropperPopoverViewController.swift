@@ -15,11 +15,13 @@ class ImagePickCropperPopoverViewController: ImagePickerPopoverViewController {
     }
     
     override func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
+        dismiss(animated: true, completion: nil)
         dismissController()
     }
     
     override func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
         self.image = croppedImage.cropToSquare()
+        dismiss(animated: true, completion: nil)
         dismissController()
     }
     

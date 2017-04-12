@@ -43,11 +43,6 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         setUpTopRightBtn()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        profileList.reloadData()
-        setUpUserInfo()
-    }
-    
     // MARK: Firebase related methods
     private func observeUser() {
         guard let uid = user?.uid else {
@@ -62,6 +57,8 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
             
             user.setUid(uid: uid)
             self.user = user
+            self.setUpUserInfo()
+            self.profileList.reloadData()
             
             Utility.getProfileImg(uid: uid, completion: { (image) in
                 if let image = image {
@@ -83,7 +80,9 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         
         profileItems = ProfileItems.getItems(user: user)
         
-        profileImgButton.setImage(user.profile.image, for: .normal)
+        if let image = user.profile.image {
+            profileImgButton.setImage(image, for: .normal)
+        }
         profileImgButton.addTarget(self, action: #selector(showFullScreenImage), for: .touchUpInside)
         
         nameLbl.text = user.profile.name
@@ -161,6 +160,7 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         }
         fullScreenImageView.image = image.cropSquareToCircle()
         user.profile.updateImage(image: image)
+        System.activeUser?.profile.updateImage(image: image)
         // Error handling?
         System.client.updateUser(newUser: user)
         

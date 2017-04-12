@@ -15,7 +15,7 @@ import FacebookLogin
 import SwiftSpinner
 
 /// `EditProfileTableViewController` represents the controller for signup table.
-class EditProfileTableViewController: ImagePickerTableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class EditProfileTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
     var doneButton: RoundCornerButton!
     
@@ -44,6 +44,8 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
     @IBOutlet weak var unlinkFacebookBtn: UIButton!
     @IBOutlet weak var unlinkGoogleBtn: UIButton!
     @IBOutlet weak var changePasswordBtn: RoundCornerButton!
+    
+    fileprivate var imagePicker = ImagePickCropperPopoverViewController()
     fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
     fileprivate let googleLoginButton = GIDSignInButton()
     
@@ -134,7 +136,6 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
             googleLoginButton.isHidden = true
             unlinkGoogleBtn.isHidden = true
         }
-        
         SwiftSpinner.hide()
     }
     
@@ -165,9 +166,16 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
     
     private func setUpProfileImage() {
         profileImageButton.setImage(user.profile.image, for: .normal)
-        profileImageButton.addTarget(self, action: #selector(showImageOptions), for: .touchUpInside)
-        changeImageButton.addTarget(self, action: #selector(showImageOptions), for: .touchUpInside)
-        alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImageButton.bounds.maxY)
+        profileImageButton.addTarget(self, action: #selector(editProfileImage), for: .touchUpInside)
+        changeImageButton.addTarget(self, action: #selector(editProfileImage), for: .touchUpInside)
+    }
+    
+    func editProfileImage() {
+        Utility.showImagePicker(imagePicker: imagePicker, viewController: self, completion: { (image) in
+            if let image = image {
+                self.profileImageButton.setImage(image, for: .normal)
+            }
+        })
     }
     
     private func setUpTextFields() {
@@ -247,15 +255,11 @@ class EditProfileTableViewController: ImagePickerTableViewController, UIPickerVi
             return
         }
         user.profile.updateProfile(username: user.profile.username, name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
+        System.activeUser?.profile.updateProfile(to: user.profile)
         // Error handling?
         System.client.updateUser(newUser: user)
         
         Utility.popViewController(no: 1, viewController: self)
-    }
-    
-    override func updateImage(to image: UIImage) {
-        profileImageButton.setImage(image, for: .normal)
-        NotificationCenter.default.removeObserver(self)
     }
     
     @IBAction func unlinkFBBtnPressed(_ sender: Any) {
