@@ -129,6 +129,7 @@ class TeamInfoTableViewController: UITableViewController {
         System.client.updateUser(newUser: user)
         if team?.members.count == 0 {
             System.client.deleteTeam(for: team!)
+            Utility.popViewController(no: 1, viewController: self)
         }
         tableView.reloadData()
     }

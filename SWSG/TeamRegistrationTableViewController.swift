@@ -62,7 +62,7 @@ class TeamRegistrationTableViewController: BaseViewController {
             if let team = System.client.getTeam(snapshot: snapshot) {
                 print("team added")
                 self.teams.addTeam(team: team)
-                self.update()
+                self.tableView.reloadData()
             }
         })
         
@@ -70,15 +70,15 @@ class TeamRegistrationTableViewController: BaseViewController {
             if let team = System.client.getTeam(snapshot: snapshot) {
                 print("team changed")
                 self.teams.replaceTeam(for: team)
-                self.update()
+                self.tableView.reloadData()
             }
         })
         
-        teamDeletedHandle = teamRef.observe(.childChanged, with: { (snapshot) -> Void in
+        teamDeletedHandle = teamRef.observe(.childRemoved, with: { (snapshot) -> Void in
             if let team = System.client.getTeam(snapshot: snapshot) {
                 print("team deleted")
                 self.teams.removeTeam(team: team)
-                self.update()
+                self.tableView.reloadData()
             }
         })
         
