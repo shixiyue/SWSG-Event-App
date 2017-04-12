@@ -18,7 +18,7 @@ class TemplateEditViewController: ImagePickerTableViewController {
     @IBOutlet private var editOverviewTableView: UITableView!
     
     private var doneButton: UIButton!
-    private var descriptionTextView: UITextView = UITextView()
+    var descriptionTextView: UITextView = UITextView()
     private var desc: String = ""
     private var images: [UIImage] = []
     private var videoId: String = ""
@@ -65,7 +65,6 @@ class TemplateEditViewController: ImagePickerTableViewController {
     }
     
     @IBAction func update(_ sender: UIButton) {
-        print(true)
         guard let description = descriptionTextView.text, let videoId = videoLinkTextField.text else {
             return
         }
@@ -74,11 +73,12 @@ class TemplateEditViewController: ImagePickerTableViewController {
         doneButton.alpha = 0.5
         
         let infoDict: [String: Any] = ["description": description, "images": images, "videoId": videoId]
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "update"), object: nil, userInfo: infoDict)
         NotificationCenter.default.addObserver(self, selector: #selector(done), name: Notification.Name(rawValue: "done"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "update"), object: nil, userInfo: infoDict)
     }
     
     @objc private func done(_ notification: NSNotification) {
+        print(true)
         doneButton.isEnabled = true
         doneButton.alpha = 1
         guard let isSuccess = notification.userInfo?["isSuccess"] as? Bool, isSuccess else {

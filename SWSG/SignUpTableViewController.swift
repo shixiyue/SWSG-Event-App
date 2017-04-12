@@ -304,7 +304,7 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     }
     
     private func updateButtonState() {
-        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || educationTextView.isEmpty || skillsTextView.isEmpty
+        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmptyContent ?? true) }) || educationTextView.isEmpty || skillsTextView.isEmpty
         signUpButton.isEnabled = !isAnyEmpty
         signUpButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
@@ -395,7 +395,6 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     //When the keyboard closes, shift the UIView Back
     //
     func keyboardWillHide(notification: NSNotification) {
-        // Changed it to the "hardcoded" value 0 because the previous method is not working when there's a prediction bar on top of the keyboard
         if self.view.frame.origin.y != 0 {
             self.view.frame.origin.y = 0
         }
@@ -406,13 +405,6 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
         } else if scrollView.contentOffset.y > maxOffset {
             scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: maxOffset)
         }
-        /*
-         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey]
-         as? NSValue)?.cgRectValue {
-         if self.view.frame.origin.y != 0 {
-         self.view.frame.origin.y += (keyboardSize.height - Config.keyboardOffsetSignUp)
-         }
-         */
     }
     
 }

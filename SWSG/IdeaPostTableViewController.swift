@@ -16,6 +16,10 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     @IBOutlet private var teamName: UILabel!
     @IBOutlet private var mainImage: UIButton!
     
+    private var containerViewController: TemplateEditViewController!
+    
+    private var textView: UITextView!
+    
     private var containerHeight: CGFloat!
 
     private var ideas = Ideas.sharedInstance()
@@ -73,6 +77,9 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         }
         containerViewController.tableView.layoutIfNeeded()
         containerHeight = containerViewController.tableView.contentSize.height
+        self.containerViewController = containerViewController
+        textView = containerViewController.descriptionTextView
+        textView.delegate = self
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -89,11 +96,17 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
             present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
             return
         }
-        guard let name = ideaName.text, !name.isEmpty else {
+        guard let name = ideaName.text, !name.isEmptyContent else {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": false])
             present(Utility.getFailAlertController(message: "Idea name cannot be empty!"), animated: true, completion: nil)
             return
         }
         guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String, let image = mainImage.image(for: .normal), let user = System.activeUser else {
+            return
+        }
+        guard !description.isEmptyContent else {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": false])
+            present(Utility.getFailAlertController(message: "Description cannot be empty!"), animated: true, completion: nil)
             return
         }
         
@@ -119,6 +132,9 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
             return
         }
         self.containerHeight = containerHeight
+        textView = containerViewController.descriptionTextView
+        textView.delegate = self
+        
         tableView.reloadData()
     }
     
@@ -134,4 +150,13 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": isSuccess])
     }
 
+}
+
+extension IdeaPostTableViewController: UITextViewDelegate {
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        ideaName.resignFirstResponder()
+        textView.becomeFirstResponder()
+    }
+    
 }

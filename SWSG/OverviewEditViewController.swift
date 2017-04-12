@@ -16,6 +16,11 @@ class OverviewEditViewController: UIViewController {
         guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String else {
             return
         }
+        guard !description.isEmptyContent else {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": false])
+            present(Utility.getFailAlertController(message: "Description cannot be empty!"), animated: true, completion: nil)
+            return
+        }
         
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
         let updatedOverview = overview.getUpdatedOverview(description: description, images: images, videoLink: videoLink)

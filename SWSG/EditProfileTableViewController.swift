@@ -424,7 +424,7 @@ extension EditProfileTableViewController: UITextViewDelegate, UITextFieldDelegat
     }
     
     private func updateButtonState() {
-        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || skillsTextView.text.isEmpty
+        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmptyContent ?? true) }) || skillsTextView.text.isEmpty
         doneButton.isEnabled = !isAnyEmpty
         doneButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
