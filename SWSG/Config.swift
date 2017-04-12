@@ -62,6 +62,11 @@ struct Config {
     static let end = "end"
     static let date = "date"
 
+    static let mentorLabel = "Mentor"
+    static let speakerLabel = "Speaker"
+    static let organizerLabel = "Organizer"
+    static let adminLabel = "Admin"
+    
     static let speakers = "Speakers"
     static let organizers = "Organizing Team"
     static let judges = "Judges"
@@ -194,6 +199,7 @@ struct Config {
     static let photoURL = "photoURL"
     static let channelType = "channelType"
     static let typingIndicator = "typingIndicator"
+    static let channelID = "channelID"
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"
