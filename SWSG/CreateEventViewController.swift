@@ -35,6 +35,9 @@ class CreateEventViewController: UIViewController {
     fileprivate let imagePicker = ImagePickerPopoverViewController()
     fileprivate var imageChanged = false
     
+    fileprivate let shortDescPlaceholder = "Displayed on a List as a Preview"
+    fileprivate let fullDescPlaceholder = "Displayed in Full in a Details Page"
+    
     override func viewDidLoad() {
         setUpImageView()
         setUpToolbar()
@@ -70,8 +73,8 @@ class CreateEventViewController: UIViewController {
     private func setUpTextViews() {
         textViews = [shortDescTV, fullDescTV]
         
-        shortDescTV.setPlaceholder("Displayed on a List as a Preview")
-        fullDescTV.setPlaceholder("Displayed in Full in a Details Page")
+        shortDescTV.setPlaceholder(shortDescPlaceholder)
+        fullDescTV.setPlaceholder(fullDescPlaceholder)
         
         for (index, textView) in textViews.enumerated() {
             textView.inputAccessoryView = toolbar
@@ -131,19 +134,22 @@ class CreateEventViewController: UIViewController {
             let time = sTimePicker.date
             startTimeTF.text = Utility.fbTimeFormatter.string(from: time)
             eTimePicker.minimumDate = sTimePicker.date
+            eTimePicker.date = sTimePicker.date
         }
         
         if activeTextField == endTimeTF {
             let time = eTimePicker.date
             endTimeTF.text = Utility.fbTimeFormatter.string(from: time)
             sTimePicker.maximumDate = eTimePicker.date
+            sTimePicker.date = eTimePicker.date
         }
     }
     
     fileprivate func updateButtonState() {
         let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || textViews.reduce(false, { $0 || ($1.text?.isEmpty ?? true) })
+        let isPlaceholder = (shortDescTV.text == shortDescPlaceholder) || (fullDescTV.text == fullDescPlaceholder)
         createBtn.isEnabled = !isAnyEmpty
-        createBtn.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
+        createBtn.alpha = (isAnyEmpty || isPlaceholder) ? Config.disableAlpha : Config.enableAlpha
     }
     
     @IBAction func saveBtnPressed(_ sender: Any) {

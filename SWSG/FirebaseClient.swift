@@ -239,6 +239,19 @@ class FirebaseClient {
         }
         getUserWith(uid: uid, completion: completion)
     }
+    
+    public func addMentorSlots(to uid: String) {
+        let mentor = Mentor(field: .business)
+        mentor.addSlots(on: Utility.fbDateFormatter.date(from: "12-04-2017")!)
+        mentor.addSlots(on: Utility.fbDateFormatter.date(from: "13-04-2017")!)
+        mentor.addSlots(on: Utility.fbDateFormatter.date(from: "14-04-2017")!)
+        
+        print(mentor.days.count)
+        print(mentor.toDictionary())
+        
+        let userRef = usersRef.child(uid)
+        userRef.child(Config.mentor).setValue(mentor.toDictionary())
+    }
 
     public func getUserWith(uid: String, completion: @escaping GetUserCallback) {
         let userRef = usersRef.child(uid)
