@@ -94,17 +94,9 @@ class MenuViewController: UIViewController {
             return
         }
         
-        if user.team != Config.noTeam {
-            teams.retrieveTeamWith(id: user.team, completion: { (team) in
-                guard let team = team else {
-                    self.teamLbl.text = Config.noTeamLabel
-                    return
-                }
-                self.teamLbl.text = team.name
-            })
-        } else {
-            teamLbl.text = Config.noTeamLabel
-        }
+        Utility.getTeamLbl(user: user, completion: { (teamLblText) in
+            self.teamLbl.text = teamLblText
+        })
     }
 
     @IBAction func onProfileClick(_ sender: UIButton) {

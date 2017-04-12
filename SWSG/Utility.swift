@@ -503,6 +503,30 @@ struct Utility {
         })
     }
     
+    static func getTeamLbl(user: User, completion: @escaping (String) -> Void) {
+        if user.type.isParticipant {
+            if user.team != Config.noTeam {
+                Teams().retrieveTeamWith(id: user.team, completion: { (team) in
+                    guard let team = team else {
+                        completion(Config.noTeamLabel)
+                        return
+                    }
+                    completion(team.name)
+                })
+            } else {
+                completion(Config.noTeamLabel)
+            }
+        } else if user.type.isMentor {
+            completion(Config.mentorLabel)
+        } else if user.type.isSpeaker {
+            completion(Config.speakerLabel)
+        } else if user.type.isOrganizer {
+            completion(Config.organizerLabel)
+        } else if user.type.isAdmin {
+            completion(Config.adminLabel)
+        }
+    }
+    
     static func validChannel(_ channel: Channel) -> Bool {
         guard let uid = System.client.getUid() else {
             return false
