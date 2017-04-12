@@ -11,7 +11,7 @@ import UIKit
 class TeamCreateTableViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
 
     @IBOutlet weak var teamName: UITextField!
-    @IBOutlet weak var lookingFor: GrayBorderTextView!
+    @IBOutlet weak var lookingFor: PlaceholderTextView!
     
     @IBOutlet weak var tag: UITextField!
     private let teamCreateErrorMsg = "Sorry, only participants of SWSG can create a team!"
@@ -69,7 +69,8 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
             self.present(Utility.getFailAlertController(message: teamCreateErrorMsg), animated: true, completion: nil)
             return
         }
-        guard let name = teamName.text?.trim(), !name.isEmpty, let looking = lookingFor.text?.trim(), !looking.isEmpty else {
+        
+        guard let name = teamName.text, let looking = lookingFor.text, !name.isEmpty, !looking.isEmpty else {
             self.present(Utility.getFailAlertController(message: emptyFieldErrorMsg),animated: true, completion: nil)
             return
         }
@@ -181,14 +182,6 @@ extension TeamCreateTableViewController {
    }
 
 extension TeamCreateTableViewController: UITextViewDelegate {
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        lookingFor = textView as! GrayBorderTextView
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        lookingFor = nil
-    }
-    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         guard let textView = textView as? PlaceholderTextView, let currentText = textView.text else {
