@@ -32,10 +32,10 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
     private func setUpIdea() {
         loadIdeaImages()
-        mainImage.image = idea.mainImage
+        setUpIdeaMainImage()
         ideaNameLabel.text = idea.name
-        teamNameLabel.text = idea.teamName
         updateVotes()
+        Utility.getTeamName(id: idea.team, label: teamNameLabel, prefix: "by Team ")
     }
     
     private func loadIdeaImages() {
@@ -49,11 +49,17 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         idea.loadImages()
     }
     
+    private func setUpIdeaMainImage() {
+        mainImage.image = idea.mainImage
+        mainImage.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullScreenImage))
+        mainImage.addGestureRecognizer(tapGesture)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         mainImage.image = idea.mainImage
         ideaNameLabel.text = idea.name
-        containerViewController.presetInfo(desc: idea.description, images: idea.images, videoLink: idea.videoLink, isScrollEnabled: false)
         containerViewController.setUp()
         DispatchQueue.main.async {
             self.containerViewController.tableView.layoutIfNeeded()
@@ -64,7 +70,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "container", let containerViewController = segue.destination as? TemplateViewController {
-            containerViewController.presetInfo(desc: idea.description, images: idea.images, videoLink: idea.videoLink, isScrollEnabled: false)
+            containerViewController.presetInfo(content: idea)
             containerViewController.tableView.layoutIfNeeded()
             containerHeight = containerViewController.tableView.contentSize.height
             self.containerViewController = containerViewController
@@ -76,7 +82,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
     @objc func updateImages(_ notification: NSNotification) {
         mainImage.image = idea.mainImage
-        containerViewController.updateImages(images: idea.images)
+        containerViewController.updateImages()
         DispatchQueue.main.async {
             self.containerViewController.tableView.layoutIfNeeded()
             self.containerHeight = self.containerViewController.tableView.contentSize.height
@@ -85,7 +91,6 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         if let edit = editButton {
             edit.isEnabled = true
         }
-        NotificationCenter.default.removeObserver(self)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

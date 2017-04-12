@@ -6,20 +6,30 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
-import Foundation
+import Firebase
 
 class Faqs {
     
-    var faq: [Faq]
+    private var faqs: [Faq] = []
     
-    init() {
-        faq = []
-        let first = Faq(question: "What is the venue?", answer: "Google Asia Pacific | Mapletree Business City\n\n70, Pasir Panjang Road\n\nSingapore, Singapore 117371")
-        let second = Faq(question: "Who make the app?", answer: "CS3217-10, Team SWSG :)")
-        faq.append(first)
-        faq.append(second)
-        System.client.saveInformation(faq: first, completion: { (_) in })
-        System.client.saveInformation(faq: second, completion: { (_) in })
+    func add(snapshot: FIRDataSnapshot) {
+        guard let snapshotValue = snapshot.value as? [String: String] else {
+            return
+        }
+        guard let faq = Faq(snapshotValue: snapshotValue) else {
+            return
+        }
+        faqs.append(faq)
+        faqs = faqs.sorted(by: {
+            guard let firstId = $0.id, let secondId = $1.id else {
+                return false
+            }
+            return firstId < secondId
+        })
+    }
+    
+    func retrieveFaqs() -> [Faq] {
+        return faqs
     }
     
 }

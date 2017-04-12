@@ -24,9 +24,9 @@ class IdeaItemTableViewCell: UITableViewCell {
         self.idea = idea
         name.text = idea.name
         desc.text = idea.description
-        team.text = idea.teamName
         ideaImageView.image = idea.mainImage
         updateVotes()
+        Utility.getTeamName(id: idea.team, label: team, prefix: "by Team ")
     }
     
     @IBAction func upvote(_ sender: UIButton) {

@@ -11,11 +11,13 @@ import Firebase
 
 class PeopleViewController: FullScreenImageViewController {
     
-    fileprivate var people = People.getPeopleInstance()
     var category: String!
-    var peopleInCategory: [Person]!
+    
+    @IBOutlet fileprivate var peopleTableView: UITableView!
+    
+    fileprivate var people = People.getPeopleInstance()
+    fileprivate var peopleInCategory: [Person]!
 
-    @IBOutlet var peopleTableView: UITableView!
     private var peopleRef: FIRDatabaseReference?
     private var peopleAddRefHandle: FIRDatabaseHandle?
     
@@ -58,6 +60,12 @@ class PeopleViewController: FullScreenImageViewController {
         peopleTableView.delegate = self
         peopleTableView.tableFooterView = UIView(frame: CGRect.zero)
         peopleTableView.allowsSelection = false
+    }
+    
+    deinit {
+        if let addHandle = peopleAddRefHandle {
+            peopleRef?.removeObserver(withHandle: addHandle)
+        }
     }
 }
 

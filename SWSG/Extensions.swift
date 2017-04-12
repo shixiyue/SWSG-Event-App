@@ -114,6 +114,8 @@ extension Date {
 
 extension String {
     
+    var isEmptyContent: Bool { return trim().isEmpty }
+    
     func trim() -> String {
         return self.trimmingCharacters(in: .whitespacesAndNewlines)
     }

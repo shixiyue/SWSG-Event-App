@@ -77,6 +77,8 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
             
             user.setUid(uid: uid)
             self.user = user
+            self.setUpUserInfo()
+            self.profileList.reloadData()
             
             Utility.getProfileImg(uid: uid, completion: { (image) in
                 if let image = image {
@@ -98,7 +100,9 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         
         profileItems = ProfileItems.getItems(user: user)
         
-        profileImgButton.setImage(user.profile.image, for: .normal)
+        if let image = user.profile.image {
+            profileImgButton.setImage(image, for: .normal)
+        }
         profileImgButton.addTarget(self, action: #selector(showFullScreenImage), for: .touchUpInside)
         
         nameLbl.text = user.profile.name
@@ -110,13 +114,7 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         }
         
         if user.team != Config.noTeam {
-            Teams().retrieveTeamWith(id: user.team, completion: { (team) in
-                guard let team = team else {
-                    self.teamLbl.text = Config.noTeamLabel
-                    return
-                }
-                self.teamLbl.text = team.name
-            })
+            Utility.getTeamName(id: user.team, label: teamLbl)
         } else {
             teamLbl.text = Config.noTeamLabel
         }
@@ -208,6 +206,7 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         }
         fullScreenImageView.image = image.cropSquareToCircle()
         user.profile.updateImage(image: image)
+        System.activeUser?.profile.updateImage(image: image)
         // Error handling?
         System.client.updateUser(newUser: user)
         
@@ -227,6 +226,9 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         tap.delegate = self
         fullScreenImageView.addGestureRecognizer(tap)
         self.view.addSubview(fullScreenImageView)
+        guard let currentUser = System.activeUser, let user = user, currentUser == user else {
+            return
+        }
         changeProfileImageToolbar.isHidden = false
         view.bringSubview(toFront: changeProfileImageToolbar)
     }

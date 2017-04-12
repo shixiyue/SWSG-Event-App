@@ -7,30 +7,61 @@
 //
 
 import UIKit
+import Firebase
 
-class FaqViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class FaqViewController: UIViewController {
     
-    @IBOutlet var faqTableView: UITableView!
-    var faq = Faqs().faq
+    @IBOutlet private var faqTableView: UITableView!
+    
+    fileprivate var faqs = Faqs()
+    fileprivate var faqInfo: [Faq]!
+    
+    private var faqRef: FIRDatabaseReference?
+    private var faqAddRefHandle: FIRDatabaseHandle?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        faqRef = System.client.getFaqRef()
+        observeFaq()
         setUpFaqTableView()
     }
     
+    private func observeFaq() {
+        guard let faqRef = faqRef else {
+            return
+        }
+        
+        faqAddRefHandle = faqRef.observe(.childAdded, with: { (snapshot) -> Void in
+            DispatchQueue.main.async {
+                self.faqs.add(snapshot: snapshot)
+                self.faqTableView.reloadData()
+            }
+        })
+    }
+
     private func setUpFaqTableView() {
         faqTableView.dataSource = self
         faqTableView.delegate = self
-        faqTableView.tableFooterView = UIView(frame: CGRect.zero)
         faqTableView.allowsSelection = false
     }
+    
+    deinit {
+        if let addHandle = faqAddRefHandle {
+            faqRef?.removeObserver(withHandle: addHandle)
+        }
+    }
+    
+}
+
+extension FaqViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return faq.count + 1
+        faqInfo = faqs.retrieveFaqs()
+        return faqInfo.count + 1
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -50,14 +81,12 @@ class FaqViewController: UIViewController, UITableViewDataSource, UITableViewDel
             cell.informationHeader.text = "Frequently Asked Questions"
             return cell
         }
-        return FaqTableViewCell()
-        /*guard let cell = tableView.dequeueReusableCell(withIdentifier: "faqCell", for: indexPath) as? FaqTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "faqCell", for: indexPath) as? FaqTableViewCell else {
             return FaqTableViewCell()
         }
-        let questionAnswer = faq[index - 1]
-        cell.question.text = questionAnswer.question
-        cell.answer.text = questionAnswer.answer
-        return cell*/
+        let faq = faqInfo[index - 1]
+        cell.setUp(question: faq.question, answer: faq.answer, link: faq.link)
+        return cell
     }
     
 }

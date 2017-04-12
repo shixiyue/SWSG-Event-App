@@ -73,22 +73,21 @@ class FullScreenImageTableViewController: UITableViewController {
     
     private func showFullScreenImage(image: UIImage) {
         let newImageView = UIImageView(image: image)
-        newImageView.frame = self.view.frame
-        if let height = self.navigationController?.navigationBar.frame.size.height {
-            newImageView.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y - height, width: self.view.frame.width, height: self.view.frame.height)
-        } else {
-            newImageView.frame = self.view.frame
-        }
+        let scrollViewYOffset = tableView.contentOffset.y
+        let navigationControllerOffset = self.navigationController?.navigationBar.frame.size.height ?? 0
+        newImageView.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y + scrollViewYOffset + navigationControllerOffset, width: self.view.frame.width, height: self.view.frame.height)
         newImageView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
         newImageView.contentMode = .scaleAspectFit
         newImageView.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreenImage))
         newImageView.addGestureRecognizer(tap)
         self.view.addSubview(newImageView)
+        tableView.isScrollEnabled = false
     }
     
     @objc private func dismissFullscreenImage(sender: UITapGestureRecognizer) {
         sender.view?.removeFromSuperview()
+        tableView.isScrollEnabled = true
     }
     
     deinit {

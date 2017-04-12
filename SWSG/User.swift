@@ -112,3 +112,13 @@ class User {
     }
     
 }
+
+extension User: Equatable { }
+
+func ==(lhs: User, rhs: User) -> Bool {
+    
+    if let lhsId = lhs.uid, let rhsId = rhs.uid {
+        return lhsId == rhsId
+    }
+    return false
+}

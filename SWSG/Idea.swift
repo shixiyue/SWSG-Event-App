@@ -8,10 +8,9 @@
 
 import UIKit
 
-class Idea: ImagesContent {
+class Idea: ImagesContent, TemplateContent {
     
     var votes: Int { return upvotes.count - downvotes.count }
-    var teamName: String { return "by Team "/*\(Teams.sharedInstance().retrieveTeamWith(id: team)!.name)"*/ }
     
     var id: String?
 
@@ -21,8 +20,8 @@ class Idea: ImagesContent {
     public private(set) var mainImage: UIImage = Config.defaultIdeaImage
     public internal(set) var images: [UIImage] = []
     public private(set) var videoLink: String
-    
-    public internal(set) var imagesState = ImagesState()
+
+    public internal(set) var imagesState = IdeasImagesState()
     
     fileprivate var upvotes = Set<String>()
     fileprivate var downvotes = Set<String>()
@@ -40,6 +39,10 @@ class Idea: ImagesContent {
         self.images = images
         self.videoLink = videoLink
         self.id = id
+        
+        if mainImage == Config.defaultIdeaImage {
+            imagesState.mainImageHasChanged = false
+        }
     }
     
     init?(snapshotValue: [String: Any]) {
@@ -72,6 +75,7 @@ class Idea: ImagesContent {
                 }
             }
         }
+        
         if let mainImageURL = snapshotValue[Config.mainImage] as? String {
             imagesState.mainImageURL = mainImageURL
         } else {

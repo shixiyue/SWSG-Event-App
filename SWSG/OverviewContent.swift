@@ -6,10 +6,9 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
-import UIKit
 import Firebase
 
-class OverviewContent: ImagesContent {
+class OverviewContent: ImagesContent, TemplateContent {
     
     var id: String? = "overview" // To conform the protocol
     public private(set) var description: String = Config.defaultContent

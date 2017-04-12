@@ -6,8 +6,6 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
-import Foundation
-
 class Person {
     
     var id: String?
@@ -18,8 +16,8 @@ class Person {
     
     private var photoURL: String?
     
-    init(photo: UIImage?, name: String, title: String, intro: String) {
-        self.photo = photo ?? UIImage()
+    init(photo: UIImage, name: String, title: String, intro: String) {
+        self.photo = photo
         self.name = name
         self.title = title
         self.intro = intro

@@ -39,8 +39,6 @@ class MenuViewController: UIViewController {
         menuList.delegate = self
         menuList.dataSource = self
         menuList.tableFooterView = UIView(frame: CGRect.zero)
-        setUpUserInfo()
-        observeImage()
         
         guard let uid = System.client.getUid() else {
             Utility.logOutUser(currentViewController: self)
@@ -50,6 +48,9 @@ class MenuViewController: UIViewController {
         userRef = System.client.getUserRef(for: uid)
         profileImg = Utility.roundUIImageView(for: profileImg)
         profileImg.image = Config.placeholderImg
+        
+        setUpUserInfo()
+        observeImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {

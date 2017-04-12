@@ -80,7 +80,7 @@ class Profile {
         })
     }
     
-    func updateProfile(username: String,name: String, image: UIImage, job: String, company: String, country: String, education: String, skills: String, description: String) {
+    func updateProfile(username: String,name: String, image: UIImage?, job: String, company: String, country: String, education: String, skills: String, description: String) {
         _checkRep()
         
         self.username = username
@@ -94,6 +94,10 @@ class Profile {
         self.desc = description
         
         _checkRep()
+    }
+    
+    func updateProfile(to profile: Profile) {
+        updateProfile(username: profile.username, name: profile.name, image: profile.image, job: profile.job, company: profile.company, country: profile.country, education: profile.education, skills: profile.skills, description: profile.desc)
     }
     
     func updateImage(image: UIImage?) {

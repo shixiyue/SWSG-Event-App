@@ -32,7 +32,7 @@ class CreateEventViewController: UIViewController {
     fileprivate var toolbar = UIToolbar()
     fileprivate var activeTextField: UITextField?
     fileprivate var activeTextView: UITextView?
-    fileprivate let imagePicker = ImagePickerPopoverViewController()
+    fileprivate let imagePicker = ImagePickCropperPopoverViewController()
     fileprivate var imageChanged = false
     
     fileprivate let shortDescPlaceholder = "Displayed on a List as a Preview"

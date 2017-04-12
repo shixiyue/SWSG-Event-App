@@ -12,9 +12,13 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     
     private var currentIdea: Idea?
     
-    @IBOutlet private var ideaName: UITextField!
+    @IBOutlet fileprivate var ideaName: UITextField!
     @IBOutlet private var teamName: UILabel!
     @IBOutlet private var mainImage: UIButton!
+    
+    private var containerViewController: TemplateEditViewController!
+    
+    private var textView: UITextView!
     
     private var containerHeight: CGFloat!
 
@@ -73,11 +77,15 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
         }
         containerViewController.tableView.layoutIfNeeded()
         containerHeight = containerViewController.tableView.contentSize.height
+        self.containerViewController = containerViewController
+        textView = containerViewController.descriptionTextView
+        textView.delegate = self
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.row {
         case 0: return 130
+        case 1: return 65
         case 3: return containerHeight
         default: return 44
         }
@@ -88,11 +96,17 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
             present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
             return
         }
-        guard let name = ideaName.text, !name.isEmpty else {
+        guard let name = ideaName.text, !name.isEmptyContent else {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": false])
             present(Utility.getFailAlertController(message: "Idea name cannot be empty!"), animated: true, completion: nil)
             return
         }
         guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String, let image = mainImage.image(for: .normal), let user = System.activeUser else {
+            return
+        }
+        guard !description.isEmptyContent else {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": false])
+            present(Utility.getFailAlertController(message: "Description cannot be empty!"), animated: true, completion: nil)
             return
         }
         
@@ -118,16 +132,31 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
             return
         }
         self.containerHeight = containerHeight
+        textView = containerViewController.descriptionTextView
+        textView.delegate = self
+        
         tableView.reloadData()
     }
     
     private func getResult(error: FirebaseError?) {
+        var isSuccess: Bool
         if let firebaseError = error {
             present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
-            return
+            isSuccess = false
+        } else {
+            NotificationCenter.default.removeObserver(self)
+            isSuccess = true
         }
-        NotificationCenter.default.removeObserver(self)
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": isSuccess])
     }
 
+}
+
+extension IdeaPostTableViewController: UITextViewDelegate {
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        ideaName.resignFirstResponder()
+        textView.becomeFirstResponder()
+    }
+    
 }
