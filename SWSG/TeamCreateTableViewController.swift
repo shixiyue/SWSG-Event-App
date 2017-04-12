@@ -31,7 +31,7 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
     @IBOutlet weak var collectionView: UICollectionView!
     
     @IBAction func onSaveBtnClick(_ sender: Any) {
-        guard let tagToAdd = tag.text, !tagToAdd.isEmpty else {
+        guard let tagToAdd = tag.text?.trim(), !tagToAdd.isEmpty else {
             present(Utility.getFailAlertController(message: "Tag field cannot be empty!"), animated: true, completion: nil)
             return
         }
@@ -42,6 +42,7 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.allowsSelection = false
         collectionView.delegate = self
         lookingFor.setPlaceholder("Skills looking for...")
         lookingFor.delegate = self
@@ -58,10 +59,16 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
             self.present(Utility.getFailAlertController(message: teamCreateErrorMsg), animated: true, completion: nil)
             return
         }
-        guard let name = teamName.text, !name.isEmpty, let looking = lookingFor.text, !looking.isEmpty else {
+        guard let name = teamName.text?.trim(), !name.isEmpty, let looking = lookingFor.text?.trim(), !looking.isEmpty else {
             self.present(Utility.getFailAlertController(message: emptyFieldErrorMsg),animated: true, completion: nil)
             return
         }
+        
+        guard tags.count != 0 else {
+            self.present(Utility.getFailAlertController(message: "You must add a skill tag!"),animated: true, completion: nil)
+            return
+        }
+        
         guard System.activeUser?.team == Config.noTeam else {
             self.present(Utility.getFailAlertController(message: mtplTeamErrorMsg),animated: true, completion: nil)
             return
@@ -79,6 +86,7 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
         teams.addTeam(team: team)
         print("preparing to set user index")
         user.setTeamId(id: team.id!)
+        System.client.updateUser(newUser: user)
         System.activeUser = user
         Utility.popViewController(no: 1, viewController: self)
        // Utility.onBackButtonClick(tableViewController: self)

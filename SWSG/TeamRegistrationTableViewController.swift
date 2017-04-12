@@ -22,6 +22,7 @@ class TeamRegistrationTableViewController: BaseViewController {
         super.viewDidLoad()
         tableView.delegate = self
         addSlideMenuButton()
+        tableView.separatorStyle = .none
        // NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "teams"), object: nil)
        // observeEvents()
     }
