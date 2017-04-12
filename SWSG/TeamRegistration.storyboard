@@ -156,19 +156,6 @@
                         <view key="tableFooterView" contentMode="scaleToFill" id="xgJ-sj-aan">
                             <rect key="frame" x="0.0" y="358" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DBW-7P-Lqe">
-                                    <rect key="frame" x="302" y="6" width="46" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
-                                    <state key="normal" title="Done">
-                                        <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="onDoneButtonClick:" destination="kTz-08-Fw8" eventType="touchUpInside" id="Re7-Yk-e7s"/>
-                                    </connections>
-                                </button>
-                            </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
                         <sections>
@@ -337,7 +324,21 @@
                             <outlet property="delegate" destination="kTz-08-Fw8" id="lHd-cj-nQ1"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="x27-tD-a8J"/>
+                    <navigationItem key="navigationItem" id="x27-tD-a8J">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="wGR-Hl-IDj">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="DBW-7P-Lqe">
+                                <rect key="frame" x="313" y="7" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
+                                <state key="normal" title="Done">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onDoneButtonClick:" destination="kTz-08-Fw8" eventType="touchUpInside" id="Re7-Yk-e7s"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="ts3-g6-pm5" id="oiz-Sc-ms8"/>
                         <outlet property="lookingFor" destination="rPy-J1-uso" id="5ce-Sp-g6V"/>

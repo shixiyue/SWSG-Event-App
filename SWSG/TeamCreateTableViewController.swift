@@ -181,6 +181,37 @@ extension TeamCreateTableViewController {
    }
 
 extension TeamCreateTableViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        lookingFor = textView as! GrayBorderTextView
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        lookingFor = nil
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        guard let textView = textView as? PlaceholderTextView, let currentText = textView.text else {
+            return false
+        }
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        
+        if updatedText.isEmpty {
+            textView.setPlaceholder()
+            return false
+        } else if textView.textColor == Config.placeholderColor && !text.isEmpty {
+            textView.removePlaceholder()
+        }
+        return true
+    }
+    
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        guard view.window != nil, textView.textColor == Config.placeholderColor else {
+            return
+        }
+        textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+    }
+    
     func textViewDidChange(_ textView: UITextView) {
         self.tableView.beginUpdates()
         if textView.contentSize.height > CGFloat(60) {
@@ -190,5 +221,7 @@ extension TeamCreateTableViewController: UITextViewDelegate {
         
     }
 }
+
+
 
 
