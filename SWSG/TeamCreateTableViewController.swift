@@ -52,6 +52,16 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
         self.collectionView.backgroundColor = UIColor.clear
         self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "tags"), object: nil)
+        
+        self.hideKeyboardWhenTappedAround()
+        
+        teamName.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+        tag.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+        lookingFor.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
     }
     
     @IBAction func onDoneButtonClick(_ sender: Any) {
@@ -73,8 +83,11 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
             self.present(Utility.getFailAlertController(message: mtplTeamErrorMsg),animated: true, completion: nil)
             return
         }
+        guard let uid = user.uid else {
+            return
+        }
         
-        let team = Team(id: "", members: [user.uid!], name: name, lookingFor: looking, isPrivate: false, tags: tags)
+        let team = Team(id: "", members: [uid], name: name, lookingFor: looking, isPrivate: false, tags: tags)
         
         System.client.createTeam(_team: team, completion: { (error) in
             if let firebaseError = error {
@@ -85,7 +98,10 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
         })
         teams.addTeam(team: team)
         print("preparing to set user index")
-        user.setTeamId(id: team.id!)
+        guard let teamId = team.id else {
+            return
+        }
+        user.setTeamId(id: teamId)
         System.client.updateUser(newUser: user)
         System.activeUser = user
         Utility.popViewController(no: 1, viewController: self)
@@ -165,6 +181,37 @@ extension TeamCreateTableViewController {
    }
 
 extension TeamCreateTableViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        lookingFor = textView as! GrayBorderTextView
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        lookingFor = nil
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        guard let textView = textView as? PlaceholderTextView, let currentText = textView.text else {
+            return false
+        }
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        
+        if updatedText.isEmpty {
+            textView.setPlaceholder()
+            return false
+        } else if textView.textColor == Config.placeholderColor && !text.isEmpty {
+            textView.removePlaceholder()
+        }
+        return true
+    }
+    
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        guard view.window != nil, textView.textColor == Config.placeholderColor else {
+            return
+        }
+        textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+    }
+    
     func textViewDidChange(_ textView: UITextView) {
         self.tableView.beginUpdates()
         if textView.contentSize.height > CGFloat(60) {
@@ -174,5 +221,7 @@ extension TeamCreateTableViewController: UITextViewDelegate {
         
     }
 }
+
+
 
 

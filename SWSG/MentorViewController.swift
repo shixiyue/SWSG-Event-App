@@ -64,15 +64,6 @@ class MentorViewController: UIViewController {
             return
         }
         
-        profileImg = Utility.roundUIImageView(for: profileImg)
-        profileImg.image = Config.placeholderImg
-        
-        Utility.getProfileImg(uid: uid, completion: { (image) in
-            if let image = image {
-                self.profileImg.image = image
-            }
-        })
-        
         mentorRef = System.client.getUserRef(for: uid)
         
     }
@@ -121,13 +112,22 @@ class MentorViewController: UIViewController {
     }
     
     func setUpDescription() {
-        guard let mentorAcct = mentorAcct else {
+        guard let mentorAcct = mentorAcct, let uid = mentorAcct.uid else {
             return
         }
         let profile = mentorAcct.profile
         
-        profileImg.image = profile.image
         nameLbl.text = profile.name
+        
+        profileImg = Utility.roundUIImageView(for: profileImg)
+        profileImg.image = Config.placeholderImg
+        
+        Utility.getProfileImg(uid: uid, completion: { (image) in
+            if let image = image {
+                self.profileImg.image = image
+            }
+        })
+        
         positionLbl.text = profile.job
         companyLbl.text = profile.company
         descriptionTB.text = profile.desc
@@ -154,13 +154,18 @@ class MentorViewController: UIViewController {
     
     @IBAction func composeBtnPressed(_ sender: Any) {
         
-        guard let mentorAcct = mentorAcct, let uid = mentorAcct.uid else {
+        guard let uid = System.client.getUid() else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
+        guard let mentorAcct = mentorAcct, let mentorID = mentorAcct.uid else {
             return
         }
         
         var members = [String]()
-        members.append(System.client.getUid())
         members.append(uid)
+        members.append(mentorID)
         
         let channel = Channel(type: .directMessage, members: members)
         System.client.createChannel(for: channel, completion: { (channel, error) in

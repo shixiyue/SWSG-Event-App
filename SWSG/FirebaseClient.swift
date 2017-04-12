@@ -241,6 +241,19 @@ class FirebaseClient {
         }
         getUserWith(uid: uid, completion: completion)
     }
+    
+    public func addMentorSlots(to uid: String) {
+        let mentor = Mentor(field: .business)
+        mentor.addSlots(on: Utility.fbDateFormatter.date(from: "12-04-2017")!)
+        mentor.addSlots(on: Utility.fbDateFormatter.date(from: "13-04-2017")!)
+        mentor.addSlots(on: Utility.fbDateFormatter.date(from: "14-04-2017")!)
+        
+        print(mentor.days.count)
+        print(mentor.toDictionary())
+        
+        let userRef = usersRef.child(uid)
+        userRef.child(Config.mentor).setValue(mentor.toDictionary())
+    }
 
     public func getUserWith(uid: String, completion: @escaping GetUserCallback) {
         let userRef = usersRef.child(uid)
@@ -334,7 +347,15 @@ class FirebaseClient {
                 completion(self.checkError(err))
                 return
             }
-        completion(nil)
+            completion(nil)
+            
+            let channel = Channel(type: .privateChannel, icon: nil, name: _team.name, members: _team.members)
+            
+            self.createNewChannel(for: channel, completion: { (channel, error) in
+                if let channel = channel {
+                    teamRef.child(Config.channelID).setValue(channel.id)
+                }
+            })
         })
     }
     
@@ -345,6 +366,12 @@ class FirebaseClient {
         
         let teamRef = getTeamRef(for: id)
         teamRef.updateChildValues(team.toDictionary())
+        
+        teamRef.child(Config.channelID).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let channelID = snapshot.value as? String {
+                self.updateChannel(members: team.members, for: channelID)
+            }
+        })
     }
     
     public func deleteTeam(for team: Team) {
@@ -354,9 +381,34 @@ class FirebaseClient {
         
         let teamsRef = getTeamsRef()
         let teamRef = teamsRef.child(id)
+        
+        teamRef.child(Config.channelID).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let channelID = snapshot.value as? String {
+                self.deleteChannel(for: channelID)
+            }
+        })
+        
         teamRef.removeValue { (error, ref) in
         }
     }
+    
+    public func getTeamChannel(for team: Team, completion: @escaping GetChannelCallback) {
+        guard let id = team.id else {
+            return
+        }
+        
+        let teamRef = getTeamRef(for: id)
+        teamRef.updateChildValues(team.toDictionary())
+        
+        teamRef.child(Config.channelID).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let channelID = snapshot.value as? String {
+                self.getChannel(with: channelID, completion: completion)
+            } else {
+                completion(nil, nil)
+            }
+        })
+    }
+    
     /*
     public func getTeams(completion: @escaping GetTeamsCallback) {
         teamsRef.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -654,15 +706,42 @@ class FirebaseClient {
         channelRef.child(Config.name).setValue(name)
     }
     
+    public func updateChannel(members: [String], for channel: Channel) {
+        guard let id = channel.id else {
+            return
+        }
+        
+        updateChannel(members: members, for: id)
+    }
+    
+    public func updateChannel(members: [String], for id: String) {
+        let channelRef = getChannelRef(for: id)
+        channelRef.child(Config.members).setValue(members)
+    }
+    
     public func deleteChannel(for channel: Channel) {
         guard let id = channel.id else {
             return
         }
         
+        deleteChannel(for: id)
+    }
+    
+    public func deleteChannel(for id: String) {
         let channelsRef = getChannelsRef()
         let channelRef = channelsRef.child(id)
         channelRef.removeValue { (error, ref) in
         }
+    }
+    
+    private func getChannel(with id: String, completion: @escaping GetChannelCallback) {
+        let channelRef = getChannelsRef().child(id)
+        
+        channelRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            let channel = Channel(id: snapshot.key, snapshot: snapshot)
+            
+            completion(channel, nil)
+        })
     }
     
     private func getChannel(with members: [String], completion: @escaping GetChannelCallback) {
@@ -968,8 +1047,12 @@ class FirebaseClient {
         })
     }
     
-    func getUid() -> String {
-        return auth?.currentUser?.uid ?? ""
+    func getUid() -> String? {
+        guard let auth = auth, let user = auth.currentUser else {
+            return nil
+        }
+        
+        return user.uid
     }
     
     private func checkError(_ err: Error?) -> FirebaseError? {

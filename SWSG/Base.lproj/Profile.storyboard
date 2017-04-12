@@ -122,14 +122,23 @@
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="barTintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </toolbar>
+                            <imageView hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Chat" translatesAutoresizingMaskIntoConstraints="NO" id="jsM-7w-OcE">
+                                <rect key="frame" x="329" y="72" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="2pa-FU-NKn"/>
+                                    <constraint firstAttribute="height" constant="30" id="UGV-R6-i9i"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.098023496568202972" green="0.098048247396945953" blue="0.098021931946277618" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="BNq-63-hic" firstAttribute="leading" secondItem="yAJ-Te-e1f" secondAttribute="leading" id="1Z1-vM-QoI"/>
+                            <constraint firstItem="jsM-7w-OcE" firstAttribute="trailing" secondItem="yAJ-Te-e1f" secondAttribute="trailingMargin" id="EFL-AF-xa9"/>
                             <constraint firstItem="aXF-KN-DeJ" firstAttribute="leading" secondItem="yAJ-Te-e1f" secondAttribute="leading" id="HR7-S1-wbf"/>
                             <constraint firstItem="DAz-za-bZf" firstAttribute="centerX" secondItem="yAJ-Te-e1f" secondAttribute="centerX" id="Hqb-7C-iPc"/>
                             <constraint firstItem="BNq-63-hic" firstAttribute="top" secondItem="DAz-za-bZf" secondAttribute="bottom" constant="8" id="HxO-BB-BYr"/>
                             <constraint firstAttribute="trailing" secondItem="XP6-ow-HQX" secondAttribute="trailing" id="THO-u7-szy"/>
+                            <constraint firstItem="jsM-7w-OcE" firstAttribute="top" secondItem="F0K-qS-1jJ" secondAttribute="bottom" constant="8" id="UM8-OT-WnP"/>
                             <constraint firstItem="BNq-63-hic" firstAttribute="centerX" secondItem="yAJ-Te-e1f" secondAttribute="centerX" id="a9h-km-woF"/>
                             <constraint firstItem="KMr-1i-dyd" firstAttribute="top" secondItem="AHr-vh-QoN" secondAttribute="bottom" constant="8" id="b30-pQ-fQA"/>
                             <constraint firstAttribute="trailing" secondItem="BNq-63-hic" secondAttribute="trailing" id="b4z-WQ-ldO"/>
@@ -157,6 +166,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="changeProfileImageToolbar" destination="XP6-ow-HQX" id="hcB-4n-RpH"/>
+                        <outlet property="composeBtn" destination="jsM-7w-OcE" id="vlF-Ml-2jO"/>
                         <outlet property="nameLbl" destination="BNq-63-hic" id="cMi-EV-HYg"/>
                         <outlet property="profileImgButton" destination="DAz-za-bZf" id="YrA-hb-vki"/>
                         <outlet property="profileList" destination="KMr-1i-dyd" id="2z3-mN-I8q"/>
@@ -164,11 +174,20 @@
                         <outlet property="topRightBtn" destination="Nf9-L9-tbv" id="wEv-vt-DeX"/>
                         <outlet property="usernameLbl" destination="aXF-KN-DeJ" id="Q3n-Ub-5Kp"/>
                         <segue destination="z4V-HV-xgr" kind="show" identifier="profileToEditProfile" id="0qJ-eI-8Qd"/>
+                        <segue destination="qE4-1k-Kwp" kind="show" identifier="profileToChannel" id="mhU-tW-du0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="06Q-xu-MMU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4972" y="-278.41079460269867"/>
+        </scene>
+        <!--ChannelViewController-->
+        <scene sceneID="Sf3-8G-Z9w">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Chat" referencedIdentifier="ChannelViewController" id="qE4-1k-Kwp" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2ga-x1-WPu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5568" y="-703"/>
         </scene>
         <!--Edit Profile Table View Controller-->
         <scene sceneID="L7N-cx-c5q">
@@ -830,7 +849,7 @@
         <!--Navigation Controller-->
         <scene sceneID="G5r-Ow-tSm">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="huf-f7-zRJ" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ProfileNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="huf-f7-zRJ" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="cjc-gd-qgX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -847,6 +866,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Chat" width="208" height="174"/>
         <image name="Profile" width="133" height="133"/>
     </resources>
 </document>

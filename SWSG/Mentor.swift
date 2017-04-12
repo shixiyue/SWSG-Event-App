@@ -12,7 +12,7 @@ class Mentor {
     var days = [ConsultationDate]()
     var field: Field
     
-    init(profile: Profile, field: Field) {
+    init(field: Field) {
         self.field = field
     }
     
@@ -58,6 +58,7 @@ class Mentor {
         var dict = [String: Any]()
         
         for day in days {
+            print(day.date)
             dict[Utility.fbDateFormatter.string(from: day.date)] = day.toDictionary()
         }
         

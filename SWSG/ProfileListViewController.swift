@@ -135,11 +135,9 @@ extension ProfileListViewController: UITableViewDataSource {
         cell.jobLbl.text = user.profile.job
         cell.companyLbl.text = user.profile.company
         
-        if user.team != Config.noTeam {
-            Utility.getTeamName(id: user.team, label: cell.teamLbl)
-        } else {
-            cell.teamLbl.text = Config.noTeamLabel
-        }
+        Utility.getTeamLbl(user: user, completion: { (teamLblText) in
+            cell.teamLbl.text = teamLblText
+        })
         
         Utility.getProfileImg(uid: uid, completion: { (image) in
             if let image = image {

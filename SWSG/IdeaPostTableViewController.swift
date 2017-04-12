@@ -12,7 +12,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     
     private var currentIdea: Idea?
     
-    @IBOutlet private var ideaName: UITextField!
+    @IBOutlet fileprivate var ideaName: UITextField!
     @IBOutlet private var teamName: UILabel!
     @IBOutlet private var mainImage: UIButton!
     

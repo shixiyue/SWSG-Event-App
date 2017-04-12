@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Team Registration Table View Controller-->
+        <!--Team List-->
         <scene sceneID="ycP-Pv-prw">
             <objects>
                 <viewController storyboardIdentifier="TeamRegistrationTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Kal-pg-07J" customClass="TeamRegistrationTableViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
@@ -129,7 +129,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="FW7-82-nMQ">
+                    <navigationItem key="navigationItem" title="Team List" id="FW7-82-nMQ">
                         <barButtonItem key="rightBarButtonItem" title="Create" id="MMH-cB-kAU">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             <connections>
@@ -156,19 +156,6 @@
                         <view key="tableFooterView" contentMode="scaleToFill" id="xgJ-sj-aan">
                             <rect key="frame" x="0.0" y="358" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DBW-7P-Lqe">
-                                    <rect key="frame" x="302" y="6" width="46" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
-                                    <state key="normal" title="Done">
-                                        <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="onDoneButtonClick:" destination="kTz-08-Fw8" eventType="touchUpInside" id="Re7-Yk-e7s"/>
-                                    </connections>
-                                </button>
-                            </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
                         <sections>
@@ -337,7 +324,21 @@
                             <outlet property="delegate" destination="kTz-08-Fw8" id="lHd-cj-nQ1"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="x27-tD-a8J"/>
+                    <navigationItem key="navigationItem" id="x27-tD-a8J">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="wGR-Hl-IDj">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="DBW-7P-Lqe">
+                                <rect key="frame" x="313" y="7" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="20"/>
+                                <state key="normal" title="Done">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onDoneButtonClick:" destination="kTz-08-Fw8" eventType="touchUpInside" id="Re7-Yk-e7s"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="ts3-g6-pm5" id="oiz-Sc-ms8"/>
                         <outlet property="lookingFor" destination="rPy-J1-uso" id="5ce-Sp-g6V"/>
@@ -544,21 +545,45 @@
                             <outlet property="delegate" destination="Hkw-3O-A1T" id="DQi-KV-vrg"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="HyL-ta-e9f"/>
+                    <navigationItem key="navigationItem" id="HyL-ta-e9f">
+                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="iAn-25-ChU">
+                            <connections>
+                                <action selector="chatBtnPressed:" destination="Hkw-3O-A1T" id="lcM-yU-65J"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="buttonLbl" destination="HKr-Vg-hCw" id="mw8-tL-aI7"/>
+                        <segue destination="Hxq-T1-EcM" kind="show" identifier="teamToChannel" id="vnf-vu-r6s"/>
+                        <segue destination="Kjg-kh-WCM" kind="show" identifier="teamToProfile" id="MNg-2t-KEk"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FTz-Hv-Kqe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3398.5" y="590.5"/>
         </scene>
+        <!--ProfileViewController-->
+        <scene sceneID="LCb-bt-7FY">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Profile" referencedIdentifier="ProfileViewController" id="Kjg-kh-WCM" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zi7-6A-XeW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4141" y="464"/>
+        </scene>
+        <!--ChannelViewController-->
+        <scene sceneID="2OV-iu-gPa">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Chat" referencedIdentifier="ChannelViewController" id="Hxq-T1-EcM" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l2a-YR-Rao" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4168" y="589"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="TdE-mW-C4I">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="U5F-XB-rEF" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Juz-0D-uFh">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Juz-0D-uFh">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

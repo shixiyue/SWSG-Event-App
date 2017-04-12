@@ -40,11 +40,16 @@ class MenuViewController: UIViewController {
         menuList.dataSource = self
         menuList.tableFooterView = UIView(frame: CGRect.zero)
         
+        guard let uid = System.client.getUid() else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
+        userRef = System.client.getUserRef(for: uid)
         profileImg = Utility.roundUIImageView(for: profileImg)
         profileImg.image = Config.placeholderImg
         
         setUpUserInfo()
-        userRef = System.client.getUserRef(for: System.client.getUid())
         observeImage()
     }
     
@@ -90,11 +95,9 @@ class MenuViewController: UIViewController {
             return
         }
         
-        if user.team != Config.noTeam {
-            Utility.getTeamName(id: user.team, label: teamLbl)
-        } else {
-            teamLbl.text = Config.noTeamLabel
-        }
+        Utility.getTeamLbl(user: user, completion: { (teamLblText) in
+            self.teamLbl.text = teamLblText
+        })
     }
 
     @IBAction func onProfileClick(_ sender: UIButton) {
