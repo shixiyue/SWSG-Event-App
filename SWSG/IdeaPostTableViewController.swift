@@ -72,6 +72,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.row {
         case 0: return 130
+        case 1: return 65
         case 3: return containerHeight
         default: return 44
         }
@@ -116,12 +117,15 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     }
     
     private func getResult(error: FirebaseError?) {
+        var isSuccess: Bool
         if let firebaseError = error {
             present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
-            return
+            isSuccess = false
+        } else {
+            NotificationCenter.default.removeObserver(self)
+            isSuccess = true
         }
-        NotificationCenter.default.removeObserver(self)
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": isSuccess])
     }
 
 }

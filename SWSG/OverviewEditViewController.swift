@@ -20,13 +20,16 @@ class OverviewEditViewController: UIViewController {
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
         let updatedOverview = overview.getUpdatedOverview(description: description, images: images, videoLink: videoLink)
         System.client.updateInformation(overview: updatedOverview, completion: { (error) in
+            var isSuccess: Bool
             if let error = error {
                 self.present(Utility.getFailAlertController(message: error.errorMessage), animated: true, completion: nil)
-                return
+                isSuccess = false
+            } else {
+                self.overview.update(description: description, images: images, videoLink: videoLink)
+                NotificationCenter.default.removeObserver(self)
+                isSuccess = true
             }
-            self.overview.update(description: description, images: images, videoLink: videoLink)
-            NotificationCenter.default.removeObserver(self)
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": isSuccess])
         })
     }
     

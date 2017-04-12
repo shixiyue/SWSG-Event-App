@@ -117,6 +117,7 @@
 		CC95008F1E863CAF00EC871F /* OverviewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC95008E1E863CAF00EC871F /* OverviewContent.swift */; };
 		CC9981D81E9C7BC9008D872C /* ImagesState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9981D71E9C7BC9008D872C /* ImagesState.swift */; };
 		CC9981DC1E9C8E34008D872C /* ImagesContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9981DB1E9C8E33008D872C /* ImagesContent.swift */; };
+		CCC9460A1E9D5EF00041585A /* TemplateContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC946091E9D5EF00041585A /* TemplateContent.swift */; };
 		CCDCCD7B1E7D6E7600931AC0 /* UtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDCCD7A1E7D6E7600931AC0 /* UtilityTests.swift */; };
 		CCE7DDDA1E8A4E440044A863 /* TemplateEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDD91E8A4E440044A863 /* TemplateEditViewController.swift */; };
 		CCE7DDDE1E8B757E0044A863 /* PhotoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE7DDDD1E8B757E0044A863 /* PhotoTableViewCell.swift */; };
@@ -312,6 +313,7 @@
 		CC95008E1E863CAF00EC871F /* OverviewContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverviewContent.swift; sourceTree = "<group>"; };
 		CC9981D71E9C7BC9008D872C /* ImagesState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesState.swift; sourceTree = "<group>"; };
 		CC9981DB1E9C8E33008D872C /* ImagesContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesContent.swift; sourceTree = "<group>"; };
+		CCC946091E9D5EF00041585A /* TemplateContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemplateContent.swift; sourceTree = "<group>"; };
 		CCDCCD781E7D6E7600931AC0 /* SWSGTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SWSGTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCDCCD7A1E7D6E7600931AC0 /* UtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityTests.swift; sourceTree = "<group>"; };
 		CCDCCD7C1E7D6E7600931AC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -748,6 +750,7 @@
 			children = (
 				E348D56F1E841E2900947B3F /* Idea.swift */,
 				CC9981DB1E9C8E33008D872C /* ImagesContent.swift */,
+				CCC946091E9D5EF00041585A /* TemplateContent.swift */,
 				CC9981D71E9C7BC9008D872C /* ImagesState.swift */,
 				E348D5711E841E3000947B3F /* Ideas.swift */,
 			);
@@ -1098,6 +1101,7 @@
 				CC18E1921E9A722400BE8B67 /* ImagePickCropperPopoverViewController.swift in Sources */,
 				E3220C671E7D385B008AFA85 /* TeamRegistrationTableViewController.swift in Sources */,
 				CC7A4AF81E876F4F00BC8A4B /* PeopleTableViewCell.swift in Sources */,
+				CCC9460A1E9D5EF00041585A /* TemplateContent.swift in Sources */,
 				3FBB4C1E1E9BD25A00A45FB3 /* ProfileListViewController.swift in Sources */,
 				CC5F1C5D1E8630F1006A5322 /* InformationCell.swift in Sources */,
 				E3220C451E7AF088008AFA85 /* EventHeaderTableViewCell.swift in Sources */,

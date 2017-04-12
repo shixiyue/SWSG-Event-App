@@ -6,13 +6,13 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
-import UIKit
-
 protocol ImagesContent: class {
+    
+    associatedtype State: ImagesState
     
     var id: String? { get }
     var images: [UIImage] { get set }
-    var imagesState: ImagesState { get set }
+    var imagesState: State { get set }
     
     func loadImages()
     

@@ -384,15 +384,15 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Idea Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rV4-6i-ATU">
-                                                    <rect key="frame" x="16" y="8.5" width="343" height="26"/>
+                                                    <rect key="frame" x="8" y="8.5" width="359" height="26"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="22"/>
                                                     <color key="textColor" red="0.90980392160000001" green="0.16862745100000001" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="rV4-6i-ATU" firstAttribute="leading" secondItem="dyN-Jr-uv9" secondAttribute="leadingMargin" constant="8" id="11t-Sg-0Ne"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="rV4-6i-ATU" secondAttribute="trailing" constant="8" id="599-Kt-h7v"/>
+                                                <constraint firstItem="rV4-6i-ATU" firstAttribute="leading" secondItem="dyN-Jr-uv9" secondAttribute="leadingMargin" id="11t-Sg-0Ne"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="rV4-6i-ATU" secondAttribute="trailing" id="599-Kt-h7v"/>
                                                 <constraint firstItem="rV4-6i-ATU" firstAttribute="centerY" secondItem="dyN-Jr-uv9" secondAttribute="centerY" id="Lxd-gy-7pR"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -405,15 +405,15 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="by Team" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pVM-sW-Ggw">
-                                                    <rect key="frame" x="16" y="9" width="343" height="26"/>
+                                                    <rect key="frame" x="8" y="9" width="359" height="26"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="22"/>
                                                     <color key="textColor" red="0.90980392160000001" green="0.16862745100000001" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="pVM-sW-Ggw" firstAttribute="leading" secondItem="QFb-Vi-PpE" secondAttribute="leadingMargin" constant="8" id="6qU-d9-ol7"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="pVM-sW-Ggw" secondAttribute="trailing" constant="8" id="CYM-A2-E3N"/>
+                                                <constraint firstItem="pVM-sW-Ggw" firstAttribute="leading" secondItem="QFb-Vi-PpE" secondAttribute="leadingMargin" id="6qU-d9-ol7"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="pVM-sW-Ggw" secondAttribute="trailing" id="CYM-A2-E3N"/>
                                                 <constraint firstItem="pVM-sW-Ggw" firstAttribute="centerY" secondItem="QFb-Vi-PpE" secondAttribute="centerY" id="oSD-70-9bz"/>
                                             </constraints>
                                         </tableViewCellContentView>
