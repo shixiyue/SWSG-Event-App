@@ -643,4 +643,14 @@ struct Utility {
         viewController.view.endEditing(true)
     }
     
+    static func getTeamName(id: String, label: UILabel, prefix: String = Config.emptyString) {
+        Teams().retrieveTeamWith(id: id, completion: { (team) in
+            guard let team = team else {
+                label.text = prefix + Config.noTeamLabel
+                return
+            }
+            label.text = prefix + team.name
+        })
+    }
+    
 }

@@ -25,7 +25,11 @@ class Teams {
     }
     
     public func addTeam(team: Team) {
-        teams.append(team)
+        if let index = teams.index(of: team) {
+            teams[index] = team
+        } else {
+            teams.append(team)
+        }
     }
     
     public func retrieveTeamWith(id: String, completion: @escaping (Team?) -> Void) {

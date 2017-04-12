@@ -11,7 +11,6 @@ import UIKit
 class Idea: ImagesContent, TemplateContent {
     
     var votes: Int { return upvotes.count - downvotes.count }
-    var teamName: String { return "by Team "/*\(Teams.sharedInstance().retrieveTeamWith(id: team)!.name)"*/ }
     
     var id: String?
 
@@ -76,6 +75,7 @@ class Idea: ImagesContent, TemplateContent {
                 }
             }
         }
+        
         if let mainImageURL = snapshotValue[Config.mainImage] as? String {
             imagesState.mainImageURL = mainImageURL
         } else {

@@ -34,8 +34,8 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         loadIdeaImages()
         setUpIdeaMainImage()
         ideaNameLabel.text = idea.name
-        teamNameLabel.text = idea.teamName
         updateVotes()
+        Utility.getTeamName(id: idea.team, label: teamNameLabel, prefix: "by Team ")
     }
     
     private func loadIdeaImages() {
