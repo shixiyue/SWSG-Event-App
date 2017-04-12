@@ -19,7 +19,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     private var containerHeight: CGFloat!
 
     private var ideas = Ideas.sharedInstance()
-    private var teams = Teams.sharedInstance()
+    private var teams = Teams()
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -18,7 +18,7 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
     private let emptyFieldErrorMsg = "Fields cannot be empty!"
     private let mtplTeamErrorMsg = "You can not join more than 1 team!"
     
-    private let teams = Teams.sharedInstance()
+    private let teams = Teams()
     var sizingCell: TagCell?
     internal var tags = [String]() {
         didSet {

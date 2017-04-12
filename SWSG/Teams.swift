@@ -10,15 +10,15 @@ import Foundation
 import Firebase
 
 class Teams {
-    private static var teamsInstance = Teams()
-    private var teams : [Team]
-    private init() {
-        teams = [Team]()
-    }
+   // private static var teamsInstance = Teams()
+    var teams = [Team]()
+   // private init() {
+     //   teams = [Team]()
+    //}
     
-    class func sharedInstance() -> Teams {
-        return teamsInstance
-    }
+    //class func sharedInstance() -> Teams {
+      //  return teamsInstance
+    //}
     
     public func replaceTeams(teams: [Team]) {
          self.teams = teams
@@ -33,7 +33,6 @@ class Teams {
         print("id is \(id)")
         System.client.getTeam(with: id, completion: {
             (team, error) in
-            print("team is \(team)")
             completion(team)
         })
     }

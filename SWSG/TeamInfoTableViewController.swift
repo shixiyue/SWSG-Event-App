@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class TeamInfoTableViewController: UITableViewController {
     
@@ -14,7 +15,7 @@ class TeamInfoTableViewController: UITableViewController {
     var team : Team?
     var teamId : String?
     var sizingCell: TagCell?
-    private let teams = Teams.sharedInstance()
+    private let teams = Teams()
     private let joinTeamErrorMsg = "You can not join more than one team"
     private let quitTeamErrorMsg = "You do not belong to this team"
     private let fullTeamErrorMsg = "Team is full"
@@ -77,16 +78,15 @@ class TeamInfoTableViewController: UITableViewController {
                 self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
                 return
             }
-            //print("in TeamInfoTableViewController, set team index to \(teamIndex!), current team is \(user.team)")
+
             user.setTeamId(id: team!.id!)
             System.activeUser = user
             
             team?.addMember(member: user)
             print("member added")
-          //  teams.replaceTeamAt(index: teamIndex!, with: team!)
             buttonLbl.setTitle(Config.quitTeam, for: .normal)
         } else if (sender as! UIButton).currentTitle == Config.quitTeam {
-            if user.team != Config.noTeam {
+            if user.team != team?.id {
                 self.present(Utility.getFailAlertController(message: quitTeamErrorMsg), animated: true, completion: nil)
                 return
             }
@@ -99,7 +99,11 @@ class TeamInfoTableViewController: UITableViewController {
             } else {
                 buttonLbl.setTitle(Config.fullTeam, for: .normal)
             }
-            
+        }
+        System.client.updateTeam(for: team!)
+        System.client.updateUser(newUser: user)
+        if team?.members.count == 0 {
+            System.client.deleteTeam(for: team!)
         }
         tableView.reloadData()
     }

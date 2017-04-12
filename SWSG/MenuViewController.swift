@@ -31,7 +31,7 @@ class MenuViewController: UIViewController {
     private var userRef: FIRDatabaseReference?
     private var userRefHandle: FIRDatabaseHandle?
     
-    var teams = Teams.sharedInstance()
+    var teams = Teams()
     var btnMenu : UIButton!
     var delegate : SlideMenuDelegate?
     

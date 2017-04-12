@@ -335,6 +335,26 @@ class FirebaseClient {
         completion(nil)
         })
     }
+    
+    func updateTeam(for team: Team) {
+        guard let id = team.id else {
+            return
+        }
+        
+        let teamRef = getTeamRef(for: id)
+        teamRef.updateChildValues(team.toDictionary())
+    }
+    
+    public func deleteTeam(for team: Team) {
+        guard let id = team.id else {
+            return
+        }
+        
+        let teamsRef = getTeamsRef()
+        let teamRef = teamsRef.child(id)
+        teamRef.removeValue { (error, ref) in
+        }
+    }
     /*
     public func getTeams(completion: @escaping GetTeamsCallback) {
         teamsRef.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -936,6 +956,10 @@ class FirebaseClient {
     
     public func getIdeaRef(for ideaID: String) -> FIRDatabaseReference {
         return ideasRef.child(ideaID)
+    }
+    
+    public func getTeamRef(for teamID: String) -> FIRDatabaseReference {
+        return teamsRef.child(teamID)
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {

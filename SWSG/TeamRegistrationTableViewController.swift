@@ -12,8 +12,7 @@ import Firebase
 class TeamRegistrationTableViewController: BaseViewController {
     
     @IBOutlet var tableView: UITableView!
-    fileprivate let teams = Teams.sharedInstance()
-    
+    fileprivate var teams = Teams()
     private var teamRef: FIRDatabaseReference!
     private var teamAddedHandle: FIRDatabaseHandle?
     private var teamChangedHandle: FIRDatabaseHandle?
@@ -24,6 +23,11 @@ class TeamRegistrationTableViewController: BaseViewController {
         tableView.delegate = self
         addSlideMenuButton()
        // NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "teams"), object: nil)
+       // observeEvents()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        teams = Teams()
         observeEvents()
     }
     
@@ -97,7 +101,7 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
         print("loading table view")
         cell.teamName.text = team.name
         cell.teamIsLookingFor.text = team.lookingFor
-        for i in 0..<team.members.count {
+        for i in 0..<4 {
             switch i {
             case 0:
                 print("1st user")
@@ -106,18 +110,31 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
                 })
             case 1:
                 print("2nd user")
+                if team.members.count < 2 {
+                    cell.mmbrImage2.image = nil
+                    break
+                }
                 Utility.getProfileImg(uid: team.members[1], completion: {(image) in
-                    cell.mmbrImage1.image = image
+                    cell.mmbrImage2.image = image
                 })
             case 2:
                 print("3rd user")
+                if team.members.count < 3 {
+                    cell.mmbrImage3.image = nil
+                    break
+                }
                 Utility.getProfileImg(uid: team.members[2], completion: {(image) in
-                    cell.mmbrImage1.image = image
+                    cell.mmbrImage3.image = image
                 })
             case 3:
                 print("4th user")
+                if team.members.count < 4 {
+                    cell.mmbrImage4.image = nil
+                    break
+                }
+
                 Utility.getProfileImg(uid: team.members[3], completion: {(image) in
-                    cell.mmbrImage1.image = image
+                    cell.mmbrImage4.image = image
                 })
             default: break
             }

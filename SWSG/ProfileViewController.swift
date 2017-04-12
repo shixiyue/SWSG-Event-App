@@ -95,7 +95,7 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         }
         
         if user.team != Config.noTeam {
-            Teams.sharedInstance().retrieveTeamWith(id: user.team, completion: { (team) in
+            Teams().retrieveTeamWith(id: user.team, completion: { (team) in
                 guard let team = team else {
                     self.teamLbl.text = Config.noTeamLabel
                     return
