@@ -73,8 +73,11 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
             self.present(Utility.getFailAlertController(message: mtplTeamErrorMsg),animated: true, completion: nil)
             return
         }
+        guard let uid = user.uid else {
+            return
+        }
         
-        let team = Team(id: "", members: [user.uid!], name: name, lookingFor: looking, isPrivate: false, tags: tags)
+        let team = Team(id: "", members: [uid], name: name, lookingFor: looking, isPrivate: false, tags: tags)
         
         System.client.createTeam(_team: team, completion: { (error) in
             if let firebaseError = error {
@@ -85,7 +88,10 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
         })
         teams.addTeam(team: team)
         print("preparing to set user index")
-        user.setTeamId(id: team.id!)
+        guard let teamId = team.id else {
+            return
+        }
+        user.setTeamId(id: teamId)
         System.client.updateUser(newUser: user)
         System.activeUser = user
         Utility.popViewController(no: 1, viewController: self)

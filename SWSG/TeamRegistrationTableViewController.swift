@@ -32,6 +32,10 @@ class TeamRegistrationTableViewController: BaseViewController {
         observeEvents()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
+    
     func update() {
         print("updating")
         print("\(teams.count)")
