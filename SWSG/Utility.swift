@@ -13,6 +13,7 @@ import Firebase
 import EventKit
 import Google
 import GoogleSignIn
+import SwiftSpinner
 
 struct Utility {
     
@@ -426,11 +427,20 @@ struct Utility {
             viewController.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
         } else {
             System.client.getCurrentUser(completion: { (user, userError) in
-                if let firebaseError = userError, user == nil {
-                    viewController.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
-                } else {
-                    Utility.logInUser(user: user!, currentViewController: viewController)
+                guard let user = user else {
+                    var msg = "An error has occured"
+                    if let error = userError {
+                        msg = error.errorMessage
+                    }
+                    
+                    viewController.present(Utility.getFailAlertController(message: msg), animated: true, completion: { () in
+                        SwiftSpinner.hide()
+                    })
+                    
+                    return
                 }
+                
+                Utility.logInUser(user: user, currentViewController: viewController)
             })
         }
     }
