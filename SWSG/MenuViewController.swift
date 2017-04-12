@@ -42,7 +42,12 @@ class MenuViewController: UIViewController {
         setUpUserInfo()
         observeImage()
         
-        userRef = System.client.getUserRef(for: System.client.getUid())
+        guard let uid = System.client.getUid() else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
+        userRef = System.client.getUserRef(for: uid)
         profileImg = Utility.roundUIImageView(for: profileImg)
         profileImg.image = Config.placeholderImg
     }

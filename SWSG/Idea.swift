@@ -147,7 +147,10 @@ class Idea: ImagesContent {
     }
     
     func getVotingState() -> (upvote: Bool, downvote: Bool) {
-        let uid = System.client.getUid()
+        guard let uid = System.client.getUid() else {
+            return (false, false)
+        }
+        
         return (upvotes.contains(uid), downvotes.contains(uid))
     }
     

@@ -504,8 +504,12 @@ struct Utility {
     }
     
     static func validChannel(_ channel: Channel) -> Bool {
+        guard let uid = System.client.getUid() else {
+            return false
+        }
+        
         if channel.type != .publicChannel {
-            if !channel.members.contains(System.client.getUid()) {
+            if !channel.members.contains(uid) {
                 return false
             }
         }

@@ -42,10 +42,10 @@ class User {
         }
         self.type = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
 
-        guard let team = snapshotValue[Config.team] as? String else {
-            return nil
+        if let team = snapshotValue[Config.team] as? String {
+            self.team = team
         }
-        self.team = team
+        
         guard let profileSnapshot = snapshotValue[Config.profile] as? [String: Any], let profile = Profile(snapshotValue: profileSnapshot) else {
             return nil
         }

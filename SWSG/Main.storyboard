@@ -65,6 +65,15 @@
                                 <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notifications" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ais-O1-ITA">
+                                <rect key="frame" x="16" y="346" width="124.5" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="lkq-n3-1sq"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="24"/>
+                                <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k4R-87-UqZ">
                                 <rect key="frame" x="0.0" y="238" width="375" height="100"/>
                                 <constraints>
@@ -74,12 +83,21 @@
                                     <segue destination="NYs-qi-gck" kind="embed" id="8a9-g6-Yzl"/>
                                 </connections>
                             </containerView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Notifications" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iq0-SW-DeZ">
+                                <rect key="frame" x="116" y="397" width="144" height="26"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="22"/>
+                                <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="Ais-O1-ITA" firstAttribute="leading" secondItem="XIb-no-xB0" secondAttribute="leadingMargin" id="44L-zv-b0L"/>
                             <constraint firstItem="k4R-87-UqZ" firstAttribute="top" secondItem="Q9B-Wi-HgQ" secondAttribute="bottom" constant="8" id="I2T-M3-wzF"/>
                             <constraint firstItem="quM-4g-mj3" firstAttribute="top" secondItem="FcQ-eb-5Mf" secondAttribute="bottom" constant="37" id="Jo8-Bf-MKm"/>
                             <constraint firstItem="quM-4g-mj3" firstAttribute="leading" secondItem="XIb-no-xB0" secondAttribute="leading" id="KEg-YV-WCI"/>
+                            <constraint firstItem="Ais-O1-ITA" firstAttribute="top" secondItem="k4R-87-UqZ" secondAttribute="bottom" constant="8" id="KqI-Bf-rGg"/>
                             <constraint firstAttribute="trailing" secondItem="quM-4g-mj3" secondAttribute="trailing" id="OVj-HH-d4b"/>
                             <constraint firstItem="7Bj-9D-ZDH" firstAttribute="leading" secondItem="XIb-no-xB0" secondAttribute="leadingMargin" id="a7n-wy-OlO"/>
                             <constraint firstItem="k4R-87-UqZ" firstAttribute="leading" secondItem="XIb-no-xB0" secondAttribute="leading" id="i8Z-ut-6ID"/>

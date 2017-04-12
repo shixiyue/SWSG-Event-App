@@ -97,7 +97,12 @@ class ChannelInfoViewController: UIViewController {
     }
     
     @IBAction func quitChatBtnPressed(_ sender: Any) {
-        self.client.removeMember(from: channel, uid: System.client.getUid())
+        guard let uid = System.client.getUid() else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
+        self.client.removeMember(from: channel, uid: uid)
         
         Utility.popViewController(no: 2, viewController: self)
     }

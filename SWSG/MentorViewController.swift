@@ -154,13 +154,18 @@ class MentorViewController: UIViewController {
     
     @IBAction func composeBtnPressed(_ sender: Any) {
         
-        guard let mentorAcct = mentorAcct, let uid = mentorAcct.uid else {
+        guard let uid = System.client.getUid() else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
+        guard let mentorAcct = mentorAcct, let mentorID = mentorAcct.uid else {
             return
         }
         
         var members = [String]()
-        members.append(System.client.getUid())
         members.append(uid)
+        members.append(mentorID)
         
         let channel = Channel(type: .directMessage, members: members)
         System.client.createChannel(for: channel, completion: { (channel, error) in

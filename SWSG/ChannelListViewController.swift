@@ -45,13 +45,18 @@ class ChannelListViewController: BaseViewController {
         channelsExistingHandle = channelsRef.observe(.childChanged, with: { (snapshot) in
             var removedObjects = 0
             
+            guard let uid = System.client.getUid() else {
+                Utility.logOutUser(currentViewController: self)
+                return
+            }
+            
             for (index, channel) in self.channels.enumerated() {
                 if snapshot.key == channel.id {
                     guard let channel = Channel(id: snapshot.key, snapshot: snapshot) else {
                         return
                     }
                     
-                    guard channel.members.contains(self.client.getUid()) else {
+                    guard channel.members.contains(uid) else {
                         let indexToRemove = index - removedObjects
                         self.channels.remove(at: indexToRemove)
                         self.chatList.reloadData()
@@ -138,6 +143,12 @@ class ChannelListViewController: BaseViewController {
         let title = "Direct Message"
         let btnText = "Create"
         let placeholder = "Username"
+        
+        guard let uid = client.getUid() else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
         Utility.createPopUpWithTextField(title: title, message: message,
                                          btnText: btnText, placeholderText: placeholder,
                                          existingText: existingText,
@@ -153,7 +164,7 @@ class ChannelListViewController: BaseViewController {
                 }
                 
                 var members = [String]()
-                members.append(self.client.getUid())
+                members.append(uid)
                 members.append(userUID)
                 
                 let channel = Channel(type: .directMessage, members: members)

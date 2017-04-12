@@ -55,7 +55,13 @@ final class ChannelViewController: JSQMessagesViewController {
     //MARK: Initialization Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.senderId = client.getUid()
+        
+        guard let uid = client.getUid() else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
+        self.senderId = uid
         setUpFirebase()
         setUpChannelInfo()
         
