@@ -180,6 +180,9 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         tap.delegate = self
         fullScreenImageView.addGestureRecognizer(tap)
         self.view.addSubview(fullScreenImageView)
+        guard let currentUser = System.activeUser, let user = user, currentUser == user else {
+            return
+        }
         changeProfileImageToolbar.isHidden = false
         view.bringSubview(toFront: changeProfileImageToolbar)
     }

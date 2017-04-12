@@ -32,7 +32,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
     private func setUpIdea() {
         loadIdeaImages()
-        mainImage.image = idea.mainImage
+        setUpIdeaMainImage()
         ideaNameLabel.text = idea.name
         teamNameLabel.text = idea.teamName
         updateVotes()
@@ -47,6 +47,13 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         }
         NotificationCenter.default.addObserver(self, selector: #selector(updateImages), name: Notification.Name(rawValue: id), object: nil)
         idea.loadImages()
+    }
+    
+    private func setUpIdeaMainImage() {
+        mainImage.image = idea.mainImage
+        mainImage.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullScreenImage))
+        mainImage.addGestureRecognizer(tapGesture)
     }
     
     override func viewWillAppear(_ animated: Bool) {
