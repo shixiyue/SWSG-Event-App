@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Team Registration Table View Controller-->
+        <!--Team List-->
         <scene sceneID="ycP-Pv-prw">
             <objects>
                 <viewController storyboardIdentifier="TeamRegistrationTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Kal-pg-07J" customClass="TeamRegistrationTableViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
@@ -129,7 +129,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="FW7-82-nMQ">
+                    <navigationItem key="navigationItem" title="Team List" id="FW7-82-nMQ">
                         <barButtonItem key="rightBarButtonItem" title="Create" id="MMH-cB-kAU">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             <connections>

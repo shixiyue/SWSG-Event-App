@@ -191,6 +191,7 @@ class TeamInfoTableViewController: UITableViewController {
                     }
                 })
                 cell.profileimage = Utility.roundUIImageView(for: cell.profileimage)
+                cell.profileimage.image = Config.placeholderImg
                     Utility.getProfileImg(uid: team.members[indexPath.row - 1], completion: {(image) in
                         cell.profileimage.image = image
                     })

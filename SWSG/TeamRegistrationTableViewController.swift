@@ -110,6 +110,8 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
             switch i {
             case 0:
                 print("1st user")
+                cell.mmbrImage1 = Utility.roundUIImageView(for: cell.mmbrImage1)
+                cell.mmbrImage1.image = Config.placeholderImg
                 Utility.getProfileImg(uid: team.members[0], completion: {(image) in
                     cell.mmbrImage1.image = image
                 })
@@ -119,6 +121,8 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
                     cell.mmbrImage2.image = nil
                     break
                 }
+                cell.mmbrImage2 = Utility.roundUIImageView(for: cell.mmbrImage2)
+                cell.mmbrImage2.image = Config.placeholderImg
                 Utility.getProfileImg(uid: team.members[1], completion: {(image) in
                     cell.mmbrImage2.image = image
                 })
@@ -128,6 +132,8 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
                     cell.mmbrImage3.image = nil
                     break
                 }
+                cell.mmbrImage3 = Utility.roundUIImageView(for: cell.mmbrImage3)
+                cell.mmbrImage3.image = Config.placeholderImg
                 Utility.getProfileImg(uid: team.members[2], completion: {(image) in
                     cell.mmbrImage3.image = image
                 })
@@ -137,7 +143,9 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
                     cell.mmbrImage4.image = nil
                     break
                 }
-
+                
+                cell.mmbrImage4 = Utility.roundUIImageView(for: cell.mmbrImage4)
+                cell.mmbrImage4.image = Config.placeholderImg
                 Utility.getProfileImg(uid: team.members[3], completion: {(image) in
                     cell.mmbrImage4.image = image
                 })

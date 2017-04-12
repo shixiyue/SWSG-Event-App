@@ -86,24 +86,6 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         })
     }
     
-    func composeBtnPressed() {
-        guard let currentUID = System.client.getUid(), let user = user, let userUID = user.uid else {
-            return
-        }
-        
-        var members = [String]()
-        members.append(currentUID)
-        members.append(userUID)
-        
-        let channel = Channel(type: .directMessage, members: members)
-        System.client.createChannel(for: channel, completion: { (channel, error) in
-            guard error == nil else {
-                return
-            }
-            self.performSegue(withIdentifier: Config.profileToChannel, sender: channel)
-        })
-    }
-    
     private func setUpProfileList() {
         profileList.tableFooterView = UIView(frame: CGRect.zero)
         profileList.allowsSelection = false
@@ -172,6 +154,24 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
             composeBtn.addGestureRecognizer(tapGesture)
             composeBtn.isHidden = false
         }
+    }
+    
+    func composeBtnPressed(_ sender: UITapGestureRecognizer) {
+        guard let currentUID = System.client.getUid(), let user = user, let userUID = user.uid else {
+            return
+        }
+        
+        var members = [String]()
+        members.append(currentUID)
+        members.append(userUID)
+        
+        let channel = Channel(type: .directMessage, members: members)
+        System.client.createChannel(for: channel, completion: { (channel, error) in
+            guard error == nil else {
+                return
+            }
+            self.performSegue(withIdentifier: Config.profileToChannel, sender: channel)
+        })
     }
     
     @IBAction func topRightBtnPressed(_ sender: Any) {
