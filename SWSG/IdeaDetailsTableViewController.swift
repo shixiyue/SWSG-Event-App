@@ -21,19 +21,32 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
     private var containerViewController: TemplateViewController!
     private var containerHeight: CGFloat!
+    private var editButton: UIBarButtonItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        idea.loadImages()
+        
+        setNavigationBar()
+        setUpIdea()
+    }
+    
+    private func setUpIdea() {
+        loadIdeaImages()
         mainImage.image = idea.mainImage
         ideaNameLabel.text = idea.name
         teamNameLabel.text = idea.teamName
         updateVotes()
-        setNavigationBar()
-        guard let id = idea.id else {
+    }
+    
+    private func loadIdeaImages() {
+        guard !idea.imagesState.imagesHasFetched, let id = idea.id else {
             return
         }
+        if let edit = editButton {
+            edit.isEnabled = false
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(updateImages), name: Notification.Name(rawValue: id), object: nil)
+        idea.loadImages()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -68,6 +81,9 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
             self.containerViewController.tableView.layoutIfNeeded()
             self.containerHeight = self.containerViewController.tableView.contentSize.height
             self.tableView.reloadData()
+        }
+        if let edit = editButton {
+            edit.isEnabled = true
         }
         NotificationCenter.default.removeObserver(self)
     }
@@ -113,6 +129,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         }
         let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(showDeleteWarning))
         let edit = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(jumpToEdit))
+        self.editButton = edit
         navigationItem.rightBarButtonItems = [delete, edit]
     }
     

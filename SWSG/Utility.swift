@@ -13,6 +13,7 @@ import Firebase
 import EventKit
 import Google
 import GoogleSignIn
+import SwiftSpinner
 
 struct Utility {
     
@@ -221,9 +222,28 @@ struct Utility {
             }
         })
     }
+    
     static func strtok(string: String, delimiter: String) -> [Int] {
         let values = string.components(separatedBy: delimiter).flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
         return values
+    }
+    
+    static func channelsSortedByLatestMessage(channels: [Channel]) -> [Channel] {
+        let sortedChannels = channels.sorted(by: {
+            guard let msgFirst = $0.latestMessage, let msgSecond = $1.latestMessage else {
+                if let _ = $0.latestMessage {
+                    return true
+                } else if let _ = $1.latestMessage {
+                    return false
+                } else {
+                    return $0.id! < $1.id!
+                }
+            }
+            
+            return msgFirst.timestamp > msgSecond.timestamp
+        })
+        
+        return sortedChannels
     }
     
     static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
@@ -407,11 +427,20 @@ struct Utility {
             viewController.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
         } else {
             System.client.getCurrentUser(completion: { (user, userError) in
-                if let firebaseError = userError, user == nil {
-                    viewController.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
-                } else {
-                    Utility.logInUser(user: user!, currentViewController: viewController)
+                guard let user = user else {
+                    var msg = "An error has occured"
+                    if let error = userError {
+                        msg = error.errorMessage
+                    }
+                    
+                    viewController.present(Utility.getFailAlertController(message: msg), animated: true, completion: { () in
+                        SwiftSpinner.hide()
+                    })
+                    
+                    return
                 }
+                
+                Utility.logInUser(user: user, currentViewController: viewController)
             })
         }
     }
@@ -471,6 +500,45 @@ struct Utility {
             
             Utility.logUserIn(error: error, current: viewController)
             completion(true)
+        })
+    }
+    
+    static func validChannel(_ channel: Channel) -> Bool {
+        if channel.type != .publicChannel {
+            if !channel.members.contains(System.client.getUid()) {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    static func getOtherUser(in channel: Channel, completion: @escaping (User?) -> Void) {
+        for memberID in channel.members {
+            if memberID != System.client.getUid() {
+                System.client.getUserWith(uid: memberID, completion: { (user, error) in
+                    completion(user)
+                })
+                return
+            }
+        }
+        
+        completion(nil)
+    }
+    
+    static func getLatestMessage(channel: Channel, snapshot: FIRDataSnapshot,
+                                  completion: @escaping () -> Void) {
+        let query = System.client.getLatestMessageQuery(for: snapshot.key)
+        query.observe(.value, with: { (snapshot) in
+            for child in snapshot.children {
+                guard let mentorSnapshot = child as? FIRDataSnapshot,
+                    let message = Message(snapshot: mentorSnapshot) else {
+                        continue
+                }
+                channel.latestMessage = message
+            }
+            completion()
+            
         })
     }
     

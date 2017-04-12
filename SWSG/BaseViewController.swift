@@ -126,11 +126,11 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         self.addChildViewController(menuVC)
         menuVC.view.layoutIfNeeded()
         
-        
-        menuVC.view.frame=CGRect(x: 0 - UIScreen.main.bounds.size.width, y: menuYOffset, width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height);
+        let heightOffset = navigationController?.navigationBar.frame.size.height ?? 0
+        menuVC.view.frame=CGRect(x: 0 - UIScreen.main.bounds.size.width, y: menuYOffset, width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height - heightOffset);
         
         UIView.animate(withDuration: 0.3, animations: { () -> Void in
-            menuVC.view.frame=CGRect(x: 0, y: self.menuYOffset, width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height);
+            menuVC.view.frame=CGRect(x: 0, y: self.menuYOffset, width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height - heightOffset);
             sender.isEnabled = true
         }, completion:nil)
     }

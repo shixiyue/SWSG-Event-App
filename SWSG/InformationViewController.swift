@@ -32,8 +32,7 @@ class InformationViewController: BaseViewController {
         }
         switch identifier {
         case Config.speakers, Config.judges, Config.organizers:
-            peopleViewController.people = People.getPeopleInstance().retrievePerson(category: identifier)
-            peopleViewController.header = identifier
+            peopleViewController.category = identifier
         default:
             return
         }

@@ -302,6 +302,7 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pFM-rQ-c2b" customClass="RoundCornerButton" customModule="SWSG" customModuleProvider="target">
                                                     <rect key="frame" x="12" y="8" width="351" height="30"/>
                                                     <color key="backgroundColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
                                                     <state key="normal" title="Change Password">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                     </state>
@@ -331,7 +332,7 @@
                                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OMd-fD-24b" customClass="RoundCornerButton" customModule="SWSG" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="170" height="30"/>
                                                             <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
                                                             <state key="normal" title="Unlink Facebook">
                                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                             </state>
@@ -354,8 +355,8 @@
                                                     <subviews>
                                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ipi-9T-jJt" customClass="RoundCornerButton" customModule="SWSG" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="170" height="30"/>
-                                                            <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                            <color key="backgroundColor" red="0.17057954511264153" green="0.85166164340101524" blue="0.23825884935239453" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
                                                             <state key="normal" title="Unlink Google">
                                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                             </state>
@@ -676,13 +677,23 @@
                                                                 <constraint firstAttribute="height" constant="100" id="hcl-Lb-aBv"/>
                                                             </constraints>
                                                         </view>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="st3-gC-vvV">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Htf-Qk-TEA">
                                                             <rect key="frame" x="5" y="0.0" width="100" height="100"/>
+                                                            <subviews>
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="st3-gC-vvV">
+                                                                    <rect key="frame" x="5" y="5" width="90" height="90"/>
+                                                                </imageView>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="100" id="7xT-x7-Red"/>
-                                                                <constraint firstAttribute="width" constant="100" id="MKm-O5-wAh"/>
+                                                                <constraint firstItem="st3-gC-vvV" firstAttribute="leading" secondItem="Htf-Qk-TEA" secondAttribute="leading" constant="5" id="61e-3x-vkc"/>
+                                                                <constraint firstAttribute="height" constant="100" id="89h-r4-Dhf"/>
+                                                                <constraint firstAttribute="bottom" secondItem="st3-gC-vvV" secondAttribute="bottom" constant="5" id="8qA-DB-ODm"/>
+                                                                <constraint firstAttribute="trailing" secondItem="st3-gC-vvV" secondAttribute="trailing" constant="5" id="F83-4y-bQr"/>
+                                                                <constraint firstAttribute="width" constant="100" id="FAo-o9-3IO"/>
+                                                                <constraint firstItem="st3-gC-vvV" firstAttribute="top" secondItem="Htf-Qk-TEA" secondAttribute="top" constant="5" id="NNF-zF-Ow7"/>
                                                             </constraints>
-                                                        </imageView>
+                                                        </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gBv-LE-K9p">
                                                             <rect key="frame" x="105" y="0.0" width="270" height="100"/>
                                                             <subviews>
@@ -737,15 +748,14 @@
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstItem="gBv-LE-K9p" firstAttribute="top" secondItem="MS3-VN-Xci" secondAttribute="top" id="01t-4Y-fea"/>
-                                                        <constraint firstAttribute="bottom" secondItem="st3-gC-vvV" secondAttribute="bottom" id="A0m-70-0g8"/>
-                                                        <constraint firstItem="gBv-LE-K9p" firstAttribute="leading" secondItem="st3-gC-vvV" secondAttribute="trailing" id="Elx-ol-4Kt"/>
                                                         <constraint firstAttribute="trailing" secondItem="gBv-LE-K9p" secondAttribute="trailing" id="K4I-FE-9K1"/>
-                                                        <constraint firstItem="st3-gC-vvV" firstAttribute="leading" secondItem="Twt-dl-Rzq" secondAttribute="trailing" id="Lb3-AI-y80"/>
                                                         <constraint firstAttribute="bottom" secondItem="Twt-dl-Rzq" secondAttribute="bottom" id="R1i-Rv-P1z"/>
                                                         <constraint firstAttribute="height" constant="100" id="aH0-hB-Ig1"/>
                                                         <constraint firstItem="Twt-dl-Rzq" firstAttribute="leading" secondItem="MS3-VN-Xci" secondAttribute="leading" id="bda-xI-zVK"/>
-                                                        <constraint firstItem="st3-gC-vvV" firstAttribute="top" secondItem="MS3-VN-Xci" secondAttribute="top" id="h5O-ZT-Ami"/>
+                                                        <constraint firstItem="Htf-Qk-TEA" firstAttribute="leading" secondItem="Twt-dl-Rzq" secondAttribute="trailing" id="mJf-L4-RGS"/>
+                                                        <constraint firstItem="Htf-Qk-TEA" firstAttribute="top" secondItem="MS3-VN-Xci" secondAttribute="top" id="muW-vY-mpd"/>
                                                         <constraint firstAttribute="bottom" secondItem="gBv-LE-K9p" secondAttribute="bottom" id="nPu-jS-tFd"/>
+                                                        <constraint firstAttribute="bottom" secondItem="Htf-Qk-TEA" secondAttribute="bottom" id="tsB-EN-Zlv"/>
                                                         <constraint firstItem="Twt-dl-Rzq" firstAttribute="top" secondItem="MS3-VN-Xci" secondAttribute="top" id="xwf-cg-aWj"/>
                                                     </constraints>
                                                 </stackView>
@@ -822,7 +832,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="huf-f7-zRJ" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="cjc-gd-qgX">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cjc-gd-qgX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

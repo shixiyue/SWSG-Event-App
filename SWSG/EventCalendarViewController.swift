@@ -44,6 +44,11 @@ class EventCalendarViewController: BaseViewController {
         dayList.reloadData()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        dayList.reloadData()
+    }
+    
     private func setUpCalendar() {
         calendarView.dataSource = self
         calendarView.delegate = self
@@ -112,22 +117,24 @@ class EventCalendarViewController: BaseViewController {
         // channels being written to the Firebase DB
         eventRef = System.client.getEventsRef()
         eventAddedHandle = eventRef.observe(.childAdded, with: { (snapshot) -> Void in
+            print(snapshot)
             guard let date = Utility.fbDateFormatter.date(from: snapshot.key) else {
                 return
             }
-            self.events[date] = System.client.getEvents(snapshot: snapshot)
+            self.events[date] = System.client.getEvents(snapshot: snapshot)?.sorted(by: { $0.startDateTime < $1.startDateTime} )
             self.calendarView.reloadData()
         })
         
         eventChangedHandle = eventRef.observe(.childChanged, with: { (snapshot) -> Void in
+            print(snapshot)
             guard let date = Utility.fbDateFormatter.date(from: snapshot.key) else {
                 return
             }
-            self.events[date] = System.client.getEvents(snapshot: snapshot)
+            self.events[date] = System.client.getEvents(snapshot: snapshot)?.sorted(by: { $0.startDateTime < $1.startDateTime} )
             self.calendarView.reloadData()
         })
         
-        eventDeletedHandle = eventRef.observe(.childChanged, with: { (snapshot) -> Void in
+        eventDeletedHandle = eventRef.observe(.childRemoved, with: { (snapshot) -> Void in
             guard let date = Utility.fbDateFormatter.date(from: snapshot.key) else {
                 return
             }

@@ -65,13 +65,18 @@ struct Config {
     static let speakers = "Speakers"
     static let organizers = "Organizing Team"
     static let judges = "Judges"
-
+    static let title = "title"
+    static let intro = "intro"
+    static let photo = "photo"
+    static let question = "question"
+    static let answer = "answer"
     
     // Parameters for UI:
-    static let defaultButtonFont = UIFont(name: "Futura", size: 20)
+    static let defaultButtonFont = UIFont(name: "Futura", size: 15)
     static let buttonCornerRadius: CGFloat = 5
     static let themeColor = UIColor(red: 232.0/255.0, green: 43.0/255.0, blue: 49.0/255.0, alpha: CGFloat(1))
     static let placeholderColor = UIColor(red: 199/255, green: 199/255, blue: 205/255, alpha: 1.0)
+    static let greenColor = UIColor(red: 0/255, green: 173/255, blue: 54/255, alpha: 1.0)
     static let disableAlpha: CGFloat = 0.5
     static let enableAlpha: CGFloat = 1
     static let maximumZoomScale: CGFloat = 10
@@ -84,10 +89,12 @@ struct Config {
     static let placeholderImg = UIImage(named: "Placeholder")!
     static let defaultIdeaImage = UIImage(named: "default-idea-image")!
     static let loadingImage = UIImage(named: "loading")!
+    static let defaultPersonImage = UIImage(named: "Profile")!
     static let emptyStar = UIImage(named: "Star-Empty")!
     static let fullStar = UIImage(named: "Star-Full")!
     static let chatIconWidth: CGFloat = 40
     static let headerBuffer: CGFloat = 45
+    static let scrollViewOffset: CGFloat = 300
     static let keyboardOffsetSignUp: CGFloat = 94
     
     // Parameters for Storyboard:
@@ -116,7 +123,11 @@ struct Config {
     static let imageCropper = "ImageCropper"
     static let imageCropperViewController = "ImageCropperViewController"
     static let uiSupporting = "UISupporting"
-    
+    static let eventPageCellView = "eventPageCellView"
+    static let emptyEventView = "emptyEventView"
+    static let emptyChatView = "emptyChatView"
+    static let eventDetailsTableViewController = "EventDetailsTableViewController"
+    static let channelPageCellView = "channelPageCellView"
     static let channelViewController = "ChannelViewController"
     
     //Parameters for Segues:
@@ -137,6 +148,10 @@ struct Config {
     static let profileToEditProfile = "profileToEditProfile"
     static let chatToProfile = "chatToProfile"
     static let mentorToProfile = "mentorToProfile"
+    static let eventToProfile = "eventToProfile"
+    static let eventPageEmbed = "eventPageEmbed"
+    static let homeToEventDetails = "homeToEventDetails"
+    static let homeToChat = "homeToChat"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
@@ -146,6 +161,7 @@ struct Config {
     static let done = "Done"
     static let noTeamLabel = "No Team yet"
     static let defaultContent = " "
+    static let emptyString = ""
     
     static let passwordMinLength = 6
     

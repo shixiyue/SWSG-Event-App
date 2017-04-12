@@ -36,11 +36,14 @@ class Teams {
             completion(team)
         })
     }
-    
     public func retrieveTeamWith(index: Int) -> Team? {
+        if index < teams.count {
         return teams[index]
+        } else {
+            return nil
+        }
     }
-    
+
     public func replaceTeamAt(index: Int, with team: Team) {
         teams[index] = team
     }
