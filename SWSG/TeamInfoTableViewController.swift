@@ -165,6 +165,7 @@ class TeamInfoTableViewController: UITableViewController {
                         print("error reading user")
                     }
                 })
+                cell.profileimage = Utility.roundUIImageView(for: cell.profileimage)
                     Utility.getProfileImg(uid: team.members[indexPath.row - 1], completion: {(image) in
                         cell.profileimage.image = image
                     })
