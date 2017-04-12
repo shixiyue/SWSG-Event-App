@@ -21,12 +21,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="startup-weekend-logo" translatesAutoresizingMaskIntoConstraints="NO" id="2H6-xH-EoB">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="startup-weekend-logo" translatesAutoresizingMaskIntoConstraints="NO" id="2H6-xH-EoB">
                                 <rect key="frame" x="67" y="282" width="240" height="103"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="103" id="JNG-Cm-V5X"/>
+                                    <constraint firstAttribute="width" constant="240" id="RmQ-9D-4GD"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="2H6-xH-EoB" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="OIm-2h-6ou"/>
+                            <constraint firstItem="2H6-xH-EoB" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="l2A-WZ-YRS"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>

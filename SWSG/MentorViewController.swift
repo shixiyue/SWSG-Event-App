@@ -87,6 +87,7 @@ class MentorViewController: UIViewController {
             self.mentor = mentor
             self.cvLayout.dataSourceDidUpdate = true
             self.consultationSlotCollection.reloadData()
+            print("test")
         })
     }
     
