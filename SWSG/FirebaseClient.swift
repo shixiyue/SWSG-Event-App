@@ -35,6 +35,8 @@ class FirebaseClient {
     typealias GetEventCallback = (Event?, FirebaseError?) -> Void
     typealias GetEventsCallback = ([Date: [Event]], FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
+    typealias GetTeamCallback = (Team?, FirebaseError?) -> Void
+    typealias GetTeamsCallback = ([Team], FirebaseError?) -> Void
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
     typealias ImageCallback = (UIImage?, String?) -> Void
     typealias ImagesCallback = ([UIImage]?, String?) -> Void
@@ -334,6 +336,88 @@ class FirebaseClient {
         let userRef = usersRef.child(activeUID)
         userRef.child(Config.favourites).setValue(favourites)
         System.activeUser?.setFavourites(favourites: favourites)
+        
+    }
+    
+    public func createTeam(_team: Team, completion: @escaping CreateTeamCallback) {
+        let teamRef = teamsRef.childByAutoId()
+        _team.id = teamRef.key
+        teamRef.setValue(_team.toDictionary(), withCompletionBlock: { (err, _) in
+            guard err == nil else {
+                completion(self.checkError(err))
+                return
+            }
+        completion(nil)
+        })
+    }
+    
+    func updateTeam(for team: Team) {
+        guard let id = team.id else {
+            return
+        }
+        
+        let teamRef = getTeamRef(for: id)
+        teamRef.updateChildValues(team.toDictionary())
+    }
+    
+    public func deleteTeam(for team: Team) {
+        guard let id = team.id else {
+            return
+        }
+        
+        let teamsRef = getTeamsRef()
+        let teamRef = teamsRef.child(id)
+        teamRef.removeValue { (error, ref) in
+        }
+    }
+    /*
+    public func getTeams(completion: @escaping GetTeamsCallback) {
+        teamsRef.observeSingleEvent(of: .value, with: { (snapshot) in
+              var teams = [Team]()
+            for teamNameSnapshot in snapshot.children {
+                for teamSnapShot in (teamNameSnapshot as AnyObject).children {
+                    guard let team = Team(id: (teamSnapShot as AnyObject).key, snapshot: teamSnapShot as! FIRDataSnapshot) else {
+                        continue
+                    }
+                    teams.append(team)
+                }
+            }
+            completion(teams, nil)
+        })
+    }*/
+    public func getTeam(snapshot: Any?) -> Team? {
+        print("inside getTeams method")
+        guard let snapshot = snapshot as? FIRDataSnapshot else {
+            print("snapshot is nil")
+            return nil
+        }
+       // for teamsSnapshot in snapshot.children {
+            //print("inside teamsnapshot")
+            //print("\(teamsSnapshot)")
+          //  guard let teamsSnapshot = teamsSnapshot as? FIRDataSnapshot else {
+            //    continue
+        //}
+        print("team id is \(snapshot.key)")
+        return Team(id: snapshot.key, snapshot: snapshot)
+    }
+    
+
+    public func getTeam(with id: String, completion: @escaping GetTeamCallback) {
+            let teamRef = teamsRef.child(id)
+            // TODO: handle error
+            print("inside get Team method")
+            print("team ref is \(teamRef)")
+            teamRef.observeSingleEvent(of: .value, with: {(snapshot) in
+                print("wowowwowo")
+                guard let team = Team(id: id, snapshot: snapshot) else {
+                    print("team retrieved in getTeam is nil")
+                    completion(nil, nil)
+                    return
+                }
+                print("team is not nil")
+                //team.setId(id: id)
+                completion(team, nil)
+            })
         
     }
     
@@ -967,6 +1051,10 @@ class FirebaseClient {
         return eventsRef
     }
     
+    public func getTeamsRef() -> FIRDatabaseReference {
+        return teamsRef
+    }
+    
     public func getEventRef(event: Event) -> FIRDatabaseReference {
         let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
         
@@ -991,6 +1079,10 @@ class FirebaseClient {
         return ideasRef.child(ideaID)
     }
     
+
+    public func getTeamRef(for teamID: String) -> FIRDatabaseReference {
+        return teamsRef.child(teamID)
+    }
     public func getPeopleRef(for category: String) -> FIRDatabaseReference {
         return informationRef.child("people").child(category)
     }
@@ -1001,6 +1093,7 @@ class FirebaseClient {
     
     public func getFaqRef() -> FIRDatabaseReference {
         return informationRef.child("faq")
+
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {

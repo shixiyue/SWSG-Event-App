@@ -20,7 +20,7 @@ class User {
     public private (set) var uid: String?
     public private (set) var favourites: [String]?
     
-    init(profile: Profile, type: UserTypes, team: Int, email: String) {
+    init(profile: Profile, type: UserTypes, team: String, email: String) {
         self.type = type
         self.team = team
         self.profile = profile
@@ -41,11 +41,11 @@ class User {
             return nil
         }
         self.type = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
-        
-        if let team = snapshotValue[Config.team] as? Int {
-            self.team = team
+
+        guard let team = snapshotValue[Config.team] as? String else {
+            return nil
         }
-        
+        self.team = team
         guard let profileSnapshot = snapshotValue[Config.profile] as? [String: Any], let profile = Profile(snapshotValue: profileSnapshot) else {
             return nil
         }
@@ -66,11 +66,11 @@ class User {
         return team != Config.noTeam
     }
     
-    func setTeamIndex(index: Int) {
+    func setTeamId(id: String) {
         guard type.isParticipant else {
             return
         }
-        team = index
+        team = id
     }
     
     func setMentor(mentor: Mentor) {
@@ -107,7 +107,7 @@ class User {
         // Assumption: type, profile and team have met their representation invariants.
         assert (Utility.isValidEmail(testStr: email))
         if !type.isParticipant {
-            assert(team == -1)
+            assert(team == Config.noTeam)
         }
     }
     

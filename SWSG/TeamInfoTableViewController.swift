@@ -7,14 +7,15 @@
 //
 
 import UIKit
+import Firebase
 
 class TeamInfoTableViewController: UITableViewController {
     
     @IBOutlet weak var buttonLbl: UIButton!
     var team : Team?
-    var teamIndex : Int?
-        var sizingCell: TagCell?
-    private let teams = Teams.sharedInstance()
+    var teamId : String?
+    var sizingCell: TagCell?
+    private let teams = Teams()
     private let joinTeamErrorMsg = "You can not join more than one team"
     private let quitTeamErrorMsg = "You do not belong to this team"
     private let fullTeamErrorMsg = "Team is full"
@@ -73,24 +74,23 @@ class TeamInfoTableViewController: UITableViewController {
             return
         }
         if (sender as! UIButton).currentTitle == Config.joinTeam {
-            if user.team != -1 {
+            if user.team != Config.noTeam {
                 self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
                 return
             }
-            print("in TeamInfoTableViewController, set team index to \(teamIndex!), current team is \(user.team)")
-            user.setTeamIndex(index: teamIndex!)
+
+            user.setTeamId(id: team!.id!)
             System.activeUser = user
             
             team?.addMember(member: user)
             print("member added")
-            teams.replaceTeamAt(index: teamIndex!, with: team!)
             buttonLbl.setTitle(Config.quitTeam, for: .normal)
         } else if (sender as! UIButton).currentTitle == Config.quitTeam {
-            if user.team != teamIndex {
+            if user.team != team?.id {
                 self.present(Utility.getFailAlertController(message: quitTeamErrorMsg), animated: true, completion: nil)
                 return
             }
-            user.setTeamIndex(index: -1)
+            user.setTeamId(id: Config.noTeam)
             System.activeUser = user
             team?.removeMember(member: user)
             print("member deleted")
@@ -99,7 +99,11 @@ class TeamInfoTableViewController: UITableViewController {
             } else {
                 buttonLbl.setTitle(Config.fullTeam, for: .normal)
             }
-            
+        }
+        System.client.updateTeam(for: team!)
+        System.client.updateUser(newUser: user)
+        if team?.members.count == 0 {
+            System.client.deleteTeam(for: team!)
         }
         tableView.reloadData()
     }
@@ -147,14 +151,27 @@ class TeamInfoTableViewController: UITableViewController {
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "teamMemberCell", for: indexPath) as! TeamMemberTableViewCell
-                cell.nameLbl.text = team?.members[indexPath.row - 1].profile.name
-                cell.jobLbl.text = team?.members[indexPath.row-1].profile.job
-                cell.companyLbl.text = team?.members[indexPath.row - 1].profile.company
-                cell.descLbl.text = team?.members[indexPath.row-1].profile.desc
-                cell.profileimage.image = team?.members[indexPath.row - 1].profile.image ?? UIImage(named: "Placeholder")
+                guard let team = team else {
+                    return cell
+                }
+                System.client.getUserWith(uid: team.members[indexPath.row-1], completion: {
+                    (user, error) in
+                    if let user = user {
+                        cell.nameLbl.text = user.profile.name
+                        cell.jobLbl.text = user.profile.job
+                        cell.companyLbl.text = user.profile.company
+                        cell.descLbl.text = user.profile.desc
+                    } else {
+                        print("error reading user")
+                    }
+                })
+                    Utility.getProfileImg(uid: team.members[indexPath.row - 1], completion: {(image) in
+                        cell.profileimage.image = image
+                    })
+                
                 return cell
             }
-        } else {
+        }else {
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeaderCell", for: indexPath) as! SectionHeaderTableViewCell
                 cell.sectionHeaderLbl.text = "Our skills"

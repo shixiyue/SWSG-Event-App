@@ -31,7 +31,7 @@ class MenuViewController: UIViewController {
     private var userRef: FIRDatabaseReference?
     private var userRefHandle: FIRDatabaseHandle?
     
-    var teams = Teams.sharedInstance()
+    var teams = Teams()
     var btnMenu : UIButton!
     var delegate : SlideMenuDelegate?
     
@@ -89,8 +89,14 @@ class MenuViewController: UIViewController {
             return
         }
         
-        if user.team != -1 && teams.count != 0 {
-            teamLbl.text = teams.retrieveTeamAt(index: user.team).name
+        if user.team != Config.noTeam {
+            teams.retrieveTeamWith(id: user.team, completion: { (team) in
+                guard let team = team else {
+                    self.teamLbl.text = Config.noTeamLabel
+                    return
+                }
+                self.teamLbl.text = team.name
+            })
         } else {
             teamLbl.text = Config.noTeamLabel
         }

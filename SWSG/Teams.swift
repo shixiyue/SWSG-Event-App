@@ -7,38 +7,59 @@
 //
 
 import Foundation
+import Firebase
 
 class Teams {
-    private static var teamsInstance = Teams()
-    private var teams : [Team] {
-        didSet {
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "teams"), object: self)
-            print("saving teams")
-            //Storage.saveTeams(data: teams, fileName: "Teams")
-        }
-    }
+   // private static var teamsInstance = Teams()
+    var teams = [Team]()
+   // private init() {
+     //   teams = [Team]()
+    //}
     
-    private init() {
-        print("reading from storage for teams")
-        teams = [Team]()
-        //self.teams = Storage.readTeams(fileName: "Teams") ?? [Team]()
-    }
+    //class func sharedInstance() -> Teams {
+      //  return teamsInstance
+    //}
     
-    class func sharedInstance() -> Teams {
-        return teamsInstance
+    public func replaceTeams(teams: [Team]) {
+         self.teams = teams
     }
     
     public func addTeam(team: Team) {
         teams.append(team)
     }
     
-    public func retrieveTeamAt(index: Int) -> Team {
+    public func retrieveTeamWith(id: String, completion: @escaping (Team?) -> Void) {
         //return Team(members: [], name: "", lookingFor: nil, isPrivate: false, tags: nil)
-        return teams[index]
+        print("id is \(id)")
+        System.client.getTeam(with: id, completion: {
+            (team, error) in
+            completion(team)
+        })
     }
-    
+    public func retrieveTeamWith(index: Int) -> Team? {
+        if index < teams.count {
+        return teams[index]
+        } else {
+            return nil
+        }
+    }
+
     public func replaceTeamAt(index: Int, with team: Team) {
         teams[index] = team
+    }
+    
+    func replaceTeam(for team: Team) {
+        guard let index = teams.index(of: team) else {
+            return
+        }
+        teams[index] = team
+    }
+    
+    func removeTeam(team: Team) {
+        guard let index = teams.index(of: team) else {
+            return
+        }
+        teams.remove(at: index)
     }
     
     public var count: Int {

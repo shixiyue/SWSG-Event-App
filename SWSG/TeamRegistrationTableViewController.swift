@@ -7,33 +7,79 @@
 //
 
 import UIKit
+import Firebase
 
 class TeamRegistrationTableViewController: BaseViewController {
     
     @IBOutlet var tableView: UITableView!
-    fileprivate let teams = Teams.sharedInstance()
+    fileprivate var teams = Teams()
+    private var teamRef: FIRDatabaseReference!
+    private var teamAddedHandle: FIRDatabaseHandle?
+    private var teamChangedHandle: FIRDatabaseHandle?
+    private var teamDeletedHandle: FIRDatabaseHandle?
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        tableView.delegate = self
         addSlideMenuButton()
-        NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "teams"), object: nil)
+        tableView.separatorStyle = .none
+       // NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "teams"), object: nil)
+       // observeEvents()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        teams = Teams()
+        observeEvents()
     }
     
     func update() {
-        tableView.reloadData()
+        print("updating")
+        print("\(teams.count)")
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let targetvc = segue.destination as? TeamInfoTableViewController else {
             return
         }
         if let index = tableView.indexPathForSelectedRow?.row {
-            targetvc.team = teams.retrieveTeamAt(index: index)
-            targetvc.teamIndex = index
+            targetvc.team = teams.retrieveTeamWith(index: index)
         }
     }
+    
+    private func observeEvents() {
+        // Use the observe method to listen for new
+        // channels being written to the Firebase DB
+        teamRef = System.client.getTeamsRef()
+        teamAddedHandle = teamRef.observe(.childAdded, with: { (snapshot) -> Void in
+            if let team = System.client.getTeam(snapshot: snapshot) {
+                print("team added")
+                self.teams.addTeam(team: team)
+                self.update()
+            }
+        })
+        
+        teamChangedHandle = teamRef.observe(.childChanged, with: { (snapshot) -> Void in
+            if let team = System.client.getTeam(snapshot: snapshot) {
+                print("team changed")
+                self.teams.replaceTeam(for: team)
+                self.update()
+            }
+        })
+        
+        teamDeletedHandle = teamRef.observe(.childChanged, with: { (snapshot) -> Void in
+            if let team = System.client.getTeam(snapshot: snapshot) {
+                print("team deleted")
+                self.teams.removeTeam(team: team)
+                self.update()
+            }
+        })
+        
+    }
+
 }
 
 extension TeamRegistrationTableViewController: UITableViewDataSource, UITableViewDelegate {
@@ -50,15 +96,47 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamItemCell", for: indexPath) as! TeamItemTableViewCell
-        let team = teams.retrieveTeamAt(index: indexPath.row)
+        guard let team = teams.retrieveTeamWith(index: indexPath.row) else {
+            return cell
+        }
+        print("loading table view")
         cell.teamName.text = team.name
         cell.teamIsLookingFor.text = team.lookingFor
-        for i in 0..<team.members.count {
+        for i in 0..<4 {
             switch i {
-            case 0: cell.mmbrImage1.image = team.members[0].profile.image ?? UIImage(named: "Placeholder")!
-            case 1: cell.mmbrImage2.image = team.members[1].profile.image ?? UIImage(named: "Placeholder")
-            case 2: cell.mmbrImage3.image = team.members[2].profile.image ?? UIImage(named: "Placeholder")
-            case 3: cell.mmbrImage4.image = team.members[3].profile.image ?? UIImage(named: "Placeholder")
+            case 0:
+                print("1st user")
+                Utility.getProfileImg(uid: team.members[0], completion: {(image) in
+                    cell.mmbrImage1.image = image
+                })
+            case 1:
+                print("2nd user")
+                if team.members.count < 2 {
+                    cell.mmbrImage2.image = nil
+                    break
+                }
+                Utility.getProfileImg(uid: team.members[1], completion: {(image) in
+                    cell.mmbrImage2.image = image
+                })
+            case 2:
+                print("3rd user")
+                if team.members.count < 3 {
+                    cell.mmbrImage3.image = nil
+                    break
+                }
+                Utility.getProfileImg(uid: team.members[2], completion: {(image) in
+                    cell.mmbrImage3.image = image
+                })
+            case 3:
+                print("4th user")
+                if team.members.count < 4 {
+                    cell.mmbrImage4.image = nil
+                    break
+                }
+
+                Utility.getProfileImg(uid: team.members[3], completion: {(image) in
+                    cell.mmbrImage4.image = image
+                })
             default: break
             }
         }
