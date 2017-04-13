@@ -349,7 +349,7 @@ class FirebaseClient {
             }
             completion(nil)
             
-            let channel = Channel(type: .privateChannel, icon: nil, name: _team.name, members: _team.members)
+            let channel = Channel(type: .team, icon: nil, name: _team.name, members: _team.members)
             
             self.createNewChannel(for: channel, completion: { (channel, error) in
                 if let channel = channel {

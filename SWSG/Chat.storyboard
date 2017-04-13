@@ -263,9 +263,12 @@
                         <barButtonItem key="backBarButtonItem" title="Back" id="Aez-OF-7NK"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="addBtn" destination="ae6-7C-Vsi" id="Y82-0w-qSx"/>
+                        <outlet property="editNameBtn" destination="Lzx-ix-q58" id="eIo-ji-sEB"/>
                         <outlet property="iconIV" destination="TIh-DY-aEP" id="on6-K6-Sho"/>
                         <outlet property="membersList" destination="JXK-tH-ABV" id="8x3-9Z-ptB"/>
                         <outlet property="nameLbl" destination="fKI-fd-Iba" id="ecM-WF-Xlh"/>
+                        <outlet property="quitBtn" destination="VjB-g6-ZUe" id="XrC-jf-QMu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZTg-Jp-r57" userLabel="First Responder" sceneMemberID="firstResponder"/>

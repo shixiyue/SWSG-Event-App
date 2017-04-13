@@ -546,7 +546,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="HyL-ta-e9f">
-                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="iAn-25-ChU">
+                        <barButtonItem key="rightBarButtonItem" image="Chat" id="iAn-25-ChU">
                             <connections>
                                 <action selector="chatBtnPressed:" destination="Hkw-3O-A1T" id="lcM-yU-65J"/>
                             </connections>
@@ -554,6 +554,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="buttonLbl" destination="HKr-Vg-hCw" id="mw8-tL-aI7"/>
+                        <outlet property="chatBtn" destination="iAn-25-ChU" id="tOS-CU-cVE"/>
                         <segue destination="Hxq-T1-EcM" kind="show" identifier="teamToChannel" id="vnf-vu-r6s"/>
                         <segue destination="Kjg-kh-WCM" kind="show" identifier="teamToProfile" id="MNg-2t-KEk"/>
                     </connections>
@@ -597,4 +598,7 @@
             <point key="canvasLocation" x="383" y="357"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Chat" width="22" height="22"/>
+    </resources>
 </document>

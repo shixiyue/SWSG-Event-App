@@ -421,7 +421,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Mentor" id="T7v-nL-AhR">
                         <barButtonItem key="backBarButtonItem" title="Back" id="JcI-KA-kL6"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="eKh-r3-jYL">
+                        <barButtonItem key="rightBarButtonItem" image="Chat" id="eKh-r3-jYL">
                             <connections>
                                 <action selector="composeBtnPressed:" destination="S0B-9p-C9T" id="Uxx-Qz-AnE"/>
                             </connections>
@@ -462,6 +462,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Chat" width="22" height="22"/>
         <image name="Profile" width="133" height="133"/>
     </resources>
     <inferredMetricsTieBreakers>

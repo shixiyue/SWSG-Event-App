@@ -25,6 +25,7 @@ class TeamInfoTableViewController: UITableViewController {
          NotificationCenter.default.post(name: Notification.Name(rawValue: "reload"), object: self)
         }
     }
+    @IBOutlet weak var chatBtn: UIBarButtonItem!
 
     @IBAction func onBackButtonClick(_ sender: Any) {
         Utility.onBackButtonClick(tableViewController: self)
@@ -35,11 +36,14 @@ class TeamInfoTableViewController: UITableViewController {
         }
         if team.containsMember(member: user) {
             buttonLbl.setTitle(Config.quitTeam, for: .normal)
+            chatBtn.isEnabled = true
         } else if team.members.count < Config.maxTeamMember {
             print("\(team.members.count)")
             buttonLbl.setTitle(Config.joinTeam, for: .normal)
+            chatBtn.isEnabled = false
         } else {
             buttonLbl.setTitle(Config.fullTeam, for: .normal)
+            chatBtn.isEnabled = false
         }
     }
     override func viewDidLoad() {
@@ -110,6 +114,7 @@ class TeamInfoTableViewController: UITableViewController {
             team?.addMember(member: user)
             print("member added")
             buttonLbl.setTitle(Config.quitTeam, for: .normal)
+            chatBtn.isEnabled = true
         } else if (sender as! UIButton).currentTitle == Config.quitTeam {
             if user.team != team?.id {
                 self.present(Utility.getFailAlertController(message: quitTeamErrorMsg), animated: true, completion: nil)
@@ -119,6 +124,8 @@ class TeamInfoTableViewController: UITableViewController {
             System.activeUser = user
             team?.removeMember(member: user)
             print("member deleted")
+            chatBtn.isEnabled = false
+            
             if team!.members.count < Config.maxTeamMember {
                 buttonLbl.setTitle(Config.joinTeam, for: .normal)
             } else {
