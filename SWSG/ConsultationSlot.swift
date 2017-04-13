@@ -11,21 +11,19 @@ import Foundation
 struct ConsultationSlot {
     var startDateTime: Date
     var status: ConsultationSlotStatus
-    var team: Int
+    var team: String?
     
     init(start date: Date, status: ConsultationSlotStatus) {
         self.startDateTime = date
         self.status = status
-        self.team = -1
     }
     
     init?(snapshot: [String: Any], at startDateTime: Date) {
         self.startDateTime = startDateTime
         
-        guard let team = snapshot[Config.team] as? Int else {
-            return nil
+        if let team = snapshot[Config.team] as? String {
+            self.team = team
         }
-        self.team = team
         
         guard let statusSnapshot = snapshot[Config.consultationStatus] as? String,
             let status = ConsultationSlotStatus(rawValue: statusSnapshot) else {
@@ -35,6 +33,12 @@ struct ConsultationSlot {
     }
     
     func toDictionary() -> [String: Any] {
-        return [Config.team: team, Config.consultationStatus: status.rawValue]
+        var dict: [String: Any] = [Config.consultationStatus: status.rawValue]
+        
+        if let team = team {
+            dict[Config.team] = team
+        }
+        
+        return dict
     }
 }

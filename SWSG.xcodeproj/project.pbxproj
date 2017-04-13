@@ -344,7 +344,7 @@
 		E3220C521E7BAAC5008AFA85 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		E3220C541E7BABA5008AFA85 /* Comments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comments.swift; sourceTree = "<group>"; };
 		E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TeamRegistration.storyboard; sourceTree = "<group>"; };
-		E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRegistrationTableViewController.swift; sourceTree = "<group>"; };
+		E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRegistrationTableViewController.swift; sourceTree = "<group>"; usesTabs = 0; };
 		E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamItemTableViewCell.swift; sourceTree = "<group>"; };
 		E3220C6A1E7D3D25008AFA85 /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
 		E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCreateTableViewController.swift; sourceTree = "<group>"; };

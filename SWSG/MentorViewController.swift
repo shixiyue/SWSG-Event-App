@@ -79,15 +79,23 @@ class MentorViewController: UIViewController {
         // Use the observe method to listen for new
         // channels being written to the Firebase DB
         mentorRefHandle = mentorRef.observe(.value, with: { (snapshot) -> Void in
-            guard let userSnapshot = snapshot.value as? [String: Any],
-                let mentorSnapshot = userSnapshot[Config.mentor] as? [String: Any],
-                let mentor = Mentor(snapshot: mentorSnapshot) else {
+            print("test")
+            guard let userSnapshot = snapshot.value as? [String: Any] else {
+                print("test4")
+                return
+            }
+            guard let mentorSnapshot = userSnapshot[Config.mentor] as? [String: Any] else {
+                print("test5")
+                return
+            }
+            guard let mentor = Mentor(snapshot: mentorSnapshot) else {
+                    print("test6")
                     return
             }
             self.mentor = mentor
             self.cvLayout.dataSourceDidUpdate = true
             self.consultationSlotCollection.reloadData()
-            print("test")
+            print("test2")
         })
     }
     
