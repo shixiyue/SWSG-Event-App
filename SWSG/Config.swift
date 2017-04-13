@@ -136,6 +136,9 @@ struct Config {
     static let eventDetailsTableViewController = "EventDetailsTableViewController"
     static let channelPageCellView = "channelPageCellView"
     static let channelViewController = "ChannelViewController"
+    static let registrationStoryboard = "Registration"
+    static let registrationListViewController = "RegistrationListViewController"
+    static let participantRegistrationViewController = "ParticipantRegistrationViewController"
     
     //Parameters for Segues:
     static let channelListToChannel = "showChannel"
@@ -162,6 +165,8 @@ struct Config {
     static let teamToChat = "teamToChannel"
     static let teamToProfile = "teamToProfile"
     static let profileToChannel = "profileToChannel"
+    static let registrationListToRegistration = "registrationListToRegistration"
+    static let registrationToProfile = "registrationToProfile"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
@@ -231,4 +236,9 @@ struct Config {
     static let startDateTime = "startDateTime"
     static let endDateTime = "endDateTime"
     static let shortDesc = "shortDesc"
+    
+    //Parameters for Registration
+    static let registeredUsers = "registeredUsers"
+    static let registrationCell = "RegistrationCell"
+    static let registeredUserCell = "RegisteredUserCell"
 }

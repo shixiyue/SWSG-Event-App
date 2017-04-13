@@ -37,6 +37,7 @@ class FirebaseClient {
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
     typealias GetTeamCallback = (Team?, FirebaseError?) -> Void
     typealias GetTeamsCallback = ([Team], FirebaseError?) -> Void
+    typealias RegistrationCallback = (FirebaseError?) -> Void
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
     typealias ImageCallback = (UIImage?, String?) -> Void
     typealias ImagesCallback = ([UIImage]?, String?) -> Void
@@ -48,6 +49,7 @@ class FirebaseClient {
     private let eventsRef = FIRDatabase.database().reference(withPath: "events")
     private let ideasRef = FIRDatabase.database().reference(withPath: "ideas")
     private let informationRef = FIRDatabase.database().reference(withPath: "information")
+    private let registrationRef = FIRDatabase.database().reference(withPath: "registration")
     private let storageRef = FIRStorage.storage().reference(forURL: Config.appURL)
     private let auth = FIRAuth.auth()
     
@@ -863,6 +865,34 @@ class FirebaseClient {
         })
     }
     
+    public func createRegistrationEvent(rEvent: RegistrationEvent, completion: @escaping RegistrationCallback) {
+        let rEventRef = registrationRef.childByAutoId()
+        rEventRef.setValue(rEvent.toDictionary())
+        completion(nil)
+    }
+    
+    public func editRegistrationEvent(rEvent: RegistrationEvent, completion: @escaping RegistrationCallback) {
+        guard let id = rEvent.id else {
+            completion(nil)
+            return
+        }
+        
+        let rEventRef = registrationRef.child(id)
+        rEventRef.setValue(rEvent.toDictionary())
+        completion(nil)
+    }
+    
+    public func deleteRegistrationEvent(rEvent: RegistrationEvent, completion: @escaping RegistrationCallback) {
+        guard let id = rEvent.id else {
+            completion(nil)
+            return
+        }
+        
+        let rEventRef = registrationRef.child(id)
+        rEventRef.setValue(nil)
+        completion(nil)
+    }
+    
     public func saveImage(image: UIImage, completion: @escaping ImageURLCallback) {
         let imagePath = auth!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
         
@@ -1149,7 +1179,6 @@ class FirebaseClient {
     public func getIdeaRef(for ideaID: String) -> FIRDatabaseReference {
         return ideasRef.child(ideaID)
     }
-    
 
     public func getTeamRef(for teamID: String) -> FIRDatabaseReference {
         return teamsRef.child(teamID)
@@ -1164,7 +1193,14 @@ class FirebaseClient {
     
     public func getFaqRef() -> FIRDatabaseReference {
         return informationRef.child("faq")
-
+    }
+    
+    public func getRegistrationRef() -> FIRDatabaseReference {
+        return registrationRef
+    }
+    
+    public func getRegisteredEventRef(id: String) -> FIRDatabaseReference {
+        return registrationRef.child(id)
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {

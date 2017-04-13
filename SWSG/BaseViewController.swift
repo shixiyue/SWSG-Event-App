@@ -55,6 +55,12 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             self.open(viewController: Config.ideasViewController, from: Config.ideasStoryboard)
         case .people:
             self.open(viewController: Config.profileListViewController, from: Config.profileStoryboard)
+        case .registration:
+            if System.activeUser?.type.isOrganizer == true {
+                self.open(viewController: Config.registrationListViewController, from: Config.registrationStoryboard)
+            } else {
+                self.open(viewController: Config.participantRegistrationViewController, from: Config.registrationStoryboard)
+            }
         case .logout:
             Utility.logOutUser(currentViewController: self)
         }

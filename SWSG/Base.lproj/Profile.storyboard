@@ -866,7 +866,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Chat" width="208" height="174"/>
+        <image name="Chat" width="22" height="22"/>
         <image name="Profile" width="133" height="133"/>
     </resources>
 </document>

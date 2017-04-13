@@ -152,6 +152,10 @@ class MentorViewController: UIViewController {
         let slot = day.slots[index]
         let slotTimeString = Utility.fbDateTimeFormatter.string(from: slot.startDateTime)
         
+        mentor.days[dayIndex].slots[index].status = .booked
+        mentor.days[dayIndex].slots[index].team = System.activeUser?.team
+        
+        
         let slotRef = mentorRef.child("mentor/consultationDays/\(dateString)/\(slotTimeString)")
         slotRef.child(Config.consultationStatus).setValue(ConsultationSlotStatus.booked.rawValue)
         slotRef.child(Config.team).setValue(System.activeUser?.team)
@@ -332,6 +336,8 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let dayIndex = indexPath.section
         let index = indexPath.item - 1
         let slot = mentor.days[dayIndex].slots[index]
+        print(slot.startDateTime)
+        print(slot.status.rawValue)
         
         guard slot.status == .vacant else {
             return
