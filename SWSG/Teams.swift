@@ -10,21 +10,19 @@ import Foundation
 import Firebase
 
 class Teams {
-   // private static var teamsInstance = Teams()
+    
     var teams = [Team]()
-   // private init() {
-     //   teams = [Team]()
-    //}
-    
-    //class func sharedInstance() -> Teams {
-      //  return teamsInstance
-    //}
-    
-    public func replaceTeams(teams: [Team]) {
-         self.teams = teams
+    var count: Int {
+        get {
+            return teams.count
+        }
     }
     
-    public func addTeam(team: Team) {
+    func replaceTeams(teams: [Team]) {
+        self.teams = teams
+    }
+    
+    func addTeam(team: Team) {
         if let index = teams.index(of: team) {
             teams[index] = team
         } else {
@@ -32,23 +30,22 @@ class Teams {
         }
     }
     
-    public func retrieveTeamWith(id: String, completion: @escaping (Team?) -> Void) {
-        //return Team(members: [], name: "", lookingFor: nil, isPrivate: false, tags: nil)
-        print("id is \(id)")
+    func retrieveTeamWith(id: String, completion: @escaping (Team?) -> Void) {
         System.client.getTeam(with: id, completion: {
             (team, error) in
             completion(team)
         })
     }
-    public func retrieveTeamWith(index: Int) -> Team? {
+    
+    func retrieveTeamWith(index: Int) -> Team? {
         if index < teams.count {
-        return teams[index]
+            return teams[index]
         } else {
             return nil
         }
     }
-
-    public func replaceTeamAt(index: Int, with team: Team) {
+    
+    func replaceTeamAt(index: Int, with team: Team) {
         teams[index] = team
     }
     
@@ -65,13 +62,6 @@ class Teams {
         }
         teams.remove(at: index)
     }
-    
-    public var count: Int {
-        get {
-            return teams.count
-        }
-    }
-    
 }
 
 

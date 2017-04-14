@@ -12,21 +12,22 @@ import Firebase
 class TeamInfoTableViewController: UITableViewController {
     
     @IBOutlet weak var buttonLbl: UIButton!
+    @IBOutlet weak var chatBtn: UIBarButtonItem!
+    
     var team : Team?
-    var teamId : String?
-    var sizingCell: TagCell?
+    fileprivate var teamId : String?
+    fileprivate var sizingCell: TagCell?
+    
     private let teams = Teams()
     private let joinTeamErrorMsg = "You can not join more than one team"
     private let quitTeamErrorMsg = "You do not belong to this team"
     private let fullTeamErrorMsg = "Team is full"
-    private var containerHeight = CGFloat(100) {
+    fileprivate var containerHeight = CGFloat(100) {
         didSet {
-        print("setting container view height")
-         NotificationCenter.default.post(name: Notification.Name(rawValue: "reload"), object: self)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "reload"), object: self)
         }
     }
-    @IBOutlet weak var chatBtn: UIBarButtonItem!
-
+    
     @IBAction func onBackButtonClick(_ sender: Any) {
         Utility.onBackButtonClick(tableViewController: self)
     }
@@ -38,7 +39,6 @@ class TeamInfoTableViewController: UITableViewController {
             buttonLbl.setTitle(Config.quitTeam, for: .normal)
             chatBtn.isEnabled = true
         } else if team.members.count < Config.maxTeamMember {
-            print("\(team.members.count)")
             buttonLbl.setTitle(Config.joinTeam, for: .normal)
             chatBtn.isEnabled = false
         } else {
@@ -46,6 +46,7 @@ class TeamInfoTableViewController: UITableViewController {
             chatBtn.isEnabled = false
         }
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
@@ -53,12 +54,10 @@ class TeamInfoTableViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-        
         if segue.identifier == Config.teamToChat, let channel = sender as? Channel {
             guard let chatVc = segue.destination as? ChannelViewController else {
                 return
             }
-            
             chatVc.senderDisplayName = System.activeUser?.profile.username
             chatVc.channel = channel
         } else if segue.identifier == Config.teamToProfile, let user = sender as? User,
@@ -69,7 +68,6 @@ class TeamInfoTableViewController: UITableViewController {
     
     @objc private func reload() {
         tableView.beginUpdates()
-        print("reloading height")
         tableView.layoutIfNeeded()
         tableView.endUpdates()
     }
@@ -78,77 +76,156 @@ class TeamInfoTableViewController: UITableViewController {
         guard let team = team else {
             return
         }
-        
         System.client.getTeamChannel(for: team, completion: { (channel, error) in
             self.performSegue(withIdentifier: Config.teamToChat, sender: channel)
         })
     }
-
-    
-    // MARK: - Table view data source
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 2
-    }
     
     @IBAction func onRqtToJoinButtonTapped(_ sender: Any) {
-        print("tapped")
+        let btnTitle = (sender as! UIButton).currentTitle ?? ""
         guard let user = System.activeUser, user.type.isParticipant else {
             self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
             return
         }
-        if (sender as! UIButton).currentTitle == Config.fullTeam {
+        guard let team = team else {
+            return
+        }
+        if btnTitle == Config.fullTeam {
             self.present(Utility.getFailAlertController(message: fullTeamErrorMsg), animated: true, completion: nil)
             return
         }
-        if (sender as! UIButton).currentTitle == Config.joinTeam {
-            if user.team != Config.noTeam {
-                self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
-                return
-            }
-
-            user.setTeamId(id: team!.id!)
-            System.activeUser = user
-            
-            team?.addMember(member: user)
-            print("member added")
-            buttonLbl.setTitle(Config.quitTeam, for: .normal)
-            chatBtn.isEnabled = true
-        } else if (sender as! UIButton).currentTitle == Config.quitTeam {
-            if user.team != team?.id {
-                self.present(Utility.getFailAlertController(message: quitTeamErrorMsg), animated: true, completion: nil)
-                return
-            }
-            user.setTeamId(id: Config.noTeam)
-            System.activeUser = user
-            team?.removeMember(member: user)
-            print("member deleted")
-            chatBtn.isEnabled = false
-            
-            if team!.members.count < Config.maxTeamMember {
-                buttonLbl.setTitle(Config.joinTeam, for: .normal)
-            } else {
-                buttonLbl.setTitle(Config.fullTeam, for: .normal)
-            }
+        if btnTitle == Config.joinTeam && user.team != Config.noTeam {
+            self.present(Utility.getFailAlertController(message: joinTeamErrorMsg), animated: true, completion: nil)
+            return
         }
-        System.client.updateTeam(for: team!)
+        if btnTitle == Config.quitTeam && user.team != team.id {
+            self.present(Utility.getFailAlertController(message: quitTeamErrorMsg), animated: true, completion: nil)
+            return
+        }
+        if btnTitle == Config.joinTeam {
+            user.setTeamId(id: team.id!)
+            team.addMember(member: user)
+            chatBtn.isEnabled = true
+        } else if btnTitle == Config.quitTeam {
+            user.setTeamId(id: Config.noTeam)
+            team.removeMember(member: user)
+            chatBtn.isEnabled = false
+        }
+        buttonLbl.setTitle(toggleBtnTitle(prevTitle: btnTitle, team: team), for: .normal)
+        
+        System.client.updateTeam(for: team)
         System.client.updateUser(newUser: user)
-        if team?.members.count == 0 {
-            System.client.deleteTeam(for: team!)
+        
+        if team.members.count == 0 {
+            System.client.deleteTeam(for: team)
             Utility.popViewController(no: 1, viewController: self)
         }
         tableView.reloadData()
     }
     
+    private func toggleBtnTitle(prevTitle: String, team: Team) -> String {
+        if prevTitle == Config.joinTeam {
+            return Config.quitTeam
+        } else if prevTitle == Config.quitTeam {
+            return Config.joinTeam
+        } else {
+            return ""
+        }
+    }
+    
+}
+
+/// UITableViewDataSource methods
+extension TeamInfoTableViewController {
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         if section == 0 {
             return team!.members.count+1
         } else {
             return 4
         }
     }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if indexPath.section == 0 {
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeaderCell", for: indexPath) as! SectionHeaderTableViewCell
+                cell.sectionHeaderLbl.text = "Our Members"
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "teamMemberCell", for: indexPath) as! TeamMemberTableViewCell
+                guard team != nil else {
+                    return cell
+                }
+                configureTeamMemberCell(cell: cell, at: indexPath.row - 1)
+                return cell
+            }
+        }else {
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeaderCell", for: indexPath) as! SectionHeaderTableViewCell
+                cell.sectionHeaderLbl.text = "Our skills"
+                return cell
+                
+            } else if indexPath.row == 1 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "tagdisplaycell", for: indexPath) as! TagTableViewCell
+                configureTagCell(cell: cell)
+                return cell
+            }
+            else if indexPath.row == 2 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeaderCell", for: indexPath) as! SectionHeaderTableViewCell
+                cell.sectionHeaderLbl.text = "Looking For Members like..."
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "lookingForCell", for: indexPath) as! TeamLookingForTableViewCell
+                cell.lookingForLbl.text = team?.lookingFor
+                return cell
+            }
+        }
+    }
+    
+    private func configureTeamMemberCell(cell: TeamMemberTableViewCell, at index: Int) {
+        guard let team = team else {
+              return
+        }
+        System.client.getUserWith(uid: team.members[index], completion: {
+            (user, error) in
+            if let user = user {
+                cell.nameLbl.text = user.profile.name
+                cell.jobLbl.text = user.profile.job
+                cell.companyLbl.text = user.profile.company
+                cell.descLbl.text = user.profile.desc
+            } else {
+                print("error reading user")
+            }
+        })
+        cell.profileimage = Utility.roundUIImageView(for: cell.profileimage)
+        Utility.getProfileImg(uid: team.members[index], completion: {(image) in
+            cell.profileimage.image = image ?? Config.placeholderImg
+        })
+    }
+    
+    private func configureTagCell(cell: TagTableViewCell) {
+        cell.tagCollectionView.delegate = self
+        let cellNib = UINib(nibName: "TagCell", bundle: nil)
+        cell.tagCollectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
+        cell.tagCollectionView.backgroundColor = UIColor.clear
+        self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
+        cell.tagCollectionView.performBatchUpdates({() -> Void in
+            cell.tagCollectionView.reloadData()
+        }, completion: {(_) -> Void in
+            if cell.tagCollectionView.contentSize.height > self.containerHeight {
+                self.containerHeight = cell.tagCollectionView.contentSize.height
+            }
+        })
+    }
+}
+/// UITableViewDelegate methods
+extension TeamInfoTableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
@@ -174,82 +251,10 @@ class TeamInfoTableViewController: UITableViewController {
         return UITableViewAutomaticDimension
     }
     
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if indexPath.section == 0 {
-            if indexPath.row == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeaderCell", for: indexPath) as! SectionHeaderTableViewCell
-                cell.sectionHeaderLbl.text = "Our Members"
-                return cell
-            } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "teamMemberCell", for: indexPath) as! TeamMemberTableViewCell
-                guard let team = team else {
-                    return cell
-                }
-                System.client.getUserWith(uid: team.members[indexPath.row-1], completion: {
-                    (user, error) in
-                    if let user = user {
-                        cell.nameLbl.text = user.profile.name
-                        cell.jobLbl.text = user.profile.job
-                        cell.companyLbl.text = user.profile.company
-                        cell.descLbl.text = user.profile.desc
-                    } else {
-                        print("error reading user")
-                    }
-                })
-                cell.profileimage = Utility.roundUIImageView(for: cell.profileimage)
-                cell.profileimage.image = Config.placeholderImg
-                    Utility.getProfileImg(uid: team.members[indexPath.row - 1], completion: {(image) in
-                        cell.profileimage.image = image
-                    })
-                
-                return cell
-            }
-        }else {
-            if indexPath.row == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeaderCell", for: indexPath) as! SectionHeaderTableViewCell
-                cell.sectionHeaderLbl.text = "Our skills"
-                return cell
-
-            } else if indexPath.row == 1 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "tagdisplaycell", for: indexPath) as! TagTableViewCell
-                cell.tagCollectionView.delegate = self
-                let cellNib = UINib(nibName: "TagCell", bundle: nil)
-                cell.tagCollectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
-                cell.tagCollectionView.backgroundColor = UIColor.clear
-                self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
-                cell.tagCollectionView.performBatchUpdates({() -> Void in
-                cell.tagCollectionView.reloadData()
-                }, completion: {(_) -> Void in
-                    if cell.tagCollectionView.contentSize.height > self.containerHeight {
-                        self.containerHeight = cell.tagCollectionView.contentSize.height
-                    }
-                    print("containerheight is \(self.containerHeight) while collection height is \(cell.tagCollectionView.contentSize.height)")
-                })
-                return cell
-            }
-            else if indexPath.row == 2 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionHeaderCell", for: indexPath) as! SectionHeaderTableViewCell
-                cell.sectionHeaderLbl.text = "Looking For Members like..."
-                return cell
-            } else {
-                print("loading looking for")
-                let cell = tableView.dequeueReusableCell(withIdentifier: "lookingForCell", for: indexPath) as! TeamLookingForTableViewCell
-                cell.lookingForLbl.text = team?.lookingFor
-                return cell
-            }
-        }
-        
-    }
-    
-    override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath){
-        print("test")
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         guard let team = team else {
             return
         }
-        
         System.client.getUserWith(uid: team.members[indexPath.row-1], completion: {
             (user, error) in
             if let user = user {
@@ -257,13 +262,13 @@ class TeamInfoTableViewController: UITableViewController {
             }
         })
     }
-    
 }
 
-extension TeamInfoTableViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension TeamInfoTableViewController: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let team = self.team, let tags = team.tags {
-        return tags.count
+            return tags.count
         }
         return 0
     }
@@ -274,18 +279,22 @@ extension TeamInfoTableViewController: UICollectionViewDataSource, UICollectionV
         return cell
     }
     
+    fileprivate  func configureCell(cell: TagCell, forIndexPath indexPath: IndexPath) {
+        if let team = self.team, let tags = team.tags {
+            let tag = tags[indexPath.row]
+            cell.tagName.text = tag
+        }
+    }
+}
+
+extension TeamInfoTableViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath)
         let size = self.sizingCell!.tagName.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
         return CGSize(width: size.width*1.5, height: size.height*2)
     }
-    
-    func configureCell(cell: TagCell, forIndexPath indexPath: IndexPath) {
-        if let team = self.team, let tags = team.tags {
-            let tag = tags[indexPath.row]
-            cell.tagName.text = tag
-        }
-    }
-    
+}
+
+extension TeamInfoTableViewController: UICollectionViewDelegate {
 }
