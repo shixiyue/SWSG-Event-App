@@ -48,6 +48,7 @@ class SignUpTableViewController: UIViewController {
     fileprivate var activeTextField: UITextField?
     fileprivate var activeTextView: UITextView?
     fileprivate var imagePicker = ImagePickCropperPopoverViewController()
+    fileprivate var profileImgSet = false
     fileprivate var currentCredential: FIRAuthCredential?
     public var socialUser: SocialUser?
 
@@ -153,14 +154,21 @@ class SignUpTableViewController: UIViewController {
         Utility.showImagePicker(imagePicker: imagePicker, viewController: self, completion: { (image) in
             if let image = image {
                 self.profileIV.image = image
+                self.profileImgSet = true
             }
             self.textFields.first?.becomeFirstResponder()
         })
     }
     
     @objc private func signUp(sender: UIButton) {
-        guard let image = profileIV.image, let name = nameTextField.text, let username = usernameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextView.text, let skills = skillsTextView.content, let desc = descTextView.content else {
+        guard let name = nameTextField.text, let username = usernameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text, let job = jobTextField.text, let company = companyTextField.text, let education = educationTextView.text, let skills = skillsTextView.content, let desc = descTextView.content else {
             return
+        }
+        
+        var image = profileIV.image
+        
+        if !profileImgSet {
+            image = nil
         }
         
         Utility.attemptRegistration(email: email, auth: .email, newCredential: nil, viewController: self, completion: { (exists, arr) in
@@ -176,6 +184,8 @@ class SignUpTableViewController: UIViewController {
             } else {
                 //Account does not exist, proceed with registration
                 let type = UserTypes(isParticipant: true, isSpeaker: false, isMentor: false, isOrganizer: false, isAdmin: false)
+                
+                
                 let profile = Profile(name: name, username: username, image: image, job: job, company: company, country: country,
                                       education: education, skills: skills, description: desc)
                 let user = User(profile: profile, type: type, email: email)
