@@ -11,9 +11,13 @@ import Firebase
 
 class ChannelListViewController: BaseViewController {
     @IBOutlet weak var chatList: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     // MARK: Properties
     fileprivate var channels = [Channel]()
+    fileprivate var filteredChannels = [Channel]()
+    fileprivate var searchActive = false
+    fileprivate var directMessageChannelName = [String: String]()
     fileprivate var client = System.client
     
     //MARK: Firebase References
@@ -31,8 +35,18 @@ class ChannelListViewController: BaseViewController {
         chatList.delegate = self
         chatList.dataSource = self
         
+        setUpSearchBar()
         observeChannels()
         chatList.reloadData()
+    }
+    
+    private func setUpSearchBar() {
+        searchBar.delegate = self
+        searchBar.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
     }
     
     // MARK: Firebase related methods
@@ -207,6 +221,9 @@ class ChannelListViewController: BaseViewController {
 // MARK: UITableViewDataSource
 extension ChannelListViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if searchActive && searchBar.text != "" {
+            return filteredChannels.count
+        }
         return channels.count
     }
     
@@ -218,13 +235,19 @@ extension ChannelListViewController: UITableViewDataSource {
         }
         
         let index = indexPath.item
-        let channel = channels[index]
+        let channel: Channel
+        if searchActive && searchBar.text != "" {
+            channel = filteredChannels[index]
+        } else {
+            channel = channels[index]
+        }
         cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
         
         if channel.type == .directMessage {
             Utility.getOtherUser(in: channel, completion: { (user) in
-                if let user = user, let uid = user.uid {
+                if let user = user, let uid = user.uid, let channelID = channel.id {
                     cell.nameLbl.text = user.profile.name
+                    self.directMessageChannelName[channelID] = user.profile.name
                     
                     Utility.getProfileImg(uid: uid, completion: { (image) in
                         if let image = image {
@@ -286,7 +309,15 @@ extension ChannelListViewController: UITableViewDataSource {
 // MARK: UITableViewDelegate
 extension ChannelListViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let channel = channels[indexPath.item]
+        let channel: Channel
+        let index = indexPath.item
+        
+        if searchActive && searchBar.text != "" {
+            channel = filteredChannels[index]
+        } else {
+            channel = channels[index]
+        }
+        
         self.performSegue(withIdentifier: Config.channelListToChannel, sender: channel)
     }
     
@@ -315,5 +346,46 @@ extension ChannelListViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
+    }
+}
+
+// MARK: UISearchResultsUpdating
+extension ChannelListViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredChannels = channels.filter { channel in
+            if channel.type == .directMessage, let channelID = channel.id  {
+                guard directMessageChannelName.keys.contains(channelID),
+                    let otherPersonName = directMessageChannelName[channelID] else {
+                        return false
+                }
+                
+                return otherPersonName.lowercased().contains(searchText.lowercased())
+            } else if let name = channel.name {
+                return name.lowercased().contains(searchText.lowercased())
+            } else {
+                return false
+            }
+        }
+        print(filteredChannels.count)
+        
+        searchActive = (filteredChannels.count != 0)
+        
+        chatList.reloadData()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
     }
 }

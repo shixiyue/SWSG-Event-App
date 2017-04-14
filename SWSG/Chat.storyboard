@@ -26,9 +26,14 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2ja-3U-1ZA">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Channel Name" id="Ri4-e5-GPJ">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="channelCell" rowHeight="80" id="6rO-MU-Ius" customClass="ChannelCell" customModule="SWSG" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="80"/>
+                                        <rect key="frame" x="0.0" y="72" width="375" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6rO-MU-Ius" id="2OG-cb-XZF">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="79.5"/>
@@ -92,11 +97,21 @@
                     </navigationItem>
                     <connections>
                         <outlet property="chatList" destination="2ja-3U-1ZA" id="1n2-Wn-5t9"/>
+                        <outlet property="searchBar" destination="Ri4-e5-GPJ" id="Py4-V0-5nW"/>
+                        <outlet property="searchDisplayController" destination="ojG-xU-0Oq" id="BgW-qO-BLc"/>
                         <segue destination="sYy-Gm-6aU" kind="show" identifier="showChannel" id="5iS-Sf-YBp"/>
                         <segue destination="gej-Jw-c1J" kind="show" identifier="showCreateChannel" id="xC4-kr-zzq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="58T-MR-rKY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="ojG-xU-0Oq">
+                    <connections>
+                        <outlet property="delegate" destination="016-OR-Mms" id="ydl-i2-rdI"/>
+                        <outlet property="searchContentsController" destination="016-OR-Mms" id="293-7m-qbv"/>
+                        <outlet property="searchResultsDataSource" destination="016-OR-Mms" id="pOt-VX-gKj"/>
+                        <outlet property="searchResultsDelegate" destination="016-OR-Mms" id="vvf-u5-JGp"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="956" y="121.88905547226388"/>
         </scene>
@@ -452,7 +467,7 @@
             <objects>
                 <navigationController storyboardIdentifier="ChatNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Lmb-sv-L2p" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="quO-pt-kxx">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="quO-pt-kxx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
