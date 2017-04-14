@@ -279,7 +279,7 @@
             <objects>
                 <navigationController storyboardIdentifier="RegistrationNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bxj-Cw-p9c" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="jLj-6J-0dQ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jLj-6J-0dQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -297,7 +297,7 @@
             <objects>
                 <navigationController storyboardIdentifier="ParticipantRegistrationNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="umY-nn-3fD" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="r57-sg-VIv">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="r57-sg-VIv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
