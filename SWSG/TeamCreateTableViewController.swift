@@ -164,7 +164,7 @@ extension TeamCreateTableViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath)
         let size = self.sizingCell!.tagName.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
-        return CGSize(width: size.width*1.5, height: size.height*2)
+        return CGSize(width: size.width, height: size.height*2)
     }
 }
 
