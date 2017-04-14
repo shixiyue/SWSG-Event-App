@@ -123,6 +123,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         sender.tag = 10
         
         tapGesture.isEnabled = true
+        self.view.endEditing(true)
         
         let storyboard = UIStoryboard(name: "Menu", bundle: nil)
         let menuVC : MenuViewController = storyboard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController

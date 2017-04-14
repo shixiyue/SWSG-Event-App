@@ -366,9 +366,12 @@ extension ChannelListViewController: UISearchBarDelegate {
                 return false
             }
         }
-        print(filteredChannels.count)
         
-        searchActive = (filteredChannels.count != 0)
+        if searchText.characters.count == 0 {
+            searchActive = false
+        } else {
+            searchActive = true
+        }
         
         chatList.reloadData()
     }

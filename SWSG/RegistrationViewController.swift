@@ -39,6 +39,8 @@ class RegistrationViewController: UIViewController {
         registeredList.delegate = self
         registeredList.dataSource = self
         
+        self.title = registrationEvent?.name
+        
         observeRegistrationEvent()
     }
     

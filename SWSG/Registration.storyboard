@@ -26,9 +26,14 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9qf-du-f7Z">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Registration Event Name" id="3ae-8D-Iox">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RegistrationCell" id="qhW-Mr-NOZ" customClass="RegistrationCell" customModule="SWSG" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qhW-Mr-NOZ" id="rIJ-bg-gWP">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -74,6 +79,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="registrationList" destination="9qf-du-f7Z" id="Xfp-xG-mHq"/>
+                        <outlet property="searchBar" destination="3ae-8D-Iox" id="YvW-78-tfa"/>
                         <segue destination="MUb-Zd-PEz" kind="show" identifier="registrationListToRegistration" id="qgS-FF-BFS"/>
                     </connections>
                 </viewController>
@@ -273,7 +279,7 @@
             <objects>
                 <navigationController storyboardIdentifier="RegistrationNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bxj-Cw-p9c" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jLj-6J-0dQ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="jLj-6J-0dQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -291,7 +297,7 @@
             <objects>
                 <navigationController storyboardIdentifier="ParticipantRegistrationNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="umY-nn-3fD" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="r57-sg-VIv">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="r57-sg-VIv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

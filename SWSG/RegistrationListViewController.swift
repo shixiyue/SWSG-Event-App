@@ -11,9 +11,12 @@ import Firebase
 
 class RegistrationListViewController: UIViewController {
     
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var registrationList: UITableView!
     
     fileprivate var registrationEvents = [RegistrationEvent]()
+    fileprivate var filteredREvents = [RegistrationEvent]()
+    fileprivate var searchActive = false
     
     fileprivate var registrationRef: FIRDatabaseReference?
     fileprivate var regAddHandler: FIRDatabaseHandle?
@@ -25,8 +28,16 @@ class RegistrationListViewController: UIViewController {
         registrationList.delegate = self
         registrationList.dataSource = self
         
+        searchBar.delegate = self
+        searchBar.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+        
         observeRegistrationEvents()
     }
+    
+    func donePressed() {
+        self.view.endEditing(true)
+    }
+        
     
     // MARK: Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -95,12 +106,23 @@ class RegistrationListViewController: UIViewController {
 
 extension RegistrationListViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return registrationEvents.count
+        if searchActive == true {
+            return filteredREvents.count
+        } else {
+            return registrationEvents.count
+        }
     }
     
     public func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let registrationEvent = registrationEvents[indexPath.item]
+        let registrationEvent: RegistrationEvent
+        
+        if searchActive == true {
+            registrationEvent = filteredREvents[indexPath.item]
+        } else {
+            registrationEvent = registrationEvents[indexPath.item]
+        }
+        
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: Config.registrationCell, for: indexPath) as? RegistrationCell else {
                 return RegistrationCell()
@@ -114,7 +136,14 @@ extension RegistrationListViewController: UITableViewDataSource {
 
 extension RegistrationListViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let registrationEvent = registrationEvents[indexPath.item]
+        let registrationEvent: RegistrationEvent
+        
+        if searchActive == true {
+            registrationEvent = filteredREvents[indexPath.item]
+        } else {
+            registrationEvent = registrationEvents[indexPath.item]
+        }
+        
         self.performSegue(withIdentifier: Config.registrationListToRegistration, sender: registrationEvent)
     }
     
@@ -134,5 +163,38 @@ extension RegistrationListViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
+    }
+}
+
+// MARK: UISearchResultsUpdating
+extension RegistrationListViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredREvents = registrationEvents.filter { rEvent in
+            return rEvent.name.lowercased().contains(searchText.lowercased())
+        }
+        
+        if searchText.characters.count == 0 {
+            searchActive = false
+        } else {
+            searchActive = true
+        }
+        
+        registrationList.reloadData()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
     }
 }
