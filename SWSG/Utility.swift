@@ -696,4 +696,9 @@ struct Utility {
         })
     }
     
+    static func styleSearchBar(_ searchBar: UISearchBar) {
+        searchBar.layer.borderWidth = 1
+        searchBar.layer.borderColor = Config.themeColor.cgColor
+    }
+    
 }

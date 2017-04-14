@@ -43,6 +43,7 @@ class ChannelListViewController: BaseViewController {
     private func setUpSearchBar() {
         searchBar.delegate = self
         searchBar.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+        Utility.styleSearchBar(searchBar)
     }
     
     func donePressed() {

@@ -29,6 +29,7 @@
                                 <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Registration Event Name" id="3ae-8D-Iox">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <color key="barTintColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </searchBar>
                                 <prototypes>

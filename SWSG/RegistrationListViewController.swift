@@ -28,10 +28,14 @@ class RegistrationListViewController: UIViewController {
         registrationList.delegate = self
         registrationList.dataSource = self
         
+        setUpSearchBar()
+        observeRegistrationEvents()
+    }
+    
+    func setUpSearchBar() {
         searchBar.delegate = self
         searchBar.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
-        
-        observeRegistrationEvents()
+        Utility.styleSearchBar(searchBar)
     }
     
     func donePressed() {
