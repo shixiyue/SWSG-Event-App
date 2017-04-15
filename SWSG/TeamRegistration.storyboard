@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -154,7 +155,7 @@
         <!--Team Create Table View Controller-->
         <scene sceneID="Nga-mZ-VBc">
             <objects>
-                <tableViewController id="kTz-08-Fw8" customClass="TeamCreateTableViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="TeamCreateViewController" id="kTz-08-Fw8" customClass="TeamCreateTableViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" id="GaZ-H1-NhO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -354,7 +355,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="74r-o2-M3M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3397.5999999999999" y="-93.103448275862078"/>
+            <point key="canvasLocation" x="2385" y="-45"/>
         </scene>
         <!--Team Info Table View Controller-->
         <scene sceneID="mBc-tA-2eb">
@@ -555,11 +556,28 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="HyL-ta-e9f">
-                        <barButtonItem key="rightBarButtonItem" image="Chat" id="iAn-25-ChU">
-                            <connections>
-                                <action selector="chatBtnPressed:" destination="Hkw-3O-A1T" id="lcM-yU-65J"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem image="Chat" id="iAn-25-ChU">
+                                <connections>
+                                    <action selector="chatBtnPressed:" destination="Hkw-3O-A1T" id="lcM-yU-65J"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem style="plain" id="534-6c-oYA">
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Dt8-rz-ODi">
+                                    <rect key="frame" x="258" y="7" width="60" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Edit">
+                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="EditBtnPressed:" destination="Hkw-3O-A1T" eventType="touchUpInside" id="ehY-JT-MFW"/>
+                                    </connections>
+                                </button>
+                                <connections>
+                                    <segue destination="Wux-Fw-nv9" kind="show" identifier="teamEdit" customClass="SegueFromRight" customModule="SWSG" customModuleProvider="target" id="QHv-mz-fWI"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="buttonLbl" destination="HKr-Vg-hCw" id="mw8-tL-aI7"/>
@@ -571,7 +589,76 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FTz-Hv-Kqe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3398.5" y="590.5"/>
+            <point key="canvasLocation" x="2385" y="625"/>
+        </scene>
+        <!--Team Edit View Controller-->
+        <scene sceneID="sT8-HI-Drg">
+            <objects>
+                <viewController id="MJ2-Ec-WgT" customClass="TeamEditViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Pcb-Gl-8ud"/>
+                        <viewControllerLayoutGuide type="bottom" id="SAM-7Z-TVV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="OTz-KF-UfD">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y9f-aT-8ix">
+                                <rect key="frame" x="0.0" y="64" width="375" height="550"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="550" id="5hZ-wA-CgV"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="74h-lX-dzH" kind="embed" id="TKC-b4-52S"/>
+                                </connections>
+                            </containerView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yho-kL-aaB">
+                                <rect key="frame" x="0.0" y="614" width="375" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Done">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onDoneBtnPressed:" destination="MJ2-Ec-WgT" eventType="touchUpInside" id="hrx-HZ-Sru"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="y9f-aT-8ix" firstAttribute="trailing" secondItem="OTz-KF-UfD" secondAttribute="trailing" id="5oK-uj-MHH"/>
+                            <constraint firstItem="y9f-aT-8ix" firstAttribute="top" secondItem="Pcb-Gl-8ud" secondAttribute="bottom" id="QrZ-Gj-TO7"/>
+                            <constraint firstItem="Yho-kL-aaB" firstAttribute="trailing" secondItem="OTz-KF-UfD" secondAttribute="trailing" id="cLi-S4-iSg"/>
+                            <constraint firstItem="Yho-kL-aaB" firstAttribute="top" secondItem="y9f-aT-8ix" secondAttribute="bottom" id="dZp-BN-W5V"/>
+                            <constraint firstItem="y9f-aT-8ix" firstAttribute="leading" secondItem="OTz-KF-UfD" secondAttribute="leading" id="xzy-Kr-lMY"/>
+                            <constraint firstItem="Yho-kL-aaB" firstAttribute="leading" secondItem="OTz-KF-UfD" secondAttribute="leading" id="yXj-Tn-yQd"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="9rM-Om-TPJ">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="y5x-6G-4yd">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yse-em-F9E">
+                                <rect key="frame" x="16" y="7" width="83" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Back">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onBackBtnClick:" destination="MJ2-Ec-WgT" eventType="touchUpInside" id="gjP-f8-p7V"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Jcg-dv-Eft" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4015" y="251"/>
+        </scene>
+        <!--TeamCreateViewController-->
+        <scene sceneID="wQE-uT-C7h">
+            <objects>
+                <viewControllerPlaceholder storyboardName="TeamRegistration" referencedIdentifier="TeamCreateViewController" id="74h-lX-dzH" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hqZ-RX-qgl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4686" y="250"/>
         </scene>
         <!--ProfileViewController-->
         <scene sceneID="LCb-bt-7FY">
@@ -579,7 +666,7 @@
                 <viewControllerPlaceholder storyboardName="Profile" referencedIdentifier="ProfileViewController" id="Kjg-kh-WCM" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zi7-6A-XeW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4141" y="464"/>
+            <point key="canvasLocation" x="3155" y="580"/>
         </scene>
         <!--ChannelViewController-->
         <scene sceneID="2OV-iu-gPa">
@@ -587,14 +674,14 @@
                 <viewControllerPlaceholder storyboardName="Chat" referencedIdentifier="ChannelViewController" id="Hxq-T1-EcM" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l2a-YR-Rao" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4168" y="589"/>
+            <point key="canvasLocation" x="3163" y="659"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="TdE-mW-C4I">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="U5F-XB-rEF" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Juz-0D-uFh">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Juz-0D-uFh">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -606,6 +693,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uaB-Vk-SOr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="383" y="357"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Dda-BX-Y0s">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Wux-Fw-nv9" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="rxy-Rp-8Xw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="MJ2-Ec-WgT" kind="relationship" relationship="rootViewController" id="WXO-vg-MR1"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xDV-lW-ZJD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3191" y="251"/>
         </scene>
     </scenes>
     <resources>
