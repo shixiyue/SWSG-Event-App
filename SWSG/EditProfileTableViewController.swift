@@ -251,6 +251,10 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
     }
     
     @objc private func update(sender: UIButton) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         guard let image = profileImageButton.imageView?.image, let name = nameTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextField.text, let skills = skillsTextView.content, let desc = descTextView.content else {
             return
         }
@@ -263,6 +267,10 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
     }
     
     @IBAction func unlinkFBBtnPressed(_ sender: Any) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         let title = "Removed Facebook"
         let message = "Facebook Login has been removed from your account"
         Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { () in
@@ -280,6 +288,10 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
     }
     
     @IBAction func unlinkGoogleBtnPressed(_ sender: Any) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         let title = "Removed Google"
         let message = "Google Login has been removed from your account"
         Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { () in
@@ -297,6 +309,10 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
     }
     
     @IBAction func changeBtnPressed(_ sender: Any) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         if !auth.contains(.email) {
             showAddPassword()
         } else {

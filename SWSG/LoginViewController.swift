@@ -92,6 +92,10 @@ class LoginViewController: UIViewController {
     }
     
     @objc fileprivate func logIn() {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         guard let email = emailTextField.text, let password = passwordTextField.text else {
             return
         }

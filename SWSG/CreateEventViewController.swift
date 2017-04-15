@@ -153,6 +153,10 @@ class CreateEventViewController: UIViewController {
     }
     
     @IBAction func saveBtnPressed(_ sender: Any) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         let startDateTime = Date.dateTime(forDate: datePicker.date, forTime: sTimePicker.date)
         let endDateTime = Date.dateTime(forDate: datePicker.date, forTime: eTimePicker.date)
         var image: UIImage? = nil

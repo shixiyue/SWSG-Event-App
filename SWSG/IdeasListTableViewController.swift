@@ -30,12 +30,7 @@ class IdeasListTableViewController: BaseViewController {
     private var ideasAddRefHandle: FIRDatabaseHandle?
     private var ideasChangeRefHandle: FIRDatabaseHandle?
     private var ideasDeleteRefHandle: FIRDatabaseHandle?
-    
-    private enum ideaCreateErrorMsg: String {
-        case notParticipant = "Sorry, only participants of SWSG can create an idea!"
-        case noTeam = "Sorry, only participants who have joined teams can create an idea!"
-    }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == "showDetails", let detailsViewController = segue.destination as? IdeaDetailsTableViewController, let index = sender as? Int else {
             return
@@ -119,11 +114,7 @@ class IdeasListTableViewController: BaseViewController {
     
     @IBAction func addIdea() {
         guard let user = System.activeUser, user.type.isParticipant else {
-            present(Utility.getFailAlertController(message: ideaCreateErrorMsg.notParticipant.rawValue), animated: true, completion: nil)
-            return
-        }
-        guard user.hasTeam else {
-            present(Utility.getFailAlertController(message: ideaCreateErrorMsg.noTeam.rawValue), animated: true, completion: nil)
+            present(Utility.getFailAlertController(message: Config.ideaCreateErrorMessage), animated: true, completion: nil)
             return
         }
         performSegue(withIdentifier: "addIdea", sender: nil)

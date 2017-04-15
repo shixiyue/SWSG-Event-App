@@ -133,6 +133,11 @@ class MentorViewController: UIViewController {
     }
     
     func setSlot(on dayIndex: Int, at index: Int, status: ConsultationSlotStatus) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
+        
         guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
             return
         }
