@@ -561,7 +561,8 @@ struct Utility {
             for child in snapshot.children {
                 guard let mentorSnapshot = child as? FIRDataSnapshot,
                     let message = Message(snapshot: mentorSnapshot) else {
-                        continue
+                        completion()
+                        return
                 }
                 channel.latestMessage = message
             }

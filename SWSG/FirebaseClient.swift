@@ -411,34 +411,11 @@ class FirebaseClient {
         })
     }
     
-    /*
-    public func getTeams(completion: @escaping GetTeamsCallback) {
-        teamsRef.observeSingleEvent(of: .value, with: { (snapshot) in
-              var teams = [Team]()
-            for teamNameSnapshot in snapshot.children {
-                for teamSnapShot in (teamNameSnapshot as AnyObject).children {
-                    guard let team = Team(id: (teamSnapShot as AnyObject).key, snapshot: teamSnapShot as! FIRDataSnapshot) else {
-                        continue
-                    }
-                    teams.append(team)
-                }
-            }
-            completion(teams, nil)
-        })
-    }*/
     public func getTeam(snapshot: Any?) -> Team? {
-        print("inside getTeams method")
         guard let snapshot = snapshot as? FIRDataSnapshot else {
-            print("snapshot is nil")
             return nil
         }
-       // for teamsSnapshot in snapshot.children {
-            //print("inside teamsnapshot")
-            //print("\(teamsSnapshot)")
-          //  guard let teamsSnapshot = teamsSnapshot as? FIRDataSnapshot else {
-            //    continue
-        //}
-        print("team id is \(snapshot.key)")
+        
         return Team(id: snapshot.key, snapshot: snapshot)
     }
     
@@ -446,17 +423,12 @@ class FirebaseClient {
     public func getTeam(with id: String, completion: @escaping GetTeamCallback) {
             let teamRef = teamsRef.child(id)
             // TODO: handle error
-            print("inside get Team method")
-            print("team ref is \(teamRef)")
             teamRef.observeSingleEvent(of: .value, with: {(snapshot) in
-                print("wowowwowo")
                 guard let team = Team(id: id, snapshot: snapshot) else {
-                    print("team retrieved in getTeam is nil")
                     completion(nil, nil)
                     return
                 }
-                print("team is not nil")
-                //team.setId(id: id)
+                
                 completion(team, nil)
             })
         
@@ -695,7 +667,6 @@ class FirebaseClient {
                 return
             }
             channelRef.child(Config.image).setValue(imageURL)
-            
         })
     }
     

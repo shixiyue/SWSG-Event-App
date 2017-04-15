@@ -132,7 +132,7 @@ class MentorViewController: UIViewController {
         descriptionTB.text = profile.desc
     }
     
-    func bookSlot(on dayIndex: Int, at index: Int) {
+    func setSlot(on dayIndex: Int, at index: Int, status: ConsultationSlotStatus) {
         guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
             return
         }
@@ -142,12 +142,15 @@ class MentorViewController: UIViewController {
         let slot = day.slots[index]
         let slotTimeString = Utility.fbDateTimeFormatter.string(from: slot.startDateTime)
         
-        mentor.days[dayIndex].slots[index].status = .booked
-        mentor.days[dayIndex].slots[index].team = System.activeUser?.team
+        mentor.days[dayIndex].slots[index].status = status
         
         let slotRef = mentorRef.child("mentor/consultationDays/\(dateString)/\(slotTimeString)")
-        slotRef.child(Config.consultationStatus).setValue(ConsultationSlotStatus.booked.rawValue)
-        slotRef.child(Config.team).setValue(System.activeUser?.team)
+        slotRef.child(Config.consultationStatus).setValue(status.rawValue)
+        
+        if status == .booked {
+            mentor.days[dayIndex].slots[index].team = System.activeUser?.team
+            slotRef.child(Config.team).setValue(System.activeUser?.team)
+        }
     }
     
     func goToProfile(_ sender: UITapGestureRecognizer) {
@@ -195,10 +198,13 @@ class MentorViewController: UIViewController {
                 let index = indexPaths[0].item
                 mentorVC.mentorAcct = relatedMentors[index]
             }
-        } else if Config.mentorToProfile == Config.mentorToProfile,
+        } else if segue.identifier == Config.mentorToProfile,
             let profileVC = segue.destination as? ProfileViewController,
             let mentorAcct = mentorAcct {
             profileVC.user = mentorAcct
+        } else if segue.identifier == Config.mentorToTeamInfo, let team = sender as? Team,
+            let teamInfoVC = segue.destination as? TeamInfoTableViewController {
+            teamInfoVC.team = team
         }
     }
 }
@@ -319,21 +325,80 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func selectedSlot(for collectionView: UICollectionView,
                               at indexPath: IndexPath) {
-        guard let mentor = mentorAcct?.mentor, System.activeUser?.type.isParticipant == true else {
-            return
-        }
         
-        guard System.activeUser?.team != Config.noTeam else {
-            let title = "Error"
-            let message = "You need to be part of a team to book a slot"
-            Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _ in
-            })
+        guard let mentor = mentorAcct?.mentor else {
             return
         }
         
         let dayIndex = indexPath.section
         let index = indexPath.item - 1
         let slot = mentor.days[dayIndex].slots[index]
+        
+        if System.activeUser?.uid == mentorAcct?.uid, slot.status == .booked, let team = slot.team {
+            System.client.getTeam(with: team, completion: { (team, error) in
+                if let team = team {
+                    let title = "\(slot.startDateTime.string(format: "dd/M - Ha"))"
+                    let message = "Has been booked by \(team.name)"
+                    let slotController = UIAlertController(title: title, message: message,
+                                                              preferredStyle: UIAlertControllerStyle.alert)
+                                        
+                    let dismissAction = UIAlertAction(title: "Dismiss", style: .default) { _ in
+                    }
+                    slotController.addAction(dismissAction)
+                    
+                    let viewAction = UIAlertAction(title: "View Profile", style: .default) { _ in
+                        self.performSegue(withIdentifier: Config.mentorToTeamInfo, sender: team)
+                    }
+                    slotController.addAction(viewAction)
+                    
+                    //Present the Popup
+                    self.present(slotController, animated: true, completion: nil)
+                    return
+                }
+            })
+            return
+        } else if System.activeUser?.uid == mentorAcct?.uid {
+            let title = "Slot Status"
+            let message = "Set Slot Status"
+            let slotController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+            
+            if slot.status != .vacant {
+                let availableAction = UIAlertAction(title: "Vacant", style: .default, handler: {
+                    _ in
+                    self.setSlot(on: dayIndex, at: index, status: .vacant)
+                    return
+                })
+                slotController.addAction(availableAction)
+            }
+            
+            if slot.status != .unavailable {
+                let unavailableAction = UIAlertAction(title: "Unavailable", style: .default, handler: {
+                    _ in
+                    self.setSlot(on: dayIndex, at: index, status: .unavailable)
+                    return
+                })
+                slotController.addAction(unavailableAction)
+            }
+            
+            //Add a Cancel Action to the Popup
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                return
+            }
+            slotController.addAction(cancelAction)
+            
+            slotController.popoverPresentationController?.sourceView = self.view
+            
+            //Displays the Compose Popup
+            self.present(slotController, animated: true, completion: nil)
+        }
+        
+        guard System.activeUser?.type.isParticipant == true, System.activeUser?.team != Config.noTeam else {
+            let title = "Error"
+            let message = "You need to be part of a team to book a slot"
+            Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _ in
+            })
+            return
+        }
         
         guard slot.status == .vacant else {
             return
@@ -345,7 +410,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         //Add an Action to Confirm the Deletion with the Destructive Style
         let confirmAction = UIAlertAction(title: "Confirm", style: .default) { _ -> Void in
-            self.bookSlot(on: dayIndex, at: index)
+            self.setSlot(on: dayIndex, at: index, status: .booked)
         }
         bookingController.addAction(confirmAction)
         

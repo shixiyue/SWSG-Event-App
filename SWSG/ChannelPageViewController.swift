@@ -18,6 +18,7 @@ class ChannelPageViewController: UIPageViewController {
     
     fileprivate var channelsRef: FIRDatabaseReference?
     private var channelsAddedHandle: FIRDatabaseHandle?
+    private var channelsExistingHandle: FIRDatabaseHandle?
     
     fileprivate var index = 0
     
@@ -47,13 +48,23 @@ class ChannelPageViewController: UIPageViewController {
     private func observeChannels() {
         channelsRef = System.client.getChannelsRef()
         
-        channelsAddedHandle = channelsRef?.observe(.childAdded, with: { (snapshot) in
+        channelsAddedHandle = channelsRef?.observe(.value, with: { (snapshot) in
+            var validChannels = 0
+            for child in snapshot.children {
+                if let child = child as? FIRDataSnapshot, let channel = Channel(id: child.key, snapshot: child),
+                    Utility.validChannel(channel){
+                    validChannels += 1
+                }
+            }
+            
+            if validChannels == 0 {
+                self.setEmptyChat()
+            }
+        })
+        
+        channelsExistingHandle = channelsRef?.observe(.childAdded, with: { (snapshot) in
             guard let channel = Channel(id: snapshot.key, snapshot: snapshot),
                 Utility.validChannel(channel) else {
-                    if self.channelViewControllers.count == 0 {
-                        self.setEmptyChat()
-                    }
-                    
                     return
             }
             
@@ -71,6 +82,7 @@ class ChannelPageViewController: UIPageViewController {
                     }
                 }
             })
+            
         })
     }
     
@@ -82,14 +94,17 @@ class ChannelPageViewController: UIPageViewController {
     }
     
     fileprivate func setViewController() {
-        guard index >= 0, index < channelViewControllers.count, channelViewControllers.count > 0 else {
+        guard index >= 0, index < channelViewControllers.count, channelViewControllers.count > 0,
+            let viewController = channelViewControllers.first else {
             return
         }
         
-        setViewController(viewController: channelViewControllers.first!)
+        print("test3")
+        setViewController(viewController: viewController)
     }
     
     fileprivate func setViewController(viewController: UIViewController) {
+        print("test4")
         self.setViewControllers([viewController],
                                 direction: .forward,
                                 animated: true,
@@ -150,7 +165,6 @@ class ChannelPageViewController: UIPageViewController {
         guard let view = sender.view else {
             return
         }
-        
         
         let channel = channelIdentifier[view.tag]
         

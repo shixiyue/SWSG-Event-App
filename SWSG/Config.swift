@@ -140,6 +140,7 @@ struct Config {
     static let registrationStoryboard = "Registration"
     static let registrationListViewController = "RegistrationListViewController"
     static let participantRegistrationViewController = "ParticipantRegistrationViewController"
+    static let teamInfoTableViewController = "TeamInfoTableViewController"
     
     //Parameters for Segues:
     static let channelListToChannel = "showChannel"
@@ -168,6 +169,7 @@ struct Config {
     static let profileToChannel = "profileToChannel"
     static let registrationListToRegistration = "registrationListToRegistration"
     static let registrationToProfile = "registrationToProfile"
+    static let mentorToTeamInfo = "mentorToTeamInfo"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"

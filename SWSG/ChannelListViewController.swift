@@ -30,6 +30,7 @@ class ChannelListViewController: BaseViewController {
     private var channelsNewHandle: FIRDatabaseHandle?
     private var channelsDeletedHandle: FIRDatabaseHandle?
     
+    //MARK: Intialization and Deinitialization
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()
@@ -44,6 +45,21 @@ class ChannelListViewController: BaseViewController {
         chatList.reloadData()
     }
     
+    deinit {
+        if let existingHandle = channelsExistingHandle {
+            channelsRef.removeObserver(withHandle: existingHandle)
+        }
+        
+        if let newHandle = channelsNewHandle {
+            channelsRef.removeObserver(withHandle: newHandle)
+        }
+        
+        if let deletedHandle = channelsDeletedHandle {
+            channelsRef.removeObserver(withHandle: deletedHandle)
+        }
+    }
+    
+    //MARK: UI Set Up
     private func setUpSearchBar() {
         Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
         Utility.styleSearchBar(searchBar)
@@ -211,16 +227,6 @@ class ChannelListViewController: BaseViewController {
             let chatVc = segue.destination as? ChannelViewController {
             chatVc.senderDisplayName = System.activeUser?.profile.username
             chatVc.channel = channel
-        }
-    }
-    
-    deinit {
-        if let existingHandle = channelsExistingHandle {
-            channelsRef.removeObserver(withHandle: existingHandle)
-        }
-        
-        if let newHandle = channelsNewHandle {
-            channelsRef.removeObserver(withHandle: newHandle)
         }
     }
 }
