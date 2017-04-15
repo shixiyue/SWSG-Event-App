@@ -149,7 +149,7 @@ class MentorViewController: UIViewController {
         
         mentor.days[dayIndex].slots[index].status = status
         
-        let slotRef = mentorRef.child("mentor/consultationDays/\(dateString)/\(slotTimeString)")
+        let slotRef = mentorRef.child("\(Config.mentor)/\(Config.consultationDays)/\(dateString)/\(slotTimeString)")
         slotRef.child(Config.consultationStatus).setValue(status.rawValue)
         
         if status == .booked {
@@ -283,7 +283,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
                                          at indexPath: IndexPath) -> UICollectionViewCell {
         guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor,
             let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier:"consultationSlotCell",
+            withReuseIdentifier: Config.consultationSlotCell,
             for: indexPath) as? ConsultationSlotCell
             else {
                 return ConsultationSlotCell()
@@ -299,10 +299,8 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func getRelatedMentorCell(for collectionView: UICollectionView,
                                       at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier:"relatedMentorCell",
-            for: indexPath) as? MentorCell
-            else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier:
+            Config.relatedMentorCell, for: indexPath) as? MentorCell else {
                 return MentorCell()
         }
         

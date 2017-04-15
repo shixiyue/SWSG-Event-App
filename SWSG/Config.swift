@@ -195,7 +195,8 @@ struct Config {
     }
     
     static let duration = 60
-    
+    static let consultationSlotCell = "consultationSlotCell"
+    static let relatedMentorCell = "relatedMentorCell"
     static let slotCollectionTag = 1
     static let relatedCollectionTag = 2
     
