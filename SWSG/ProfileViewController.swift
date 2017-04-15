@@ -108,16 +108,9 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         nameLbl.text = user.profile.name
         usernameLbl.text = "@\(user.profile.username)"
         
-        guard user.type.isParticipant else {
-            teamLbl.text = user.type.toString()
-            return
-        }
-        
-        if user.team != Config.noTeam {
-            Utility.getTeamName(id: user.team, label: teamLbl)
-        } else {
-            teamLbl.text = Config.noTeamLabel
-        }
+        Utility.getTeamLbl(user: user, completion: { (teamLblText) in
+            self.teamLbl.text = teamLblText
+        })
     }
     
     private func setUpTopRightBtn() {
@@ -242,6 +235,10 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
     }
 
     @IBAction func changeProfileImage(_ sender: UIBarButtonItem) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         showImageOptions()
         alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImgButton.bounds.maxY)
     }

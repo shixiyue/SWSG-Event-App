@@ -12,7 +12,7 @@ class IdeaItemTableViewCell: UITableViewCell {
     
     @IBOutlet private var name: UILabel!
     @IBOutlet private var desc: UILabel!
-    @IBOutlet private var team: UILabel!
+    @IBOutlet private var user: UILabel!
     @IBOutlet private var ideaImageView: UIImageView!
     @IBOutlet private var votes: UILabel!
     @IBOutlet private var upvoteButton: UIButton!
@@ -26,7 +26,7 @@ class IdeaItemTableViewCell: UITableViewCell {
         desc.text = idea.description
         ideaImageView.image = idea.mainImage
         updateVotes()
-        Utility.getTeamName(id: idea.team, label: team, prefix: "by Team ")
+        Utility.getUserFullName(uid: idea.user, label: user, prefix: Config.ideaUserNamePrefix)
     }
     
     @IBAction func upvote(_ sender: UIButton) {

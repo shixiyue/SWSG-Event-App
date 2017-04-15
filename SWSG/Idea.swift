@@ -15,7 +15,7 @@ class Idea: ImagesContent, TemplateContent {
     var id: String?
 
     public private(set) var name: String
-    public private(set) var team: String
+    public private(set) var user: String
     public private(set) var description: String
     public private(set) var mainImage: UIImage = Config.defaultIdeaImage
     public internal(set) var images: [UIImage] = []
@@ -30,10 +30,10 @@ class Idea: ImagesContent, TemplateContent {
     private var imagesURL: [String: String]?
     private var imagesDict = [String: UIImage]()
 
-    init(name: String, team: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String, id: String? = nil) {
+    init(name: String, user: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String, id: String? = nil) {
 
         self.name = name
-        self.team = team
+        self.user = user
         self.description = description
         self.mainImage = mainImage
         self.images = images
@@ -54,10 +54,10 @@ class Idea: ImagesContent, TemplateContent {
             return nil
         }
         self.name = name
-        guard let team = snapshotValue[Config.team] as? String else {
+        guard let user = snapshotValue[Config.user] as? String else {
             return nil
         }
-        self.team = team
+        self.user = user
         guard let description = snapshotValue[Config.description] as? String else {
             return nil
         }
@@ -66,16 +66,7 @@ class Idea: ImagesContent, TemplateContent {
             return nil
         }
         self.videoLink = videoLink
-        if let votes = snapshotValue[Config.votes] as? [String: Bool] {
-            for (user, vote) in votes {
-                if vote == true {
-                    upvotes.insert(user)
-                } else {
-                    downvotes.insert(user)
-                }
-            }
-        }
-        
+        updateVotes(snapshotValue: snapshotValue)
         if let mainImageURL = snapshotValue[Config.mainImage] as? String {
             imagesState.mainImageURL = mainImageURL
         } else {
@@ -106,7 +97,7 @@ class Idea: ImagesContent, TemplateContent {
     }
     
     func getUpdatedIdea(name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) -> Idea {
-        let idea = Idea(name: name, team: team, description: description, mainImage: mainImage, images: images, videoLink: videoLink, id: id)
+        let idea = Idea(name: name, user: user, description: description, mainImage: mainImage, images: images, videoLink: videoLink, id: id)
         idea.imagesState.mainImageHasChanged = self.mainImage != mainImage
         idea.imagesState.imagesHasChanged = self.images != images
         return idea
@@ -118,6 +109,19 @@ class Idea: ImagesContent, TemplateContent {
         self.mainImage = mainImage
         self.images = images
         self.videoLink = videoLink
+    }
+    
+    func updateVotes(snapshotValue: [String: Any]) {
+        guard let votes = snapshotValue[Config.votes] as? [String: Bool] else {
+            return
+        }
+        for (user, vote) in votes {
+            if vote == true {
+                upvotes.insert(user)
+            } else {
+                downvotes.insert(user)
+            }
+        }
     }
     
     func upvote() {
@@ -160,7 +164,7 @@ class Idea: ImagesContent, TemplateContent {
     
     func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [Config.name: self.name,
-                                   Config.team: self.team,
+                                   Config.user: self.user,
                                    Config.description: self.description,
                                    Config.videoLink: self.videoLink]
         if let id = id {
@@ -183,7 +187,7 @@ func ==(lhs: Idea, rhs: Idea) -> Bool {
         return lhsId == rhsId
     }
     return lhs.name == rhs.name
-        && lhs.team == rhs.team
+        && lhs.user == rhs.user
         && lhs.description == rhs.description
         && lhs.mainImage == rhs.mainImage
         && lhs.images == rhs.images

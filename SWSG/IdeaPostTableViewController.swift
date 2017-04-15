@@ -13,7 +13,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     private var currentIdea: Idea?
     
     @IBOutlet fileprivate var ideaName: UITextField!
-    @IBOutlet private var teamName: UILabel!
+    @IBOutlet private var userName: UILabel!
     @IBOutlet private var mainImage: UIButton!
     
     private var containerViewController: TemplateEditViewController!
@@ -31,13 +31,7 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
             return
         }
         cropMode = .square
-        teams.retrieveTeamWith(id: user.team, completion: { (team) in
-            guard let team = team else {
-                self.teamName.text = Config.noTeam
-                return
-            }
-            self.teamName.text = "by Team \(team.name)"
-        })
+        userName.text = Config.ideaUserNamePrefix + user.profile.name
         preset()
         NotificationCenter.default.addObserver(self, selector: #selector(addIdea), name: Notification.Name(rawValue: "update"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
@@ -121,7 +115,11 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
             })
             return
         }
-        let idea = Idea(name: name, team: user.team, description: description, mainImage: image, images: images, videoLink: videoLink)
+        guard let uid = user.uid else {
+            present(Utility.getFailAlertController(message: "Error!"), animated: true, completion: nil)
+            return
+        }
+        let idea = Idea(name: name, user: uid, description: description, mainImage: image, images: images, videoLink: videoLink)
         System.client.createIdea(idea: idea, completion: { (error) in
             self.getResult(error: error)
         })

@@ -65,6 +65,10 @@ class TeamCreateTableViewController: UITableViewController, UICollectionViewData
     }
     
     @IBAction func onDoneButtonClick(_ sender: Any) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         guard let user = System.activeUser, user.type.isParticipant else {
             self.present(Utility.getFailAlertController(message: teamCreateErrorMsg), animated: true, completion: nil)
             return

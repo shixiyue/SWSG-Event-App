@@ -90,11 +90,6 @@ class MenuViewController: UIViewController {
         nameLbl.text = user.profile.name
         usernameLbl.text = "@\(user.profile.username)"
         
-        guard user.type.isParticipant else {
-            teamLbl.text = user.type.toString()
-            return
-        }
-        
         Utility.getTeamLbl(user: user, completion: { (teamLblText) in
             self.teamLbl.text = teamLblText
         })

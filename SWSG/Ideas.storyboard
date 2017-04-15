@@ -48,7 +48,7 @@
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="by Team" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R2X-XT-pvF">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="by User" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R2X-XT-pvF">
                                             <rect key="frame" x="118" y="84" width="224" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" red="0.90980392160000001" green="0.16862745100000001" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -122,8 +122,8 @@
                                     <outlet property="downvoteButton" destination="Ytn-gu-E2h" id="EUQ-ig-4ho"/>
                                     <outlet property="ideaImageView" destination="HDR-Q4-jMo" id="jGF-90-EU2"/>
                                     <outlet property="name" destination="XWp-of-Ztb" id="1T0-Sd-bP4"/>
-                                    <outlet property="team" destination="R2X-XT-pvF" id="ThY-S3-jg4"/>
                                     <outlet property="upvoteButton" destination="RD7-HY-WiN" id="Y2W-xa-uhD"/>
+                                    <outlet property="user" destination="R2X-XT-pvF" id="VV1-61-uGj"/>
                                     <outlet property="votes" destination="7TS-K5-Ojq" id="PGg-fS-YEv"/>
                                 </connections>
                             </tableViewCell>
@@ -282,7 +282,7 @@
                     <connections>
                         <outlet property="ideaName" destination="lQl-kW-Kfm" id="Ccx-1a-ElD"/>
                         <outlet property="mainImage" destination="oJJ-Fx-0dp" id="C99-o2-L0u"/>
-                        <outlet property="teamName" destination="2vm-tz-2iL" id="Xpn-Gx-J4R"/>
+                        <outlet property="userName" destination="2vm-tz-2iL" id="Tap-fM-0UE"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J65-2F-VDQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -404,7 +404,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="by Team" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pVM-sW-Ggw">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="by User" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pVM-sW-Ggw">
                                                     <rect key="frame" x="8" y="9" width="359" height="26"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="22"/>
                                                     <color key="textColor" red="0.90980392160000001" green="0.16862745100000001" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -471,8 +471,8 @@
                         <outlet property="downvoteButton" destination="KrH-kI-NHO" id="prG-5D-QRk"/>
                         <outlet property="ideaNameLabel" destination="rV4-6i-ATU" id="DNm-HC-sZz"/>
                         <outlet property="mainImage" destination="yWu-0l-cR3" id="9xP-GB-CaW"/>
-                        <outlet property="teamNameLabel" destination="pVM-sW-Ggw" id="WyY-ui-xvt"/>
                         <outlet property="upvoteButton" destination="O4m-0n-jae" id="Ce4-0p-KSq"/>
+                        <outlet property="userNameLabel" destination="pVM-sW-Ggw" id="aHc-xv-XLS"/>
                         <outlet property="votes" destination="miJ-5G-HR5" id="Cg1-Uu-42y"/>
                         <segue destination="lmr-Uf-aqu" kind="show" identifier="editIdea" id="AtR-m3-JxD"/>
                     </connections>
@@ -496,6 +496,6 @@
         <image name="upvote" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="l3Y-uz-a3N"/>
+        <segue reference="AtR-m3-JxD"/>
     </inferredMetricsTieBreakers>
 </document>
