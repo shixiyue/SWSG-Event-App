@@ -64,6 +64,7 @@ class TeamRegistrationTableViewController: BaseViewController {
         teamChangedHandle = teamRef.observe(.childChanged, with: { (snapshot) -> Void in
             if let team = System.client.getTeam(snapshot: snapshot) {
                 self.teams.replaceTeam(for: team)
+                print("team cheanged in registration")
                 self.tableView.reloadData()
             }
         })

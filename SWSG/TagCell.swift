@@ -11,6 +11,7 @@ import UIKit
 class TagCell: UICollectionViewCell {
     @IBOutlet weak var tagName: UILabel!
     @IBOutlet weak var tagNameMaxWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var delete: UIButton!
     
     override func awakeFromNib() {
         self.backgroundColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
@@ -21,6 +22,7 @@ class TagCell: UICollectionViewCell {
     }
     override func layoutSubviews() {
         self.layoutIfNeeded()
+        bringSubview(toFront: delete)
     }
     
     func preferredLayoutSizeFittingSize(targetSize: CGSize)-> CGSize {

@@ -19,9 +19,13 @@ class TeamInfoTableViewController: UITableViewController {
     fileprivate var sizingCell: TagCell?
     
     private let teams = Teams()
+
     private let joinTeamErrorMsg = "You can not join more than one team"
     private let quitTeamErrorMsg = "You do not belong to this team"
     private let fullTeamErrorMsg = "Team is full"
+    private var teamRef: FIRDatabaseReference!
+    private var teamChangedHandle: FIRDatabaseHandle?
+    
     fileprivate var containerHeight = CGFloat(100) {
         didSet {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "reload"), object: self)
@@ -45,6 +49,8 @@ class TeamInfoTableViewController: UITableViewController {
             buttonLbl.setTitle(Config.fullTeam, for: .normal)
             chatBtn.isEnabled = false
         }
+        observeEvents()
+        tableView.reloadData()
     }
     
     override func viewDidLoad() {
@@ -63,6 +69,8 @@ class TeamInfoTableViewController: UITableViewController {
         } else if segue.identifier == Config.teamToProfile, let user = sender as? User,
             let profileVC = segue.destination as? ProfileViewController {
             profileVC.user = user
+        } else if segue.identifier == "teamEdit", let team = sender as? Team, let destVC = segue.destination as? UINavigationController, let editVC = destVC.topViewController as? TeamEditViewController {
+            editVC.team = team
         }
     }
     
@@ -79,6 +87,12 @@ class TeamInfoTableViewController: UITableViewController {
         System.client.getTeamChannel(for: team, completion: { (channel, error) in
             self.performSegue(withIdentifier: Config.teamToChat, sender: channel)
         })
+    }
+    @IBAction func EditBtnPressed(_ sender: Any) {
+        guard let team = team else {
+            return
+        }
+        self.performSegue(withIdentifier: "teamEdit", sender: team)
     }
     
     @IBAction func onRqtToJoinButtonTapped(_ sender: Any) {
@@ -133,6 +147,18 @@ class TeamInfoTableViewController: UITableViewController {
         }
     }
     
+    private func observeEvents() {
+        
+        teamRef = System.client.getTeamsRef()
+        teamChangedHandle = teamRef.observe(.childChanged, with: { (snapshot) -> Void in
+            if let team = System.client.getTeam(snapshot: snapshot) {
+                self.team = team
+                print("team changes")
+                self.tableView.beginUpdates()
+                self.tableView.endUpdates()
+            }
+        })
+    }
 }
 
 /// UITableViewDataSource methods
@@ -144,6 +170,7 @@ extension TeamInfoTableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
+            print("\(team!.members.count+1)")
             return team!.members.count+1
         } else {
             return 4
@@ -255,6 +282,9 @@ extension TeamInfoTableViewController {
         guard let team = team else {
             return
         }
+        guard indexPath.section == 0 else {
+            return
+        }
         System.client.getUserWith(uid: team.members[indexPath.row-1], completion: {
             (user, error) in
             if let user = user {
@@ -276,6 +306,7 @@ extension TeamInfoTableViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TagCell", for: indexPath) as! TagCell
         self.configureCell(cell: cell, forIndexPath: indexPath)
+        cell.delete.isHidden = true
         return cell
     }
     
