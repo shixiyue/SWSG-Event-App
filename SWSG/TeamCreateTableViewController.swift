@@ -111,10 +111,6 @@ class TeamCreateTableViewController: UITableViewController {
         System.activeUser = user
         Utility.popViewController(no: 1, viewController: self)
     }
-
-    @IBAction func onBackBtnClick(_ sender: Any) {
-        Utility.onBackButtonClick(tableViewController: self)
-    }
     
     @objc private func reload() {
         self.tableView.beginUpdates()

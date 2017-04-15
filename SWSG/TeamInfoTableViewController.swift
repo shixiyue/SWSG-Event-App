@@ -51,8 +51,6 @@ class TeamInfoTableViewController: UITableViewController {
             buttonLbl.setTitle(Config.fullTeam, for: .normal)
             chatBtn.isEnabled = false
         }
-        observeEvents()
-        tableView.reloadData()
     }
     
     override func viewDidLoad() {
@@ -63,7 +61,19 @@ class TeamInfoTableViewController: UITableViewController {
             self.title = team.name
         }
         
+        guard let user = System.activeUser, let rBBItems = self.navigationItem.rightBarButtonItems,
+            let team = team else {
+            return
+        }
+        
+        for (index, item) in rBBItems.enumerated() {
+            if item.tag == 1 && !team.containsMember(member: user) {
+                self.navigationItem.rightBarButtonItems?.remove(at: index)
+            }
+        }
+        
         setUpLayout()
+        observeEvents()
     }
     
     fileprivate func setUpLayout() {
@@ -83,8 +93,8 @@ class TeamInfoTableViewController: UITableViewController {
         } else if segue.identifier == Config.teamToProfile, let user = sender as? User,
             let profileVC = segue.destination as? ProfileViewController {
             profileVC.user = user
-        } else if segue.identifier == "teamEdit", let team = sender as? Team, let destVC = segue.destination as? UINavigationController, let editVC = destVC.topViewController as? TeamEditViewController {
-            editVC.team = team
+        } else if segue.identifier == "teamEdit", let destVC = segue.destination  as? TeamEditViewController {
+            destVC.team = team
         }
     }
     
@@ -162,14 +172,16 @@ class TeamInfoTableViewController: UITableViewController {
     }
     
     private func observeEvents() {
+        guard let teamID = team?.id else {
+            return
+        }
         
-        teamRef = System.client.getTeamsRef()
-        teamChangedHandle = teamRef.observe(.childChanged, with: { (snapshot) -> Void in
-            if let team = System.client.getTeam(snapshot: snapshot) {
+        teamRef = System.client.getTeamRef(for: teamID)
+        teamChangedHandle = teamRef.observe(.value, with: { (snapshot) -> Void in
+            if let team = Team(id: snapshot.key, snapshot: snapshot) {
                 self.team = team
-                print("team changes")
-                self.tableView.beginUpdates()
-                self.tableView.endUpdates()
+                self.title = team.name
+                self.tableView.reloadData()
             }
         })
     }

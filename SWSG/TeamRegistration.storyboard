@@ -562,19 +562,9 @@
                                     <action selector="chatBtnPressed:" destination="Hkw-3O-A1T" id="lcM-yU-65J"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem style="plain" id="534-6c-oYA">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Dt8-rz-ODi">
-                                    <rect key="frame" x="258" y="7" width="60" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="Edit">
-                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="EditBtnPressed:" destination="Hkw-3O-A1T" eventType="touchUpInside" id="ehY-JT-MFW"/>
-                                    </connections>
-                                </button>
+                            <barButtonItem tag="1" title="Edit" id="zzf-EH-Qr6">
                                 <connections>
-                                    <segue destination="Wux-Fw-nv9" kind="show" identifier="teamEdit" customClass="SegueFromRight" customModule="SWSG" customModuleProvider="target" id="QHv-mz-fWI"/>
+                                    <segue destination="MJ2-Ec-WgT" kind="show" identifier="teamEdit" id="68F-NL-UeZ"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -633,20 +623,7 @@
                             <constraint firstItem="Yho-kL-aaB" firstAttribute="leading" secondItem="OTz-KF-UfD" secondAttribute="leading" id="yXj-Tn-yQd"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="9rM-Om-TPJ">
-                        <barButtonItem key="leftBarButtonItem" style="plain" id="y5x-6G-4yd">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yse-em-F9E">
-                                <rect key="frame" x="16" y="7" width="83" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Back">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="onBackBtnClick:" destination="MJ2-Ec-WgT" eventType="touchUpInside" id="gjP-f8-p7V"/>
-                                </connections>
-                            </button>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="9rM-Om-TPJ"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jcg-dv-Eft" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -681,7 +658,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="U5F-XB-rEF" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Juz-0D-uFh">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Juz-0D-uFh">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -693,24 +670,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uaB-Vk-SOr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="383" y="357"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="Dda-BX-Y0s">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Wux-Fw-nv9" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="rxy-Rp-8Xw">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="MJ2-Ec-WgT" kind="relationship" relationship="rootViewController" id="WXO-vg-MR1"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xDV-lW-ZJD" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3191" y="251"/>
         </scene>
     </scenes>
     <resources>

@@ -24,12 +24,8 @@ class TeamEditViewController: UIViewController {
             return
         }
         if delegate.updateTeamValue() {
-           Utility.onBackButtonClick(UIViewController: self)
+           Utility.popViewController(no: 1, viewController: self)
         }
-    }
-
-    @IBAction func onBackBtnClick(_ sender: Any) {
-        Utility.onBackButtonClick(UIViewController: self)
     }
     
     // MARK: - Navigation
