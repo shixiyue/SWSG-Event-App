@@ -3,6 +3,7 @@
 //  SWSG
 //
 //  Created by Li Xiaowei on 3/27/17.
+//  Modified by Jeremy Jee
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
@@ -10,10 +11,14 @@ import UIKit
 import Firebase
 import JTAppleCalendar
 
+/**
+    EventCalendarViewController is a UIViewController, inherits from BaseViewController
+    for the menu, that displays all the events on a Calendar View
+ 
+ */
+
 class EventCalendarViewController: BaseViewController {
-    var events = [Date: [Event]]()
-    fileprivate var filteredEvents = [Event]()
-    
+    //MARK: IBOutlets
     @IBOutlet weak var dayHeaderView: UIView!
     @IBOutlet weak var dayLbl: UILabel!
     @IBOutlet weak var calendarStackView: UIView!
@@ -23,6 +28,8 @@ class EventCalendarViewController: BaseViewController {
     @IBOutlet weak var addBtn: UIBarButtonItem!
     
     //MARK: Properties
+    fileprivate var events = [Date: [Event]]()
+    fileprivate var filteredEvents = [Event]()
     fileprivate var isCalendar = true
     fileprivate var searchActive = false {
         willSet(newSearchActive) {
@@ -36,6 +43,7 @@ class EventCalendarViewController: BaseViewController {
     private var eventChangedHandle: FIRDatabaseHandle?
     private var eventDeletedHandle: FIRDatabaseHandle?
     
+    //MARK: Intialization Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -155,41 +163,8 @@ class EventCalendarViewController: BaseViewController {
         }
     }
     
-    // Function to handle the text color of the calendar
-    func handleCellTextColor(view: JTAppleDayCellView?, cellState: CellState) {
-        
-        guard let myCustomCell = view as? CalendarCell  else {
-            return
-        }
-        
-        if cellState.isSelected {
-            myCustomCell.dayLabel.textColor = UIColor.white
-        } else {
-            if cellState.dateBelongsTo == .thisMonth {
-                myCustomCell.dayLabel.textColor = UIColor.black
-            } else {
-                myCustomCell.dayLabel.textColor = UIColor.darkGray
-            }
-        }
-    }
-    
     @objc private func reload() {
         calendarView.reloadData()
-    }
-    
-    // Function to handle the calendar selection
-    func handleCellSelection(view: JTAppleDayCellView?, cellState: CellState) {
-        guard let cell = view as? CalendarCell  else {
-            return
-        }
-        if cellState.isSelected {
-            cell.selectedView.layer.cornerRadius = 25
-            cell.selectedView.isHidden = false
-            cell.dot.backgroundColor = UIColor.white
-        } else {
-            cell.selectedView.isHidden = true
-            cell.dot.backgroundColor = Config.themeColor
-        }
     }
     
     // MARK: Firebase related methods
@@ -240,7 +215,24 @@ class EventCalendarViewController: BaseViewController {
 
 }
 
+//MARK: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate
 extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
+    func handleCellTextColor(view: JTAppleDayCellView?, cellState: CellState) {
+        guard let myCustomCell = view as? CalendarCell  else {
+            return
+        }
+        
+        if cellState.isSelected {
+            myCustomCell.dayLabel.textColor = UIColor.white
+        } else {
+            if cellState.dateBelongsTo == .thisMonth {
+                myCustomCell.dayLabel.textColor = UIColor.black
+            } else {
+                myCustomCell.dayLabel.textColor = UIColor.darkGray
+            }
+        }
+    }
+    
     func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
         let parameters = ConfigurationParameters(startDate: Config.calendarStartDate,
                                                  endDate: Config.calendarEndDate,
@@ -284,6 +276,21 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {
         handleCellSelection(view: cell, cellState: cellState)
         handleCellTextColor(view: cell, cellState: cellState)
+    }
+    
+    // Function to handle the calendar selection
+    func handleCellSelection(view: JTAppleDayCellView?, cellState: CellState) {
+        guard let cell = view as? CalendarCell  else {
+            return
+        }
+        if cellState.isSelected {
+            cell.selectedView.layer.cornerRadius = 25
+            cell.selectedView.isHidden = false
+            cell.dot.backgroundColor = UIColor.white
+        } else {
+            cell.selectedView.isHidden = true
+            cell.dot.backgroundColor = Config.themeColor
+        }
     }
     
     // This sets the height of your header

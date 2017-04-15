@@ -9,19 +9,26 @@
 import UIKit
 import Firebase
 
+/**
+    ChannelPageViewController is a UIPageViewController that shows the Latest
+    Chats Widget on the Home View Controller
+ */
+
 class ChannelPageViewController: UIPageViewController {
+    
+    //MARK: Properties
     fileprivate var channels = [Channel]()
     fileprivate var channelIdentifier = [Int: Channel]()
     fileprivate var channelViewControllers = [UIViewController]()
-    
     fileprivate var firstLoaded = false
+    fileprivate var index = 0
     
+    //MARK: Firebase References
     fileprivate var channelsRef: FIRDatabaseReference?
     private var channelsAddedHandle: FIRDatabaseHandle?
     private var channelsExistingHandle: FIRDatabaseHandle?
     
-    fileprivate var index = 0
-    
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,6 +52,7 @@ class ChannelPageViewController: UIPageViewController {
         }
     }
     
+    //MARK: Firebase Functions
     private func observeChannels() {
         channelsRef = System.client.getChannelsRef()
         
@@ -86,6 +94,7 @@ class ChannelPageViewController: UIPageViewController {
         })
     }
     
+    //MARK: UI Supporting Functions
     fileprivate func setEmptyChat() {
         let storyboard = UIStoryboard(name: Config.mainStoryboard, bundle: nil)
         let emptyChat = storyboard.instantiateViewController(withIdentifier: Config.emptyChatView)
@@ -99,12 +108,10 @@ class ChannelPageViewController: UIPageViewController {
             return
         }
         
-        print("test3")
         setViewController(viewController: viewController)
     }
     
     fileprivate func setViewController(viewController: UIViewController) {
-        print("test4")
         self.setViewControllers([viewController],
                                 direction: .forward,
                                 animated: true,

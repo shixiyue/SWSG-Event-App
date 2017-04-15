@@ -14,24 +14,35 @@ import Google
 import GoogleSignIn
 import SwiftSpinner
 
+/**
+    LoginViewController is a UIViewController that displays the Log In Screen
+    
+    Specifications:
+        - newCredential: Credential if the User already has an account and is attempting to
+                         login from a new Authentication Provider
+        - clientArr:     Array of Authentication Providers that the User has logged
+                         in with before.
+ */
 class LoginViewController: UIViewController {
 
+    //MARK: IBOutlets
     @IBOutlet fileprivate var emailTextField: UITextField!
     @IBOutlet fileprivate var passwordTextField: UITextField!
     @IBOutlet fileprivate var logInButton: RoundCornerButton!
-    
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var emailView: UIView!
     @IBOutlet weak var facebookView: UIView!
     @IBOutlet weak var googleView: UIView!
     @IBOutlet weak var signUpView: UIView!
     
+    //MARK: Properties
     var newCredential: FIRAuthCredential?
     var clientArr: [String]?
     fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
     fileprivate let googleLoginButton = GIDSignInButton()
     fileprivate var currentAuth: AuthType?
     
+    //MARK: Intialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpButton()
@@ -103,14 +114,7 @@ class LoginViewController: UIViewController {
         attemptLogin(email: email, password: password, user: nil, auth: .email)
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        updateButtonState()
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
-        updateButtonState()
-    }
-    
+    //MARK: UI Supporting Methods
     private func updateButtonState() {
         let isAnyEmpty = emailTextField.text?.isEmpty ?? true || passwordTextField.text?.isEmpty ?? true
         logInButton.isEnabled = !isAnyEmpty
@@ -168,6 +172,7 @@ class LoginViewController: UIViewController {
     
 }
 
+//MARK: UITextFieldDelegate
 extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == emailTextField {
@@ -178,8 +183,17 @@ extension LoginViewController: UITextFieldDelegate {
         }
         return false
     }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        updateButtonState()
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
+        updateButtonState()
+    }
 }
 
+//MARK: GIDSignInDelegate, GIDSignInUIDelegate
 extension LoginViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     func googleLoginBtnPressed(sender: UITapGestureRecognizer) {
         GIDSignIn.sharedInstance().signIn()
@@ -194,6 +208,7 @@ extension LoginViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     }
 }
 
+//MARK: LoginButtonDelegate
 extension LoginViewController: LoginButtonDelegate {
     
     func loginButtonDidCompleteLogin(_ fbLoginButton: LoginButton, result: LoginResult){

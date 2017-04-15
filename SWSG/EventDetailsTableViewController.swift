@@ -9,23 +9,32 @@
 import UIKit
 import Firebase
 
+/**
+    EventDetailsTableViewController is a UITableViewController that displays
+    the details of an event.
+ 
+    Specifications:
+        - event: The Event to be displayed
+ */
+
 class EventDetailsTableViewController: UITableViewController {
-    
-    public var event : Event?
-    private var containerHeight: CGFloat!
-    private var events = Events.instance
-    fileprivate var commenters = [Int: User]()
 
+    //MARK: IBOutlets
     @IBOutlet weak var eventDetailsTableView: UITableView!
-
     @IBOutlet weak var titleImageIV: UIImageView!
-
+    
+    //MARK: Properties
+    public var event : Event?
+    fileprivate var containerHeight: CGFloat!
     fileprivate var imageIVSize: CGSize!
+    fileprivate var events = Events.instance
+    fileprivate var commenters = [Int: User]()
     
     //MARK: Firebase References
     private var eventRef: FIRDatabaseReference!
     private var eventChangedHandle: FIRDatabaseHandle?
     
+    //MARK: Initialization Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTable()
@@ -39,19 +48,6 @@ class EventDetailsTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         setUpImageView()
-    }
-    
-    //MARK: Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        
-        if segue.identifier == Config.eventToProfile, let user = sender as? User {
-            guard let profileVC = segue.destination as? ProfileViewController else {
-                return
-            }
-            
-            profileVC.user = user
-        }
     }
     
     private func setUpTable() {
@@ -75,6 +71,20 @@ class EventDetailsTableViewController: UITableViewController {
         })
     }
     
+    //MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.eventToProfile, let user = sender as? User {
+            guard let profileVC = segue.destination as? ProfileViewController else {
+                return
+            }
+            
+            profileVC.user = user
+        }
+    }
+    
+    //MARK: Firebase Functions
     private func observeEvent() {
         guard let event = event else {
             return
@@ -96,6 +106,7 @@ class EventDetailsTableViewController: UITableViewController {
         })
     }
     
+    //MARK: User Interaction Functions
     @IBAction func onAddCalendarBtnClicked(_ sender: Any) {
         guard let event = event else{
             return
@@ -108,11 +119,6 @@ class EventDetailsTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     func hideNavBarTapHandler(recognizer: UIGestureRecognizer) {
         if recognizer.state == .ended {
             self.navigationItem.hidesBackButton = !self.navigationItem.hidesBackButton
@@ -120,7 +126,7 @@ class EventDetailsTableViewController: UITableViewController {
         }
     }
     
-    // MARK: - Table view data source
+    // MARK: UITableViewDataSource
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections

@@ -13,27 +13,30 @@ import FacebookLogin
 import GoogleSignIn
 import SwiftSpinner
 
-/// `InitialViewController` represents the view controller for initial screen, which will prompt the user to sign up / log in.
+/**
+    InitialViewController is a UIViewController that displays the Initial Screen
+    if a user is not logged in. It provides the user with an option to either
+    Register or Log In.
+ */
+
 class InitialViewController: UIViewController {
+    
+    //MARK: IBOutlets
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var fbView: UIView!
     @IBOutlet weak var googleView: UIView!
     
+    //MARK: Properties
     fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
     fileprivate let googleLoginButton = GIDSignInButton()
     fileprivate let client = System.client
     fileprivate var currentAuth: AuthType?
     
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fbLoginButton.center = fbView.center
-        fbLoginButton.delegate = self
-        
-        googleLoginButton.center = googleView.center
-        
-        self.stackView.addSubview(fbLoginButton)
-        self.stackView.addSubview(googleLoginButton)
+        setUpButtons()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,6 +50,16 @@ class InitialViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.isNavigationBarHidden = false
+    }
+    
+    fileprivate func setUpButtons() {
+        fbLoginButton.center = fbView.center
+        fbLoginButton.delegate = self
+        
+        googleLoginButton.center = googleView.center
+        
+        self.stackView.addSubview(fbLoginButton)
+        self.stackView.addSubview(googleLoginButton)
     }
     
     // MARK: Navigation
@@ -108,6 +121,7 @@ class InitialViewController: UIViewController {
     }
 }
 
+//MARK: GIDSignInDelegate, GIDSignInUIDelegate
 extension InitialViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if error == nil {
@@ -120,8 +134,8 @@ extension InitialViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     }
 }
 
+//MARK: LoginButtonDelegate
 extension InitialViewController: LoginButtonDelegate {
-    
     func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult){
         SwiftSpinner.show("Communicating with Facebook")
         client.getFBProfile(completion: { (user, error) in

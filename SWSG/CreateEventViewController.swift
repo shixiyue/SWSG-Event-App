@@ -8,8 +8,14 @@
 
 import UIKit
 
+/**
+    CreateEventViewController is a UIViewController that displays a form to
+    create new events.
+ */
+
 class CreateEventViewController: UIViewController {
     
+    //MARK: IBOutlets
     @IBOutlet weak var imageIV: UIImageView!
     @IBOutlet weak var nameTF: UITextField!
     @IBOutlet weak var dateTF: UITextField!
@@ -18,26 +24,24 @@ class CreateEventViewController: UIViewController {
     @IBOutlet weak var venueTF: UITextField!
     @IBOutlet weak var shortDescTV: PlaceholderTextView!
     @IBOutlet weak var fullDescTV: PlaceholderTextView!
-    
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var createBtn: RoundCornerButton!
     
-    var textFields: [UITextField]!
-    var textViews: [PlaceholderTextView]!
-    
+    //MARK: Properties
+    fileprivate var textFields: [UITextField]!
+    fileprivate var textViews: [PlaceholderTextView]!
     fileprivate let datePicker = UIDatePicker()
     fileprivate let sTimePicker = UIDatePicker()
     fileprivate let eTimePicker = UIDatePicker()
-    
     fileprivate var toolbar = UIToolbar()
     fileprivate var activeTextField: UITextField?
     fileprivate var activeTextView: UITextView?
     fileprivate let imagePicker = ImagePickCropperPopoverViewController()
     fileprivate var imageChanged = false
-    
     fileprivate let shortDescPlaceholder = "Displayed on a List as a Preview"
     fileprivate let fullDescPlaceholder = "Displayed in Full in a Details Page"
     
+    //MARK: Initialization Methods
     override func viewDidLoad() {
         setUpImageView()
         setUpToolbar()
@@ -83,7 +87,6 @@ class CreateEventViewController: UIViewController {
         }
     }
     
-    //Sets the Keyboard to push and lower the view when it appears and disappears
     private func addKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWasShown),
                                                name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -103,6 +106,7 @@ class CreateEventViewController: UIViewController {
         
     }
     
+    //MARK: Handling User Input Functions
     func showImagePicker() {
         Utility.showImagePicker(imagePicker: imagePicker, viewController: self, completion: { (image) in
             if let image = image {
@@ -177,6 +181,7 @@ class CreateEventViewController: UIViewController {
     }
 }
 
+//MARK: UITextFieldDelegate
 extension CreateEventViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -231,6 +236,7 @@ extension CreateEventViewController: UITextFieldDelegate {
 
 }
 
+//MARK: UITextViewDelegate
 extension CreateEventViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         activeTextView = textView

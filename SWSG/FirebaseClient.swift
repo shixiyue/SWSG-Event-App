@@ -14,6 +14,10 @@ import Google
 import GoogleSignIn
 import OneSignal
 
+/**
+    FirebaseClient is the main interface between the App and Firebase
+ */
+
 class FirebaseClient {
     
     typealias GeneralErrorCallback = (FirebaseError?) -> Void

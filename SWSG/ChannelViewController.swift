@@ -12,9 +12,18 @@ import JSQMessagesViewController
 import Photos
 import SwiftGifOrigin
 
+/**
+    ChannelViewController is a JSQMessagesViewController from the JSQMessagesViewController
+    library. It displays the contents of a Channel, and relies on the UI from the library
+    to do so.
+ 
+    Specifications:
+        - channel: Channel to be displayed
+ */
+
 final class ChannelViewController: JSQMessagesViewController {
     
-    //MARK: Class Variables
+    //MARK: Properties
     var channel: Channel?
     fileprivate var client = System.client
     fileprivate var otherUser: User?
@@ -79,20 +88,6 @@ final class ChannelViewController: JSQMessagesViewController {
         super.viewDidAppear(animated)
         
         observeTyping()
-    }
-    
-    // MARK: Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        
-        if segue.identifier == Config.channelToChannelInfo,
-            let dest = segue.destination as? ChannelInfoViewController,
-            let channel = channel {
-            dest.channel = channel
-        } else if segue.identifier == Config.chatToProfile,
-            let user = sender as? User, let dest = segue.destination as? ProfileViewController {
-            dest.user = user
-        }
     }
     
     deinit {
@@ -178,6 +173,20 @@ final class ChannelViewController: JSQMessagesViewController {
     private func setupIncomingBubble() -> JSQMessagesBubbleImage {
         let bubbleImageFactory = JSQMessagesBubbleImageFactory()
         return bubbleImageFactory!.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
+    }
+    
+    // MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.channelToChannelInfo,
+            let dest = segue.destination as? ChannelInfoViewController,
+            let channel = channel {
+            dest.channel = channel
+        } else if segue.identifier == Config.chatToProfile,
+            let user = sender as? User, let dest = segue.destination as? ProfileViewController {
+            dest.user = user
+        }
     }
     
     //MARK: Message Display Methods

@@ -8,6 +8,11 @@
 
 import UIKit
 
+/**
+ ChannelPageCellController is a UIViewController that is used as a single
+ cell in the widget of the Latest Chats in HomeViewController as part of the
+ ChannelPageViewController
+ */
 class ChannelPageCellController: UIViewController {
     
     @IBOutlet var channelView: UIView!

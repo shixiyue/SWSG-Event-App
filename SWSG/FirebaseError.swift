@@ -8,8 +8,12 @@
 
 import Foundation
 
-// refer to https://firebase.google.com/docs/auth/ios/errors
-
+/**
+    FirebaseError is an enum of Error that contains the different kinds
+    of Firebase Errors.
+ 
+    Refer to https://firebase.google.com/docs/auth/ios/errors
+ */
 enum FirebaseError: Error {
     case networkError
     case userNotFound

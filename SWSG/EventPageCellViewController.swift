@@ -8,6 +8,11 @@
 
 import UIKit
 
+/**
+    EventPageCellViewController is a UIViewController that is used as a single
+    cell in the widget of the Latest Events in HomeViewController as part of the
+    EventPageViewController
+ */
 class EventPageCellViewController: UIViewController {
     
     @IBOutlet weak var stackView: UIStackView!
