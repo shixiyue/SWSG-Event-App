@@ -35,6 +35,7 @@ class FirebaseClient {
     typealias GetEventCallback = (Event?, FirebaseError?) -> Void
     typealias GetEventsCallback = ([Date: [Event]], FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
+    typealias GetNotificationsCallback = ([PushNotification], FirebaseError?) -> Void
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
     typealias ImageCallback = (UIImage?, String?) -> Void
     typealias ImagesCallback = ([UIImage]?, String?) -> Void
@@ -46,7 +47,8 @@ class FirebaseClient {
     private let eventsRef = FIRDatabase.database().reference(withPath: "events")
     private let ideasRef = FIRDatabase.database().reference(withPath: "ideas")
     private let informationRef = FIRDatabase.database().reference(withPath: "information")
-    private let notiRef = FIRDatabase.database().reference(withPath: "notifications")
+    private let notisIndividualRef = FIRDatabase.database().reference(withPath: "notifications_individual")
+    private let notisAllRef = FIRDatabase.database().reference(withPath: "notifications_all")
     private let storageRef = FIRStorage.storage().reference(forURL: Config.appURL)
     private let auth = FIRAuth.auth()
     
@@ -325,6 +327,54 @@ class FirebaseClient {
         
     }
     
+    public func createNotiIndividual(_ noti: PushNotification, uid: String, completion: @escaping GeneralErrorCallback?) {
+        let timestamp = NSDate().timeIntervalSince1970
+        let notiRef = notisIndividualRef.child(uid).child(String(timestamp)).childByAutoId()
+        let value = noti.toDictionary()
+        value[Config.timestamp] = timestamp 
+        eventRef.setValue(value)
+        completion(nil)
+    }
+
+    public func getNotiIndividual(uid: String, count: Int, completion: @escaping GetNotiCallback) {
+        let notiRef = notisIndividualRef.child(uid)
+        let query = notiRef.queryOrdered(byChild: Config.timestamp).queryLimited(toLast: count)
+        query.observeSingleEvent(of: .value, with { (snapshot) in 
+            for child in snapshot.children {
+                let result = [PushNotification]()
+                guard let childSnapshot = child as? FIRDataSnapshot, let noti = PushNotification(snapshot: childSnapshot) else {
+                    continue
+                }
+                result.append(noti)
+            }
+            completion(result, nil)
+        })
+    }
+
+    public func createNotiAll(_ noti: PushNotification, completion: @escaping GeneralErrorCallback?) {
+        let timestamp = NSDate().timeIntervalSince1970
+        let notiRef = notisAllRef.child(String(timestamp)).childByAutoId()
+        let value = noti.toDictionary()
+        value[Config.timestamp] = timestamp 
+        eventRef.setValue(value)
+        completion(nil)
+    }
+
+    public func getNotiAll(count: Int, completion: @escaping GetNotiCallback) {
+        let notiRef = notisAllRef
+        let query = notiRef.queryOrdered(byChild: Config.timestamp).queryLimited(toLast: count)
+        query.observeSingleEvent(of: .value, with { (snapshot) in 
+            for child in snapshot.children {
+                let result = [PushNotification]()
+                guard let childSnapshot = child as? FIRDataSnapshot, let noti = PushNotification(snapshot: childSnapshot) else {
+                    continue
+                }
+                result.append(noti)
+            }
+            completion(result, nil)
+        })
+    }
+
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
         let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
         let eventRef = eventsRef.child(dayString).childByAutoId()
@@ -940,7 +990,7 @@ class FirebaseClient {
     }
     
     public func getLatestMessageQuery(for channel: String) -> FIRDatabaseQuery {
-        return getChannelsRef().child(channel).child(Config.messages).queryLimited(toLast: 1)
+        return getChannelsRef().child(channel).child(Config.messages).(toLast: 1)
     }
     
     public func getUserRef(for uid: String) -> FIRDatabaseReference {

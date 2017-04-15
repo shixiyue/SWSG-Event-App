@@ -21,6 +21,27 @@ class PushNotification {
         self.message = message
     }
     
+    init?(snapshot: FIRDataSnapshot) {
+        guard let data = snapshot.value as? [String: AnyObject] else {
+            return nil
+        }
+        guard let rawType = data["type"] as? Int else {
+            return nil
+        }
+        guard let type = PushNotificationType(rawValue: rawType) else {
+            return nil
+        }
+        self.type = type
+        guard let additionData = data["addition_data"] as? [String: Any] else {
+            return nil
+        }
+        self.additionData = additionData
+        guard let message = data["message"] as? String else {
+            return nil
+        }
+        self.message = message
+    }
+
     init?(sendableDict: [String: Any]) {
         guard let contents = sendableDict["contents"] as? [String: String] else {
             return nil
