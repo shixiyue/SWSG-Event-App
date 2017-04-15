@@ -22,7 +22,11 @@ class RegistrationViewController: UIViewController {
     var registrationEvent: RegistrationEvent?
     fileprivate var registeredUsers = [User]()
     fileprivate var filteredRUsers = [User]()
-    fileprivate var searchActive = false
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            registeredList.reloadData()
+        }
+    }
     
     fileprivate var registrationEventRef: FIRDatabaseReference?
     fileprivate var rUserAddedHandle: FIRDatabaseHandle?
@@ -67,10 +71,6 @@ class RegistrationViewController: UIViewController {
     
     func donePressed() {
         self.view.endEditing(true)
-        
-        if searchBar.text?.characters.count == 0 {
-            searchActive = false
-        }
     }
     
     private func observeRegistrationEvent() {
@@ -272,29 +272,25 @@ extension RegistrationViewController: UISearchBarDelegate {
                 rUser.profile.username.lowercased().contains(searchText.lowercased())
         }
         
-        if searchText.characters.count == 0 {
-            searchActive = false
-        } else {
-            searchActive = true
-        }
         
-        registeredList.reloadData()
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchActive = true
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        Utility.searchBtnPressed(viewController: self)
     }
 }
 

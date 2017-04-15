@@ -26,12 +26,6 @@ class EventCalendarViewController: BaseViewController {
     fileprivate var isCalendar = true
     fileprivate var searchActive = false {
         willSet(newSearchActive) {
-            if newSearchActive {
-                isCalendar = false
-            } else {
-                isCalendar = true
-            }
-            setLayout()
             dayList.reloadData()
         }
     }
@@ -112,10 +106,6 @@ class EventCalendarViewController: BaseViewController {
     
     func donePressed() {
         self.view.endEditing(true)
-        
-        if searchBar.text?.characters.count == 0 {
-            searchActive = false
-        }
     }
     
     private func addObservers() {
@@ -404,6 +394,9 @@ extension EventCalendarViewController: UITableViewDelegate {
 extension EventCalendarViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterEvents(searchText: searchText)
+        
+        isCalendar = false
+        setLayout()
     }
     
     fileprivate func filterEvents(searchText: String) {
@@ -417,27 +410,31 @@ extension EventCalendarViewController: UISearchBarDelegate {
             return event.name.lowercased().contains(searchText.lowercased())
         }
         
-        if searchText.characters.count == 0 {
-            searchActive = false
-        } else {
-            searchActive = true
-        }
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchActive = true
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        isCalendar = false
+        setLayout()
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchActive = false
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        isCalendar = true
+        setLayout()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        Utility.searchBtnPressed(viewController: self)
+        
+        isCalendar = false
+        setLayout()
     }
 }
 

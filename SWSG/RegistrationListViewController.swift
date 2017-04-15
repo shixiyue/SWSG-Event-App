@@ -16,7 +16,11 @@ class RegistrationListViewController: UIViewController {
     
     fileprivate var registrationEvents = [RegistrationEvent]()
     fileprivate var filteredREvents = [RegistrationEvent]()
-    fileprivate var searchActive = false
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            registrationList.reloadData()
+        }
+    }
     
     fileprivate var registrationRef: FIRDatabaseReference?
     fileprivate var regAddHandler: FIRDatabaseHandle?
@@ -39,10 +43,6 @@ class RegistrationListViewController: UIViewController {
     
     func donePressed() {
         self.view.endEditing(true)
-        
-        if searchBar.text?.characters.count == 0 {
-            searchActive = false
-        }
     }
     
     // MARK: Navigation
@@ -71,13 +71,10 @@ class RegistrationListViewController: UIViewController {
         })
         
         regRemovedHandler = registrationRef?.observe(.childRemoved, with: { (snapshot) in
-            print(snapshot)
             guard let rEvent = RegistrationEvent(id: snapshot.key, snapshot: snapshot) else {
-                print("test3")
                 return
             }
             
-            print("test4")
             for (index, event) in self.registrationEvents.enumerated() {
                 if event.id == rEvent.id {
                     self.registrationEvents.remove(at: index)
@@ -85,7 +82,6 @@ class RegistrationListViewController: UIViewController {
                 }
             }
             
-            print("test2")
             self.registrationList.reloadData()
         })
 
@@ -178,29 +174,23 @@ extension RegistrationListViewController: UISearchBarDelegate {
         filteredREvents = registrationEvents.filter { rEvent in
             return rEvent.name.lowercased().contains(searchText.lowercased())
         }
-        
-        if searchText.characters.count == 0 {
-            searchActive = false
-        } else {
-            searchActive = true
-        }
-        
-        registrationList.reloadData()
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchActive = true
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        Utility.searchBtnPressed(viewController: self)
     }
 }

@@ -16,7 +16,11 @@ class TeamRegistrationTableViewController: BaseViewController {
     
     fileprivate var teams = Teams()
     fileprivate var filteredTeams = Teams()
-    fileprivate var searchActive = false
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            tableView.reloadData()
+        }
+    }
     
     private var teamRef: FIRDatabaseReference!
     private var teamAddedHandle: FIRDatabaseHandle?
@@ -215,28 +219,23 @@ extension TeamRegistrationTableViewController: UISearchBarDelegate {
             return team.name.lowercased().contains(searchText.lowercased())
         }
         
-        if searchText.characters.count == 0 {
-            searchActive = false
-        } else {
-            searchActive = true
-        }
-        
-        tableView.reloadData()
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchActive = true
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        Utility.searchBtnPressed(viewController: self)
     }
 }

@@ -707,4 +707,19 @@ struct Utility {
         searchBar.layer.borderColor = Config.themeColor.cgColor
     }
     
+    static func setSearchActive(_ searchActive: inout Bool, searchBar: UISearchBar) {
+        guard let searchText = searchBar.text else {
+            return
+        }
+        
+        if searchText.characters.count == 0 {
+            searchActive = false
+        } else {
+            searchActive = true
+        }
+    }
+    
+    static func searchBtnPressed(viewController: UIViewController) {
+        viewController.view.endEditing(true)
+    }
 }

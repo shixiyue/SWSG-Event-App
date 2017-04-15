@@ -147,7 +147,7 @@ extension ProfileListViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let user: User
-        
+        print(searchActive)
         if searchActive && filteredUsers.count > indexPath.item {
             user = filteredUsers[indexPath.item]
         } else {
@@ -186,7 +186,6 @@ extension ProfileListViewController: UITableViewDelegate {
         let user: User
         
         if searchActive && filteredUsers.count > indexPath.item {
-            print("Test2")
             user = filteredUsers[indexPath.item]
         } else {
             user = favourites[indexPath.item]
@@ -202,6 +201,20 @@ extension ProfileListViewController: UITextFieldDelegate {
         self.view.endEditing(true)
         return false
     }
+    
+    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            print(indexPath.row)
+            let favourite = favourites[indexPath.row]
+            
+            guard let favouriteUID = favourite.uid else {
+                return
+            }
+            
+            System.client.removeFavourte(uid: favouriteUID)
+            print("tst")
+        }
+    }
 }
 
 // MARK: UISearchResultsUpdating
@@ -212,26 +225,23 @@ extension ProfileListViewController: UISearchBarDelegate {
                 user.profile.username.lowercased().contains(searchText.lowercased())
         }
         
-        if searchText.characters.count == 0 {
-            searchActive = false
-        } else {
-            searchActive = true
-        }
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchActive = true
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false;
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        Utility.searchBtnPressed(viewController: self)
     }
 }
