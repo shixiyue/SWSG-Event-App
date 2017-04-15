@@ -20,6 +20,7 @@ class EventCalendarViewController: BaseViewController {
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var dayList: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var addBtn: UIBarButtonItem!
     
     //MARK: Properties
     fileprivate var isCalendar = true
@@ -46,6 +47,7 @@ class EventCalendarViewController: BaseViewController {
         
         addSlideMenuButton()
         
+        setUpLayout()
         setUpGestures()
         setUpCalendar()
         setUpDayList()
@@ -62,6 +64,15 @@ class EventCalendarViewController: BaseViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         dayList.reloadData()
+    }
+    
+    private func setUpLayout() {
+        let canAddEvent = System.activeUser?.type.isAdmin == true ||
+            System.activeUser?.type.isOrganizer == true
+        
+        if !canAddEvent {
+            self.navigationItem.rightBarButtonItem = nil
+        }
     }
     
     private func setUpGestures(){

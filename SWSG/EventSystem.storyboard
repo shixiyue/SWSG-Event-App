@@ -204,6 +204,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addBtn" destination="BDN-Dr-e6x" id="Hss-C3-sxe"/>
                         <outlet property="calendarStackView" destination="CAw-gS-N85" id="Om8-I2-mrg"/>
                         <outlet property="calendarView" destination="crH-tg-Wlm" id="Byq-gi-8Sm"/>
                         <outlet property="dayHeaderView" destination="m9O-fS-lDg" id="Vxr-tE-7M6"/>
