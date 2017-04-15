@@ -98,6 +98,15 @@ extension Date {
         return newDate
     }
     
+    func add(days: Int) -> Date {
+        let calendar = Calendar.current
+        guard let newDate = calendar.date(byAdding: .day, value: days, to: self) else {
+            return Date()
+        }
+        
+        return newDate
+    }
+    
     func string(format: String) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = format

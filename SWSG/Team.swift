@@ -33,7 +33,6 @@ class Team {
     }
     
     init?(id: String, snapshot: FIRDataSnapshot) {
-        print("\(snapshot.value)")
         guard let snapshotValue = snapshot.value as? [String: Any] else {
             print("snapshot value is nil")
             return nil

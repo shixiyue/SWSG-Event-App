@@ -13,6 +13,9 @@ class ChannelInfoViewController: UIViewController {
     @IBOutlet weak var iconIV: UIImageView!
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var membersList: UITableView!
+    @IBOutlet weak var quitBtn: RoundCornerButton!
+    @IBOutlet weak var addBtn: RoundCornerButton!
+    @IBOutlet weak var editNameBtn: UIButton!
     
     var channel: Channel!
     var members = [User]()
@@ -44,6 +47,19 @@ class ChannelInfoViewController: UIViewController {
         
         let tapNameGesture = UITapGestureRecognizer(target: self, action: #selector(editName))
         nameLbl.addGestureRecognizer(tapNameGesture)
+        
+        if channel.type == .team {
+            quitBtn.isHidden = true
+            addBtn.isHidden = true
+            editNameBtn.isHidden = true
+            nameLbl.isUserInteractionEnabled = false
+        } else if channel.type == .publicChannel {
+            membersList.isHidden = true
+            quitBtn.isHidden = true
+            addBtn.isHidden = true
+            editNameBtn.isHidden = true
+            nameLbl.isUserInteractionEnabled = false
+        }
     }
     
     // MARK: Firebase related methods

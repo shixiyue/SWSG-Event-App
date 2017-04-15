@@ -46,6 +46,7 @@ final class ChannelViewController: JSQMessagesViewController {
     fileprivate var storageRef: FIRStorageReference!
     
     //MARK: Firebase Handles
+    fileprivate var channelRefHandle: FIRDatabaseHandle?
     fileprivate var newMessageRefHandle: FIRDatabaseHandle?
     fileprivate var updatedMessageRefHandle: FIRDatabaseHandle?
     
@@ -70,6 +71,7 @@ final class ChannelViewController: JSQMessagesViewController {
         collectionView?.collectionViewLayout.incomingAvatarViewSize = defaultAvatarSize
         collectionView?.collectionViewLayout.outgoingAvatarViewSize = defaultAvatarSize
         
+        observeChannel()
         observeMessages()
     }
     
@@ -124,6 +126,10 @@ final class ChannelViewController: JSQMessagesViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(iconIVTapped))
         iconIV.addGestureRecognizer(tapGesture)
         
+        setInfo()
+    }
+    
+    private func setInfo() {
         if let channel = channel, channel.type == .directMessage {
             Utility.getOtherUser(in: channel, completion: { (user) in
                 if let user = user, let uid = user.uid {
@@ -255,6 +261,17 @@ final class ChannelViewController: JSQMessagesViewController {
     }
     
     //MARK: Firebase Observation Methods
+    private func observeChannel() {
+        channelRefHandle = channelRef.observe(.value, with: { (snapshot) in
+            guard let channel = Channel(id: snapshot.key, snapshot: snapshot) else {
+                return
+            }
+            
+            self.channel = channel
+            self.setInfo()
+        })
+    }
+    
     private func observeMessages() {
         let messageQuery = messageRef.queryLimited(toLast:25)
         

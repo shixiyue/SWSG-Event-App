@@ -11,15 +11,24 @@ import Firebase
 import JTAppleCalendar
 
 class EventCalendarViewController: BaseViewController {
-    
-    // We cache our colors because we do not want to be creating
-    // a new color every time a cell is displayed. We do not want a laggy
-    // scrolling calendar.
-
     var events = [Date: [Event]]()
+    fileprivate var filteredEvents = [Event]()
     
+    @IBOutlet weak var dayHeaderView: UIView!
+    @IBOutlet weak var dayLbl: UILabel!
+    @IBOutlet weak var calendarStackView: UIView!
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var dayList: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var addBtn: UIBarButtonItem!
+    
+    //MARK: Properties
+    fileprivate var isCalendar = true
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            dayList.reloadData()
+        }
+    }
     
     //MARK: Firebase References
     private var eventRef: FIRDatabaseReference!
@@ -32,6 +41,8 @@ class EventCalendarViewController: BaseViewController {
         
         addSlideMenuButton()
         
+        setUpLayout()
+        setUpGestures()
         setUpCalendar()
         setUpDayList()
         addObservers()
@@ -47,6 +58,30 @@ class EventCalendarViewController: BaseViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         dayList.reloadData()
+    }
+    
+    private func setUpLayout() {
+        let canAddEvent = System.activeUser?.type.isAdmin == true ||
+            System.activeUser?.type.isOrganizer == true
+        
+        if !canAddEvent {
+            self.navigationItem.rightBarButtonItem = nil
+        }
+    }
+    
+    private func setUpGestures(){
+        let tap = UITapGestureRecognizer(target: self, action: #selector(toggleViewMode))
+        tap.numberOfTapsRequired = 2
+        view.isUserInteractionEnabled = true
+        view.addGestureRecognizer(tap)
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
+        
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swiped))
+        swipeLeft.direction = .left
+        view.addGestureRecognizer(swipeLeft)
     }
     
     private func setUpCalendar() {
@@ -65,6 +100,12 @@ class EventCalendarViewController: BaseViewController {
     private func setUpDayList() {
         dayList.delegate = self
         dayList.dataSource = self
+        
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
     }
     
     private func addObservers() {
@@ -72,6 +113,46 @@ class EventCalendarViewController: BaseViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "events"), object: nil)
+    }
+    
+    func swiped(_ gesture: UIGestureRecognizer) {
+        guard let swipeGesture = gesture as? UISwipeGestureRecognizer,
+            let selectedDate = calendarView.selectedDates.first else {
+            return
+        }
+        
+        let newDate: Date
+        switch swipeGesture.direction {
+        case UISwipeGestureRecognizerDirection.right:
+            newDate = selectedDate.add(days: -1)
+        case UISwipeGestureRecognizerDirection.left:
+            newDate = selectedDate.add(days: 1)
+        default:
+            newDate = selectedDate
+        }
+        calendarView.scrollToDate(newDate, triggerScrollToDateDelegate: false)
+        calendarView.selectDates([newDate])
+        
+        if searchActive, let text = searchBar.text {
+            filterEvents(searchText: text)
+        }
+    }
+    
+    // MARK: Handle View Mode
+    func toggleViewMode() {
+        isCalendar = !isCalendar
+        
+        setLayout()
+    }
+    
+    fileprivate func setLayout() {
+        if isCalendar {
+            calendarStackView.isHidden = false
+            dayHeaderView.isHidden = true
+        } else {
+            calendarStackView.isHidden = true
+            dayHeaderView.isHidden = false
+        }
     }
     
     // Function to handle the text color of the calendar
@@ -193,6 +274,7 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {
+        dayLbl.text = Utility.fbDateFormatter.string(from: date)
         handleCellSelection(view: cell, cellState: cellState)
         handleCellTextColor(view: cell, cellState: cellState)
         
@@ -228,7 +310,13 @@ extension EventCalendarViewController: UITableViewDataSource {
             return 0
         }
         
-        return eventList.count
+        
+        if searchActive {
+            return filteredEvents.count
+        } else {
+            return eventList.count
+        }
+        
     }
     
     public func tableView(_ tableView: UITableView,
@@ -241,7 +329,13 @@ extension EventCalendarViewController: UITableViewDataSource {
                 return EventScheduleTableViewCell()
         }
         
-        let event = eventList[indexPath.item]
+        let event: Event
+            
+        if searchActive && filteredEvents.count > indexPath.item {
+            event = filteredEvents[indexPath.item]
+        } else {
+            event = eventList[indexPath.item]
+        }
         
         guard let id = event.id else {
             return EventScheduleTableViewCell()
@@ -280,12 +374,67 @@ extension EventCalendarViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let selectedDate = calendarView.selectedDates.first,
             events.keys.contains(selectedDate),
-            let eventsList = events[selectedDate] else {
+            let eventList = events[selectedDate] else {
                 return
         }
-        let event = eventsList[indexPath.item]
+        
+        let event: Event
+        
+        if searchActive {
+            event = filteredEvents[indexPath.item]
+        } else {
+            event = eventList[indexPath.item]
+        }
         
         self.performSegue(withIdentifier: Config.showEventDetails, sender: event)
+    }
+}
+
+// MARK: UISearchResultsUpdating
+extension EventCalendarViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterEvents(searchText: searchText)
+        
+        isCalendar = false
+        setLayout()
+    }
+    
+    fileprivate func filterEvents(searchText: String) {
+        guard let selectedDate = calendarView.selectedDates.first,
+            events.keys.contains(selectedDate),
+            let eventList = events[selectedDate] else {
+                return
+        }
+        
+        filteredEvents = eventList.filter { event in
+            return event.name.lowercased().contains(searchText.lowercased())
+        }
+        
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        isCalendar = false
+        setLayout()
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        isCalendar = true
+        setLayout()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        Utility.searchBtnPressed(viewController: self)
+        
+        isCalendar = false
+        setLayout()
     }
 }
 

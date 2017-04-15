@@ -115,6 +115,7 @@ struct Config {
     static let informationViewController = "InformationViewController"
     static let mentorStoryboard = "Mentor"
     static let mentorViewController = "MentorViewController"
+    static let mentorAdminViewController = "MentorAdminViewController"
     static let eventStoryboard = "EventSystem"
     static let eventViewController = "EventCalendarViewController"
     static let teamStoryboard = "TeamRegistration"
@@ -136,6 +137,9 @@ struct Config {
     static let eventDetailsTableViewController = "EventDetailsTableViewController"
     static let channelPageCellView = "channelPageCellView"
     static let channelViewController = "ChannelViewController"
+    static let registrationStoryboard = "Registration"
+    static let registrationListViewController = "RegistrationListViewController"
+    static let participantRegistrationViewController = "ParticipantRegistrationViewController"
     
     //Parameters for Segues:
     static let channelListToChannel = "showChannel"
@@ -162,6 +166,8 @@ struct Config {
     static let teamToChat = "teamToChannel"
     static let teamToProfile = "teamToProfile"
     static let profileToChannel = "profileToChannel"
+    static let registrationListToRegistration = "registrationListToRegistration"
+    static let registrationToProfile = "registrationToProfile"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
@@ -207,6 +213,13 @@ struct Config {
     static let channelType = "channelType"
     static let typingIndicator = "typingIndicator"
     static let channelID = "channelID"
+    static let createPublicHeaderLabel = "Create Public Channel"
+    static let createPublicMembersHeaderLabel = "Members (Only for Private Channel"
+    
+    
+    // Parameters for Profile
+    static let headerFavourites = "Favourites"
+    static let headerSearchResults = "Search Results"
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"
@@ -233,4 +246,9 @@ struct Config {
     static let startDateTime = "startDateTime"
     static let endDateTime = "endDateTime"
     static let shortDesc = "shortDesc"
+    
+    //Parameters for Registration
+    static let registeredUsers = "registeredUsers"
+    static let registrationCell = "RegistrationCell"
+    static let registeredUserCell = "RegisteredUserCell"
 }

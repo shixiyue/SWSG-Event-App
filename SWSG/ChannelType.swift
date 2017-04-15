@@ -12,4 +12,5 @@ enum ChannelType: String {
     case publicChannel
     case privateChannel
     case directMessage
+    case team
 }

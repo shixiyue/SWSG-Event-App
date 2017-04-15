@@ -11,9 +11,17 @@ import Firebase
 
 class MentorGridViewController: BaseViewController {
     @IBOutlet weak var mentorCollection: UICollectionView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
+    //MAR: Properties
     fileprivate var insets: CGFloat!
     fileprivate var mentors = [User]()
+    fileprivate var filteredMentors = [User]()
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            mentorCollection.reloadData()
+        }
+    }
     
     //MARK: Firebase References
     private var mentorsRef: FIRDatabaseQuery?
@@ -30,6 +38,7 @@ class MentorGridViewController: BaseViewController {
         
         mentorsRef = System.client.getMentorsRef()
         observeMentors()
+        setUpSearchBar()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -37,7 +46,16 @@ class MentorGridViewController: BaseViewController {
             if let mentorVC = segue.destination as? MentorViewController,
                 let indexPaths = mentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item
-                mentorVC.mentorAcct = mentors[index]
+                
+                let mentor: User
+                
+                if searchActive {
+                    mentor = filteredMentors[index]
+                } else {
+                    mentor = mentors[index]
+                }
+                
+                mentorVC.mentorAcct = mentor
             }
         }
     }
@@ -46,6 +64,16 @@ class MentorGridViewController: BaseViewController {
         if let refHandle = mentorsRefHandle {
             mentorsRef?.removeObserver(withHandle: refHandle)
         }
+    }
+    
+    // MARK: Layout methods
+    private func setUpSearchBar() {
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
+        Utility.styleSearchBar(searchBar)
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
     }
     
     // MARK: Firebase related methods
@@ -82,7 +110,11 @@ class MentorGridViewController: BaseViewController {
 extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
-        return mentors.count
+        if searchActive {
+            return filteredMentors.count
+        } else {
+            return mentors.count
+        }
     }
     
     public func collectionView(_ collectionView: UICollectionView,
@@ -93,7 +125,13 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
         }
         
         let index = indexPath.item
-        let profile = mentors[index].profile
+        let profile: Profile
+            
+        if searchActive {
+            profile = filteredMentors[index].profile
+        } else {
+            profile = mentors[index].profile
+        }
         
         if profile.image != nil {
             cell.iconIV.image = profile.image
@@ -110,3 +148,30 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
     }
 }
 
+// MARK: UISearchResultsUpdating
+extension MentorGridViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredMentors = mentors.filter { mentor in
+            return mentor.profile.name.lowercased().contains(searchText.lowercased())
+        }
+        
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        Utility.searchBtnPressed(viewController: self)
+    }
+}

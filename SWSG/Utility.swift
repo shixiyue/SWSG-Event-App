@@ -696,4 +696,30 @@ struct Utility {
         })
     }
     
+    static func setUpSearchBar(_ searchBar: UISearchBar, viewController: UISearchBarDelegate, selector: Selector) {
+        searchBar.delegate = viewController
+        searchBar.inputAccessoryView = Utility.getDoneToolbar(done: selector)
+    }
+    
+    static func styleSearchBar(_ searchBar: UISearchBar) {
+        searchBar.barTintColor = Config.themeColor
+        searchBar.layer.borderWidth = 1
+        searchBar.layer.borderColor = Config.themeColor.cgColor
+    }
+    
+    static func setSearchActive(_ searchActive: inout Bool, searchBar: UISearchBar) {
+        guard let searchText = searchBar.text else {
+            return
+        }
+        
+        if searchText.characters.count == 0 {
+            searchActive = false
+        } else {
+            searchActive = true
+        }
+    }
+    
+    static func searchBtnPressed(viewController: UIViewController) {
+        viewController.view.endEditing(true)
+    }
 }

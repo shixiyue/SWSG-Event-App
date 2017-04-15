@@ -23,7 +23,6 @@ class MentorViewController: UIViewController {
     private let mentorBookingErrorMsg = "Sorry, only participants of SWSG can book a slot!"
     
     public var mentorAcct: User?
-    fileprivate var mentor: Mentor?
     fileprivate var relatedMentors = [User]()
     fileprivate var cvLayout = MultiDirectionCollectionViewLayout()
     
@@ -84,7 +83,7 @@ class MentorViewController: UIViewController {
                 let mentor = Mentor(snapshot: mentorSnapshot) else {
                     return
             }
-            self.mentor = mentor
+            self.mentorAcct?.setMentor(mentor: mentor)
             self.cvLayout.dataSourceDidUpdate = true
             self.consultationSlotCollection.reloadData()
         })
@@ -138,7 +137,7 @@ class MentorViewController: UIViewController {
             present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
             return
         }
-        guard let mentor = mentor else {
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
             return
         }
         
@@ -146,6 +145,9 @@ class MentorViewController: UIViewController {
         let dateString = Utility.fbDateFormatter.string(from: day.date)
         let slot = day.slots[index]
         let slotTimeString = Utility.fbDateTimeFormatter.string(from: slot.startDateTime)
+        
+        mentor.days[dayIndex].slots[index].status = .booked
+        mentor.days[dayIndex].slots[index].team = System.activeUser?.team
         
         let slotRef = mentorRef.child("mentor/consultationDays/\(dateString)/\(slotTimeString)")
         slotRef.child(Config.consultationStatus).setValue(ConsultationSlotStatus.booked.rawValue)
@@ -207,7 +209,7 @@ class MentorViewController: UIViewController {
 
 extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        guard let mentor = mentor else {
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
                 return 1
         }
         
@@ -220,14 +222,13 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
-        guard let mentor = mentor else {
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
             return 0
         }
         
         if collectionView.tag == Config.slotCollectionTag {
             return mentor.days[section].slots.count + 1
         } else if collectionView.tag == Config.relatedCollectionTag {
-            print(relatedMentors.count)
             return relatedMentors.count
         } else {
             return 0
@@ -250,7 +251,8 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func getConsultationDayCell(for collectionView: UICollectionView,
                                       at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let mentor = mentor, let cell = collectionView.dequeueReusableCell(
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor,
+            let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier:"consultationDayCell",
             for: indexPath) as? ConsultationDayCell
             else {
@@ -272,7 +274,8 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func getConsultationSlotCell(for collectionView: UICollectionView,
                                          at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let mentor = mentor, let cell = collectionView.dequeueReusableCell(
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor,
+            let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier:"consultationSlotCell",
             for: indexPath) as? ConsultationSlotCell
             else {
@@ -320,7 +323,15 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func selectedSlot(for collectionView: UICollectionView,
                               at indexPath: IndexPath) {
-        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
+        guard let mentor = mentorAcct?.mentor, System.activeUser?.type.isParticipant == true else {
+            return
+        }
+        
+        guard System.activeUser?.team != Config.noTeam else {
+            let title = "Error"
+            let message = "You need to be part of a team to book a slot"
+            Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _ in
+            })
             return
         }
         
@@ -339,8 +350,6 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         //Add an Action to Confirm the Deletion with the Destructive Style
         let confirmAction = UIAlertAction(title: "Confirm", style: .default) { _ -> Void in
             self.bookSlot(on: dayIndex, at: index)
-            
-            //collectionView.reloadItems(at: [indexPath])
         }
         bookingController.addAction(confirmAction)
         

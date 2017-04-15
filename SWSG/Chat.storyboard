@@ -26,9 +26,15 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2ja-3U-1ZA">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Channel Name" id="Ri4-e5-GPJ">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <color key="barTintColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="channelCell" rowHeight="80" id="6rO-MU-Ius" customClass="ChannelCell" customModule="SWSG" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="80"/>
+                                        <rect key="frame" x="0.0" y="72" width="375" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6rO-MU-Ius" id="2OG-cb-XZF">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="79.5"/>
@@ -41,8 +47,8 @@
                                                         <constraint firstAttribute="height" constant="70" id="gKx-aT-2hO"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team Innovator Chat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uul-4W-uDH">
-                                                    <rect key="frame" x="86" y="4" width="265" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uul-4W-uDH">
+                                                    <rect key="frame" x="86" y="4" width="265" height="0.0"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -50,14 +56,7 @@
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MMT-yG-WMr">
                                                     <rect key="frame" x="86" y="24" width="265" height="50"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <attributedString key="attributedText">
-                                                        <fragment>
-                                                            <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                                            <attributes>
-                                                                <font key="NSFont" metaFont="system" size="14"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
+                                                    <attributedString key="attributedText"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
                                             </subviews>
@@ -99,11 +98,21 @@
                     </navigationItem>
                     <connections>
                         <outlet property="chatList" destination="2ja-3U-1ZA" id="1n2-Wn-5t9"/>
+                        <outlet property="searchBar" destination="Ri4-e5-GPJ" id="Py4-V0-5nW"/>
+                        <outlet property="searchDisplayController" destination="ojG-xU-0Oq" id="BgW-qO-BLc"/>
                         <segue destination="sYy-Gm-6aU" kind="show" identifier="showChannel" id="5iS-Sf-YBp"/>
                         <segue destination="gej-Jw-c1J" kind="show" identifier="showCreateChannel" id="xC4-kr-zzq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="58T-MR-rKY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="ojG-xU-0Oq">
+                    <connections>
+                        <outlet property="delegate" destination="016-OR-Mms" id="ydl-i2-rdI"/>
+                        <outlet property="searchContentsController" destination="016-OR-Mms" id="293-7m-qbv"/>
+                        <outlet property="searchResultsDataSource" destination="016-OR-Mms" id="pOt-VX-gKj"/>
+                        <outlet property="searchResultsDelegate" destination="016-OR-Mms" id="vvf-u5-JGp"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="956" y="121.88905547226388"/>
         </scene>
@@ -154,7 +163,7 @@
                                 <rect key="frame" x="122" y="72" width="130" height="130"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fKI-fd-Iba">
+                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fKI-fd-Iba">
                                 <rect key="frame" x="52" y="244" width="270" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="24"/>
@@ -263,9 +272,12 @@
                         <barButtonItem key="backBarButtonItem" title="Back" id="Aez-OF-7NK"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="addBtn" destination="ae6-7C-Vsi" id="Y82-0w-qSx"/>
+                        <outlet property="editNameBtn" destination="Lzx-ix-q58" id="eIo-ji-sEB"/>
                         <outlet property="iconIV" destination="TIh-DY-aEP" id="on6-K6-Sho"/>
                         <outlet property="membersList" destination="JXK-tH-ABV" id="8x3-9Z-ptB"/>
                         <outlet property="nameLbl" destination="fKI-fd-Iba" id="ecM-WF-Xlh"/>
+                        <outlet property="quitBtn" destination="VjB-g6-ZUe" id="XrC-jf-QMu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZTg-Jp-r57" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -441,9 +453,11 @@
                         <outlet property="addBtn" destination="Jyd-ky-KP6" id="n3g-el-zZT"/>
                         <outlet property="doneBtn" destination="iM9-1S-1Jr" id="vaU-iY-Q06"/>
                         <outlet property="editBtn" destination="fdo-tB-iOB" id="opG-CX-PgN"/>
+                        <outlet property="headerLbl" destination="rJy-Ih-EsL" id="0mE-mi-a0G"/>
                         <outlet property="iconIV" destination="nb8-jR-jp1" id="xIB-Zf-Jiq"/>
                         <outlet property="memberList" destination="qS2-ik-ouD" id="RcI-qB-6Lj"/>
                         <outlet property="memberTF" destination="8wr-Fr-qLU" id="UZz-R6-Zza"/>
+                        <outlet property="membersHeaderLbl" destination="e3B-M2-Gdb" id="oMW-UC-qpe"/>
                         <outlet property="nameTF" destination="Jbg-cc-FrH" id="s5t-cH-wCd"/>
                     </connections>
                 </viewController>
@@ -456,7 +470,9 @@
             <objects>
                 <navigationController storyboardIdentifier="ChatNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Lmb-sv-L2p" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="quO-pt-kxx">
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="375" height="667"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="quO-pt-kxx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

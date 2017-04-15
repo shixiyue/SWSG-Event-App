@@ -14,7 +14,7 @@
         <scene sceneID="1yk-d8-8sn">
             <objects>
                 <navigationController storyboardIdentifier="NavigationController" title="Navigation Controller" useStoryboardIdentifierAsRestorationIdentifier="YES" id="537-R6-jC3" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="XIJ-Tx-l4T">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="XIJ-Tx-l4T">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -83,9 +83,12 @@
                                     <segue destination="NYs-qi-gck" kind="embed" id="8a9-g6-Yzl"/>
                                 </connections>
                             </containerView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Notifications" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iq0-SW-DeZ">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Notifications" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iq0-SW-DeZ">
                                 <rect key="frame" x="116" y="397" width="144" height="26"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="144" id="Das-3i-RFA"/>
+                                    <constraint firstAttribute="height" constant="26" id="Xq2-Ck-DVs"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="22"/>
                                 <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -99,7 +102,9 @@
                             <constraint firstItem="quM-4g-mj3" firstAttribute="leading" secondItem="XIb-no-xB0" secondAttribute="leading" id="KEg-YV-WCI"/>
                             <constraint firstItem="Ais-O1-ITA" firstAttribute="top" secondItem="k4R-87-UqZ" secondAttribute="bottom" constant="8" id="KqI-Bf-rGg"/>
                             <constraint firstAttribute="trailing" secondItem="quM-4g-mj3" secondAttribute="trailing" id="OVj-HH-d4b"/>
+                            <constraint firstItem="iq0-SW-DeZ" firstAttribute="centerX" secondItem="XIb-no-xB0" secondAttribute="centerX" id="RQN-Ck-07L"/>
                             <constraint firstItem="7Bj-9D-ZDH" firstAttribute="leading" secondItem="XIb-no-xB0" secondAttribute="leadingMargin" id="a7n-wy-OlO"/>
+                            <constraint firstItem="iq0-SW-DeZ" firstAttribute="top" secondItem="Ais-O1-ITA" secondAttribute="bottom" constant="30" id="fnq-ci-tjX"/>
                             <constraint firstItem="k4R-87-UqZ" firstAttribute="leading" secondItem="XIb-no-xB0" secondAttribute="leading" id="i8Z-ut-6ID"/>
                             <constraint firstItem="Q9B-Wi-HgQ" firstAttribute="leading" secondItem="XIb-no-xB0" secondAttribute="leadingMargin" id="lJd-Tn-c1A"/>
                             <constraint firstItem="7Bj-9D-ZDH" firstAttribute="top" secondItem="FcQ-eb-5Mf" secondAttribute="bottom" constant="8" id="mjx-y5-Mmt"/>

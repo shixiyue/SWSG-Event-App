@@ -278,6 +278,11 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.field.text = field
         cell.content.text = content
+        
+        if content.trimmingCharacters(in: .whitespaces).characters.count == 0 {
+            cell.isHidden = true
+        }
+        
         return cell
     }
     

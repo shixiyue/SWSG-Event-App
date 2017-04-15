@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		06232BA26D2B146B5917564F /* Pods_SWSG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54B8245B6BA99CC5301E1F07 /* Pods_SWSG.framework */; };
+		3F0063321EA253EC00086A50 /* MentorAdminViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0063311EA253EC00086A50 /* MentorAdminViewController.swift */; };
 		3F12AFCB1E711CBB00B26D67 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F12AFCA1E711CBB00B26D67 /* AppDelegate.swift */; };
 		3F12AFCD1E711CBB00B26D67 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */; };
 		3F12AFD01E711CBB00B26D67 /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F12AFCE1E711CBB00B26D67 /* Menu.storyboard */; };
@@ -69,6 +70,13 @@
 		3FED30251E77A37300C007AD /* MentorGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30241E77A37300C007AD /* MentorGridViewController.swift */; };
 		3FED30271E77A57600C007AD /* (null) in Sources */ = {isa = PBXBuildFile; };
 		3FED30291E77A5CB00C007AD /* Mentor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FED30281E77A5CB00C007AD /* Mentor.swift */; };
+		3FEE49DA1E9F50E300DC4EE1 /* Registration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3FEE49D91E9F50E300DC4EE1 /* Registration.storyboard */; };
+		3FEE49DC1E9F558700DC4EE1 /* RegistrationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEE49DB1E9F558700DC4EE1 /* RegistrationListViewController.swift */; };
+		3FEE49DE1E9F55A300DC4EE1 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEE49DD1E9F55A300DC4EE1 /* RegistrationViewController.swift */; };
+		3FEE49E11E9F582100DC4EE1 /* RegistrationEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEE49E01E9F582100DC4EE1 /* RegistrationEvent.swift */; };
+		3FEE49E31E9F5BDC00DC4EE1 /* RegistrationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEE49E21E9F5BDC00DC4EE1 /* RegistrationCell.swift */; };
+		3FEE49E51E9F5F6800DC4EE1 /* RegisteredUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEE49E41E9F5F6800DC4EE1 /* RegisteredUserCell.swift */; };
+		3FEE49E71E9F9BC700DC4EE1 /* ParticipantRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEE49E61E9F9BC700DC4EE1 /* ParticipantRegistrationViewController.swift */; };
 		3FF6530A1E9AB08200B9E64F /* CreateEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF653091E9AB08200B9E64F /* CreateEventViewController.swift */; };
 		90799619E39D1ABA4810AB68 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CA7AA4F9D14A6E7B2876E9AD /* libPods-OneSignalNotificationServiceExtension.a */; };
 		C28B2ED81E86601300F6DD67 /* FirebaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28B2ED71E86601300F6DD67 /* FirebaseClient.swift */; };
@@ -164,6 +172,7 @@
 		E355BB821E94E244002E29DD /* TagCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E355BB811E94E243002E29DD /* TagCell.xib */; };
 		E355BB841E94E399002E29DD /* TagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB831E94E399002E29DD /* TagCell.swift */; };
 		E355BB8C1E97C657002E29DD /* CreateEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */; };
+		E3B545101EA1182200FFB63E /* TeamEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B5450F1EA1182200FFB63E /* TeamEditViewController.swift */; };
 		E3E3B2E51E9A2E9800778B9C /* TagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E3B2E41E9A2E9800778B9C /* TagTableViewCell.swift */; };
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
@@ -203,6 +212,7 @@
 
 /* Begin PBXFileReference section */
 		14A94E75A8D03D28BA2C7862 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
+		3F0063311EA253EC00086A50 /* MentorAdminViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorAdminViewController.swift; sourceTree = "<group>"; };
 		3F12AFC71E711CBB00B26D67 /* SWSG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SWSG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F12AFCA1E711CBB00B26D67 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3F12AFCC1E711CBB00B26D67 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -263,6 +273,13 @@
 		3FED30221E77A2D400C007AD /* MentorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorCell.swift; sourceTree = "<group>"; };
 		3FED30241E77A37300C007AD /* MentorGridViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MentorGridViewController.swift; sourceTree = "<group>"; };
 		3FED30281E77A5CB00C007AD /* Mentor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mentor.swift; sourceTree = "<group>"; };
+		3FEE49D91E9F50E300DC4EE1 /* Registration.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Registration.storyboard; sourceTree = "<group>"; };
+		3FEE49DB1E9F558700DC4EE1 /* RegistrationListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationListViewController.swift; sourceTree = "<group>"; };
+		3FEE49DD1E9F55A300DC4EE1 /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
+		3FEE49E01E9F582100DC4EE1 /* RegistrationEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationEvent.swift; sourceTree = "<group>"; };
+		3FEE49E21E9F5BDC00DC4EE1 /* RegistrationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationCell.swift; sourceTree = "<group>"; };
+		3FEE49E41E9F5F6800DC4EE1 /* RegisteredUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisteredUserCell.swift; sourceTree = "<group>"; };
+		3FEE49E61E9F9BC700DC4EE1 /* ParticipantRegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantRegistrationViewController.swift; sourceTree = "<group>"; };
 		3FF653091E9AB08200B9E64F /* CreateEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateEventViewController.swift; sourceTree = "<group>"; };
 		47768B1F37EFBCE271E85CCA /* Pods-SWSG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWSG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SWSG/Pods-SWSG.debug.xcconfig"; sourceTree = "<group>"; };
 		54B8245B6BA99CC5301E1F07 /* Pods_SWSG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SWSG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -344,7 +361,7 @@
 		E3220C521E7BAAC5008AFA85 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		E3220C541E7BABA5008AFA85 /* Comments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comments.swift; sourceTree = "<group>"; };
 		E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TeamRegistration.storyboard; sourceTree = "<group>"; };
-		E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRegistrationTableViewController.swift; sourceTree = "<group>"; };
+		E3220C661E7D385B008AFA85 /* TeamRegistrationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRegistrationTableViewController.swift; sourceTree = "<group>"; usesTabs = 0; };
 		E3220C681E7D3ADC008AFA85 /* TeamItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamItemTableViewCell.swift; sourceTree = "<group>"; };
 		E3220C6A1E7D3D25008AFA85 /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
 		E3220C6C1E7D6B40008AFA85 /* TeamCreateTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCreateTableViewController.swift; sourceTree = "<group>"; };
@@ -365,6 +382,7 @@
 		E355BB811E94E243002E29DD /* TagCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagCell.xib; sourceTree = "<group>"; };
 		E355BB831E94E399002E29DD /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
 		E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateEventTableViewController.swift; sourceTree = "<group>"; };
+		E3B5450F1EA1182200FFB63E /* TeamEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamEditViewController.swift; sourceTree = "<group>"; };
 		E3E3B2E41E9A2E9800778B9C /* TagTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagTableViewCell.swift; sourceTree = "<group>"; };
 		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
@@ -435,6 +453,7 @@
 				3FED302B1E77A5FA00C007AD /* Mentor */,
 				3FED301D1E779A2100C007AD /* Menu */,
 				3FED302A1E77A5F300C007AD /* Model */,
+				3FEE49D81E9F50C700DC4EE1 /* Registration */,
 				CC1CF8A11E7C028D002224BC /* Profile */,
 				C2A8A6831E9B0EE3008D50BC /* PushNotification */,
 				E3220C631E7D380A008AFA85 /* TeamRegistration */,
@@ -510,6 +529,7 @@
 		3F9795661E7A9005004BC26C /* Mentor */ = {
 			isa = PBXGroup;
 			children = (
+				3FED30281E77A5CB00C007AD /* Mentor.swift */,
 				3FC314631E77DD21009B21AB /* ConsultationSlot.swift */,
 				3FC3146B1E7A5017009B21AB /* ConsultationDate.swift */,
 				3FC314651E77DD7D009B21AB /* ConsultationSlotStatus.swift */,
@@ -522,7 +542,6 @@
 			isa = PBXGroup;
 			children = (
 				3F97951E1E7A6A58004BC26C /* Team.swift */,
-				3FED30281E77A5CB00C007AD /* Mentor.swift */,
 				3F9482B01E7E3DDC00016259 /* Profile.swift */,
 				3F9482B11E7E3DDC00016259 /* User.swift */,
 				E3220C461E7B9776008AFA85 /* UserTypes.swift */,
@@ -573,13 +592,14 @@
 			isa = PBXGroup;
 			children = (
 				3F178FF11E99068400057929 /* Backend */,
-				3FF653071E9A825C00B9E64F /* Events */,
-				CC507F271E96695A006432FC /* Information */,
-				CC6CB12E1E90FC2F00C71793 /* Idea */,
 				3F408CCC1E83C1D900E2B787 /* Chat */,
-				3F9795671E7A9010004BC26C /* Users */,
-				C2A8A6881E9B0F43008D50BC /* PushNotification */,
+				3FF653071E9A825C00B9E64F /* Events */,
+				CC6CB12E1E90FC2F00C71793 /* Idea */,
+				CC507F271E96695A006432FC /* Information */,
 				3F9795661E7A9005004BC26C /* Mentor */,
+				3FEE49DF1E9F580100DC4EE1 /* Registration */,
+				C2A8A6881E9B0F43008D50BC /* PushNotification */,
+				3F9795671E7A9010004BC26C /* Users */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -593,8 +613,30 @@
 				3FC314611E77DBAD009B21AB /* ConsultationSlotCell.swift */,
 				3FC314691E77EB84009B21AB /* MentorViewController.swift */,
 				3FED30241E77A37300C007AD /* MentorGridViewController.swift */,
+				3F0063311EA253EC00086A50 /* MentorAdminViewController.swift */,
 			);
 			name = Mentor;
+			sourceTree = "<group>";
+		};
+		3FEE49D81E9F50C700DC4EE1 /* Registration */ = {
+			isa = PBXGroup;
+			children = (
+				3FEE49D91E9F50E300DC4EE1 /* Registration.storyboard */,
+				3FEE49DB1E9F558700DC4EE1 /* RegistrationListViewController.swift */,
+				3FEE49E41E9F5F6800DC4EE1 /* RegisteredUserCell.swift */,
+				3FEE49E61E9F9BC700DC4EE1 /* ParticipantRegistrationViewController.swift */,
+				3FEE49E21E9F5BDC00DC4EE1 /* RegistrationCell.swift */,
+				3FEE49DD1E9F55A300DC4EE1 /* RegistrationViewController.swift */,
+			);
+			name = Registration;
+			sourceTree = "<group>";
+		};
+		3FEE49DF1E9F580100DC4EE1 /* Registration */ = {
+			isa = PBXGroup;
+			children = (
+				3FEE49E01E9F582100DC4EE1 /* RegistrationEvent.swift */,
+			);
+			name = Registration;
 			sourceTree = "<group>";
 		};
 		3FF653061E9A720800B9E64F /* UI Calendar Files */ = {
@@ -789,6 +831,7 @@
 			isa = PBXGroup;
 			children = (
 				E3220C641E7D3822008AFA85 /* TeamRegistration.storyboard */,
+				E3B5450F1EA1182200FFB63E /* TeamEditViewController.swift */,
 				E355BB811E94E243002E29DD /* TagCell.xib */,
 				E355BB831E94E399002E29DD /* TagCell.swift */,
 				E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */,
@@ -950,6 +993,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F12AFD81E711CBB00B26D67 /* LaunchScreen.storyboard in Resources */,
+				3FEE49DA1E9F50E300DC4EE1 /* Registration.storyboard in Resources */,
 				E348D57E1E8A828900947B3F /* PinkSectionHeaderView.xib in Resources */,
 				E3220C291E796BC0008AFA85 /* EventSystem.storyboard in Resources */,
 				CC1CF8A41E7C03DA002224BC /* Profile.storyboard in Resources */,
@@ -1068,6 +1112,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FEE49E51E9F5F6800DC4EE1 /* RegisteredUserCell.swift in Sources */,
 				E355BB8C1E97C657002E29DD /* CreateEventTableViewController.swift in Sources */,
 				3FED30231E77A2D400C007AD /* MentorCell.swift in Sources */,
 				C2A8A68A1E9B0F69008D50BC /* PushNotification.swift in Sources */,
@@ -1089,6 +1134,7 @@
 				CC7A4B141E88B0D800BC8A4B /* SponsorsViewController.swift in Sources */,
 				CC7A4B161E88BB6600BC8A4B /* Sponsors.swift in Sources */,
 				CCE7DDE21E8BF5030044A863 /* LPRTableView.swift in Sources */,
+				3FEE49DE1E9F55A300DC4EE1 /* RegistrationViewController.swift in Sources */,
 				3F178FF31E99069E00057929 /* FBRequest.swift in Sources */,
 				E3F137931E827C1700E26394 /* TeamLookingForTableViewCell.swift in Sources */,
 				3F9795631E7A8DBF004BC26C /* Utility.swift in Sources */,
@@ -1104,6 +1150,7 @@
 				3F3284231E92185B0062490D /* MultiDirectionCollectionViewLayout.swift in Sources */,
 				3F12AFCD1E711CBB00B26D67 /* HomeViewController.swift in Sources */,
 				E3220C3B1E7AE387008AFA85 /* EventImageTableViewCell.swift in Sources */,
+				3FEE49E11E9F582100DC4EE1 /* RegistrationEvent.swift in Sources */,
 				CC18E1921E9A722400BE8B67 /* ImagePickCropperPopoverViewController.swift in Sources */,
 				E3220C671E7D385B008AFA85 /* TeamRegistrationTableViewController.swift in Sources */,
 				CC7A4AF81E876F4F00BC8A4B /* PeopleTableViewCell.swift in Sources */,
@@ -1157,12 +1204,14 @@
 				CC9981DC1E9C8E34008D872C /* ImagesContent.swift in Sources */,
 				3FC3146A1E77EB84009B21AB /* MentorViewController.swift in Sources */,
 				3F20D4B51E9A37070082146B /* AuthType.swift in Sources */,
+				3FEE49E71E9F9BC700DC4EE1 /* ParticipantRegistrationViewController.swift in Sources */,
 				3FC314601E77DB90009B21AB /* ConsultationDayCell.swift in Sources */,
 				CC1CF8AE1E7C1ED6002224BC /* EditProfileViewController.swift in Sources */,
 				CCE7DDE01E8B760C0044A863 /* VideoLinkTableViewCell.swift in Sources */,
 				C2A8A6851E9B0EFD008D50BC /* HttpClient.swift in Sources */,
 				3F97955B1E7A8DBF004BC26C /* SignUpTableViewController.swift in Sources */,
 				CC9981D81E9C7BC9008D872C /* ImagesState.swift in Sources */,
+				E3B545101EA1182200FFB63E /* TeamEditViewController.swift in Sources */,
 				E3220C691E7D3ADC008AFA85 /* TeamItemTableViewCell.swift in Sources */,
 				E348D5681E840D6100947B3F /* IdeaDetailsTableViewController.swift in Sources */,
 				C28B2EDA1E86665000F6DD67 /* FirebaseError.swift in Sources */,
@@ -1190,10 +1239,12 @@
 				CC7F4C8F1E9CB3FD00106D63 /* Faq.swift in Sources */,
 				E355BB841E94E399002E29DD /* TagCell.swift in Sources */,
 				3FC314661E77DD7D009B21AB /* ConsultationSlotStatus.swift in Sources */,
+				3FEE49E31E9F5BDC00DC4EE1 /* RegistrationCell.swift in Sources */,
 				CC7A4B121E88A85F00BC8A4B /* SponsorsTitleTableViewCell.swift in Sources */,
 				3FED301C1E77930200C007AD /* BaseViewController.swift in Sources */,
 				CC1CF8AA1E7C137A002224BC /* ProfileItems.swift in Sources */,
 				3F408CC91E83C06900E2B787 /* ChannelCell.swift in Sources */,
+				3F0063321EA253EC00086A50 /* MentorAdminViewController.swift in Sources */,
 				3FC314641E77DD22009B21AB /* ConsultationSlot.swift in Sources */,
 				CC9500891E86398F00EC871F /* TemplateViewController.swift in Sources */,
 				E3E3B2E51E9A2E9800778B9C /* TagTableViewCell.swift in Sources */,
@@ -1201,6 +1252,7 @@
 				3FC6219F1E96525300661305 /* ChannelInfoViewController.swift in Sources */,
 				3FED30161E76FA0A00C007AD /* MenuViewController.swift in Sources */,
 				E3220C511E7BA903008AFA85 /* CommentsInputTableViewCell.swift in Sources */,
+				3FEE49DC1E9F558700DC4EE1 /* RegistrationListViewController.swift in Sources */,
 				E3220C6D1E7D6B40008AFA85 /* TeamCreateTableViewController.swift in Sources */,
 				E3220C411E7AE3C6008AFA85 /* EventDetailTableViewCell.swift in Sources */,
 				3FC621991E9542AB00661305 /* MemberCell.swift in Sources */,
@@ -1376,7 +1428,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = ./SWSG/bridgingHeader.h;
 				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1396,7 +1448,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = ./SWSG/bridgingHeader.h;
 				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

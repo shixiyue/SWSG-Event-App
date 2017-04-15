@@ -76,6 +76,8 @@ PODS:
   - JSQSystemSoundPlayer (2.0.1)
   - JTAppleCalendar (6.1.6)
   - OneSignal (2.5.2)
+  - QRCode (2.0)
+  - QRCodeReader.swift (7.4.0)
   - RSKImageCropper (1.6.1)
   - SwiftGifOrigin (1.6.1)
   - SwiftSpinner (1.2.1)
@@ -92,6 +94,8 @@ DEPENDENCIES:
   - JSQMessagesViewController
   - JTAppleCalendar (~> 6.1)
   - OneSignal (~> 2.0)
+  - QRCode
+  - QRCodeReader.swift
   - RSKImageCropper
   - SwiftGifOrigin
   - SwiftSpinner
@@ -119,11 +123,13 @@ SPEC CHECKSUMS:
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTAppleCalendar: 560fb46421880f53ad54123295072de24bca2b18
   OneSignal: 66d08b6b1e3c3858cbf28207ed20f1fa865ab2a2
+  QRCode: f98a1886c8f37523704a7512a4c0cd45b34c18a4
+  QRCodeReader.swift: 759a4320cd9005ecc94abdb4aaf0eb72fcd359d0
   RSKImageCropper: 0df8c99e77a8ea7ca7a8b83ef468556f31584254
   SwiftGifOrigin: d6679d3ebe9df2e049a84bc52582635107b581f6
   SwiftSpinner: 62a28bbb4035f252a1e91b0e17fc40bdbbfa0aab
   TextFieldEffects: 9e5cce561ea39c75b86e9d3637601727a67e8b23
 
-PODFILE CHECKSUM: 3239dbe8f54585bae3c486d3c41ac5310d60640c
+PODFILE CHECKSUM: 1cbe6a31cbab35b1955db1db488ab367f2fb2bee
 
 COCOAPODS: 1.2.0
