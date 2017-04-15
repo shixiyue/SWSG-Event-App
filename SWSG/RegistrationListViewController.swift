@@ -32,9 +32,8 @@ class RegistrationListViewController: UIViewController {
         observeRegistrationEvents()
     }
     
-    func setUpSearchBar() {
-        searchBar.delegate = self
-        searchBar.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+    fileprivate func setUpSearchBar() {
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
         Utility.styleSearchBar(searchBar)
     }
     
@@ -170,7 +169,7 @@ extension RegistrationListViewController: UITextFieldDelegate {
     }
 }
 
-// MARK: UISearchResultsUpdating
+// MARK: UISearchBarDelegate
 extension RegistrationListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filteredREvents = registrationEvents.filter { rEvent in

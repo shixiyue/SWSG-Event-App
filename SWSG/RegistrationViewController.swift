@@ -17,9 +17,12 @@ class RegistrationViewController: UIViewController {
     @IBOutlet weak var usernameTF: UITextField!
     @IBOutlet weak var cameraBtn: UIBarButtonItem!
     @IBOutlet weak var registeredList: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var registrationEvent: RegistrationEvent?
     fileprivate var registeredUsers = [User]()
+    fileprivate var filteredRUsers = [User]()
+    fileprivate var searchActive = false
     
     fileprivate var registrationEventRef: FIRDatabaseReference?
     fileprivate var rUserAddedHandle: FIRDatabaseHandle?
@@ -41,6 +44,7 @@ class RegistrationViewController: UIViewController {
         
         self.title = registrationEvent?.name
         
+        setUpSearchBar()
         observeRegistrationEvent()
     }
     
@@ -55,6 +59,14 @@ class RegistrationViewController: UIViewController {
             
             profileVC.user = rUser
         }
+    }
+    
+    fileprivate func setUpSearchBar() {
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
     }
     
     private func observeRegistrationEvent() {
@@ -161,12 +173,23 @@ class RegistrationViewController: UIViewController {
 
 extension RegistrationViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return registeredUsers.count
+        if searchActive {
+            return filteredRUsers.count
+        } else {
+            return registeredUsers.count
+        }
     }
     
     public func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let registeredUser = registeredUsers[indexPath.item]
+        let registeredUser: User
+        
+        if searchActive && filteredRUsers.count > indexPath.item {
+            registeredUser = filteredRUsers[indexPath.item]
+        } else {
+            registeredUser = registeredUsers[indexPath.item]
+        }
+        
         guard let uid = registeredUser.uid,
             let cell = tableView.dequeueReusableCell(
             withIdentifier: Config.registeredUserCell, for: indexPath) as? RegisteredUserCell else {
@@ -190,7 +213,14 @@ extension RegistrationViewController: UITableViewDataSource {
 
 extension RegistrationViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let registeredUser = registeredUsers[indexPath.item]
+        let registeredUser: User
+        
+        if searchActive && filteredRUsers.count > indexPath.item {
+            registeredUser = filteredRUsers[indexPath.item]
+        } else {
+            registeredUser = registeredUsers[indexPath.item]
+        }
+        
         self.performSegue(withIdentifier: Config.registrationToProfile, sender: registeredUser)
     }
     
@@ -229,3 +259,38 @@ extension RegistrationViewController: QRCodeReaderViewControllerDelegate {
         dismiss(animated: true, completion: nil)
     }
 }
+
+// MARK: UISearchBarDelegate
+extension RegistrationViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredRUsers = registeredUsers.filter { rUser in
+            return rUser.profile.name.lowercased().contains(searchText.lowercased()) ||
+                rUser.profile.username.lowercased().contains(searchText.lowercased())
+        }
+        
+        if searchText.characters.count == 0 {
+            searchActive = false
+        } else {
+            searchActive = true
+        }
+        
+        registeredList.reloadData()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+}
+

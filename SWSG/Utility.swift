@@ -696,6 +696,11 @@ struct Utility {
         })
     }
     
+    static func setUpSearchBar(_ searchBar: UISearchBar, viewController: UISearchBarDelegate, selector: Selector) {
+        searchBar.delegate = viewController
+        searchBar.inputAccessoryView = Utility.getDoneToolbar(done: selector)
+    }
+    
     static func styleSearchBar(_ searchBar: UISearchBar) {
         searchBar.layer.borderWidth = 1
         searchBar.layer.borderColor = Config.themeColor.cgColor

@@ -86,8 +86,7 @@ class EventCalendarViewController: BaseViewController {
         dayList.delegate = self
         dayList.dataSource = self
         
-        searchBar.delegate = self
-        searchBar.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
     }
     
     func donePressed() {

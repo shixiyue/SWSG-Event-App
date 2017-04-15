@@ -190,9 +190,14 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zS2-VU-EZP">
                                 <rect key="frame" x="0.0" y="174" width="375" height="493"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Registered Participant Name" id="Fba-o6-gm6">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RegisteredUserCell" rowHeight="60" id="j1a-o0-r4g" customClass="RegisteredUserCell" customModule="SWSG" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="60"/>
+                                        <rect key="frame" x="0.0" y="72" width="375" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="j1a-o0-r4g" id="xES-Mx-N2s">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="59.5"/>
@@ -259,6 +264,7 @@
                         <outlet property="cameraBtn" destination="SwR-j4-5ti" id="cj7-pB-lKy"/>
                         <outlet property="navBar" destination="mjB-eG-FuP" id="xfL-cp-DL2"/>
                         <outlet property="registeredList" destination="zS2-VU-EZP" id="IxE-iS-zAA"/>
+                        <outlet property="searchBar" destination="Fba-o6-gm6" id="s17-Yb-LUI"/>
                         <outlet property="usernameTF" destination="5dk-eC-uSN" id="PWH-xD-49Z"/>
                         <segue destination="mU5-sx-B8y" kind="show" identifier="registrationToProfile" id="7Nm-31-ebh"/>
                     </connections>
@@ -280,7 +286,7 @@
             <objects>
                 <navigationController storyboardIdentifier="RegistrationNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bxj-Cw-p9c" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jLj-6J-0dQ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="jLj-6J-0dQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -298,7 +304,7 @@
             <objects>
                 <navigationController storyboardIdentifier="ParticipantRegistrationNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="umY-nn-3fD" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="r57-sg-VIv">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="r57-sg-VIv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

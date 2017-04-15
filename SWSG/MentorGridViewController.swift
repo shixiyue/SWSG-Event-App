@@ -64,8 +64,7 @@ class MentorGridViewController: BaseViewController {
     
     // MARK: Layout methods
     private func setUpSearchBar() {
-        searchBar.delegate = self
-        searchBar.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
         Utility.styleSearchBar(searchBar)
     }
     
