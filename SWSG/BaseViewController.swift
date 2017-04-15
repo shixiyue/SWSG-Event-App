@@ -34,7 +34,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
     }
     
     func slideMenuItemSelectedAtIndex(_ index: Int) {
-        guard let item = MenuItems.MenuOrder(rawValue: index) else {
+        guard let item = MenuItems.MenuOrder(rawValue: index), let type = System.activeUser?.type else {
             return
         }
         switch(item){
@@ -46,7 +46,11 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         case .schedule:
             self.open(viewController: Config.eventViewController, from: Config.eventStoryboard)
         case .mentors:
-            self.open(viewController: Config.mentorViewController, from: Config.mentorStoryboard)
+            if type.isMentor {
+                self.open(viewController: Config.mentorAdminViewController, from: Config.mentorStoryboard)
+            } else {
+                self.open(viewController: Config.mentorViewController, from: Config.mentorStoryboard)
+            }
         case .teams:
             self.open(viewController: Config.teamRegistrationViewController, from: Config.teamStoryboard)
         case .chat:
@@ -56,7 +60,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         case .people:
             self.open(viewController: Config.profileListViewController, from: Config.profileStoryboard)
         case .registration:
-            if System.activeUser?.type.isOrganizer == true {
+            if type.isOrganizer {
                 self.open(viewController: Config.registrationListViewController, from: Config.registrationStoryboard)
             } else {
                 self.open(viewController: Config.participantRegistrationViewController, from: Config.registrationStoryboard)

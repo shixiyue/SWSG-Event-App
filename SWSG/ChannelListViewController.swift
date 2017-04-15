@@ -115,13 +115,6 @@ class ChannelListViewController: BaseViewController {
                 return
         }
         
-        Utility.getChatIcon(id: channelSnapshot.key, completion: { (image) in
-            if let image = image {
-                channel.icon = image
-                self.chatList.reloadData()
-            }
-        })
-        
         Utility.getLatestMessage(channel: channel, snapshot: channelSnapshot, completion: { _ in
             self.chatList.reloadData()
         })
@@ -132,9 +125,17 @@ class ChannelListViewController: BaseViewController {
     @IBAction func composeBtnPressed(_ sender: Any) {
         let composeController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
+        if System.activeUser?.type.isAdmin == true || System.activeUser?.type.isOrganizer == true {
+            let publicChannelAction = UIAlertAction(title: "Public Channel", style: .default, handler: {
+                _ in
+                self.performSegue(withIdentifier: Config.channelListToCreateChannel, sender: true)
+            })
+            composeController.addAction(publicChannelAction)
+        }
+        
         let channelAction = UIAlertAction(title: "Group Channel", style: .default, handler: {
             _ in
-            self.performSegue(withIdentifier: Config.channelListToCreateChannel, sender: self)
+            self.performSegue(withIdentifier: Config.channelListToCreateChannel, sender: false)
         })
         composeController.addAction(channelAction)
         
@@ -201,11 +202,13 @@ class ChannelListViewController: BaseViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
-        if let channel = sender as? Channel {
-            guard let chatVc = segue.destination as? ChannelViewController else {
-                return
-            }
-            
+        if segue.identifier == Config.channelListToCreateChannel,
+            let isPublic = sender as? Bool,
+            let createVc = segue.destination as? CreateChannelViewController {
+            createVc.isPublic = isPublic
+        } else if segue.identifier == Config.channelListToChannel,
+            let channel = sender as? Channel,
+            let chatVc = segue.destination as? ChannelViewController {
             chatVc.senderDisplayName = System.activeUser?.profile.username
             chatVc.channel = channel
         }
@@ -246,10 +249,15 @@ extension ChannelListViewController: UITableViewDataSource {
             channel = channels[index]
         }
         cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
+        cell.iconIV.image = Config.placeholderImg
+        
+        guard let channelID = channel.id else {
+            return ChannelCell()
+        }
         
         if channel.type == .directMessage {
             Utility.getOtherUser(in: channel, completion: { (user) in
-                if let user = user, let uid = user.uid, let channelID = channel.id {
+                if let user = user, let uid = user.uid {
                     cell.nameLbl.text = user.profile.name
                     self.directMessageChannelName[channelID] = user.profile.name
                     
@@ -261,12 +269,11 @@ extension ChannelListViewController: UITableViewDataSource {
                 }
             })
         } else if channel.type != .directMessage {
-            
-            if channel.icon == nil {
-                cell.iconIV.image = Config.placeholderImg
-            } else {
-                cell.iconIV.image = channel.icon
-            }
+            Utility.getChatIcon(id: channelID, completion: { (image) in
+                if let image = image {
+                    cell.iconIV.image = image
+                }
+            })
             
             cell.nameLbl.text = channel.name
         }
@@ -277,7 +284,7 @@ extension ChannelListViewController: UITableViewDataSource {
             var senderName = message.senderName
             
             if message.senderId == client.getUid() {
-                senderName = "Me"
+                senderName = "You"
             }
             
             if let msgText = message.text {
@@ -336,8 +343,9 @@ extension ChannelListViewController: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         let channel = channels[indexPath.row]
+        let canDeletePublic = System.activeUser?.type.isAdmin == true || System.activeUser?.type.isOrganizer == true
         
-        if channel.type == .directMessage {
+        if channel.type == .directMessage || (channel.type == .publicChannel && canDeletePublic) {
             return true
         } else {
             return false

@@ -18,7 +18,11 @@ class CreateChannelViewController: UIViewController {
     @IBOutlet weak var editBtn: UIButton!
     @IBOutlet weak var memberList: UITableView!
     @IBOutlet weak var iconIV: UIImageView!
+    @IBOutlet weak var headerLbl: UILabel!
+    @IBOutlet weak var membersHeaderLbl: UILabel!
 
+    var isPublic = false
+    
     fileprivate let client = System.client
     fileprivate var members = [User]()
     fileprivate var iconAdded = false
@@ -26,6 +30,23 @@ class CreateChannelViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setUpLayout()
+        setUpTextFieldAndButtons()
+        setUpMemberList()
+        setUpIcon()
+    }
+    fileprivate func setUpLayout() {
+        if isPublic {
+            headerLbl.text = Config.createPublicHeaderLabel
+            membersHeaderLbl.isHidden = true
+            memberTF.isHidden = true
+            addBtn.isHidden = true
+            memberList.isHidden = true
+        }
+    }
+    
+    fileprivate func setUpTextFieldAndButtons() {
         nameTF.delegate = self
         memberTF.delegate = self
         doneBtn.isEnabled = false
@@ -33,11 +54,25 @@ class CreateChannelViewController: UIViewController {
         btnNotifier(textField: nameTF, button: doneBtn)
         btnNotifier(textField: memberTF, button: addBtn)
         
-        members.append(System.activeUser!)
+        addDoneToolbar(textField: nameTF)
+        addDoneToolbar(textField: memberTF)
+        
+        self.hideKeyboardWhenTappedAround()
+    }
+    
+    fileprivate func setUpMemberList() {
+        guard let activeUser = System.activeUser else {
+            return
+        }
+        
+        members.append(activeUser)
         
         memberList.delegate = self
         memberList.dataSource = self
         
+    }
+    
+    fileprivate func setUpIcon() {
         iconIV = Utility.roundUIImageView(for: iconIV)
         iconIV.image = Config.placeholderImg
         
@@ -45,13 +80,9 @@ class CreateChannelViewController: UIViewController {
         iconIV.addGestureRecognizer(gestureRecognizer)
         editBtn.addTarget(self, action: #selector(showImagePicker), for: .touchUpInside)
         
-        self.hideKeyboardWhenTappedAround()
-        
-        addDoneToolbar(textField: nameTF)
-        addDoneToolbar(textField: memberTF)
     }
     
-    func addDoneToolbar(textField: UITextField) {
+    fileprivate func addDoneToolbar(textField: UITextField) {
         textField.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
     }
     
@@ -64,7 +95,7 @@ class CreateChannelViewController: UIViewController {
             return
         }
         
-        guard members.count > 1 else {
+        guard members.count > 1 || isPublic else {
             Utility.displayDismissivePopup(title: "Not Enough Members", message: "You need at least 1 other member", viewController: self, completion: { _ in })
             return
         }
@@ -85,8 +116,15 @@ class CreateChannelViewController: UIViewController {
             image = iconIV.image
         }
         
-        let channel = Channel(id: nil, type: .privateChannel, icon: image, name: name,
+        let channel: Channel
+         
+        if isPublic {
+            channel = Channel(id: nil, type: .publicChannel, icon: image, name: name,
                               members: memberUIDs)
+        } else {
+            channel = Channel(id: nil, type: .privateChannel, icon: image, name: name,
+                              members: memberUIDs)
+        }
         
         client.createChannel(for: channel, completion: { (channel, error) in
             Utility.popViewController(no: 1, viewController: self)

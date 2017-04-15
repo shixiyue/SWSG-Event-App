@@ -453,9 +453,11 @@
                         <outlet property="addBtn" destination="Jyd-ky-KP6" id="n3g-el-zZT"/>
                         <outlet property="doneBtn" destination="iM9-1S-1Jr" id="vaU-iY-Q06"/>
                         <outlet property="editBtn" destination="fdo-tB-iOB" id="opG-CX-PgN"/>
+                        <outlet property="headerLbl" destination="rJy-Ih-EsL" id="0mE-mi-a0G"/>
                         <outlet property="iconIV" destination="nb8-jR-jp1" id="xIB-Zf-Jiq"/>
                         <outlet property="memberList" destination="qS2-ik-ouD" id="RcI-qB-6Lj"/>
                         <outlet property="memberTF" destination="8wr-Fr-qLU" id="UZz-R6-Zza"/>
+                        <outlet property="membersHeaderLbl" destination="e3B-M2-Gdb" id="oMW-UC-qpe"/>
                         <outlet property="nameTF" destination="Jbg-cc-FrH" id="s5t-cH-wCd"/>
                     </connections>
                 </viewController>
@@ -468,6 +470,8 @@
             <objects>
                 <navigationController storyboardIdentifier="ChatNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Lmb-sv-L2p" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="375" height="667"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="quO-pt-kxx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

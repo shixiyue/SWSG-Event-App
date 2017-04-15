@@ -53,6 +53,12 @@ class ChannelInfoViewController: UIViewController {
             addBtn.isHidden = true
             editNameBtn.isHidden = true
             nameLbl.isUserInteractionEnabled = false
+        } else if channel.type == .publicChannel {
+            membersList.isHidden = true
+            quitBtn.isHidden = true
+            addBtn.isHidden = true
+            editNameBtn.isHidden = true
+            nameLbl.isUserInteractionEnabled = false
         }
     }
     
