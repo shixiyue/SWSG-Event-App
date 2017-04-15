@@ -319,7 +319,15 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func selectedSlot(for collectionView: UICollectionView,
                               at indexPath: IndexPath) {
-        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
+        guard let mentor = mentorAcct?.mentor, System.activeUser?.type.isParticipant == true else {
+            return
+        }
+        
+        guard System.activeUser?.team != Config.noTeam else {
+            let title = "Error"
+            let message = "You need to be part of a team to book a slot"
+            Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _ in
+            })
             return
         }
         

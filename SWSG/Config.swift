@@ -115,6 +115,7 @@ struct Config {
     static let informationViewController = "InformationViewController"
     static let mentorStoryboard = "Mentor"
     static let mentorViewController = "MentorViewController"
+    static let mentorAdminViewController = "MentorAdminViewController"
     static let eventStoryboard = "EventSystem"
     static let eventViewController = "EventCalendarViewController"
     static let teamStoryboard = "TeamRegistration"
@@ -210,6 +211,9 @@ struct Config {
     static let channelType = "channelType"
     static let typingIndicator = "typingIndicator"
     static let channelID = "channelID"
+    static let createPublicHeaderLabel = "Create Public Channel"
+    static let createPublicMembersHeaderLabel = "Members (Only for Private Channel"
+    
     
     // Parameters for Profile
     static let headerFavourites = "Favourites"
