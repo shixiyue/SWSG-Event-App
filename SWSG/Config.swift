@@ -61,6 +61,9 @@ struct Config {
     static let notiType = "type"
     static let notiAdditionData = "addition_data"
     static let notiMessage = "message"
+    static let notiContents = "contents"
+    static let notiData = "data"
+    static let english = "en"
 
     static let start = "start"
     static let end = "end"
