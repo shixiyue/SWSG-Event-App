@@ -582,6 +582,7 @@
                     <connections>
                         <outlet property="buttonLbl" destination="HKr-Vg-hCw" id="mw8-tL-aI7"/>
                         <outlet property="chatBtn" destination="iAn-25-ChU" id="tOS-CU-cVE"/>
+                        <outlet property="joinView" destination="kVX-tj-LO0" id="sOA-iG-WTK"/>
                         <segue destination="Hxq-T1-EcM" kind="show" identifier="teamToChannel" id="vnf-vu-r6s"/>
                         <segue destination="Kjg-kh-WCM" kind="show" identifier="teamToProfile" id="MNg-2t-KEk"/>
                     </connections>

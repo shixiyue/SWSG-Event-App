@@ -31,7 +31,9 @@ class TeamInfoTableViewController: UITableViewController {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "reload"), object: self)
         }
     }
-    
+
+    @IBOutlet weak var joinView: UIView!
+
     @IBAction func onBackButtonClick(_ sender: Any) {
         Utility.onBackButtonClick(tableViewController: self)
     }
@@ -59,6 +61,14 @@ class TeamInfoTableViewController: UITableViewController {
         
         if let team = team {
             self.title = team.name
+        }
+        
+        setUpLayout()
+    }
+    
+    fileprivate func setUpLayout() {
+        if System.activeUser?.type.isParticipant == false {
+            joinView.isHidden = true
         }
     }
     
@@ -219,6 +229,7 @@ extension TeamInfoTableViewController {
         }
     }
     
+
     private func configureTeamMemberCell(cell: TeamMemberTableViewCell, at index: Int) {
         guard let team = team else {
               return
@@ -283,7 +294,8 @@ extension TeamInfoTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
-        guard let team = team else {
+
+        guard let team = team, indexPath.section == 0 else {
             return
         }
         guard indexPath.section == 0 else {
@@ -297,6 +309,7 @@ extension TeamInfoTableViewController {
         })
     }
 }
+
 
 extension TeamInfoTableViewController: UICollectionViewDataSource {
     
