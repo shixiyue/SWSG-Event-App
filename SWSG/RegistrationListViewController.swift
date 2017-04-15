@@ -40,7 +40,6 @@ class RegistrationListViewController: UIViewController {
     func donePressed() {
         self.view.endEditing(true)
     }
-        
     
     // MARK: Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

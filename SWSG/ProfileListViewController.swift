@@ -12,19 +12,40 @@ import Firebase
 class ProfileListViewController: BaseViewController {
     
     @IBOutlet weak var profileList: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var headerLbl: UILabel!
     
     fileprivate let client = System.client
+    fileprivate var favourites = [User]()
     fileprivate var users = [User]()
+    fileprivate var filteredUsers = [User]()
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            if newSearchActive {
+                headerLbl.text = Config.headerSearchResults
+            } else {
+                headerLbl.text = Config.headerFavourites
+            }
+            
+            profileList.reloadData()
+        }
+    }
     
     fileprivate var favouritesRef: FIRDatabaseReference?
     private var favouritesAddedHandle: FIRDatabaseHandle?
     private var favouritesRemovedHandle: FIRDatabaseHandle?
     
+    fileprivate var usersRef: FIRDatabaseReference?
+    private var usersAddedHandle: FIRDatabaseHandle?
+    private var usersRemovedHandle: FIRDatabaseHandle?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         addSlideMenuButton()
+        setUpSearchBar()
         observeFavourites()
+        observeUsers()
         
         profileList.delegate = self
         profileList.dataSource = self
@@ -43,6 +64,16 @@ class ProfileListViewController: BaseViewController {
         }
     }
     
+    // MARK: Layout methods
+    private func setUpSearchBar() {
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
+        Utility.styleSearchBar(searchBar)
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
+    }
+    
     // MARK: Firebase related methods
     private func observeFavourites() {
         guard let uid = System.activeUser?.uid else {
@@ -57,7 +88,7 @@ class ProfileListViewController: BaseViewController {
             
             System.client.getUserWith(uid: uid, completion: { (user, error) in
                 if let user = user {
-                    self.users.append(user)
+                    self.favourites.append(user)
                     self.profileList.reloadData()
                 }
             })
@@ -68,9 +99,9 @@ class ProfileListViewController: BaseViewController {
                 return
             }
             
-            for (index, user) in self.users.enumerated() {
+            for (index, user) in self.favourites.enumerated() {
                 if user.uid == uid {
-                    self.users.remove(at: index)
+                    self.favourites.remove(at: index)
                     self.profileList.reloadData()
                     return
                 }
@@ -78,38 +109,27 @@ class ProfileListViewController: BaseViewController {
         })
     }
     
-    @IBAction func searchBtnPressed(_ sender: Any) {
-        displaySearch(existingText: "")
-    }
-    
-    private func displaySearch(existingText: String) {
-        let message = "Enter Username of Individual"
-        let title = "Profile Search"
-        let btnText = "Search"
-        let placeholder = "Username"
-        Utility.createPopUpWithTextField(title: title, message: message,
-                                         btnText: btnText, placeholderText: placeholder,
-                                         existingText: existingText,
-                                         viewController: self,
-                                         completion: { (username) in
-                                            self.searchForUser  (username: username)
-        })
-    }
-    
-    func searchForUser(username: String?) {
-        guard let username = username else {
-            return
-        }
+    private func observeUsers() {
+        usersRef = System.client.getUsersRef()
         
-        client.getUserWith(username: username, completion: { (user, error) in
-            guard let user = user else {
-                Utility.displayDismissivePopup(title: "Error",
-                                               message: "Username does not exist!",
-                                               viewController: self, completion: { _ in })
+        usersAddedHandle = usersRef?.observe(.childAdded, with: { (snapshot) in
+            guard let user = User(snapshot: snapshot) else {
                 return
             }
+            user.setUid(uid: snapshot.key)
             
-            self.performSegue(withIdentifier: Config.profileListToProfile, sender: user)
+            self.users.append(user)
+            self.profileList.reloadData()
+        })
+        
+        usersRemovedHandle = usersRef?.observe(.childRemoved, with: { (snapshot) in
+            for (index, user) in self.favourites.enumerated() {
+                if user.uid == snapshot.key {
+                    self.users.remove(at: index)
+                    self.profileList.reloadData()
+                    return
+                }
+            }
         })
     }
 }
@@ -117,12 +137,23 @@ class ProfileListViewController: BaseViewController {
 // MARK: UITableViewDataSource
 extension ProfileListViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        if searchActive {
+            return filteredUsers.count
+        } else {
+            return favourites.count
+        }
     }
     
     public func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let user = users[indexPath.item]
+        let user: User
+        
+        if searchActive && filteredUsers.count > indexPath.item {
+            user = filteredUsers[indexPath.item]
+        } else {
+            user = favourites[indexPath.item]
+        }
+        
         guard let uid = user.uid, let cell = tableView.dequeueReusableCell(
             withIdentifier: Config.profileCell, for: indexPath) as? ProfileCell else {
                 return ProfileCell()
@@ -152,7 +183,15 @@ extension ProfileListViewController: UITableViewDataSource {
 // MARK: UITableViewDelegate
 extension ProfileListViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = users[indexPath.item]
+        let user: User
+        
+        if searchActive && filteredUsers.count > indexPath.item {
+            print("Test2")
+            user = filteredUsers[indexPath.item]
+        } else {
+            user = favourites[indexPath.item]
+        }
+        
         self.performSegue(withIdentifier: Config.profileListToProfile, sender: user)
     }
 }
@@ -162,5 +201,37 @@ extension ProfileListViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
+    }
+}
+
+// MARK: UISearchResultsUpdating
+extension ProfileListViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredUsers = users.filter { user in
+            return user.profile.name.lowercased().contains(searchText.lowercased()) ||
+                user.profile.username.lowercased().contains(searchText.lowercased())
+        }
+        
+        if searchText.characters.count == 0 {
+            searchActive = false
+        } else {
+            searchActive = true
+        }
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
     }
 }

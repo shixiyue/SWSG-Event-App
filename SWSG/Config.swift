@@ -211,6 +211,10 @@ struct Config {
     static let typingIndicator = "typingIndicator"
     static let channelID = "channelID"
     
+    // Parameters for Profile
+    static let headerFavourites = "Favourites"
+    static let headerSearchResults = "Search Results"
+    
     //Parameters for storage
     static let commentsFileName = "commentsFileName"
     static let localUser = "localUser"

@@ -23,7 +23,17 @@ class EventCalendarViewController: BaseViewController {
     
     //MARK: Properties
     fileprivate var isCalendar = true
-    fileprivate var searchActive = false
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            if newSearchActive {
+                isCalendar = false
+            } else {
+                isCalendar = true
+            }
+            setLayout()
+            dayList.reloadData()
+        }
+    }
     
     //MARK: Firebase References
     private var eventRef: FIRDatabaseReference!
@@ -397,40 +407,22 @@ extension EventCalendarViewController: UISearchBarDelegate {
         } else {
             searchActive = true
         }
-        
-        dayList.reloadData()
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchActive = true
-        
-        if isCalendar {
-            toggleViewMode()
-        }
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         searchActive = false
-        
-        if !isCalendar {
-            toggleViewMode()
-        }
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchActive = false
-        
-        if isCalendar {
-            toggleViewMode()
-        }
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchActive = false
-        
-        if !isCalendar {
-            toggleViewMode()
-        }
     }
 }
 

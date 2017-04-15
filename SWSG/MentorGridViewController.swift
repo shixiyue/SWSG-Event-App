@@ -17,7 +17,11 @@ class MentorGridViewController: BaseViewController {
     fileprivate var insets: CGFloat!
     fileprivate var mentors = [User]()
     fileprivate var filteredMentors = [User]()
-    fileprivate var searchActive = false
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            mentorCollection.reloadData()
+        }
+    }
     
     //MARK: Firebase References
     private var mentorsRef: FIRDatabaseQuery?
@@ -156,8 +160,6 @@ extension MentorGridViewController: UISearchBarDelegate {
         } else {
             searchActive = true
         }
-        
-        mentorCollection.reloadData()
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {

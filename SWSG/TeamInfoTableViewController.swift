@@ -49,6 +49,10 @@ class TeamInfoTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
+        
+        if let team = team {
+            self.title = team.name
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -16,9 +16,13 @@ class ChannelListViewController: BaseViewController {
     // MARK: Properties
     fileprivate var channels = [Channel]()
     fileprivate var filteredChannels = [Channel]()
-    fileprivate var searchActive = false
     fileprivate var directMessageChannelName = [String: String]()
     fileprivate var client = System.client
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            chatList.reloadData()
+        }
+    }
     
     //MARK: Firebase References
     private var channelsRef: FIRDatabaseReference!
@@ -372,8 +376,6 @@ extension ChannelListViewController: UISearchBarDelegate {
         } else {
             searchActive = true
         }
-        
-        chatList.reloadData()
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {

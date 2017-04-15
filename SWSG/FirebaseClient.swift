@@ -1120,6 +1120,10 @@ class FirebaseClient {
         return ref.child(child).queryOrderedByValue().queryEqual(toValue: value)
     }
     
+    public func getUsersRef() -> FIRDatabaseReference {
+        return usersRef
+    }
+    
     public func getChannelsRef() -> FIRDatabaseReference {
         return databaseReference(for: Config.channelsRef)
     }

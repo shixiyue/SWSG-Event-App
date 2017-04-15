@@ -702,6 +702,7 @@ struct Utility {
     }
     
     static func styleSearchBar(_ searchBar: UISearchBar) {
+        searchBar.barTintColor = Config.themeColor
         searchBar.layer.borderWidth = 1
         searchBar.layer.borderColor = Config.themeColor.cgColor
     }

@@ -675,7 +675,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="100" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="utG-k9-bry">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="72" width="375" height="595"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="0.0" reuseIdentifier="profileCell" rowHeight="100" id="eTG-Sl-pWk" customClass="ProfileCell" customModule="SWSG" customModuleProvider="target">
@@ -798,47 +798,47 @@
                                 </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NUr-vt-BTo">
-                                <rect key="frame" x="0.0" y="64" width="375" height="29"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favourites" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4sc-FM-HYz">
-                                        <rect key="frame" x="8" y="8" width="118" height="21"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="118" id="Zcx-Eu-I0Q"/>
-                                            <constraint firstAttribute="height" constant="21" id="wfa-KR-ch4"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="23"/>
-                                        <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
+                                <rect key="frame" x="0.0" y="92" width="375" height="29"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="4sc-FM-HYz" firstAttribute="leading" secondItem="NUr-vt-BTo" secondAttribute="leading" constant="8" id="2CJ-kl-sG9"/>
                                     <constraint firstAttribute="height" constant="29" id="IPb-kn-gzg"/>
-                                    <constraint firstItem="4sc-FM-HYz" firstAttribute="top" secondItem="NUr-vt-BTo" secondAttribute="top" constant="8" id="SZx-Jo-gQQ"/>
                                 </constraints>
                             </view>
+                            <searchBar contentMode="redraw" fixedFrame="YES" placeholder="Search Users" translatesAutoresizingMaskIntoConstraints="NO" id="JSv-6f-3NS">
+                                <rect key="frame" x="0.0" y="64" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favourites" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4sc-FM-HYz">
+                                <rect key="frame" x="16" y="113" width="343" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="wfa-KR-ch4"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="23"/>
+                                <color key="textColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="NUr-vt-BTo" secondAttribute="trailing" id="1qz-Sb-riM"/>
                             <constraint firstItem="NUr-vt-BTo" firstAttribute="leading" secondItem="pno-OD-wWi" secondAttribute="leading" id="588-xp-SJb"/>
-                            <constraint firstItem="NUr-vt-BTo" firstAttribute="top" secondItem="jvu-mM-Nev" secondAttribute="bottom" id="DAy-Os-PcP"/>
+                            <constraint firstItem="NUr-vt-BTo" firstAttribute="top" secondItem="jvu-mM-Nev" secondAttribute="bottom" constant="28" id="DAy-Os-PcP"/>
                             <constraint firstItem="utG-k9-bry" firstAttribute="leading" secondItem="pno-OD-wWi" secondAttribute="leading" id="K1R-Kz-puf"/>
+                            <constraint firstItem="4sc-FM-HYz" firstAttribute="leading" secondItem="pno-OD-wWi" secondAttribute="leadingMargin" id="NCc-8k-AWQ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4sc-FM-HYz" secondAttribute="trailing" id="O6Y-uD-smR"/>
+                            <constraint firstItem="4sc-FM-HYz" firstAttribute="top" secondItem="pno-OD-wWi" secondAttribute="top" constant="113" id="Qaf-pq-lOn"/>
+                            <constraint firstItem="4sc-FM-HYz" firstAttribute="leading" secondItem="pno-OD-wWi" secondAttribute="leading" constant="16" id="m15-gj-VTd"/>
                             <constraint firstAttribute="trailing" secondItem="utG-k9-bry" secondAttribute="trailing" id="sUk-yy-MrG"/>
-                            <constraint firstItem="utG-k9-bry" firstAttribute="top" secondItem="NUr-vt-BTo" secondAttribute="bottom" constant="-29" id="tyu-uB-Ekg"/>
+                            <constraint firstItem="utG-k9-bry" firstAttribute="top" secondItem="NUr-vt-BTo" secondAttribute="bottom" constant="-49" id="tyu-uB-Ekg"/>
                             <constraint firstItem="tdY-Dl-zbN" firstAttribute="top" secondItem="utG-k9-bry" secondAttribute="bottom" id="wQJ-fM-qlB"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="People" id="Zmz-m6-vTp">
-                        <barButtonItem key="rightBarButtonItem" systemItem="search" id="nrM-kK-CaX">
-                            <connections>
-                                <action selector="searchBtnPressed:" destination="rAF-Rj-rVP" id="hrm-jA-9xb"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="People" id="Zmz-m6-vTp"/>
                     <connections>
+                        <outlet property="headerLbl" destination="4sc-FM-HYz" id="plz-pV-OVy"/>
                         <outlet property="profileList" destination="utG-k9-bry" id="UJw-Fn-K4K"/>
+                        <outlet property="searchBar" destination="JSv-6f-3NS" id="jai-Vl-iAr"/>
                         <segue destination="qwD-iu-tud" kind="show" identifier="profileListToProfile" id="M1Q-dT-4Ad"/>
                     </connections>
                 </viewController>

@@ -12,7 +12,12 @@ import Firebase
 class TeamRegistrationTableViewController: BaseViewController {
     
     @IBOutlet var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     fileprivate var teams = Teams()
+    fileprivate var filteredTeams = Teams()
+    fileprivate var searchActive = false
+    
     private var teamRef: FIRDatabaseReference!
     private var teamAddedHandle: FIRDatabaseHandle?
     private var teamChangedHandle: FIRDatabaseHandle?
@@ -23,8 +28,7 @@ class TeamRegistrationTableViewController: BaseViewController {
         tableView.delegate = self
         addSlideMenuButton()
         tableView.separatorStyle = .none
-       // NotificationCenter.default.addObserver(self, selector: #selector(TeamRegistrationTableViewController.update), name: Notification.Name(rawValue: "teams"), object: nil)
-       // observeEvents()
+        setUpSearchBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,13 +48,30 @@ class TeamRegistrationTableViewController: BaseViewController {
         }
     }
     
+    fileprivate func setUpSearchBar() {
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
+        Utility.styleSearchBar(searchBar)
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let targetvc = segue.destination as? TeamInfoTableViewController else {
             return
         }
+        
         if let index = tableView.indexPathForSelectedRow?.row {
-            targetvc.team = teams.retrieveTeamWith(index: index)
+            var team: Team?
+            
+            if searchActive {
+                team = filteredTeams.retrieveTeamWith(index: index)
+            } else {
+                team = teams.retrieveTeamWith(index: index)
+            }
+            
+            targetvc.team = team
         }
     }
     
@@ -94,15 +115,29 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return teams.count
+        if searchActive {
+            return filteredTeams.count
+        } else {
+            return teams.count
+        }
     }
 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamItemCell", for: indexPath) as! TeamItemTableViewCell
-        guard let team = teams.retrieveTeamWith(index: indexPath.row) else {
+        
+        var teamTemp: Team?
+        
+        if searchActive {
+            teamTemp = filteredTeams.retrieveTeamWith(index: indexPath.row)
+        } else {
+            teamTemp = teams.retrieveTeamWith(index: indexPath.row)
+        }
+        
+        guard let team = teamTemp else {
             return cell
         }
+        
         print("loading table view")
         cell.teamName.text = team.name
         cell.teamIsLookingFor.text = team.lookingFor
@@ -164,4 +199,37 @@ extension TeamRegistrationTableViewController: UITableViewDataSource, UITableVie
         return UITableViewAutomaticDimension
     }
 
+}
+
+// MARK: UISearchBarDelegate
+extension TeamRegistrationTableViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredTeams.teams = teams.teams.filter { team in
+            return team.name.lowercased().contains(searchText.lowercased())
+        }
+        
+        if searchText.characters.count == 0 {
+            searchActive = false
+        } else {
+            searchActive = true
+        }
+        
+        tableView.reloadData()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
 }
