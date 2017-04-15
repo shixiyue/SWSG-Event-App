@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
@@ -14,7 +15,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
     @IBOutlet private var mainImage: UIImageView!
     @IBOutlet private var ideaNameLabel: UILabel!
-    @IBOutlet private var teamNameLabel: UILabel!
+    @IBOutlet private var userNameLabel: UILabel!
     @IBOutlet private var votes: UILabel!
     @IBOutlet private var upvoteButton: UIButton!
     @IBOutlet private var downvoteButton: UIButton!
@@ -23,11 +24,15 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     private var containerHeight: CGFloat!
     private var editButton: UIBarButtonItem?
     
+    private var ideaRef: FIRDatabaseReference?
+    private var ideaChangeRefHandle: FIRDatabaseHandle?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setNavigationBar()
         setUpIdea()
+        observeIdeas()
     }
     
     private func setUpIdea() {
@@ -35,7 +40,27 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         setUpIdeaMainImage()
         ideaNameLabel.text = idea.name
         updateVotes()
-        Utility.getTeamName(id: idea.team, label: teamNameLabel, prefix: "by Team ")
+        Utility.getUserFullName(uid: idea.user, label: userNameLabel, prefix: Config.ideaUserNamePrefix)
+        guard let id = idea.id else {
+            return
+        }
+        ideaRef = System.client.getIdeaRef(for: id).child(Config.votes)
+    }
+    
+    private func observeIdeas() {
+        guard let ideaRef = ideaRef else {
+            return
+        }
+        
+        ideaChangeRefHandle = ideaRef.observe(.childChanged, with: { (snapshot) -> Void in
+            guard let snapshotValue = snapshot.value as? [String: Any] else {
+                return
+            }
+            self.idea.updateVotes(snapshotValue: snapshotValue)
+            DispatchQueue.main.async {
+                self.updateVotes()
+            }
+        })
     }
     
     private func loadIdeaImages() {
@@ -129,7 +154,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     }
     
     private func setNavigationBar() {
-        guard let user = System.activeUser, user.team == idea.team else {
+        guard let user = System.activeUser, user.uid == idea.user else {
             return
         }
         let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(showDeleteWarning))

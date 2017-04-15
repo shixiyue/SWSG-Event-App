@@ -178,6 +178,8 @@ struct Config {
     static let noTeamLabel = "No Team yet"
     static let defaultContent = " "
     static let emptyString = ""
+    static let ideaCreateErrorMessage = "Sorry, only participants of SWSG can create an idea!"
+    static let ideaUserNamePrefix = "by "
     
     static let passwordMinLength = 6
     

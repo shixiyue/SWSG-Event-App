@@ -133,6 +133,10 @@ class MentorViewController: UIViewController {
     }
     
     func bookSlot(on dayIndex: Int, at index: Int) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
             return
         }
