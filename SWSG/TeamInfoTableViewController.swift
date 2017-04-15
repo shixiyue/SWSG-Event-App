@@ -27,6 +27,7 @@ class TeamInfoTableViewController: UITableViewController {
     }
     @IBOutlet weak var chatBtn: UIBarButtonItem!
 
+    @IBOutlet weak var joinView: UIView!
     @IBAction func onBackButtonClick(_ sender: Any) {
         Utility.onBackButtonClick(tableViewController: self)
     }
@@ -52,6 +53,14 @@ class TeamInfoTableViewController: UITableViewController {
         
         if let team = team {
             self.title = team.name
+        }
+        
+        setUpLayout()
+    }
+    
+    fileprivate func setUpLayout() {
+        if System.activeUser?.type.isParticipant == false {
+            joinView.isHidden = true
         }
     }
     
@@ -249,8 +258,7 @@ class TeamInfoTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView,
                             didSelectRowAt indexPath: IndexPath){
-        print("test")
-        guard let team = team else {
+        guard let team = team, indexPath.section == 0 else {
             return
         }
         

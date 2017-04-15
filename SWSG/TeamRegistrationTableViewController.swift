@@ -28,6 +28,7 @@ class TeamRegistrationTableViewController: BaseViewController {
         tableView.delegate = self
         addSlideMenuButton()
         tableView.separatorStyle = .none
+        setUpLayout()
         setUpSearchBar()
     }
     
@@ -45,6 +46,12 @@ class TeamRegistrationTableViewController: BaseViewController {
         print("\(teams.count)")
         DispatchQueue.main.async {
             self.tableView.reloadData()
+        }
+    }
+    
+    private func setUpLayout() {
+        if System.activeUser?.type.isParticipant == false {
+            self.navigationItem.rightBarButtonItem = nil
         }
     }
     

@@ -67,6 +67,10 @@ class RegistrationViewController: UIViewController {
     
     func donePressed() {
         self.view.endEditing(true)
+        
+        if searchBar.text?.characters.count == 0 {
+            searchActive = false
+        }
     }
     
     private func observeRegistrationEvent() {
