@@ -247,7 +247,7 @@ extension ChannelInfoViewController: UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if members[indexPath.item].uid == client.getUid() {
+        if members[indexPath.item].uid == client.getUid() || channel.type != .privateChannel {
             return false
         } else {
             return true
