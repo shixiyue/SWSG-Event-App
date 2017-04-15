@@ -23,7 +23,6 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     private var containerViewController: TemplateViewController!
     private var containerHeight: CGFloat!
     private var editButton: UIBarButtonItem?
-    
     private var ideaRef: FIRDatabaseReference?
     private var ideaChangeRefHandle: FIRDatabaseHandle?
     
@@ -35,16 +34,54 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         observeIdeas()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        mainImage.image = idea.mainImage
+        ideaNameLabel.text = idea.name
+        containerViewController.setUp()
+        DispatchQueue.main.async {
+            self.containerViewController.tableView.layoutIfNeeded()
+            self.containerHeight = self.containerViewController.tableView.contentSize.height
+            self.tableView.reloadData()
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "container", let containerViewController = segue.destination as? TemplateViewController {
+            containerViewController.presetInfo(content: idea)
+            containerViewController.tableView.layoutIfNeeded()
+            containerHeight = containerViewController.tableView.contentSize.height
+            self.containerViewController = containerViewController
+            return
+        } else if segue.identifier == "editIdea", let ideaPostTableViewController = segue.destination as? IdeaPostTableViewController {
+            ideaPostTableViewController.setUpIdea(idea)
+        } else if segue.identifier == Config.ideaToProfile {
+            guard let profileVC = segue.destination as? ProfileViewController, let user = sender as? User else {
+                return
+            }
+            profileVC.user = user
+        }
+    }
+    
     private func setUpIdea() {
         loadIdeaImages()
         setUpIdeaMainImage()
+        setUpUserName()
         ideaNameLabel.text = idea.name
         updateVotes()
-        Utility.getUserFullName(uid: idea.user, label: userNameLabel, prefix: Config.ideaUserNamePrefix)
         guard let id = idea.id else {
             return
         }
         ideaRef = System.client.getIdeaRef(for: id).child(Config.votes)
+    }
+    
+    private func setUpUserName() {
+        Utility.getUserFullName(uid: idea.user, label: userNameLabel, prefix: Config.ideaUserNamePrefix)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showUserProfile))
+        userNameLabel.isUserInteractionEnabled = true
+        userNameLabel.addGestureRecognizer(tapGesture)
     }
     
     private func observeIdeas() {
@@ -53,10 +90,10 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         }
         
         ideaChangeRefHandle = ideaRef.observe(.childChanged, with: { (snapshot) -> Void in
-            guard let snapshotValue = snapshot.value as? [String: Any] else {
+            guard let vote = snapshot.value as? Bool else {
                 return
             }
-            self.idea.updateVotes(snapshotValue: snapshotValue)
+            self.idea.updateVote(user: snapshot.key, vote: vote)
             DispatchQueue.main.async {
                 self.updateVotes()
             }
@@ -81,30 +118,6 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         mainImage.addGestureRecognizer(tapGesture)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        mainImage.image = idea.mainImage
-        ideaNameLabel.text = idea.name
-        containerViewController.setUp()
-        DispatchQueue.main.async {
-            self.containerViewController.tableView.layoutIfNeeded()
-            self.containerHeight = self.containerViewController.tableView.contentSize.height
-            self.tableView.reloadData()
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "container", let containerViewController = segue.destination as? TemplateViewController {
-            containerViewController.presetInfo(content: idea)
-            containerViewController.tableView.layoutIfNeeded()
-            containerHeight = containerViewController.tableView.contentSize.height
-            self.containerViewController = containerViewController
-            return
-        } else if segue.identifier == "editIdea", let ideaPostTableViewController = segue.destination as? IdeaPostTableViewController {
-            ideaPostTableViewController.setUpIdea(idea)
-        }
-    }
-    
     @objc func updateImages(_ notification: NSNotification) {
         mainImage.image = idea.mainImage
         containerViewController.updateImages()
@@ -116,6 +129,15 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         if let edit = editButton {
             edit.isEnabled = true
         }
+    }
+    
+    @objc private func showUserProfile() {
+        System.client.getUserWith(uid: idea.user, completion: { (user, error) in
+            guard let user = user else {
+                return
+            }
+            self.performSegue(withIdentifier: Config.ideaToProfile, sender: user)
+        })
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

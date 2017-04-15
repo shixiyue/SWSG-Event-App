@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -481,11 +481,20 @@
                         <outlet property="userNameLabel" destination="pVM-sW-Ggw" id="aHc-xv-XLS"/>
                         <outlet property="votes" destination="miJ-5G-HR5" id="Cg1-Uu-42y"/>
                         <segue destination="lmr-Uf-aqu" kind="show" identifier="editIdea" id="AtR-m3-JxD"/>
+                        <segue destination="0cU-Ur-b3L" kind="show" identifier="ideaToProfile" id="gGH-pI-6u4"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VLS-Xa-pOU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2552.8000000000002" y="26.53673163418291"/>
+        </scene>
+        <!--ProfileViewController-->
+        <scene sceneID="apK-Ac-YY1">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Profile" referencedIdentifier="ProfileViewController" id="0cU-Ur-b3L" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2Pa-mz-D2N" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3162" y="4"/>
         </scene>
         <!--TemplateViewController-->
         <scene sceneID="h31-pD-irh">
@@ -493,7 +502,7 @@
                 <viewControllerPlaceholder storyboardName="UISupporting" referencedIdentifier="TemplateViewController" id="45t-nh-ePL" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YzS-2o-Ap8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3201" y="26"/>
+            <point key="canvasLocation" x="3173" y="49"/>
         </scene>
     </scenes>
     <resources>

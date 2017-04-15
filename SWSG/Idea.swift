@@ -66,7 +66,9 @@ class Idea: ImagesContent, TemplateContent {
             return nil
         }
         self.videoLink = videoLink
-        updateVotes(snapshotValue: snapshotValue)
+        if let votes = snapshotValue[Config.votes] as? [String: Bool] {
+            setVotes(votes: votes)
+        }
         if let mainImageURL = snapshotValue[Config.mainImage] as? String {
             imagesState.mainImageURL = mainImageURL
         } else {
@@ -111,16 +113,21 @@ class Idea: ImagesContent, TemplateContent {
         self.videoLink = videoLink
     }
     
-    func updateVotes(snapshotValue: [String: Any]) {
-        guard let votes = snapshotValue[Config.votes] as? [String: Bool] else {
-            return
-        }
+    func setVotes(votes: [String: Bool]) {
         for (user, vote) in votes {
-            if vote == true {
+            if vote {
                 upvotes.insert(user)
             } else {
                 downvotes.insert(user)
             }
+        }
+    }
+    
+    func updateVote(user: String, vote: Bool) {
+        if vote {
+            upvotes.insert(user)
+        } else {
+            downvotes.insert(user)
         }
     }
     

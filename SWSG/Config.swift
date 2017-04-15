@@ -168,6 +168,7 @@ struct Config {
     static let profileToChannel = "profileToChannel"
     static let registrationListToRegistration = "registrationListToRegistration"
     static let registrationToProfile = "registrationToProfile"
+    static let ideaToProfile = "ideaToProfile"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
