@@ -15,8 +15,13 @@ import Google
 import GoogleSignIn
 import SwiftSpinner
 
+/**
+    Utility is a helper struct consisting of static functions that perform
+    Utility tasks that can be abstracted from the normal code flow
+ */
 struct Utility {
     
+    //Rounds any Image View passed in
     static func roundUIImageView(for image: UIImageView) -> UIImageView {
         image.layer.cornerRadius = image.frame.size.width / 2
         image.clipsToBounds = true
@@ -24,6 +29,7 @@ struct Utility {
         return image
     }
     
+    //Returns a list of countries
     static let countries = NSLocale.isoCountryCodes.map { (code: String) -> String in
         let id = NSLocale.localeIdentifier(fromComponents: [NSLocale.Key.countryCode.rawValue: code])
         let currentLocaleID = NSLocale.current.identifier
@@ -32,12 +38,14 @@ struct Utility {
     
     static let defaultCountryIndex = countries.index(of: Config.defaultCountry) ?? 0
     
+    //Checks if an email is Valid
     static func isValidEmail(testStr: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: testStr)
     }
     
+    //Checks if a password is Valid
     static func isValidPassword(testStr: String) -> Bool {
         return testStr.characters.count >= Config.passwordMinLength
     }
@@ -50,6 +58,7 @@ struct Utility {
         currentViewController.present(controller, animated: false, completion: nil)
     }
     
+    // Show a Storyboard using the Navigation Controller
     static func showStoryboardByNavigation(storyboard: String, destinationViewController: String, currentViewController: UIViewController) {
         let storyboard = UIStoryboard(name: storyboard, bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: destinationViewController) as UIViewController
@@ -183,13 +192,13 @@ struct Utility {
         return formatter
     }
     
+    //Display a Popup with only the option to dismiss
     static func displayDismissivePopup(title: String, message: String,
                                        viewController: UIViewController,
                                        completion: @escaping () -> Void) {
         let dismissController = UIAlertController(title: title, message: message,
                                                   preferredStyle: UIAlertControllerStyle.alert)
         
-        //Add an Action to Confirm quitting with the Destructive Style
         let dismissAction = UIAlertAction(title: "Dismiss", style: .default) { _ in
             completion()
         }
@@ -199,155 +208,7 @@ struct Utility {
         viewController.present(dismissController, animated: true, completion: nil)
     }
     
-
-    static func addEventToCalendar(title: String, description: String?, startDate: Date, endDate: Date, completion: ((_ success: Bool, _ error: NSError?) -> Void)? = nil) {
-        let eventStore = EKEventStore()
-        eventStore.requestAccess(to: .event, completion: { (granted, error) in
-            if (granted) && (error == nil) {
-                let event = EKEvent(eventStore: eventStore)
-                event.title = title
-                event.startDate = startDate
-                event.endDate = endDate 
-                event.notes = description
-                event.calendar = eventStore.defaultCalendarForNewEvents
-                do {
-                    try eventStore.save(event, span: .thisEvent)
-                } catch let e as NSError {
-                    completion?(false, e)
-                    return
-                }
-                completion?(true, nil)
-            } else {
-                completion?(false, error as NSError?)
-            }
-        })
-    }
-    
-    static func strtok(string: String, delimiter: String) -> [Int] {
-        let values = string.components(separatedBy: delimiter).flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
-        return values
-    }
-    
-    static func channelsSortedByLatestMessage(channels: [Channel]) -> [Channel] {
-        let sortedChannels = channels.sorted(by: {
-            guard let msgFirst = $0.latestMessage, let msgSecond = $1.latestMessage else {
-                if let _ = $0.latestMessage {
-                    return true
-                } else if let _ = $1.latestMessage {
-                    return false
-                } else {
-                    return $0.id! < $1.id!
-                }
-            }
-            
-            return msgFirst.timestamp > msgSecond.timestamp
-        })
-        
-        return sortedChannels
-    }
-    
-    static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
-        if System.profileImageCache.keys.contains(uid) {
-            System.client.getProfileImageURL(for: uid, completion: { (url, error) in
-                if System.profileImageCache[uid]?.url == url {
-                    completion(System.profileImageCache[uid]?.image)
-                } else {
-                    forceGetProfileImg(uid: uid, completion: { (image) in
-                        completion(image)
-                    })
-                }
-            })
-        } else {
-            forceGetProfileImg(uid: uid, completion: { (image) in
-                completion(image)
-            })
-        }
-    }
-    
-    static func forceGetProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
-        System.client.fetchProfileImage(for: uid, completion: { (image, url) in
-            guard let image = image, let url = url else {
-                return
-            }
-            
-            System.profileImageCache[uid] = (image: image, url: url)
-            completion(image)
-        })
-    }
-    
-    static func getChatIcon(id: String, completion: @escaping (UIImage?) -> Void) {
-        if System.chatIconCache.keys.contains(id) {
-            System.client.getChatIconImageURL(for: id, completion: { (url, error) in
-                if System.chatIconCache[id]?.url == url {
-                    completion(System.chatIconCache[id]?.image)
-                } else {
-                    forceGetChatIcon(id: id, completion: { (image) in
-                        completion(image)
-                    })
-                }
-            })
-        } else {
-            forceGetChatIcon(id: id, completion: { (image) in
-                completion(image)
-            })
-        }
-    }
-    
-    static func forceGetChatIcon(id: String, completion: @escaping (UIImage?) -> Void) {
-        System.client.fetchChannelIcon(for: id, completion: { (image,url) in
-            guard let image = image, let url = url else {
-                return
-            }
-            
-            System.chatIconCache[id] = (image: image, url: url)
-            completion(image)
-            
-        })
-    }
-    
-    static func getEventIcon(id: String, completion: @escaping (UIImage?) -> Void) {
-        if System.eventIconCache.keys.contains(id) {
-            System.client.getEventImageURL(with: id, completion: { (url, error) in
-                if System.eventIconCache[id]?.url == url {
-                    completion(System.eventIconCache[id]?.image)
-                } else {
-                    forceGetEventIcon(id: id, completion: { (image) in
-                        completion(image)
-                    })
-                }
-                
-            })
-        } else {
-            forceGetEventIcon(id: id, completion: { (image) in
-                completion(image)
-            })
-        }
-    }
-    
-    static func forceGetEventIcon(id: String, completion: @escaping (UIImage?) -> Void) {
-        System.client.fetchEventImage(for: id, completion: { (image,url) in
-            guard let image = image, let url = url else {
-                return
-            }
-            
-            System.eventIconCache[id] = (image: image, url: url)
-            completion(image)
-            
-        })
-    }
-    
-    static func getImage(name: String, completion: @escaping (UIImage?) -> Void) {
-        if let image = System.imageCache[name] {
-            completion(image)
-        }
-        System.client.fetchImageDataAtURL(name, completion: { (image, _) in
-            if let image = image {
-                System.imageCache[name] = image
-            }
-            completion(image)
-        })
-    }
-    
+    //Display a Popup with a textfield
     static func createPopUpWithTextField(title: String, message: String, btnText: String, placeholderText: String, existingText: String, viewController: UIViewController, completion: @escaping (String) -> Void) {
         createPopUpWithTextField(title: title, message: message, btnText: btnText,
                                  placeholderText: placeholderText, existingText: existingText,
@@ -355,6 +216,7 @@ struct Utility {
                                  completion: completion)
     }
     
+     //Display a Popup with a textfield and the option for the textfield to be secure
     static func createPopUpWithTextField(title: String, message: String, btnText: String, placeholderText: String, existingText: String, isSecure: Bool, viewController: UIViewController, completion: @escaping (String) -> Void) {
         //Creating a Alert Popup for Saving
         let createController = UIAlertController(title: title, message: message,
@@ -422,6 +284,160 @@ struct Utility {
         viewController.present(createController, animated: true, completion: nil)
     }
     
+    //Add an event to the iOS Calendar
+    static func addEventToCalendar(title: String, description: String?, startDate: Date, endDate: Date, completion: ((_ success: Bool, _ error: NSError?) -> Void)? = nil) {
+        let eventStore = EKEventStore()
+        eventStore.requestAccess(to: .event, completion: { (granted, error) in
+            if (granted) && (error == nil) {
+                let event = EKEvent(eventStore: eventStore)
+                event.title = title
+                event.startDate = startDate
+                event.endDate = endDate 
+                event.notes = description
+                event.calendar = eventStore.defaultCalendarForNewEvents
+                do {
+                    try eventStore.save(event, span: .thisEvent)
+                } catch let e as NSError {
+                    completion?(false, e)
+                    return
+                }
+                completion?(true, nil)
+            } else {
+                completion?(false, error as NSError?)
+            }
+        })
+    }
+    
+    static func strtok(string: String, delimiter: String) -> [Int] {
+        let values = string.components(separatedBy: delimiter).flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
+        return values
+    }
+    
+    //Sort a list of channels by their latest messages
+    static func channelsSortedByLatestMessage(channels: [Channel]) -> [Channel] {
+        let sortedChannels = channels.sorted(by: {
+            guard let msgFirst = $0.latestMessage, let msgSecond = $1.latestMessage else {
+                if let _ = $0.latestMessage {
+                    return true
+                } else if let _ = $1.latestMessage {
+                    return false
+                } else {
+                    return $0.id! < $1.id!
+                }
+            }
+            
+            return msgFirst.timestamp > msgSecond.timestamp
+        })
+        
+        return sortedChannels
+    }
+    
+    //Obtain the Profile Img, either from cache or firebase
+    static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
+        if System.profileImageCache.keys.contains(uid) {
+            System.client.getProfileImageURL(for: uid, completion: { (url, error) in
+                if System.profileImageCache[uid]?.url == url {
+                    completion(System.profileImageCache[uid]?.image)
+                } else {
+                    forceGetProfileImg(uid: uid, completion: { (image) in
+                        completion(image)
+                    })
+                }
+            })
+        } else {
+            forceGetProfileImg(uid: uid, completion: { (image) in
+                completion(image)
+            })
+        }
+    }
+    
+    static func forceGetProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
+        System.client.fetchProfileImage(for: uid, completion: { (image, url) in
+            guard let image = image, let url = url else {
+                return
+            }
+            
+            System.profileImageCache[uid] = (image: image, url: url)
+            completion(image)
+        })
+    }
+    
+    //Obtain the Chat Icon, either from cache or firebase
+    static func getChatIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        if System.chatIconCache.keys.contains(id) {
+            System.client.getChatIconImageURL(for: id, completion: { (url, error) in
+                if System.chatIconCache[id]?.url == url {
+                    completion(System.chatIconCache[id]?.image)
+                } else {
+                    forceGetChatIcon(id: id, completion: { (image) in
+                        completion(image)
+                    })
+                }
+            })
+        } else {
+            forceGetChatIcon(id: id, completion: { (image) in
+                completion(image)
+            })
+        }
+    }
+    
+    static func forceGetChatIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        System.client.fetchChannelIcon(for: id, completion: { (image,url) in
+            guard let image = image, let url = url else {
+                return
+            }
+            
+            System.chatIconCache[id] = (image: image, url: url)
+            completion(image)
+            
+        })
+    }
+    
+    //Obtain the Event Icon, either from cache or firebase
+    static func getEventIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        if System.eventIconCache.keys.contains(id) {
+            System.client.getEventImageURL(with: id, completion: { (url, error) in
+                if System.eventIconCache[id]?.url == url {
+                    completion(System.eventIconCache[id]?.image)
+                } else {
+                    forceGetEventIcon(id: id, completion: { (image) in
+                        completion(image)
+                    })
+                }
+                
+            })
+        } else {
+            forceGetEventIcon(id: id, completion: { (image) in
+                completion(image)
+            })
+        }
+    }
+    
+    static func forceGetEventIcon(id: String, completion: @escaping (UIImage?) -> Void) {
+        System.client.fetchEventImage(for: id, completion: { (image,url) in
+            guard let image = image, let url = url else {
+                return
+            }
+            
+            System.eventIconCache[id] = (image: image, url: url)
+            completion(image)
+            
+        })
+    }
+    
+    //Obtain an image from a URL
+    static func getImage(name: String, completion: @escaping (UIImage?) -> Void) {
+        if let image = System.imageCache[name] {
+            completion(image)
+        }
+        System.client.fetchImageDataAtURL(name, completion: { (image, _) in
+            if let image = image {
+                System.imageCache[name] = image
+            }
+            completion(image)
+        })
+    }
+    
     static func logUserIn(error: FirebaseError?, current viewController: UIViewController) {
         if let firebaseError = error {
             viewController.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
@@ -445,11 +461,13 @@ struct Utility {
         }
     }
     
+    //Attempt registration with an email
     static func attemptRegistration(email: String, auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool, [String]?) -> Void) {
         attemptRegistration(email: email, password: nil, auth: auth, newCredential: newCredential,
                             viewController: viewController, completion: completion)
     }
     
+    //Attempt registration with an email and password
     static func attemptRegistration(email: String, password: String?, auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool, [String]?) -> Void) {
         
         System.client.checkIfEmailAlreadyExists(email: email, completion: { (arr, error) in
@@ -463,11 +481,13 @@ struct Utility {
         })
     }
     
+    //Attempt to login with an existing credential
     static func attemptLogin(auth: AuthType, newCredential: FIRAuthCredential?, viewController: UIViewController, completion: @escaping (Bool) -> Void) {
         attemptLogin(auth: auth, newCredential: newCredential, email: nil, password: nil,
                      viewController: viewController, completion: completion)
     }
     
+    //Attempt Login with an existing credential, add new credential if login successful
     static func attemptLogin(auth: AuthType, newCredential: FIRAuthCredential?, email: String?, password: String?, viewController: UIViewController, completion: @escaping (Bool) -> Void) {
         
         var authCredential: FIRAuthCredential?
@@ -488,6 +508,7 @@ struct Utility {
         }
     }
     
+    //Log In with a Credential
     private static func loginWithCredential(credential: FIRAuthCredential,
                                             newCredential: FIRAuthCredential?,
                                             viewController: UIViewController,
@@ -503,6 +524,7 @@ struct Utility {
         })
     }
     
+    //Get the Value of the Team Label
     static func getTeamLbl(user: User, completion: @escaping (String) -> Void) {
         if user.type.isParticipant {
             if user.team != Config.noTeam {
@@ -527,6 +549,7 @@ struct Utility {
         }
     }
     
+    //Check if a channel is valid for a user
     static func validChannel(_ channel: Channel) -> Bool {
         guard let uid = System.client.getUid() else {
             return false
@@ -541,6 +564,7 @@ struct Utility {
         return true
     }
     
+    //Get the other user in a Direct Message Channel
     static func getOtherUser(in channel: Channel, completion: @escaping (User?) -> Void) {
         for memberID in channel.members {
             if memberID != System.client.getUid() {
@@ -554,6 +578,7 @@ struct Utility {
         completion(nil)
     }
     
+    //Get the latest message for a channel
     static func getLatestMessage(channel: Channel, snapshot: FIRDataSnapshot,
                                   completion: @escaping () -> Void) {
         let query = System.client.getLatestMessageQuery(for: snapshot.key)
@@ -571,6 +596,7 @@ struct Utility {
         })
     }
     
+    //Display the image picker
     static func showImagePicker(imagePicker: ImagePickerPopoverViewController, viewController: UIViewController, completion: @escaping (UIImage?)->Void) {
         imagePicker.modalPresentationStyle = .overCurrentContext
         imagePicker.completionHandler = completion
@@ -579,6 +605,7 @@ struct Utility {
         imagePicker.showImageOptions()
     }
     
+    //Remove view controllers from the navigation controller stack
     static func popViewController(no: Int, viewController: UIViewController) {
         if let viewControllers = viewController.navigationController?.viewControllers {
             let vcIndex = viewControllers.count - (no + 1)
@@ -587,6 +614,7 @@ struct Utility {
         
     }
     
+    //Obtain a Keyboard Toolbar with previous, next and Done
     static func getToolbar(previous: Selector, next: Selector, done: Selector) -> UIToolbar {
         let toolbar = UIToolbar()
         toolbar.barStyle = .default
@@ -607,6 +635,7 @@ struct Utility {
         return toolbar
     }
     
+    //Obtain a Keyboard Toolbar with Done
     static func getDoneToolbar(done: Selector) -> UIToolbar {
         let toolbar = UIToolbar()
         toolbar.barStyle = .default
@@ -622,6 +651,7 @@ struct Utility {
         return toolbar
     }
     
+    //Default implementation for previous Text Field
     static func previousTextField(runFirst: () -> Void, activeTF: UITextField?, tfCollection: [UITextField], activeTV: UITextView?, tvCollection: [UITextView]) {
         runFirst()
         
@@ -651,6 +681,7 @@ struct Utility {
         }
     }
     
+    //Default implementation for next Text Field
     static func nextTextField(runFirst: () -> Void, runLast: () -> Void, activeTF: UITextField?, tfCollection: [UITextField], activeTV: UITextView?, tvCollection: [UITextView]) {
         runFirst()
         
@@ -682,11 +713,13 @@ struct Utility {
         }
     }
     
+    //Default implementation for done pressed
     static func donePressed(runFirst: () -> Void, viewController: UIViewController) {
         runFirst()
         viewController.view.endEditing(true)
     }
     
+    //Get the Name of a user
     static func getUserFullName(uid: String, label: UILabel, prefix: String = Config.emptyString) {
         System.client.getUserWith(uid: uid, completion: { (user, error) in
             guard let user = user else {
@@ -697,17 +730,20 @@ struct Utility {
         })
     }
     
+    //Sets Up a Search Bar
     static func setUpSearchBar(_ searchBar: UISearchBar, viewController: UISearchBarDelegate, selector: Selector) {
         searchBar.delegate = viewController
         searchBar.inputAccessoryView = Utility.getDoneToolbar(done: selector)
     }
     
+    //Style a Search Bar
     static func styleSearchBar(_ searchBar: UISearchBar) {
         searchBar.barTintColor = Config.themeColor
         searchBar.layer.borderWidth = 1
         searchBar.layer.borderColor = Config.themeColor.cgColor
     }
     
+    //Check if Search should be Set to Active
     static func setSearchActive(_ searchActive: inout Bool, searchBar: UISearchBar) {
         guard let searchText = searchBar.text else {
             return
@@ -720,10 +756,12 @@ struct Utility {
         }
     }
     
+    //Call when search button is pressed
     static func searchBtnPressed(viewController: UIViewController) {
         viewController.view.endEditing(true)
     }
     
+    //Update votes in ideas
     static func updateVotes(idea: Idea, votesLabel: UILabel, upvoteButton: UIButton, downvoteButton: UIButton) {
         votesLabel.text = "\(idea.votes)"
         let state = idea.getVotingState()

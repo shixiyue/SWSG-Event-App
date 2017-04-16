@@ -9,7 +9,20 @@
 import UIKit
 import Firebase
 
-/// `Profile` represents the profile of a User.
+/**
+ Profile contains all the description and details about the User for his Profile Page
+ 
+ Specifications:
+ - username: The username of the User
+ - name: The Name of the User
+ - image: The Profile Image for the User
+ - job: The User's Job/Position
+ - company: The company where the user is currently working
+ - country: The country the user is from
+ - education: The user's education background
+ - skills: The user's skills
+ - desc: A short writeup about the user
+ */
 class Profile {
     public private (set) var username: String
     public private (set) var name: String

@@ -61,8 +61,10 @@ struct ConsultationSlot {
     }
     
     fileprivate func _checkRep() {
+        #if DEBUG
         if status == .booked && team == nil {
             assert(false)
         }
+        #endif
     }
 }

@@ -8,7 +8,16 @@
 
 import Foundation
 
-/// `UserTypes` represents the type of a User. A user can have multiple roles, but cannot don't have any role.
+/**
+ UserTypes represents the type of the user, and supports multiple user types
+ 
+ Specifications:
+ - isParticipant
+ - isSpeaker
+ - isMentor
+ - isOrganizer
+ - isAdmin
+ */
 struct UserTypes {
     
     let isParticipant: Bool
