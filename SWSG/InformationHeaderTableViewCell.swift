@@ -8,6 +8,12 @@
 
 import UIKit
 
+/**
+ InformationHeaderCell is a UITableViewCell that is used in multiple view controllers,
+ to display what category does the information belong to.
+ 
+ It has a Header Label.
+ */
 class InformationHeaderTableViewCell: UITableViewCell {
 
     @IBOutlet private var informationHeader: UILabel!

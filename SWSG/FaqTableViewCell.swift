@@ -8,6 +8,12 @@
 
 import UIKit
 
+/**
+ FaqTableViewCell is a UITableViewCell that is used in FaqViewController
+ to display information about a faq.
+ 
+ It has an Answer Label, a Question Label, an a Link String?.
+ */
 class FaqTableViewCell: UITableViewCell {
 
     @IBOutlet var question: UILabel!

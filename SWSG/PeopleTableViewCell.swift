@@ -8,6 +8,12 @@
 
 import UIKit
 
+/**
+ PeopleTableViewCell is a UITableViewCell that is used in PeopleViewController
+ to display information about a person.
+ 
+ It has a Name Label, a Photo Image View, a Title Label, and an Intro Label.
+ */
 class PeopleTableViewCell: UITableViewCell {
 
     @IBOutlet private var photo: UIImageView!

@@ -9,6 +9,13 @@
 import UIKit
 import Firebase
 
+/**
+ FaqViewController is a UIViewController that displays the information
+ for frequently asked questions.
+ 
+ Specifications:
+ - faqs: Faqs whose information to display
+ */
 class FaqViewController: UIViewController {
     
     @IBOutlet private var faqTableView: UITableView!

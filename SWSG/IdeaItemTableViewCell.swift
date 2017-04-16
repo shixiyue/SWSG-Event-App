@@ -8,14 +8,13 @@
 
 import UIKit
 
-/*
+/**
  IdeaItemCell is a UITableViewCell that is used in IdeaListViewController
  to display information about a Idea
  
  It has a Name Label, a Idea Image View, a Description Label, a User Label, 
  a Votes Label, an UpvoteButton and a DownVoteButton.
  */
-
 class IdeaItemTableViewCell: UITableViewCell {
     
     @IBOutlet private var name: UILabel!

@@ -8,6 +8,13 @@
 
 import UIKit
 
+/**
+ OverviewViewController is a UIViewController that displays the information
+ for a overview content.
+ 
+ Specifications:
+ - overview: OverviewContent whose information to display
+ */
 class OverviewViewController: FullScreenImageTableViewController {
     
     private var overview = OverviewContent() // Placeholder
