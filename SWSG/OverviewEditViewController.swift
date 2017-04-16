@@ -47,7 +47,7 @@ class OverviewEditViewController: UIViewController {
         guard segue.identifier == Config.container, let containerViewController = segue.destination as? TemplateEditViewController else {
             return
         }
-        let videoId = Utility.getVideoId(for: idea.videoLink)
+        let videoId = Utility.getVideoId(for: overview.videoLink)
         containerViewController.presetInfo(desc: overview.description, images: overview.images, videoId: videoId, isScrollEnabled: true)
     }
     

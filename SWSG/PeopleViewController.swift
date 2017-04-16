@@ -91,7 +91,7 @@ extension PeopleViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = indexPath.item
         guard index != 0 else {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: Config.informatoinHeaderCell, for: indexPath) as? InformationHeaderTableViewCell else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: Config.informationHeaderCell, for: indexPath) as? InformationHeaderTableViewCell else {
                 return InformationHeaderTableViewCell()
             }
             cell.setHeader(category)
