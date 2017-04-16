@@ -8,6 +8,11 @@
 
 import UIKit
 
+/**
+ PhotoPageViewController is a UIPageViewController.
+ 
+ It displays multiple images.
+ */
 class PhotoPageViewController: UIPageViewController {
     
     var images: [UIImage]!

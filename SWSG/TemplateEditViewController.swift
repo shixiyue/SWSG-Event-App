@@ -8,6 +8,11 @@
 
 import UIKit
 
+/**
+ TemplateEditViewController is a UITableViewController, inherits from UITableViewController.
+ 
+ It provides a template layout to edit/create information.
+ */
 class TemplateEditViewController: UITableViewController {
 
     @IBOutlet private var editTemplateTableView: UITableView!
