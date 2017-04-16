@@ -21,7 +21,7 @@ class PlaceholderTextView: UITextView {
         return content
     }
     
-    private var placeholder: String = ""
+    private var placeholder: String = Config.emptyString
     
     func setPlaceholder(_ placeholder: String) {
         self.placeholder = placeholder
@@ -45,9 +45,9 @@ class GrayBorderTextView: PlaceholderTextView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        layer.borderColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
-        layer.borderWidth = 1.0
-        layer.cornerRadius = 5.0
+        layer.borderColor = Config.grayBorderColor
+        layer.borderWidth = Config.borderWidth
+        layer.cornerRadius = Config.cornerRadius
     }
     
 }

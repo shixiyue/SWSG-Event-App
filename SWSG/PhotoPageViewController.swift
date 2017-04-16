@@ -8,11 +8,11 @@
 
 import UIKit
 
-class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
-    
-    private var pages: [UIViewController]!
+class PhotoPageViewController: UIPageViewController {
     
     var images: [UIImage]!
+    
+    fileprivate var pages: [UIViewController]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +22,39 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
         }
         setUpPageViewController()
     }
+    
+    func setUpPageViewController() {
+        guard images.count > 0 else {
+            return
+        }
+        delegate = self
+        dataSource = self
+        
+        setUpPages()
+        setUpPageControl()
+    }
+    
+    private func setUpPages() {
+        pages = []
+        for image in images {
+            guard let pageContent = storyboard?.instantiateViewController(withIdentifier: Config.photoContentViewController) as? PhotoContentViewController else {
+                continue
+            }
+            pageContent.setImage(image)
+            pages.append(pageContent)
+        }
+        setViewControllers([pages[0]], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
+    }
+    
+    private func setUpPageControl() {
+        let appearance = UIPageControl.appearance()
+        appearance.pageIndicatorTintColor = .lightGray
+        appearance.currentPageIndicatorTintColor = .black
+    }
+    
+}
+
+extension PhotoPageViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let currentIndex = pages.index(of: viewController), currentIndex + 1 < pages.count else {
@@ -43,31 +76,6 @@ class PhotoPageViewController: UIPageViewController, UIPageViewControllerDataSou
     
     func presentationIndex(for pageViewController: UIPageViewController) -> Int {
         return 0
-    }
-    
-    func setUpPageViewController() {
-        guard images.count > 0 else {
-            return
-        }
-        delegate = self
-        dataSource = self
-        
-        pages = []
-        for image in images {
-            guard let pageContent = storyboard?.instantiateViewController(withIdentifier: "PhotoContentViewController") as? PhotoContentViewController else {
-                continue
-            }
-            pageContent.setImage(image)
-            pages.append(pageContent)
-        }
-        setViewControllers([pages[0]], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
-        setUpPageControl()
-    }
-    
-    private func setUpPageControl() {
-        let appearance = UIPageControl.appearance()
-        appearance.pageIndicatorTintColor = .lightGray
-        appearance.currentPageIndicatorTintColor = .black
     }
     
 }

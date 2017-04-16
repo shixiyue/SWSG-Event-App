@@ -316,17 +316,17 @@
                         </connections>
                     </tableView>
                     <connections>
-                        <outlet property="editOverviewTableView" destination="dvp-BX-0t6" id="Zi6-Dd-ilR"/>
+                        <outlet property="editTemplateTableView" destination="dvp-BX-0t6" id="UCx-rC-GhN"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mvS-Ao-Da8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2976.8000000000002" y="-1927.2863568215894"/>
         </scene>
-        <!--Overview-->
+        <!--Template-->
         <scene sceneID="yiG-p6-Dbb">
             <objects>
-                <tableViewController storyboardIdentifier="TemplateViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BN7-36-qcA" customClass="TemplateViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="TemplateViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BN7-36-qcA" userLabel="Template" customClass="TemplateViewController" customModule="SWSG" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="m4l-lN-6m6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -425,8 +425,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="overviewTableView" destination="m4l-lN-6m6" id="hlE-tc-NQx"/>
-                        <outlet property="overviewText" destination="7Og-n7-Pdw" id="VkA-h7-Bmv"/>
+                        <outlet property="descriptionLabel" destination="7Og-n7-Pdw" id="ar9-HR-bP0"/>
+                        <outlet property="templateTableView" destination="m4l-lN-6m6" id="Sgq-OP-Jxr"/>
                         <outlet property="video" destination="seU-TW-n29" id="ybH-Pz-Jq1"/>
                     </connections>
                 </tableViewController>

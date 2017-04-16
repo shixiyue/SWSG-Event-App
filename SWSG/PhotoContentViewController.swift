@@ -11,10 +11,15 @@ import UIKit
 class PhotoContentViewController: UIViewController {
     
     @IBOutlet private var imageView: UIImageView!
+    
     private var image: UIImage!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpImageView()
+    }
+    
+    private func setUpImageView() {
         imageView.image = image
         imageView.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullScreenImage))
