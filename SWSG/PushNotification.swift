@@ -10,6 +10,11 @@ import Foundation
 import OneSignal
 import Firebase
 
+/**
+    PushNotification store information nessessarty to send and received push notification.
+    The content of additionData is agreed between NotiPusher and NotiHandler.
+*/
+
 class PushNotification {
     
     public let type: PushNotificationType
