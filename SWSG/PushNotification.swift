@@ -13,6 +13,14 @@ import Firebase
 /**
     PushNotification store information nessessarty to send and received push notification.
     The content of additionData is agreed between NotiPusher and NotiHandler.
+    Fields: 
+        - type: represent the type of the noti
+        - additionData: additionData necessary to handle the notification.
+        - message: a string that will be displayed by the notification by iOS.
+    Invariant: 
+        - The type of the notification decide the type, content and format of additionData
+            + type announcement has and empty additionData
+            + type message has additionData has only 1 key-value pair (Config.channelId: id)
 */
 
 class PushNotification {
