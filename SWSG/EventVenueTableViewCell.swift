@@ -6,20 +6,12 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ This class display event venue
+ */
 import UIKit
 
 class EventVenueTableViewCell: UITableViewCell {
 
     @IBOutlet weak var venueLabel: UILabel!
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }

@@ -6,6 +6,19 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ TeamMemberTableViewCell inheris from UITableViewCell, it represents a single team member cell
+ 
+ -Parameters: 
+     - `nameLbl`: mutable object representing name of a member
+     - `jobLbl`: mutable object representing job of a member
+     - `companyLbl`: mutable object representing company of a member
+     - `descLbl`: mutable object representing description of a member
+     - `profileimage`: mutable object representing profile image of a member
+ 
+-SeeAlso: `Team`
+ */
+
 import UIKit
 
 class TeamMemberTableViewCell: UITableViewCell {

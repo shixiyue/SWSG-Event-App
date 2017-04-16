@@ -6,6 +6,13 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ TeamRegistrationTableViewController inherits from BaseViewController, which is a UIViewController
+ TeamRegistrationTableViewController displays a list of all teams
+ 
+ -Note: Tap on any team will direct to `TeamInfoTableViewController` page
+ */
+
 import UIKit
 import Firebase
 
@@ -85,6 +92,7 @@ class TeamRegistrationTableViewController: BaseViewController {
         }
     }
     
+    ///firebase handling of addition, changes, deletiong of team
     private func observeEvents() {
         
         teamRef = System.client.getTeamsRef()
@@ -94,24 +102,25 @@ class TeamRegistrationTableViewController: BaseViewController {
                 self.tableView.reloadData()
             }
         })
-        
         teamChangedHandle = teamRef.observe(.childChanged, with: { (snapshot) -> Void in
             if let team = System.client.getTeam(snapshot: snapshot) {
                 self.teams.replaceTeam(for: team)
-                print("team cheanged in registration")
                 self.tableView.reloadData()
             }
         })
-        
         teamDeletedHandle = teamRef.observe(.childRemoved, with: { (snapshot) -> Void in
             if let team = System.client.getTeam(snapshot: snapshot) {
                 self.teams.removeTeam(team: team)
                 self.tableView.reloadData()
             }
         })
-        
     }
     
+    /// fill profile image with corresponding member image, image is nil if the member is absent
+    /// - parameters: 
+    ///     - `cell`: team item cell
+    ///     - `index`: index of the team member image to be filled in
+    ///     - `team`: team that the cell represents
     func fillProfileImg(at cell: TeamItemTableViewCell, with index: Int, team: Team) {
         
         switch(index) {

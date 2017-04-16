@@ -6,6 +6,11 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ TeamItemTableViewCell inherits from UITableViewCell, it represents the team's name, looking for skills, 
+ and member images.
+ */
+
 import UIKit
 
 class TeamItemTableViewCell: UITableViewCell {
@@ -17,16 +22,6 @@ class TeamItemTableViewCell: UITableViewCell {
     @IBOutlet weak var mmbrImage2: UIImageView!
     @IBOutlet weak var mmbrImage3: UIImageView!
     @IBOutlet weak var mmbrImage4: UIImageView!
-   
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
 
 }
