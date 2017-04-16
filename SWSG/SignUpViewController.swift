@@ -9,6 +9,15 @@
 import UIKit
 import SwiftSpinner
 
+/**
+    SignUpViewController is a UIViewController that displays SignUpTableViewController
+    as an embedded view.
+ 
+ 
+    Specifications:
+      - socialUser: Existing Details from a Social Media Login, an optional value
+                    Details would be used to fill Name, Email and Profile Image
+ */
 class SignUpViewController: UIViewController {
     
     @IBOutlet weak var loginStack: UIStackView!

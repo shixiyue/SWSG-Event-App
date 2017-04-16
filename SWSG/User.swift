@@ -33,7 +33,9 @@ class User {
         self.init(profile: profile, type: type, team: Config.noTeam, email: email)
     }
     
-    init?(snapshot: FIRDataSnapshot) {
+    init?(uid: String, snapshot: FIRDataSnapshot) {
+        self.uid = uid
+        
         guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
             return nil
         }
@@ -78,10 +80,6 @@ class User {
             return
         }
         self.mentor = mentor
-    }
-    
-    func setUid(uid: String) {
-        self.uid = uid
     }
     
     func setFavourites(favourites: [String]?) {

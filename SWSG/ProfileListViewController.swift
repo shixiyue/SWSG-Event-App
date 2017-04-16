@@ -113,10 +113,9 @@ class ProfileListViewController: BaseViewController {
         usersRef = System.client.getUsersRef()
         
         usersAddedHandle = usersRef?.observe(.childAdded, with: { (snapshot) in
-            guard let user = User(snapshot: snapshot) else {
+            guard let user = User(uid: snapshot.key, snapshot: snapshot) else {
                 return
             }
-            user.setUid(uid: snapshot.key)
             
             self.users.append(user)
             self.profileList.reloadData()
