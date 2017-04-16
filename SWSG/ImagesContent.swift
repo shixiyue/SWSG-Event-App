@@ -7,7 +7,6 @@
 //
 
 protocol ImagesContent: class {
-    
     associatedtype State: ImagesState
     
     var id: String? { get }
@@ -15,7 +14,6 @@ protocol ImagesContent: class {
     var imagesState: State { get set }
     
     func loadImages()
-    
 }
 
 extension ImagesContent {

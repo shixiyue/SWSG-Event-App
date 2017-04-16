@@ -8,6 +8,25 @@
 
 import UIKit
 
+/**
+ Idea is a class that represents an Idea in the Idea System
+ 
+ Specifications:
+ - votes: A dynamic variable to tally what is the idea's voting score
+ - id: The ID of the Idea as given by Firebase
+ - name: Name of the Idea
+ - user: User ID of the Idea Creator
+ - description: Description of the Idea
+ - mainImage: Main Image Icon of the Idea
+ - images: Image Array of supplementary images as details
+ - videoLink: Link to an embedded video
+ - imagesState: An enum representing the status of the loading of images in Ideas
+ - upvotes: A Set containing the User IDs of people who upvoted
+ - downvotes: A Set containing the User IDs of people who downvoted
+ 
+ Representation Invariant:
+ - There should not be any users who both upvoted and downvoted
+ */
 class Idea: ImagesContent, TemplateContent {
     
     var votes: Int { return upvotes.count - downvotes.count }

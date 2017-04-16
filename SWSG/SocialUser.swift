@@ -11,7 +11,7 @@ import GoogleSignIn
 
 /**
  SocialUser is a struct that helps with the request and deserialization of data
- from Social Media, both Facebook and Goodl
+ from Social Media, both Facebook and Google
  
  Specifications:
  - id: ID for the respective Social Media account
