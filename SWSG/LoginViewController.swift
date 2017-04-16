@@ -115,7 +115,7 @@ class LoginViewController: UIViewController {
     }
     
     //MARK: UI Supporting Methods
-    private func updateButtonState() {
+    fileprivate func updateButtonState() {
         let isAnyEmpty = emailTextField.text?.isEmpty ?? true || passwordTextField.text?.isEmpty ?? true
         logInButton.isEnabled = !isAnyEmpty
         logInButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha

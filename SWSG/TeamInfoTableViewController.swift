@@ -272,13 +272,13 @@ extension TeamInfoTableViewController {
         cell.tagCollectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
         cell.tagCollectionView.backgroundColor = UIColor.clear
         self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
-        cell.tagCollectionView.performBatchUpdates({() -> Void in
+       // cell.tagCollectionView.performBatchUpdates({() -> Void in
             cell.tagCollectionView.reloadData()
-        }, completion: {(_) -> Void in
+        //}, completion: {(_) -> Void in
             if cell.tagCollectionView.contentSize.height > self.containerHeight {
                 self.containerHeight = cell.tagCollectionView.contentSize.height
             }
-        })
+        //})
     }
 }
 /// UITableViewDelegate methods
