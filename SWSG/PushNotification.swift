@@ -8,6 +8,7 @@
 
 import Foundation
 import OneSignal
+import Firebase
 
 class PushNotification {
     

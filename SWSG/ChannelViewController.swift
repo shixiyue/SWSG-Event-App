@@ -32,12 +32,8 @@ final class ChannelViewController: JSQMessagesViewController {
     fileprivate var avatarCache = [String: UIImage]()
     fileprivate let imageURLNotSetKey = "NOTSET"
     fileprivate var localTyping = false
-<<<<<<< HEAD
     fileprivate let notiPusher = NotiPusher()
-    var isTyping: Bool {
-=======
     fileprivate var isTyping: Bool {
->>>>>>> master
         get {
             return localTyping
         }

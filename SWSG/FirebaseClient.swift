@@ -341,21 +341,23 @@ class FirebaseClient {
         
     }
     
-    public func createNotiIndividual(_ noti: PushNotification, uid: String, completion: @escaping GeneralErrorCallback?) {
+    public func createNotiIndividual(_ noti: PushNotification, uid: String, completion: GeneralErrorCallback?) {
         let timestamp = NSDate().timeIntervalSince1970
         let notiRef = notisIndividualRef.child(uid).child(String(timestamp)).childByAutoId()
-        let value = noti.toDictionary()
-        value[Config.timestamp] = timestamp 
-        eventRef.setValue(value)
-        completion(nil)
+        var value = noti.toDictionary()
+        value[Config.timestamp] = timestamp
+        notiRef.setValue(value)
+        if let completion = completion {
+            completion(nil)
+        }
     }
 
-    public func getNotiIndividual(uid: String, count: Int, completion: @escaping GetNotiCallback) {
+    public func getNotiIndividual(uid: String, count: Int, completion: @escaping GetNotificationsCallback) {
         let notiRef = notisIndividualRef.child(uid)
-        let query = notiRef.queryOrdered(byChild: Config.timestamp).queryLimited(toLast: count)
-        query.observeSingleEvent(of: .value, with { (snapshot) in 
+        let query = notiRef.queryOrdered(byChild: Config.timestamp).queryLimited(toLast: UInt(count))
+        query.observeSingleEvent(of: .value, with: { (snapshot) in
+            var result = [PushNotification]()
             for child in snapshot.children {
-                let result = [PushNotification]()
                 guard let childSnapshot = child as? FIRDataSnapshot, let noti = PushNotification(snapshot: childSnapshot) else {
                     continue
                 }
@@ -365,21 +367,23 @@ class FirebaseClient {
         })
     }
 
-    public func createNotiAll(_ noti: PushNotification, completion: @escaping GeneralErrorCallback?) {
+    public func createNotiAll(_ noti: PushNotification, completion: GeneralErrorCallback?) {
         let timestamp = NSDate().timeIntervalSince1970
         let notiRef = notisAllRef.child(String(timestamp)).childByAutoId()
-        let value = noti.toDictionary()
+        var value = noti.toDictionary()
         value[Config.timestamp] = timestamp 
-        eventRef.setValue(value)
-        completion(nil)
+        notiRef.setValue(value)
+        if let completion = completion {
+            completion(nil)
+        }
     }
 
-    public func getNotiAll(count: Int, completion: @escaping GetNotiCallback) {
+    public func getNotiAll(count: Int, completion: @escaping GetNotificationsCallback) {
         let notiRef = notisAllRef
-        let query = notiRef.queryOrdered(byChild: Config.timestamp).queryLimited(toLast: count)
-        query.observeSingleEvent(of: .value, with { (snapshot) in 
+        let query = notiRef.queryOrdered(byChild: Config.timestamp).queryLimited(toLast: UInt(count))
+        query.observeSingleEvent(of: .value, with: { (snapshot) in
+            var result = [PushNotification]()
             for child in snapshot.children {
-                let result = [PushNotification]()
                 guard let childSnapshot = child as? FIRDataSnapshot, let noti = PushNotification(snapshot: childSnapshot) else {
                     continue
                 }
@@ -1163,7 +1167,7 @@ class FirebaseClient {
     }
     
     public func getLatestMessageQuery(for channel: String) -> FIRDatabaseQuery {
-        return getChannelsRef().child(channel).child(Config.messages).(toLast: 1)
+        return getChannelsRef().child(channel).child(Config.messages).queryLimited(toLast: 1)
     }
     
     public func getUserRef(for uid: String) -> FIRDatabaseReference {

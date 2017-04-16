@@ -49,10 +49,10 @@ class NotiPusher {
         http.post(urlString: "https://onesignal.com/api/v1/notifications", jsonData: data, authHeaderValue: Secret.oneSignalAuthHeaderValue, completion: nil)
     }
     
-    public func crawlNoti() {
-        let http = HttpClient()
-        http.get(urlString: "https://onesignal.com/api/v1/notifications?app_id=\(Secret.oneSignalAppId)&limit=limit&offset=offset", authHeaderValue: Secret.oneSignalAuthHeaderValue)
-    }
+//    public func crawlNoti() {
+//        let http = HttpClient()
+//        http.get(urlString: "https://onesignal.com/api/v1/notifications?app_id=\(Secret.oneSignalAppId)&limit=limit&offset=offset", authHeaderValue: Secret.oneSignalAuthHeaderValue)
+//    }
     
     public func sendMessageNoti(fromUsername: String, fromUserId: String, toChannel: Channel) {
         guard let id = toChannel.id else {
