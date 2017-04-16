@@ -8,12 +8,20 @@
 //
 import UIKit
 
+/**
+ SlideMenuDelegate is a Protocol used by MenuViewController to tell 
+ BaseViewController which option was selected
+ */
 protocol SlideMenuDelegate {
     func slideMenuItemSelectedAtIndex(_ index : Int)
 }
 
+/**
+ BaseViewController is a UIViewController used to set up the button adn navigation
+ bar to display the hamburger menu
+ */
 class BaseViewController: UIViewController, SlideMenuDelegate {
-    
+    //MARK: Properties
     var menuYOffset: CGFloat {
         if let navigationBarHeight = navigationController?.navigationBar.frame.size.height {
             return navigationBarHeight
@@ -21,10 +29,10 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             return 0
         }
     }
-    
     private var btnShowMenu: UIButton!
     private var tapGesture: UITapGestureRecognizer!
     
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -33,10 +41,43 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         view.addGestureRecognizer(tapGesture)
     }
     
+    func addSlideMenuButton(){
+        btnShowMenu = UIButton(type: UIButtonType.system)
+        btnShowMenu.setImage(self.defaultMenuImage(), for: UIControlState())
+        btnShowMenu.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        btnShowMenu.addTarget(self, action: #selector(BaseViewController.onSlideMenuButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+        let customBarItem = UIBarButtonItem(customView: btnShowMenu)
+        self.navigationItem.leftBarButtonItem = customBarItem;
+    }
+    
+    fileprivate func defaultMenuImage() -> UIImage {
+        var defaultMenuImage = UIImage()
+        
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 30, height: 22), false, 0.0)
+        
+        UIColor.black.setFill()
+        UIBezierPath(rect: CGRect(x: 0, y: 3, width: 30, height: 1)).fill()
+        UIBezierPath(rect: CGRect(x: 0, y: 10, width: 30, height: 1)).fill()
+        UIBezierPath(rect: CGRect(x: 0, y: 17, width: 30, height: 1)).fill()
+        
+        UIColor.white.setFill()
+        UIBezierPath(rect: CGRect(x: 0, y: 4, width: 30, height: 1)).fill()
+        UIBezierPath(rect: CGRect(x: 0, y: 11,  width: 30, height: 1)).fill()
+        UIBezierPath(rect: CGRect(x: 0, y: 18, width: 30, height: 1)).fill()
+        
+        defaultMenuImage = UIGraphicsGetImageFromCurrentImageContext()!
+        
+        UIGraphicsEndImageContext()
+        
+        return defaultMenuImage;
+    }
+    
+    //MARK: Handle User Interactions
     func slideMenuItemSelectedAtIndex(_ index: Int) {
         guard let item = MenuItems.MenuOrder(rawValue: index), let type = System.activeUser?.type else {
             return
         }
+        
         switch(item){
         case .home:
             self.open(viewController: Config.homeViewController, from: Config.mainStoryboard)
@@ -66,51 +107,21 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         }
     }
     
-    func open(viewController: String, from storyboard: String){
+    //MARK: Navigation
+    fileprivate func open(viewController: String, from storyboard: String){
         let storyboard = UIStoryboard(name: storyboard, bundle: nil)
         let destViewController : UIViewController = storyboard.instantiateViewController(withIdentifier: viewController)
         
         let topViewController : UIViewController = self.navigationController!.topViewController!
         
         if (topViewController.restorationIdentifier! == destViewController.restorationIdentifier!){
-            print("Same VC")
             hideMenu()
         } else {
             self.navigationController!.pushViewController(destViewController, animated: true)
         }
     }
     
-    func addSlideMenuButton(){
-        btnShowMenu = UIButton(type: UIButtonType.system)
-        btnShowMenu.setImage(self.defaultMenuImage(), for: UIControlState())
-        btnShowMenu.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        btnShowMenu.addTarget(self, action: #selector(BaseViewController.onSlideMenuButtonPressed(_:)), for: UIControlEvents.touchUpInside)
-        let customBarItem = UIBarButtonItem(customView: btnShowMenu)
-        self.navigationItem.leftBarButtonItem = customBarItem;
-    }
-    
-    func defaultMenuImage() -> UIImage {
-        var defaultMenuImage = UIImage()
-        
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: 30, height: 22), false, 0.0)
-        
-        UIColor.black.setFill()
-        UIBezierPath(rect: CGRect(x: 0, y: 3, width: 30, height: 1)).fill()
-        UIBezierPath(rect: CGRect(x: 0, y: 10, width: 30, height: 1)).fill()
-        UIBezierPath(rect: CGRect(x: 0, y: 17, width: 30, height: 1)).fill()
-        
-        UIColor.white.setFill()
-        UIBezierPath(rect: CGRect(x: 0, y: 4, width: 30, height: 1)).fill()
-        UIBezierPath(rect: CGRect(x: 0, y: 11,  width: 30, height: 1)).fill()
-        UIBezierPath(rect: CGRect(x: 0, y: 18, width: 30, height: 1)).fill()
-        
-        defaultMenuImage = UIGraphicsGetImageFromCurrentImageContext()!
-        
-        UIGraphicsEndImageContext()
-        
-        return defaultMenuImage;
-    }
-    
+    //MARK: Handle Menu Interactions
     func onSlideMenuButtonPressed(_ sender : UIButton){
         if (sender.tag == 10)
         {
@@ -125,8 +136,8 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         tapGesture.isEnabled = true
         self.view.endEditing(true)
         
-        let storyboard = UIStoryboard(name: "Menu", bundle: nil)
-        let menuVC : MenuViewController = storyboard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
+        let storyboard = UIStoryboard(name: Config.menuStoryboard, bundle: nil)
+        let menuVC : MenuViewController = storyboard.instantiateViewController(withIdentifier: Config.menuViewController) as! MenuViewController
         menuVC.btnMenu = sender
         menuVC.delegate = self
         self.view.addSubview(menuVC.view)

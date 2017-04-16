@@ -109,6 +109,8 @@ struct Config {
     static let navigationController = "NavigationController"
     static let logInSignUp = "LoginSignup"
     static let initialScreen = "InitialScreen"
+    static let menuStoryboard = "Menu"
+    static let menuViewController = "MenuViewController"
     static let mainStoryboard = "Main"
     static let homeViewController = "HomeViewController"
     static let informationStoryboard = "Information"

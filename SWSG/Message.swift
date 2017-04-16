@@ -9,12 +9,25 @@
 import UIKit
 import Firebase
 
+/**
+ Message is a class used to represent a Message in the Chat System
+ 
+ Specifications:
+ - senderId: User ID of the Sender
+ - senderName: Username of the Sender
+ - timestamp: The Date that the message was sent
+ - text: The text of the message
+ - image: The URL of the image for the message
+ 
+ Representation Invariant:
+ - The message should have either text or image, both cannot be null together
+ */
 struct Message {
-    var senderId: String
-    var senderName: String
-    var timestamp: Date
-    var text: String?
-    var image: String?
+    private (set) var senderId: String
+    private (set) var senderName: String
+    private (set) var timestamp: Date
+    private (set) var text: String?
+    private (set) var image: String?
     
     init(senderId: String, senderName: String, timestamp: Date, text: String?, image: String?) {
         self.senderId = senderId
@@ -26,30 +39,25 @@ struct Message {
     
     init?(snapshot: FIRDataSnapshot) {
         guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
-            print("test2")
             return nil
         }
         
         guard let id = snapshotValue[Config.senderId] as? String else {
-            print("test3")
             return nil
         }
         self.senderId = id
         
         guard let name = snapshotValue[Config.senderName] as? String else {
-            print("test4")
             return nil
         }
         self.senderName = name
         
         guard let timestamp = snapshotValue[Config.timestamp] as? String else {
-            print("test5")
             return nil
         }
         self.timestamp = Utility.fbDateTimeFormatter.date(from: timestamp)!
         
         if let text = snapshotValue[Config.text] as? String {
-            print("test6")
             self.text = text
         }
         
@@ -57,5 +65,11 @@ struct Message {
             self.image = image
         }
         
+    }
+    
+    fileprivate func checkRep() {
+        if text == nil && image == nil {
+            assert(false)
+        }
     }
 }

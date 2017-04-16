@@ -9,27 +9,35 @@
 import UIKit
 import Firebase
 
+/**
+ MentorViewController is a UIViewController used to details for a Mentor.
+ 
+ Specifications:
+    - mentorAcct: Mentor whose account to display
+ */
 class MentorViewController: UIViewController {
+    
+    //MARK: IBOutlets
     @IBOutlet weak var profileImg: UIImageView!
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var positionLbl: UILabel!
     @IBOutlet weak var companyLbl: UILabel!
     @IBOutlet weak var descriptionTB: UITextView!
     @IBOutlet weak var mentorView: UIView!
-    
     @IBOutlet weak var consultationSlotCollection: UICollectionView!
     @IBOutlet weak var relatedMentorCollection: UICollectionView!
     
-    private let mentorBookingErrorMsg = "Sorry, only participants of SWSG can book a slot!"
-    
+    //MARK: Properties
     public var mentorAcct: User?
     fileprivate var relatedMentors = [User]()
     fileprivate var cvLayout = MultiDirectionCollectionViewLayout()
+    private let mentorBookingErrorMsg = "Sorry, only participants of SWSG can book a slot!"
     
     //MARK: Firebase References
     private var mentorRef: FIRDatabaseReference!
     private var mentorRefHandle: FIRDatabaseHandle?
     
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -67,26 +75,26 @@ class MentorViewController: UIViewController {
         
     }
     
-    deinit {
-        if let refHandle = mentorRefHandle {
-            mentorRef.removeObserver(withHandle: refHandle)
+    private func setUpDescription() {
+        guard let mentorAcct = mentorAcct, let uid = mentorAcct.uid else {
+            return
         }
-    }
-    
-    // MARK: Firebase related methods
-    private func observeSlots() {
-        // Use the observe method to listen for new
-        // channels being written to the Firebase DB
-        mentorRefHandle = mentorRef.observe(.value, with: { (snapshot) -> Void in
-            guard let userSnapshot = snapshot.value as? [String: Any],
-                let mentorSnapshot = userSnapshot[Config.mentor] as? [String: Any],
-                let mentor = Mentor(snapshot: mentorSnapshot) else {
-                    return
+        let profile = mentorAcct.profile
+        
+        nameLbl.text = profile.name
+        
+        profileImg = Utility.roundUIImageView(for: profileImg)
+        profileImg.image = Config.placeholderImg
+        
+        Utility.getProfileImg(uid: uid, completion: { (image) in
+            if let image = image {
+                self.profileImg.image = image
             }
-            self.mentorAcct?.setMentor(mentor: mentor)
-            self.cvLayout.dataSourceDidUpdate = true
-            self.consultationSlotCollection.reloadData()
         })
+        
+        positionLbl.text = profile.job
+        companyLbl.text = profile.company
+        descriptionTB.text = profile.desc
     }
     
     private func getRelatedMentors() {
@@ -110,29 +118,30 @@ class MentorViewController: UIViewController {
         })
     }
     
-    func setUpDescription() {
-        guard let mentorAcct = mentorAcct, let uid = mentorAcct.uid else {
-            return
+    deinit {
+        if let refHandle = mentorRefHandle {
+            mentorRef.removeObserver(withHandle: refHandle)
         }
-        let profile = mentorAcct.profile
-        
-        nameLbl.text = profile.name
-        
-        profileImg = Utility.roundUIImageView(for: profileImg)
-        profileImg.image = Config.placeholderImg
-        
-        Utility.getProfileImg(uid: uid, completion: { (image) in
-            if let image = image {
-                self.profileImg.image = image
-            }
-        })
-        
-        positionLbl.text = profile.job
-        companyLbl.text = profile.company
-        descriptionTB.text = profile.desc
     }
     
-    func setSlot(on dayIndex: Int, at index: Int, status: ConsultationSlotStatus) {
+    // MARK: Firebase related methods
+    private func observeSlots() {
+        // Use the observe method to listen for new
+        // channels being written to the Firebase DB
+        mentorRefHandle = mentorRef.observe(.value, with: { (snapshot) -> Void in
+            guard let userSnapshot = snapshot.value as? [String: Any],
+                let mentorSnapshot = userSnapshot[Config.mentor] as? [String: Any],
+                let mentor = Mentor(snapshot: mentorSnapshot) else {
+                    return
+            }
+            self.mentorAcct?.setMentor(mentor: mentor)
+            self.cvLayout.dataSourceDidUpdate = true
+            self.consultationSlotCollection.reloadData()
+        })
+    }
+    
+    //MARK: Booking Function
+    fileprivate func setSlot(on dayIndex: Int, at index: Int, status: ConsultationSlotStatus) {
         guard System.client.isConnected else {
             present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
             return
@@ -158,10 +167,7 @@ class MentorViewController: UIViewController {
         }
     }
     
-    func goToProfile(_ sender: UITapGestureRecognizer) {
-        performSegue(withIdentifier: Config.mentorToProfile, sender: nil)
-    }
-    
+    //MARK: User Interaction Functions
     @IBAction func composeBtnPressed(_ sender: Any) {
         
         guard let uid = System.client.getUid() else {
@@ -186,6 +192,10 @@ class MentorViewController: UIViewController {
         })
     }
     
+    //MARK: Navigation
+    func goToProfile(_ sender: UITapGestureRecognizer) {
+        performSegue(withIdentifier: Config.mentorToProfile, sender: nil)
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
@@ -214,6 +224,7 @@ class MentorViewController: UIViewController {
     }
 }
 
+//MARK: UICollectionViewDelegate, UICollectionViewDataSource
 extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
@@ -411,18 +422,15 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let bookingController = UIAlertController(title: "Book Slot", message: message,
                                                   preferredStyle: UIAlertControllerStyle.alert)
         
-        //Add an Action to Confirm the Deletion with the Destructive Style
         let confirmAction = UIAlertAction(title: "Confirm", style: .default) { _ -> Void in
             self.setSlot(on: dayIndex, at: index, status: .booked)
         }
         bookingController.addAction(confirmAction)
         
-        //Add a Cancel Action to the Popup
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
         }
         bookingController.addAction(cancelAction)
         
-        //Present the Popup
         self.present(bookingController, animated: true, completion: nil)
     }
 }

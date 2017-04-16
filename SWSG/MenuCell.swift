@@ -8,6 +8,9 @@
 
 import UIKit
 
+/**
+ MenuCell is a UITableViewCell used to display options in MenuViewController.
+ */
 class MenuCell: UITableViewCell {
     @IBOutlet weak var icon: UIImageView!
     @IBOutlet weak var name: UILabel!

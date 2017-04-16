@@ -9,6 +9,10 @@
 import UIKit
 import Firebase
 
+/**
+ MentorGridViewController is a BaseViewController used to display all the
+ mentors in a UICollectionView
+ */
 class MentorGridViewController: BaseViewController {
     @IBOutlet weak var mentorCollection: UICollectionView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -27,6 +31,7 @@ class MentorGridViewController: BaseViewController {
     private var mentorsRef: FIRDatabaseQuery?
     private var mentorsRefHandle: FIRDatabaseHandle?
     
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()
@@ -41,6 +46,16 @@ class MentorGridViewController: BaseViewController {
         setUpSearchBar()
     }
     
+    private func setUpSearchBar() {
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
+        Utility.styleSearchBar(searchBar)
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
+    }
+    
+    //MARK: Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Config.mentorGridToMentor {
             if let mentorVC = segue.destination as? MentorViewController,
@@ -64,16 +79,6 @@ class MentorGridViewController: BaseViewController {
         if let refHandle = mentorsRefHandle {
             mentorsRef?.removeObserver(withHandle: refHandle)
         }
-    }
-    
-    // MARK: Layout methods
-    private func setUpSearchBar() {
-        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
-        Utility.styleSearchBar(searchBar)
-    }
-    
-    func donePressed() {
-        self.view.endEditing(true)
     }
     
     // MARK: Firebase related methods
@@ -105,6 +110,7 @@ class MentorGridViewController: BaseViewController {
     }
 }
 
+//MARK: UICollectionViewDelegate, UICollectionViewDataSource
 extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
@@ -146,7 +152,7 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
     }
 }
 
-// MARK: UISearchResultsUpdating
+// MARK: UISearchBarDelegate
 extension MentorGridViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filteredMentors = mentors.filter { mentor in

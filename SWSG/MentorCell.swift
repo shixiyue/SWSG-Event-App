@@ -8,6 +8,9 @@
 
 import UIKit
 
+/**
+ MentorCell is a UICollectionViewCell used to display Mentors in MentorGridViewController.
+ */
 class MentorCell: UICollectionViewCell {
     @IBOutlet weak var iconIV: UIImageView!
     @IBOutlet weak var nameLbl: UILabel!

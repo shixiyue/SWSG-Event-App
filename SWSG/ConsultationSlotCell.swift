@@ -8,6 +8,10 @@
 
 import UIKit
 
+/**
+ ConsultationSlotCell is a UICollectionViewCell used to display Consultation Slots
+ in MentorViewController.
+ */
 class ConsultationSlotCell: UICollectionViewCell {
     @IBOutlet weak var outerFrame: UIView!
     @IBOutlet weak var timeLbl: UILabel!
