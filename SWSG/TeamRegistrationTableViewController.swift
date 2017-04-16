@@ -113,27 +113,43 @@ class TeamRegistrationTableViewController: BaseViewController {
     }
     
     func fillProfileImg(at cell: TeamItemTableViewCell, with index: Int, team: Team) {
-  
+        
         switch(index) {
         case 0:
             cell.mmbrImage1 = Utility.roundUIImageView(for: cell.mmbrImage1)
+            if team.members.count <= index {
+                cell.mmbrImage1.image = nil
+                break
+            }
             Utility.getProfileImg(uid: team.members[0], completion: {(image) in
                 cell.mmbrImage1.image = image
             })
         case 1:
-            cell.mmbrImage2 = Utility.roundUIImageView(for: cell.mmbrImage2)
             
+            cell.mmbrImage2 = Utility.roundUIImageView(for: cell.mmbrImage2)
+            if team.members.count <= index {
+                cell.mmbrImage2.image = nil
+                break
+            }
             Utility.getProfileImg(uid: team.members[1], completion: {(image) in
                 cell.mmbrImage2.image = image
             })
             
         case 2:
             cell.mmbrImage3 = Utility.roundUIImageView(for: cell.mmbrImage3)
+            if team.members.count <= index {
+                cell.mmbrImage1.image = nil
+                break
+            }
             Utility.getProfileImg(uid: team.members[2], completion: {(image) in
                 cell.mmbrImage3.image = image
             })
         case 3:
             cell.mmbrImage4 = Utility.roundUIImageView(for: cell.mmbrImage4)
+            if team.members.count <= index {
+                cell.mmbrImage1.image = nil
+                break
+            }
             Utility.getProfileImg(uid: team.members[3], completion: {(image) in
                 cell.mmbrImage4.image = image
             })
@@ -176,7 +192,7 @@ extension TeamRegistrationTableViewController: UITableViewDataSource {
         }
         cell.teamName.text = team.name
         cell.teamIsLookingFor.text = team.lookingFor
-        for i in 0..<team.members.count {
+        for i in 0..<4 {
             fillProfileImg(at: cell, with: i, team: team)
         }
         return cell
