@@ -10,6 +10,8 @@ import UIKit
 
 class ImagePickCropperPopoverViewController: ImagePickerPopoverViewController {
     
+    var cropMode = RSKImageCropMode.circle
+    
     override func handleImage(chosenImage: UIImage) {
         jumpToCropImage(imageToCrop: chosenImage)
     }

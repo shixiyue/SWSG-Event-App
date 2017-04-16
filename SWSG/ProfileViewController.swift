@@ -240,7 +240,6 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
             return
         }
         showImageOptions()
-        alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImgButton.bounds.maxY)
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {

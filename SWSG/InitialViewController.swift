@@ -27,13 +27,8 @@ class InitialViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fbLoginButton.center = fbView.center
-        fbLoginButton.delegate = self
-        
-        googleLoginButton.center = googleView.center
-        
-        self.stackView.addSubview(fbLoginButton)
-        self.stackView.addSubview(googleLoginButton)
+        setUpFacebookButton()
+        setUpGoogleButton()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,13 +73,22 @@ class InitialViewController: UIViewController {
         }
     }
     
+    private func setUpFacebookButton() {
+        fbLoginButton.center = fbView.center
+        fbLoginButton.delegate = self
+        self.stackView.addSubview(fbLoginButton)
+    }
+    
+    private func setUpGoogleButton() {
+        googleLoginButton.center = googleView.center
+        self.stackView.addSubview(googleLoginButton)
+    }
+    
     fileprivate func attemptLogin(email: String, user: SocialUser, auth: AuthType) {
         Utility.attemptRegistration(email: email, auth: auth, newCredential: nil, viewController: self, completion: { (exists, arr) in
-            
-            print(exists)
             if !exists, let arr = arr {
-                let title = "Email already exists"
-                let message = "Please log in with the original client first."
+                let title = Config.emailExists
+                let message = Config.logInWithOriginal
                 SwiftSpinner.show(title, animated: false).addTapHandler({
                     SwiftSpinner.hide({
                         self.currentAuth = auth
@@ -99,8 +103,8 @@ class InitialViewController: UIViewController {
     }
     
     fileprivate func showErrorMsg() {
-        let title = "An unexpected error has occured"
-        let message = "Please try again"
+        let title = Config.unexpectedError
+        let message = Config.tryAgain
         SwiftSpinner.show(title, animated: false).addTapHandler({
             SwiftSpinner.hide({
             })
@@ -109,9 +113,10 @@ class InitialViewController: UIViewController {
 }
 
 extension InitialViewController: GIDSignInDelegate, GIDSignInUIDelegate {
+    
     public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if error == nil {
-            SwiftSpinner.show("Communicating with Google")
+            SwiftSpinner.show(Config.communicateGoogle)
             let user = SocialUser(gUser: user)
             self.attemptLogin(email: user.email, user: user, auth: .google)
         } else {
@@ -122,8 +127,9 @@ extension InitialViewController: GIDSignInDelegate, GIDSignInUIDelegate {
 
 extension InitialViewController: LoginButtonDelegate {
     
-    func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult){
-        SwiftSpinner.show("Communicating with Facebook")
+    func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
+        
+        SwiftSpinner.show(Config.communicateFacebook)
         client.getFBProfile(completion: { (user, error) in
             guard let user = user else {
                 self.showErrorMsg()

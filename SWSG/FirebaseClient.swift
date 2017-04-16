@@ -638,9 +638,16 @@ class FirebaseClient {
         ideaRef.child(Config.votes).child(user).setValue(vote)
     }
     
-    func removeIdea(for id: String) {
+    func removeIdeaVote(for id: String, user: String) {
         let ideaRef = getIdeaRef(for: id)
-        ideaRef.removeValue()
+        ideaRef.child(Config.votes).child(user).removeValue()
+    }
+    
+    func removeIdea(for id: String, completion: @escaping GeneralErrorCallback) {
+        let ideaRef = getIdeaRef(for: id)
+        ideaRef.removeValue(completionBlock: { (error, _) in
+            completion(self.checkError(error))
+        })
     }
     
     public func createChannel(for channel: Channel, completion: @escaping GetChannelCallback) {

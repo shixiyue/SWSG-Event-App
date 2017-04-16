@@ -722,4 +722,25 @@ struct Utility {
     static func searchBtnPressed(viewController: UIViewController) {
         viewController.view.endEditing(true)
     }
+    
+    static func updateVotes(idea: Idea, votesLabel: UILabel, upvoteButton: UIButton, downvoteButton: UIButton) {
+        votesLabel.text = "\(idea.votes)"
+        let state = idea.getVotingState()
+        let upvoteImage = state.upvote ? Config.upvoteFilled : Config.upvoteDefault
+        upvoteButton.setImage(upvoteImage, for: .normal)
+        let downvoteImage = state.downvote ? Config.downvoteFilled : Config.downvoteDefault
+        downvoteButton.setImage(downvoteImage, for: .normal)
+    }
+    
+    static func getVideoId(for videoLink: String) -> String {
+        let substring = videoLink.components(separatedBy: Config.youtubePrefix)
+        let videoId = substring.count > Config.youtubeIdComponent ? substring[Config.youtubeIdComponent] : Config.emptyString
+        return videoId
+    }
+    
+    static func getVideoLink(for videoId: String) -> String {
+        let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? Config.emptyString : Config.youtubePrefix + videoId
+        return videoLink
+    }
+
 }

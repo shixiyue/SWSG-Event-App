@@ -11,7 +11,8 @@ import Firebase
 
 class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
-    var idea: Idea!
+    fileprivate var containerHeight: CGFloat!
+    fileprivate var containerRowIndex = 3
     
     @IBOutlet private var mainImage: UIImageView!
     @IBOutlet private var ideaNameLabel: UILabel!
@@ -20,8 +21,8 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     @IBOutlet private var upvoteButton: UIButton!
     @IBOutlet private var downvoteButton: UIButton!
     
+    private var idea: Idea!
     private var containerViewController: TemplateViewController!
-    private var containerHeight: CGFloat!
     private var editButton: UIBarButtonItem?
     private var ideaRef: FIRDatabaseReference?
     private var ideaChangeRefHandle: FIRDatabaseHandle?
@@ -29,7 +30,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setNavigationBar()
+        setUpNavigationBar()
         setUpIdea()
         observeIdeas()
     }
@@ -37,39 +38,47 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        mainImage.image = idea.mainImage
-        ideaNameLabel.text = idea.name
-        containerViewController.setUp()
+        refreshIdea()
         DispatchQueue.main.async {
-            self.containerViewController.tableView.layoutIfNeeded()
             self.containerHeight = self.containerViewController.tableView.contentSize.height
             self.tableView.reloadData()
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "container", let containerViewController = segue.destination as? TemplateViewController {
+        if segue.identifier == Config.container, let containerViewController = segue.destination as? TemplateViewController {
             containerViewController.presetInfo(content: idea)
             containerViewController.tableView.layoutIfNeeded()
             containerHeight = containerViewController.tableView.contentSize.height
             self.containerViewController = containerViewController
-            return
-        } else if segue.identifier == "editIdea", let ideaPostTableViewController = segue.destination as? IdeaPostTableViewController {
-            ideaPostTableViewController.setUpIdea(idea)
-        } else if segue.identifier == Config.ideaToProfile {
-            guard let profileVC = segue.destination as? ProfileViewController, let user = sender as? User else {
-                return
-            }
+        } else if segue.identifier == Config.editIdea, let ideaPostTableViewController = segue.destination as? IdeaPostTableViewController {
+            ideaPostTableViewController.setIdea(idea)
+        } else if segue.identifier == Config.ideaToProfile, let profileVC = segue.destination as? ProfileViewController, let user = sender as? User {
             profileVC.user = user
         }
     }
     
+    func setIdea(_ idea: Idea) {
+        self.idea = idea
+    }
+    
+    private func setUpNavigationBar() {
+        guard let user = System.activeUser, user.uid == idea.user else {
+            return
+        }
+        let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(showDeleteWarning))
+        let edit = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(jumpToEdit))
+        self.editButton = edit
+        navigationItem.rightBarButtonItems = [delete, edit]
+    }
+    
     private func setUpIdea() {
-        loadIdeaImages()
-        setUpIdeaMainImage()
-        setUpUserName()
         ideaNameLabel.text = idea.name
-        updateVotes()
+        setUpUserName()
+        setUpIdeaMainImage()
+        loadIdeaImages()
+        Utility.updateVotes(idea: idea, votesLabel: votes, upvoteButton: upvoteButton, downvoteButton: downvoteButton)
+        
         guard let id = idea.id else {
             return
         }
@@ -84,22 +93,26 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         userNameLabel.addGestureRecognizer(tapGesture)
     }
     
+    private func setUpIdeaMainImage() {
+        mainImage.image = idea.mainImage
+        mainImage.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullScreenImage))
+        mainImage.addGestureRecognizer(tapGesture)
+    }
+    
     private func observeIdeas() {
         guard let ideaRef = ideaRef else {
             return
         }
         
-        ideaChangeRefHandle = ideaRef.observe(.childChanged, with: { (snapshot) -> Void in
-            guard let vote = snapshot.value as? Bool else {
-                return
-            }
-            self.idea.updateVote(user: snapshot.key, vote: vote)
+        ideaChangeRefHandle = ideaRef.observe(.value, with: { (snapshot) -> Void in
             DispatchQueue.main.async {
-                self.updateVotes()
+                Utility.updateVotes(idea: self.idea, votesLabel: self.votes, upvoteButton: self.upvoteButton, downvoteButton: self.downvoteButton)
             }
         })
     }
     
+    // TODO: Move it to Template
     private func loadIdeaImages() {
         guard !idea.imagesState.imagesHasFetched, let id = idea.id else {
             return
@@ -111,14 +124,29 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         idea.loadImages()
     }
     
-    private func setUpIdeaMainImage() {
+    private func refreshIdea() {
         mainImage.image = idea.mainImage
-        mainImage.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullScreenImage))
-        mainImage.addGestureRecognizer(tapGesture)
+        ideaNameLabel.text = idea.name
+        containerViewController.setUp()
     }
     
-    @objc func updateImages(_ notification: NSNotification) {
+    @IBAction func upvote(_ sender: UIButton) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
+        idea.upvote()
+    }
+    
+    @IBAction func downvote(_ sender: UIButton) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
+        idea.downvote()
+    }
+    
+    @objc private func updateImages(_ notification: NSNotification) {
         mainImage.image = idea.mainImage
         containerViewController.updateImages()
         DispatchQueue.main.async {
@@ -140,67 +168,56 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         })
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.row {
-        case 0: return 96
-        case 3: return containerHeight
-        default: return 44
-        }
-    }
-    
-    @IBAction func upvote(_ sender: UIButton) {
-        guard System.client.isConnected else {
-            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
-            return
-        }
-        idea.upvote()
-        updateVotes()
-    }
-    
-    @IBAction func downvote(_ sender: UIButton) {
-        guard System.client.isConnected else {
-            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
-            return
-        }
-        idea.downvote()
-        updateVotes()
-    }
-    
-    private func updateVotes() {
-        votes.text = "\(idea.votes)"
-        let state = idea.getVotingState()
-        let upvoteImage = state.upvote ? Config.upvoteFilled : Config.upvoteDefault
-        upvoteButton.setImage(upvoteImage, for: .normal)
-        let downvoteImage = state.downvote ? Config.downvoteFilled : Config.downvoteDefault
-        downvoteButton.setImage(downvoteImage, for: .normal)
-    }
-    
-    private func setNavigationBar() {
-        guard let user = System.activeUser, user.uid == idea.user else {
-            return
-        }
-        let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(showDeleteWarning))
-        let edit = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(jumpToEdit))
-        self.editButton = edit
-        navigationItem.rightBarButtonItems = [delete, edit]
-    }
-    
     @objc private func jumpToEdit() {
-        performSegue(withIdentifier: "editIdea", sender: self)
+        performSegue(withIdentifier: Config.editIdea, sender: self)
     }
     
     @objc private func showDeleteWarning() {
-        let alertController = UIAlertController(title: "Delete Idea", message: "Are you sure to delete this idea?", preferredStyle: .alert)
+        let alertController = UIAlertController(title: Config.deleteIdea, message: Config.deleteIdeaWarning, preferredStyle: .alert)
         
-        let cancelAction = UIAlertAction(title: "No", style: .cancel)
+        let cancelAction = UIAlertAction(title: Config.no, style: .cancel)
         alertController.addAction(cancelAction)
         
-        let confirmAction = UIAlertAction(title: "Yes", style: .destructive) { action in
-            Ideas.sharedInstance().removeIdea(idea: self.idea)
-            _ = self.navigationController?.popViewController(animated: true)
+        let confirmAction = UIAlertAction(title: Config.yes, style: .destructive) { action in
+            self.deleteIdea()
         }
         alertController.addAction(confirmAction)
-        self.present(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    private func deleteIdea() {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
+        Ideas.sharedInstance().removeIdea(idea: self.idea, completion: { (error) in
+            if let error = error {
+                self.present(Utility.getFailAlertController(message: error.errorMessage), animated: true, completion: nil)
+                return
+            }
+            _ = self.navigationController?.popViewController(animated: true)
+        })
+    }
+    
+    deinit {
+        if let changeHandle = ideaChangeRefHandle {
+            ideaRef?.removeObserver(withHandle: changeHandle)
+        }
+    }
+    
+}
+
+extension IdeaDetailsTableViewController {
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == containerRowIndex {
+            return containerHeight
+        }
+        return UITableViewAutomaticDimension
     }
     
 }

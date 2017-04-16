@@ -169,9 +169,16 @@ struct Config {
     static let registrationListToRegistration = "registrationListToRegistration"
     static let registrationToProfile = "registrationToProfile"
     static let ideaToProfile = "ideaToProfile"
+    static let showDetails = "showDetails"
+    static let addIdea = "addIdea"
+    static let container = "container"
+    static let editIdea = "editIdea"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
+    static let defaultSection = 0
+    static let ideaListTableCellHeight: CGFloat = 110
+    static let ideaItemCell = "ideaItemCell"
 
     
     // Parameters for information message:
@@ -181,6 +188,19 @@ struct Config {
     static let emptyString = ""
     static let ideaCreateErrorMessage = "Sorry, only participants of SWSG can create an idea!"
     static let ideaUserNamePrefix = "by "
+    static let deleteIdea = "Delete Idea"
+    static let deleteIdeaWarning = "Are you sure to delete this idea?"
+    static let no = "No"
+    static let yes = "Yes"
+    static let emptyIdeaNameError = "Idea name cannot be empty!"
+    static let emptyDescriptionError = "Description cannot be empty!"
+    static let generalErrorMessage = "Error!"
+    static let emailExists = "Email already exists"
+    static let logInWithOriginal = "Please log in with the original client first."
+    static let unexpectedError = "An unexpected error has occured"
+    static let tryAgain = "Please try again"
+    static let communicateFacebook = "Communicating with Facebook"
+    static let communicateGoogle = "Communicating with Google"
     
     static let passwordMinLength = 6
     
@@ -239,6 +259,11 @@ struct Config {
     
     // Parameters for notification:
     static let fullScreenImage = "fullScreenImage"
+    static let update = "update"
+    static let reload = "reload"
+    static let isSuccess = "isSuccess"
+    static let videoId = "videoId"
+    static let height = "height"
     
     //Parameters for Event
     static let calendarStartDate = Utility.fbDateFormatter.date(from: "01-01-2017")!
@@ -252,4 +277,8 @@ struct Config {
     static let registeredUsers = "registeredUsers"
     static let registrationCell = "RegistrationCell"
     static let registeredUserCell = "RegisteredUserCell"
+    
+    // Other
+    static let youtubePrefix = "https://www.youtube.com/embed/"
+    static let youtubeIdComponent = 1
 }

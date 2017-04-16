@@ -40,6 +40,7 @@ class TemplateViewController: UITableViewController {
         overviewTableView.tableFooterView = UIView(frame: CGRect.zero)
         overviewTableView.allowsSelection = false
         overviewTableView.isScrollEnabled = false
+        overviewTableView.layoutIfNeeded()
     }
     
     func presetInfo(content: TemplateContent) {
