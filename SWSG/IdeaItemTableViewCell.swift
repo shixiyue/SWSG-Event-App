@@ -31,7 +31,8 @@ class IdeaItemTableViewCell: UITableViewCell {
     
     @IBAction func upvote(_ sender: UIButton) {
         guard System.client.isConnected else {
-            UIApplication.shared.keyWindow?.rootViewController?.present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            UIApplication.shared.keyWindow?.rootViewController?.present(Utility.getNoInternetAlertController(),
+                                                                        animated: true, completion: nil)
             return
         }
         idea.upvote()

@@ -32,7 +32,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
     private var btnShowMenu: UIButton!
     private var tapGesture: UITapGestureRecognizer!
     
-    //MARK: Initialization Functions
+    // MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,13 +41,15 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         view.addGestureRecognizer(tapGesture)
     }
     
-    func addSlideMenuButton(){
+    func addSlideMenuButton() {
         btnShowMenu = UIButton(type: UIButtonType.system)
         btnShowMenu.setImage(self.defaultMenuImage(), for: UIControlState())
         btnShowMenu.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        btnShowMenu.addTarget(self, action: #selector(BaseViewController.onSlideMenuButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+        btnShowMenu.addTarget(self,
+                              action: #selector(BaseViewController.onSlideMenuButtonPressed(_:)),
+                              for: UIControlEvents.touchUpInside)
         let customBarItem = UIBarButtonItem(customView: btnShowMenu)
-        self.navigationItem.leftBarButtonItem = customBarItem;
+        self.navigationItem.leftBarButtonItem = customBarItem
     }
     
     fileprivate func defaultMenuImage() -> UIImage {
@@ -62,14 +64,14 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         
         UIColor.white.setFill()
         UIBezierPath(rect: CGRect(x: 0, y: 4, width: 30, height: 1)).fill()
-        UIBezierPath(rect: CGRect(x: 0, y: 11,  width: 30, height: 1)).fill()
+        UIBezierPath(rect: CGRect(x: 0, y: 11, width: 30, height: 1)).fill()
         UIBezierPath(rect: CGRect(x: 0, y: 18, width: 30, height: 1)).fill()
         
         defaultMenuImage = UIGraphicsGetImageFromCurrentImageContext()!
         
         UIGraphicsEndImageContext()
         
-        return defaultMenuImage;
+        return defaultMenuImage
     }
     
     //MARK: Handle User Interactions
@@ -78,7 +80,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             return
         }
         
-        switch(item){
+        switch item {
         case .home:
             self.open(viewController: Config.homeViewController, from: Config.mainStoryboard)
         case .information:
@@ -100,31 +102,31 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             if type.isOrganizer {
                 self.open(viewController: Config.registrationListViewController, from: Config.registrationStoryboard)
             } else {
-                self.open(viewController: Config.participantRegistrationViewController, from: Config.registrationStoryboard)
+                self.open(viewController: Config.participantRegistrationViewController,
+                          from: Config.registrationStoryboard)
             }
         case .logout:
             Utility.logOutUser(currentViewController: self)
         }
     }
     
-    //MARK: Navigation
-    fileprivate func open(viewController: String, from storyboard: String){
+    // MARK: Navigation
+    fileprivate func open(viewController: String, from storyboard: String) {
         let storyboard = UIStoryboard(name: storyboard, bundle: nil)
-        let destViewController : UIViewController = storyboard.instantiateViewController(withIdentifier: viewController)
+        let destViewController: UIViewController = storyboard.instantiateViewController(withIdentifier: viewController)
         
-        let topViewController : UIViewController = self.navigationController!.topViewController!
+        let topViewController: UIViewController = self.navigationController!.topViewController!
         
-        if (topViewController.restorationIdentifier! == destViewController.restorationIdentifier!){
+        if topViewController.restorationIdentifier! == destViewController.restorationIdentifier!{
             hideMenu()
         } else {
             self.navigationController!.pushViewController(destViewController, animated: true)
         }
     }
     
-    //MARK: Handle Menu Interactions
-    func onSlideMenuButtonPressed(_ sender : UIButton){
-        if (sender.tag == 10)
-        {
+    // MARK: Handle Menu Interactions
+    func onSlideMenuButtonPressed(_ sender : UIButton) {
+        if sender.tag == 10 {
             // To Hide Menu If it already there
             hideMenu()
             return
@@ -137,7 +139,10 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         self.view.endEditing(true)
         
         let storyboard = UIStoryboard(name: Config.menuStoryboard, bundle: nil)
-        let menuVC : MenuViewController = storyboard.instantiateViewController(withIdentifier: Config.menuViewController) as! MenuViewController
+        guard let menuVC : MenuViewController = storyboard.instantiateViewController(withIdentifier: Config.menuViewController) as? MenuViewController else {
+            return
+        }
+        
         menuVC.btnMenu = sender
         menuVC.delegate = self
         self.view.addSubview(menuVC.view)
@@ -145,10 +150,14 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         menuVC.view.layoutIfNeeded()
         
         let heightOffset = navigationController?.navigationBar.frame.size.height ?? 0
-        menuVC.view.frame=CGRect(x: 0 - UIScreen.main.bounds.size.width, y: menuYOffset, width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height - heightOffset);
+        menuVC.view.frame=CGRect(x: 0 - UIScreen.main.bounds.size.width, y: menuYOffset,
+                                 width: UIScreen.main.bounds.size.width / 2,
+                                 height: UIScreen.main.bounds.size.height - heightOffset);
         
         UIView.animate(withDuration: 0.3, animations: { () -> Void in
-            menuVC.view.frame=CGRect(x: 0, y: self.menuYOffset, width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height - heightOffset);
+            menuVC.view.frame=CGRect(x: 0, y: self.menuYOffset,
+                                     width: UIScreen.main.bounds.size.width / 2,
+                                     height: UIScreen.main.bounds.size.height - heightOffset);
             sender.isEnabled = true
         }, completion:nil)
     }
@@ -157,7 +166,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         btnShowMenu.tag = 0
         tapGesture.isEnabled = false
         
-        let viewMenuBack : UIView = view.subviews.last!
+        let viewMenuBack: UIView = view.subviews.last!
         
         UIView.animate(withDuration: 0.3, animations: { () -> Void in
             var frameMenu : CGRect = viewMenuBack.frame
@@ -165,7 +174,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             viewMenuBack.frame = frameMenu
             viewMenuBack.layoutIfNeeded()
             viewMenuBack.backgroundColor = UIColor.clear
-        }, completion: { (finished) -> Void in
+        }, completion: { (_) -> Void in
             viewMenuBack.removeFromSuperview()
         })
     }

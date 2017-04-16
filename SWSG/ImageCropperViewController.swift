@@ -61,22 +61,20 @@ class ImageCropperViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private var cropArea: CGRect {
-        get {
-            guard let image = imageView.image else {
-                return CGRect()
-            }
-            let factor = image.size.width / view.frame.width
-            let scale = 1 / scrollView.zoomScale
-            let imageFrame = imageView.imageFrame()
-            
-            let sideLength  = cropAreaView.frame.size.width * scale * factor
-            var x = (scrollView.contentOffset.x + cropAreaView.frame.origin.x - imageFrame.origin.x) * scale * factor
-            var y = (scrollView.contentOffset.y + cropAreaView.frame.origin.y - imageFrame.origin.y) * scale * factor - offset * scale
-            x = x < 0 ? 0 : x + sideLength > imageToCrop.size.width ? imageToCrop.size.width - sideLength : x
-            y = y < 0 ? 0 : y + sideLength > imageToCrop.size.height ? imageToCrop.size.height - sideLength : y
-            
-            return CGRect(x: x, y: y, width: sideLength, height: sideLength)
+        guard let image = imageView.image else {
+            return CGRect()
         }
+        let factor = image.size.width / view.frame.width
+        let scale = 1 / scrollView.zoomScale
+        let imageFrame = imageView.imageFrame()
+        
+        let sideLength  = cropAreaView.frame.size.width * scale * factor
+        var x = (scrollView.contentOffset.x + cropAreaView.frame.origin.x - imageFrame.origin.x) * scale * factor
+        var y = (scrollView.contentOffset.y + cropAreaView.frame.origin.y - imageFrame.origin.y) * scale * factor - offset * scale
+        x = x < 0 ? 0 : x + sideLength > imageToCrop.size.width ? imageToCrop.size.width - sideLength : x
+        y = y < 0 ? 0 : y + sideLength > imageToCrop.size.height ? imageToCrop.size.height - sideLength : y
+        
+        return CGRect(x: x, y: y, width: sideLength, height: sideLength)
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -84,7 +82,8 @@ class ImageCropperViewController: UIViewController, UIScrollViewDelegate {
     }
     
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-        self.scrollView.contentSize = CGSize(width: imageView.frame.width * scale, height: self.imageView.frame.height * scale)
+        self.scrollView.contentSize = CGSize(width: imageView.frame.width * scale,
+                                             height: self.imageView.frame.height * scale)
     }
 
     @IBAction func cancel(_ sender: UIBarButtonItem) {
@@ -96,8 +95,9 @@ class ImageCropperViewController: UIViewController, UIScrollViewDelegate {
         var croppedImage = UIImage(cgImage: croppedCGImage!)
         croppedImage = croppedImage.fixOrientation()
     
-        let imageDataDict:[String: UIImage] = [Config.image: croppedImage]
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Config.image), object: nil, userInfo: imageDataDict)
+        let imageDataDict: [String: UIImage] = [Config.image:croppedImage]
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Config.image),
+                                        object: nil, userInfo: imageDataDict)
         dismiss(animated: false, completion: nil)
     }
     

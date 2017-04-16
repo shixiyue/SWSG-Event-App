@@ -36,7 +36,8 @@ extension NSCoder {
         let isMentor = self.decodeBool(forKey: Config.isMentor)
         let isOrganizer = self.decodeBool(forKey: Config.isOrganizer)
         let isAdmin = self.decodeBool(forKey: Config.isAdmin)
-        return UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
+        return UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker,
+                         isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
     }
 }
 
@@ -145,11 +146,11 @@ extension String {
 }
 
 /// Copy from https://medium.com/@aatish.rajkarnikar/how-to-make-a-custom-image-cropper-with-swift-3-c0ec8c9c7884#.g94umbx7o
-extension UIImageView{
+extension UIImageView {
     
-    func imageFrame() -> CGRect{
+    func imageFrame() -> CGRect {
         let imageViewSize = frame.size
-        guard let imageSize = image?.size else{
+        guard let imageSize = image?.size else {
             return CGRect.zero
         }
         

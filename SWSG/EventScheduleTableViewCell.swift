@@ -22,7 +22,6 @@ class EventScheduleTableViewCell: UITableViewCell {
     @IBOutlet weak var venue: UILabel!
     @IBOutlet weak var eventDescription: UITextView!
     
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         self.eventDescription.textContainer.lineFragmentPadding = 0

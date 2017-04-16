@@ -25,15 +25,16 @@ extension ImagePickCropperPopoverViewController: RSKImageCropViewControllerDeleg
         dismissController()
     }
     
-    func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
+    func imageCropViewController(_ controller: RSKImageCropViewController,
+                                 didCropImage croppedImage: UIImage,
+                                 usingCropRect cropRect: CGRect) {
         self.image = croppedImage.cropToSquare()
         dismiss(animated: true, completion: nil)
         dismissController()
     }
     
     fileprivate func jumpToCropImage(imageToCrop: UIImage) {
-        var imageCropVC : RSKImageCropViewController!
-        imageCropVC = RSKImageCropViewController(image: imageToCrop, cropMode: cropMode)
+        var imageCropVC = RSKImageCropViewController(image: imageToCrop, cropMode: cropMode)
         imageCropVC.delegate = self
         self.present(imageCropVC, animated: false, completion: nil)
     }

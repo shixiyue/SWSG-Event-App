@@ -22,10 +22,10 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        let takePhotoAction = UIAlertAction(title: "Take a photo", style: .default) { action in
+        let takePhotoAction = UIAlertAction(title: "Take a photo", style: .default) { _ in
             self.takePhoto()
         }
-        let selectPhotoAction = UIAlertAction(title: "Select a photo", style: .default) { action in
+        let selectPhotoAction = UIAlertAction(title: "Select a photo", style: .default) { _ in
             self.selectPhoto()
         }
         
@@ -38,7 +38,9 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
         alertController.addAction(selectPhotoAction)
         
         alertController.popoverPresentationController?.sourceView = view
-        alertController.popoverPresentationController?.sourceRect = CGRect(x: alertControllerPosition.x, y: alertControllerPosition.y, width: 1, height: 1)
+        alertController.popoverPresentationController?.sourceRect = CGRect(x: alertControllerPosition.x,
+                                                                           y: alertControllerPosition.y,
+                                                                           width: 1, height: 1)
         
         present(alertController, animated: true, completion: nil)
     }
@@ -48,7 +50,7 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
         imagePicker.sourceType = .camera
         imagePicker.cameraCaptureMode = .photo
         imagePicker.modalPresentationStyle = .fullScreen
-        present(imagePicker,animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
     
     private func selectPhoto() {
@@ -72,10 +74,14 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     private func jumpToCropImage(imageToCrop: UIImage) {
-        NotificationCenter.default.addObserver(self, selector: #selector(updateImage), name: NSNotification.Name(rawValue: Config.image), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateImage),
+                                               name: NSNotification.Name(rawValue: Config.image),
+                                               object: nil)
         
         let storyboard = UIStoryboard(name: Config.uiSupporting, bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: Config.imageCropperViewController) as! ImageCropperViewController
+        guard let controller = storyboard.instantiateViewController(withIdentifier: Config.imageCropperViewController) as? ImageCropperViewController else {
+            return
+        }
         controller.imageToCrop = imageToCrop
         present(controller, animated: false, completion: nil)
     }

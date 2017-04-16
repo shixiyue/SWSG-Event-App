@@ -23,10 +23,10 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let cancelAction = UIAlertAction(title: Config.cancel, style: .cancel)
-        let takePhotoAction = UIAlertAction(title: Config.takePhoto, style: .default) { action in
+        let takePhotoAction = UIAlertAction(title: Config.takePhoto, style: .default) { _ in
             self.takePhoto()
         }
-        let selectPhotoAction = UIAlertAction(title: Config.selectPhoto, style: .default) { action in
+        let selectPhotoAction = UIAlertAction(title: Config.selectPhoto, style: .default) { _ in
             self.selectPhoto()
         }
         
@@ -35,21 +35,24 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
         alertController.addAction(selectPhotoAction)
         
         alertController.popoverPresentationController?.sourceView = view
-        alertController.popoverPresentationController?.sourceRect = CGRect(x: alertControllerPosition.x, y: alertControllerPosition.y, width: Config.defaultValue, height: Config.defaultValue)
-        
+        alertController.popoverPresentationController?.sourceRect = CGRect(x: alertControllerPosition.x,
+                                                                           y: alertControllerPosition.y,
+                                                                           width: Config.defaultValue,
+                                                                           height: Config.defaultValue)
         present(alertController, animated: true, completion: nil)
     }
     
     private func takePhoto() {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-            present(Utility.getFailAlertController(message: Config.noCamera), animated: true, completion: nil)
+            present(Utility.getFailAlertController(message: Config.noCamera),
+            animated: true, completion: nil)
             return
         }
         imagePicker.allowsEditing = false
         imagePicker.sourceType = .camera
         imagePicker.cameraCaptureMode = .photo
         imagePicker.modalPresentationStyle = .fullScreen
-        present(imagePicker,animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
     
     private func selectPhoto() {

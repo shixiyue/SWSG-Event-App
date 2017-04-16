@@ -78,6 +78,7 @@
 		3FEE49E71E9F9BC700DC4EE1 /* ParticipantRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEE49E61E9F9BC700DC4EE1 /* ParticipantRegistrationViewController.swift */; };
 		3FF6530A1E9AB08200B9E64F /* CreateEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF653091E9AB08200B9E64F /* CreateEventViewController.swift */; };
 		90799619E39D1ABA4810AB68 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CA7AA4F9D14A6E7B2876E9AD /* libPods-OneSignalNotificationServiceExtension.a */; };
+		C21774EC1E9CEC0000352155 /* NotiHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21774EB1E9CEC0000352155 /* NotiHandler.swift */; };
 		C28B2ED81E86601300F6DD67 /* FirebaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28B2ED71E86601300F6DD67 /* FirebaseClient.swift */; };
 		C28B2EDA1E86665000F6DD67 /* FirebaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28B2ED91E86665000F6DD67 /* FirebaseError.swift */; };
 		C2A8A6761E9B0BF8008D50BC /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A8A6751E9B0BF8008D50BC /* NotificationService.swift */; };
@@ -281,6 +282,7 @@
 		47768B1F37EFBCE271E85CCA /* Pods-SWSG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWSG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SWSG/Pods-SWSG.debug.xcconfig"; sourceTree = "<group>"; };
 		54B8245B6BA99CC5301E1F07 /* Pods_SWSG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SWSG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77F278356DF3CB18712C6624 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
+		C21774EB1E9CEC0000352155 /* NotiHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotiHandler.swift; sourceTree = "<group>"; };
 		C28B2ED71E86601300F6DD67 /* FirebaseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseClient.swift; sourceTree = "<group>"; };
 		C28B2ED91E86665000F6DD67 /* FirebaseError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseError.swift; sourceTree = "<group>"; };
 		C2A8A6731E9B0BF8008D50BC /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -701,6 +703,7 @@
 			children = (
 				C2A8A6841E9B0EFD008D50BC /* HttpClient.swift */,
 				C2A8A6861E9B0F0D008D50BC /* NotiPusher.swift */,
+				C21774EB1E9CEC0000352155 /* NotiHandler.swift */,
 			);
 			name = PushNotification;
 			sourceTree = "<group>";
@@ -886,6 +889,7 @@
 				CBF123FCAD2E27D5F4C3D728 /* [CP] Embed Pods Frameworks */,
 				12CCBB3508AF93C5B8F76C69 /* [CP] Copy Pods Resources */,
 				C2A8A67E1E9B0BF8008D50BC /* Embed App Extensions */,
+				3FEA51641EA3936E00370372 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1046,6 +1050,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SWSG/Pods-SWSG-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		3FEA51641EA3936E00370372 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "";
 		};
 		556769A65687CFF6359A68C5 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1248,6 +1265,7 @@
 				3FC314641E77DD22009B21AB /* ConsultationSlot.swift in Sources */,
 				CC9500891E86398F00EC871F /* TemplateViewController.swift in Sources */,
 				E3E3B2E51E9A2E9800778B9C /* TagTableViewCell.swift in Sources */,
+				C21774EC1E9CEC0000352155 /* NotiHandler.swift in Sources */,
 				CC8A4E121E8CB5C3005E2AC5 /* ImagePickerViewController.swift in Sources */,
 				3FC6219F1E96525300661305 /* ChannelInfoViewController.swift in Sources */,
 				3FED30161E76FA0A00C007AD /* MenuViewController.swift in Sources */,

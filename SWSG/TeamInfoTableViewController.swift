@@ -36,6 +36,8 @@ class TeamInfoTableViewController: UITableViewController {
     private let joinTeamErrorMsg = "You can not join more than one team"
     private let quitTeamErrorMsg = "You do not belong to this team"
     private let fullTeamErrorMsg = "Team is full"
+    private let editTeamErrorMsg = "You cannot edit this team!"
+    private let chatErrorMsg = "You cannot chat with this team!"
     
     //firebase handling variables
     private var teamRef: FIRDatabaseReference!
@@ -130,12 +132,20 @@ class TeamInfoTableViewController: UITableViewController {
         guard let team = team else {
             return
         }
+        guard let user = System.activeUser, user.team == team.id else {
+            self.present(Utility.getFailAlertController(message: chatErrorMsg), animated: true, completion: nil)
+            return
+        }
         System.client.getTeamChannel(for: team, completion: { (channel, error) in
             self.performSegue(withIdentifier: Config.teamToChat, sender: channel)
         })
     }
     @IBAction func EditBtnPressed(_ sender: Any) {
         guard let team = team else {
+            return
+        }
+        guard let user = System.activeUser, user.team == team.id else {
+            self.present(Utility.getFailAlertController(message: editTeamErrorMsg), animated: true, completion: nil)
             return
         }
         self.performSegue(withIdentifier: "teamEdit", sender: team)
@@ -167,11 +177,9 @@ class TeamInfoTableViewController: UITableViewController {
         if btnTitle == Config.joinTeam {
             user.setTeamId(id: team.id!)
             team.addMember(member: user)
-            chatBtn.isEnabled = true
         } else if btnTitle == Config.quitTeam {
             user.setTeamId(id: Config.noTeam)
             team.removeMember(member: user)
-            chatBtn.isEnabled = false
         }
         buttonLbl.setTitle(toggleBtnTitle(prevTitle: btnTitle, team: team), for: .normal)
         

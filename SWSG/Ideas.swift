@@ -14,7 +14,7 @@ class Ideas {
     var count: Int { return ideas.count }
     
     private static var ideasInstance = Ideas()
-    private var ideas : [Idea]
+    private var ideas: [Idea]
     
     private init() {
         ideas = []
@@ -32,7 +32,7 @@ class Ideas {
             return
         }
         ideas.append(idea)
-        ideas = ideas.sorted{$0.name.caseInsensitiveCompare($1.name) == .orderedAscending}
+        ideas = ideas.sorted {$0.name.caseInsensitiveCompare($1.name) == .orderedAscending}
     }
     
     func update(snapshot: FIRDataSnapshot) {
@@ -43,7 +43,7 @@ class Ideas {
             return
         }
         ideas[index] = idea
-        ideas = ideas.sorted{$0.name.caseInsensitiveCompare($1.name) == .orderedAscending}
+        ideas = ideas.sorted {$0.name.caseInsensitiveCompare($1.name) == .orderedAscending}
     }
     
     func remove(snapshot: FIRDataSnapshot) -> Int? {

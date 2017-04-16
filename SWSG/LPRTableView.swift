@@ -132,7 +132,7 @@ extension LPRTableView {
                     cell.setHighlighted(false, animated: false)
                     
                     // Create the view that will be dragged around the screen.
-                    if (draggingView == nil) {
+                    if draggingView == nil {
                         if let draggingCell = longPressReorderDelegate?.tableView?(self, draggingCell: cell, at: indexPath) {
                             cell = draggingCell
                         }
@@ -209,8 +209,7 @@ extension LPRTableView {
                 // We're in the top zone.
             else if location.y <= topScrollBeginning {
                 scrollRate = Double(location.y - topScrollBeginning) / Double(scrollZoneHeight)
-            }
-            else {
+            } else {
                 scrollRate = 0.0
             }
         }
@@ -236,7 +235,7 @@ extension LPRTableView {
                                 }
                             }
                 },
-                           completion: { [unowned self] (Bool) -> Void in
+                           completion: { [unowned self] (_) -> Void in
                             if let draggingView = self.draggingView {
                                 draggingView.removeFromSuperview()
                             }
@@ -252,8 +251,7 @@ extension LPRTableView {
                             self.hapticFeedbackSelectionChanged()
                             self.hapticFeedbackFinalize()
             })
-        }
-        else if gesture.state == .cancelled || gesture.state == .failed {
+        } else if gesture.state == .cancelled || gesture.state == .failed {
             self.hapticFeedbackFinalize()
         }
     }

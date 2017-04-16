@@ -31,7 +31,6 @@ class HttpClient {
     //             print("Data is empty")
     //             return
     //         }
-            
     //         let json = try! JSONSerialization.jsonObject(with: data, options: [])
     //         print(json)
     //     }

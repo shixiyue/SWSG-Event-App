@@ -12,8 +12,9 @@ class EventScheduleTableViewController: UITableViewController {
     var events = Events()
     
     @IBOutlet weak var eventsTableView: UITableView! {
-        didSet{
-            let eventItemTapGesture = UITapGestureRecognizer(target:self,action:#selector(EventScheduleTableViewController.eventItemTapHandler))
+        didSet {
+            let eventItemTapGesture = UITapGestureRecognizer(target:self,
+                                                             action:#selector(EventScheduleTableViewController.eventItemTapHandler))
             eventItemTapGesture.numberOfTapsRequired = 1
             eventsTableView.addGestureRecognizer(eventItemTapGesture)            
             eventsTableView.isUserInteractionEnabled = true
@@ -71,9 +72,11 @@ extension EventScheduleTableViewController {
         return events.count
     }
     
-    
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "EventCell", for: indexPath) as! EventScheduleTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "EventCell", for: indexPath) as? EventScheduleTableViewCell else {
+            return EventScheduleTableViewCell()
+        }
+        
         if let event = events.retrieveEventAt(index: indexPath.item) {
             cell.eventName.text = event.name
             let timeFormatter = DateFormatter()
@@ -87,7 +90,6 @@ extension EventScheduleTableViewController {
         return cell
     }
     
-    
     public override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
@@ -95,7 +97,6 @@ extension EventScheduleTableViewController {
     public override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
-    
     
     /*
      // Override to support conditional editing of the table view.
@@ -105,17 +106,18 @@ extension EventScheduleTableViewController {
      }
      */
     
-    
     // Override to support editing the table view.
-    public override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    public override func tableView(_ tableView: UITableView,
+                                   commit editingStyle: UITableViewCellEditingStyle,
+                                   forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+            // Create a new instance of the appropriate class, insert it into the array, 
+            // and add a new row to the table view
         }
     }
-    
     
     /*
      // Override to support rearranging the table view.

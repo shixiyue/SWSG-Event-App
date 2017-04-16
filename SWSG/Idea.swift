@@ -45,7 +45,8 @@ class Idea: ImagesContent, TemplateContent {
     fileprivate var upvotes = Set<String>()
     fileprivate var downvotes = Set<String>()
 
-    init(name: String, user: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String, id: String? = nil) {
+    init(name: String, user: String, description: String, mainImage: UIImage,
+         images: [UIImage], videoLink: String, id: String? = nil) {
 
         self.name = name
         self.user = user
@@ -113,8 +114,10 @@ class Idea: ImagesContent, TemplateContent {
         })
     }
     
-    func getUpdatedIdea(name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) -> Idea {
-        let idea = Idea(name: name, user: user, description: description, mainImage: mainImage, images: images, videoLink: videoLink, id: id)
+    func getUpdatedIdea(name: String, description: String, mainImage: UIImage,
+                        images: [UIImage], videoLink: String) -> Idea {
+        let idea = Idea(name: name, user: user, description: description,
+                        mainImage: mainImage, images: images, videoLink: videoLink, id: id)
         idea.imagesState.mainImageHasChanged = self.mainImage != mainImage
         idea.imagesState.imagesHasChanged = self.images != images
         return idea
@@ -199,7 +202,7 @@ class Idea: ImagesContent, TemplateContent {
 
 extension Idea: Equatable { }
 
-func ==(lhs: Idea, rhs: Idea) -> Bool {
+func == (lhs: Idea, rhs: Idea) -> Bool {
     
     if let lhsId = lhs.id, let rhsId = rhs.id {
         return lhsId == rhsId

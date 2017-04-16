@@ -19,7 +19,7 @@ import Firebase
 
 class ChannelInfoViewController: UIViewController {
     
-    //MARK: IBOutlets
+    // MARK: IBOutlets
     @IBOutlet weak var iconIV: UIImageView!
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var membersList: UITableView!
@@ -27,19 +27,18 @@ class ChannelInfoViewController: UIViewController {
     @IBOutlet weak var addBtn: RoundCornerButton!
     @IBOutlet weak var editNameBtn: UIButton!
     
-    //MARK: Properties
+    // MARK: Properties
     var channel: Channel!
     fileprivate var members = [User]()
     fileprivate let client = System.client
     fileprivate var imagePicker = ImagePickCropperPopoverViewController()
     
-    //MARK: Firebase References
+    // MARK: Firebase References
     fileprivate var channelRef: FIRDatabaseReference?
     private var channelExistingHandle: FIRDatabaseHandle?
     private var membersNewHandle: FIRDatabaseHandle?
-    private var membersRemovedHandle: FIRDatabaseHandle?
     
-    //MARK: Initialization Methods
+    // MARK: Initialization Methods
     override func viewDidLoad() {
         setUpIcon()
         setUpMemberList()
@@ -119,12 +118,9 @@ class ChannelInfoViewController: UIViewController {
             })
             
         })
-        
-        membersRemovedHandle = channelRef?.child(Config.members).observe(.childRemoved, with: { (snapshot) -> Void in
-        })
     }
     
-    //MARK: IBOUtlet Actions
+    // MARK: IBOUtlet Actions
     @IBAction func editIconBtnPressed(_ sender: Any) {
         editIcon()
     }
@@ -148,7 +144,7 @@ class ChannelInfoViewController: UIViewController {
         Utility.popViewController(no: 2, viewController: self)
     }
     
-    //MARK: Editing Functions
+    // MARK: Editing Functions
     func editIcon() {
         Utility.showImagePicker(imagePicker: imagePicker, viewController: self, completion: { (image) in
             if let image = image {
@@ -188,7 +184,7 @@ class ChannelInfoViewController: UIViewController {
                                          btnText: btnText, placeholderText: placeholderText,
                                          existingText: existingText, viewController: self,
                                          completion: { (name) in
-            self.client.getUserWith(username: name, completion: { (user, error) in
+            self.client.getUserWith(username: name, completion: { (user, _) in
                 guard let user = user, let _ = user.uid else {
                     Utility.displayDismissivePopup(title: "Error", message: "Username does not exist!", viewController: self, completion: { _ in
                         self.addMember(existingText: name)
@@ -240,7 +236,6 @@ extension ChannelInfoViewController: UITableViewDataSource {
             }
         })
         
-        
         cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
         cell.nameLbl.text = "\(member.profile.name) (@\(member.profile.username))"
         
@@ -251,7 +246,7 @@ extension ChannelInfoViewController: UITableViewDataSource {
 // MARK: UITableViewDelegate
 extension ChannelInfoViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView,
-                               editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]?{
+                          editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]?{
         if members[indexPath.item].uid == client.getUid() {
             let action = UITableViewRowAction()
             action.title = "Quit"
@@ -265,7 +260,9 @@ extension ChannelInfoViewController: UITableViewDelegate {
         }
     }
     
-    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView,
+                          commit editingStyle: UITableViewCellEditingStyle,
+                          forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             members.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
@@ -288,4 +285,3 @@ extension ChannelInfoViewController: UITextFieldDelegate {
         return false
     }
 }
-

@@ -25,7 +25,7 @@ import SwiftSpinner
  */
 class LoginViewController: UIViewController {
 
-    //MARK: IBOutlets
+    // MARK: IBOutlets
     @IBOutlet fileprivate var emailTextField: UITextField!
     @IBOutlet fileprivate var passwordTextField: UITextField!
     @IBOutlet fileprivate var logInButton: RoundCornerButton!
@@ -35,14 +35,14 @@ class LoginViewController: UIViewController {
     @IBOutlet private var googleView: UIView!
     @IBOutlet private var signUpView: UIView!
     
-    //MARK: Properties
+    // MARK: Properties
     var newCredential: FIRAuthCredential?
     var clientArr: [String]?
     fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
     fileprivate let googleLoginButton = GIDSignInButton()
     fileprivate var currentAuth: AuthType?
     
-    //MARK: Intialization Functions
+    // MARK: Intialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpButton()
@@ -100,8 +100,10 @@ class LoginViewController: UIViewController {
         logInButton.setDisable()
         logInButton.addTarget(self, action: #selector(logIn), for: .touchUpInside)
         
-        let fbCenter = CGPoint(x: facebookView.frame.width/2,y: facebookView.frame.height/2)
-        let googleCenter = CGPoint(x: googleView.frame.width/2,y: googleView.frame.height/2)
+        let fbCenter = CGPoint(x: facebookView.frame.width/2,
+                               y: facebookView.frame.height/2)
+        let googleCenter = CGPoint(x: googleView.frame.width/2,
+                                   y: googleView.frame.height/2)
         
         fbLoginButton.center = fbCenter
         fbLoginButton.delegate = self
@@ -145,7 +147,10 @@ class LoginViewController: UIViewController {
     }
     
     fileprivate func attemptLogin(email: String, password: String?, user: SocialUser?, auth: AuthType) {
-        Utility.attemptRegistration(email: email, password: password, auth: auth, newCredential: self.newCredential, viewController: self, completion: { (exists, arr) in
+        Utility.attemptRegistration(email: email, password: password, auth: auth,
+                                    newCredential: self.newCredential,
+                                    viewController: self,
+                                    completion: { (exists, arr) in
             
             if !exists, let _ = arr {
                 let title = Config.emailExists
@@ -165,7 +170,7 @@ class LoginViewController: UIViewController {
     
 }
 
-//MARK: UITextFieldDelegate
+// MARK: UITextFieldDelegate
 extension LoginViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -186,7 +191,7 @@ extension LoginViewController: UITextFieldDelegate {
         updateButtonState()
     }
     
-    //MARK: UI Supporting Method
+    // MARK: UI Supporting Method
     private func updateButtonState() {
         let isAnyEmpty = emailTextField.text?.isEmpty ?? true || passwordTextField.text?.isEmpty ?? true
         logInButton.isEnabled = !isAnyEmpty
@@ -195,7 +200,7 @@ extension LoginViewController: UITextFieldDelegate {
     
 }
 
-//MARK: GIDSignInDelegate, GIDSignInUIDelegate
+// MARK: GIDSignInDelegate, GIDSignInUIDelegate
 extension LoginViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     func googleLoginBtnPressed(sender: UITapGestureRecognizer) {
         GIDSignIn.sharedInstance().signIn()
@@ -213,11 +218,11 @@ extension LoginViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     
 }
 
-//MARK: LoginButtonDelegate
+// MARK: LoginButtonDelegate
 extension LoginViewController: LoginButtonDelegate {
     
-    func loginButtonDidCompleteLogin(_ fbLoginButton: LoginButton, result: LoginResult){
-        System.client.getFBProfile(completion: { (user, error) in
+    func loginButtonDidCompleteLogin(_ fbLoginButton: LoginButton, result: LoginResult) {
+        System.client.getFBProfile(completion: { (user, _) in
             guard let user = user else {
                 return
             }
@@ -227,7 +232,7 @@ extension LoginViewController: LoginButtonDelegate {
         })
     }
     
-    func loginButtonDidLogOut(_ fbLoginButton: LoginButton){
+    func loginButtonDidLogOut(_ fbLoginButton: LoginButton) {
         
     }
 }

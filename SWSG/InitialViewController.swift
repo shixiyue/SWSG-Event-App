@@ -21,18 +21,18 @@ import SwiftSpinner
 
 class InitialViewController: UIViewController {
     
-    //MARK: IBOutlets
+    // MARK: IBOutlets
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var fbView: UIView!
     @IBOutlet weak var googleView: UIView!
     
-    //MARK: Properties
+    // MARK: Properties
     fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
     fileprivate let googleLoginButton = GIDSignInButton()
     fileprivate let client = System.client
     fileprivate var currentAuth: AuthType?
     
-    //MARK: Initialization Functions
+    // MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpButtons()
@@ -91,7 +91,8 @@ class InitialViewController: UIViewController {
     }
     
     fileprivate func attemptLogin(email: String, user: SocialUser, auth: AuthType) {
-        Utility.attemptRegistration(email: email, auth: auth, newCredential: nil, viewController: self, completion: { (exists, arr) in
+        Utility.attemptRegistration(email: email, auth: auth, newCredential: nil,
+                                    viewController: self, completion: { (exists, arr) in
             if !exists, let arr = arr {
                 let title = Config.emailExists
                 let message = Config.logInWithOriginal
@@ -110,7 +111,7 @@ class InitialViewController: UIViewController {
     
 }
 
-//MARK: GIDSignInDelegate, GIDSignInUIDelegate
+// MARK: GIDSignInDelegate, GIDSignInUIDelegate
 extension InitialViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
@@ -124,13 +125,13 @@ extension InitialViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     }
 }
 
-//MARK: LoginButtonDelegate
+// MARK: LoginButtonDelegate
 extension InitialViewController: LoginButtonDelegate {
     
     func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
         
         SwiftSpinner.show(Config.communicateFacebook)
-        client.getFBProfile(completion: { (user, error) in
+        client.getFBProfile(completion: { (user, _) in
             guard let user = user else {
                 Utility.showSwiftSpinnerErrorMsg()
                 return

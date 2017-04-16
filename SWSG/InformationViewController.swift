@@ -12,7 +12,12 @@ class InformationViewController: BaseViewController {
     
     @IBOutlet private var informationTable: UITableView!
     
-    fileprivate let informationItems: [(name: String, image: String)] = [("Overview", "Overview"), ("Speakers", "Speakers"), ("Judges", "Judges"), ("Sponsors", "Sponsors"), ("Organizing Team", "Organizers"), ("Frequently Asked Questions", "Questions")]
+    fileprivate let informationItems: [(name: String, image: String)] = [("Overview", "Overview"),
+                                                                         ("Speakers", "Speakers"),
+                                                                         ("Judges", "Judges"),
+                                                                         ("Sponsors", "Sponsors"),
+                                                                         ("Organizing Team", "Organizers"),
+                                                                         ("Frequently Asked Questions", "Questions")]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +32,8 @@ class InformationViewController: BaseViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let identifier = segue.identifier, let peopleViewController = segue.destination as? PeopleViewController else {
+        guard let identifier = segue.identifier,
+            let peopleViewController = segue.destination as? PeopleViewController else {
             return
         }
         switch identifier {
@@ -54,7 +60,8 @@ extension InformationViewController: UITableViewDataSource, UITableViewDelegate 
         let index = indexPath.item
         let item =  informationItems[index]
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "informationCell", for: indexPath) as? InformationCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "informationCell",
+                                                       for: indexPath) as? InformationCell else {
             return InformationCell()
         }
         

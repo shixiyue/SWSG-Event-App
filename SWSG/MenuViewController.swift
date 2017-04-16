@@ -93,7 +93,7 @@ class MenuViewController: UIViewController {
             return
         }
         
-        userRefHandle = userRef.observe(.value, with: { (snapshot) -> Void in
+        userRefHandle = userRef.observe(.value, with: { (_) -> Void in
             Utility.getProfileImg(uid: uid, completion: { (image) in
                 if let image = image {
                     self.profileImg.image = image

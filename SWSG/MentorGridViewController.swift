@@ -14,10 +14,11 @@ import Firebase
  mentors in a UICollectionView
  */
 class MentorGridViewController: BaseViewController {
+    // MARK: IBOutlets
     @IBOutlet weak var mentorCollection: UICollectionView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    //MAR: Properties
+    // MARK: Properties
     fileprivate var insets: CGFloat!
     fileprivate var mentors = [User]()
     fileprivate var filteredMentors = [User]()
@@ -27,11 +28,11 @@ class MentorGridViewController: BaseViewController {
         }
     }
     
-    //MARK: Firebase References
+    // MARK: Firebase References
     private var mentorsRef: FIRDatabaseQuery?
     private var mentorsRefHandle: FIRDatabaseHandle?
     
-    //MARK: Initialization Functions
+    // MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()

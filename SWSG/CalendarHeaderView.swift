@@ -15,6 +15,6 @@
 
 import JTAppleCalendar
 
-class CalendarHeaderView : JTAppleHeaderView {
+class CalendarHeaderView: JTAppleHeaderView {
     @IBOutlet var title: UILabel!
 }

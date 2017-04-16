@@ -57,6 +57,13 @@ struct Config {
     static let consultationDays = "consultationDays"
     static let consultationSlots = "consultationSlots"
     static let consultationStatus = "consultationStatus"
+    static let channelId = "channel_id"
+    static let notiType = "type"
+    static let notiAdditionData = "addition_data"
+    static let notiMessage = "message"
+    static let notiContents = "contents"
+    static let notiData = "data"
+    static let english = "en"
 
     static let start = "start"
     static let end = "end"
@@ -188,7 +195,6 @@ struct Config {
     static let ideaListTableCellHeight: CGFloat = 110
     static let ideaItemCell = "ideaItemCell"
 
-    
     // Parameters for information message:
     static let done = "Done"
     static let noTeamLabel = "No Team yet"
@@ -268,7 +274,6 @@ struct Config {
     static let channelID = "channelID"
     static let createPublicHeaderLabel = "Create Public Channel"
     static let createPublicMembersHeaderLabel = "Members (Only for Private Channel"
-    
     
     // Parameters for Profile
     static let headerFavourites = "Favourites"

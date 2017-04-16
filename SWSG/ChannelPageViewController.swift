@@ -16,19 +16,19 @@ import Firebase
 
 class ChannelPageViewController: UIPageViewController {
     
-    //MARK: Properties
+    // MARK: Properties
     fileprivate var channels = [Channel]()
     fileprivate var channelIdentifier = [Int: Channel]()
     fileprivate var channelViewControllers = [UIViewController]()
     fileprivate var firstLoaded = false
     fileprivate var index = 0
     
-    //MARK: Firebase References
+    // MARK: Firebase References
     fileprivate var channelsRef: FIRDatabaseReference?
     private var channelsAddedHandle: FIRDatabaseHandle?
     private var channelsExistingHandle: FIRDatabaseHandle?
     
-    //MARK: Initialization Functions
+    // MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,7 +38,7 @@ class ChannelPageViewController: UIPageViewController {
         observeChannels()
     }
     
-    //MARK: Navigation
+    // MARK: Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
@@ -52,7 +52,7 @@ class ChannelPageViewController: UIPageViewController {
         }
     }
     
-    //MARK: Firebase Functions
+    // MARK: Firebase Functions
     private func observeChannels() {
         channelsRef = System.client.getChannelsRef()
         
@@ -60,7 +60,7 @@ class ChannelPageViewController: UIPageViewController {
             var validChannels = 0
             for child in snapshot.children {
                 if let child = child as? FIRDataSnapshot, let channel = Channel(id: child.key, snapshot: child),
-                    Utility.validChannel(channel){
+                    Utility.validChannel(channel) {
                     validChannels += 1
                 }
             }
@@ -94,7 +94,7 @@ class ChannelPageViewController: UIPageViewController {
         })
     }
     
-    //MARK: UI Supporting Functions
+    // MARK: UI Supporting Functions
     fileprivate func setEmptyChat() {
         let storyboard = UIStoryboard(name: Config.mainStoryboard, bundle: nil)
         let emptyChat = storyboard.instantiateViewController(withIdentifier: Config.emptyChatView)
@@ -121,7 +121,8 @@ class ChannelPageViewController: UIPageViewController {
     fileprivate func getViewController(channel: Channel) -> UIViewController {
         let storyboard = UIStoryboard(name: Config.mainStoryboard, bundle: nil)
         
-        guard let viewController = storyboard.instantiateViewController(withIdentifier: Config.channelPageCellView) as? ChannelPageCellController, let id = channel.id else {
+        guard let viewController = storyboard.instantiateViewController(withIdentifier: Config.channelPageCellView)
+            as? ChannelPageCellController, let id = channel.id else {
             return UIViewController()
         }
         

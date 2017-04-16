@@ -86,4 +86,3 @@ extension CommentsInputTableViewCell: UITextViewDelegate {
         textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
     }
 }
-
