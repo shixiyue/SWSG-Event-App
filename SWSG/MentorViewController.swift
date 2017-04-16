@@ -156,14 +156,15 @@ class MentorViewController: UIViewController {
         let slot = day.slots[index]
         let slotTimeString = Utility.fbDateTimeFormatter.string(from: slot.startDateTime)
         
+        mentor.days[dayIndex].slots[index].status = status
+        
         let slotRef = mentorRef.child("\(Config.mentor)/\(Config.consultationDays)/\(dateString)/\(slotTimeString)")
         slotRef.child(Config.consultationStatus).setValue(status.rawValue)
         
         if status == .booked {
-            slotRef.child(Config.team).setValue(System.activeUser?.team)
             mentor.days[dayIndex].slots[index].team = System.activeUser?.team
+            slotRef.child(Config.team).setValue(System.activeUser?.team)
         }
-        mentor.days[dayIndex].slots[index].status = status
     }
     
     // MARK: User Interaction Functions
