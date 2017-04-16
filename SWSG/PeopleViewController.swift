@@ -9,6 +9,13 @@
 import UIKit
 import Firebase
 
+/**
+ PeopleViewController is a UIViewController that displays the information
+ for a particular category of people.
+ 
+ Specifications:
+ - category: The category of people whose information to display
+ */
 class PeopleViewController: FullScreenImageViewController {
     
     var category: String!

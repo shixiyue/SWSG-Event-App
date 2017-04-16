@@ -8,6 +8,12 @@
 
 import UIKit
 
+/**
+ IdeaItemCell is a UITableViewCell that is used in InformationViewController
+ to display a category of information
+ 
+ It has a Name Label and an Icon Image View.
+ */
 class InformationCell: UITableViewCell {
     
     @IBOutlet private var icon: UIImageView!

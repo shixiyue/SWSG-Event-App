@@ -8,6 +8,13 @@
 
 import UIKit
 
+/**
+ OverviewEditViewController is a UIViewController that allows organizers
+ to edit overview content.
+ 
+ Specifications:
+ - overview: OverviewContent who will be edited
+ */
 class OverviewEditViewController: UIViewController {
     
     var overview: OverviewContent!

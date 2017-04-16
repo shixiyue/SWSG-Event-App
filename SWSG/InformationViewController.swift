@@ -8,6 +8,12 @@
 
 import UIKit
 
+/**
+ InformationViewController is a UIViewController, inherits from BaseViewController
+ for the menu, that displays a list of all categories of information.
+ 
+ It allows the user to navigate to different information.
+ */
 class InformationViewController: BaseViewController {
     
     @IBOutlet private var informationTable: UITableView!
