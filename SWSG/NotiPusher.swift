@@ -6,11 +6,19 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+    NotiPusher is the interface between the app and OneSignal that can send request to OneSignal server to send notifications to other users.
+ */
+
 import Foundation
 import OneSignal
 
 class NotiPusher {
     
+    /**
+        Send the noti to all user.
+            - requires: the type of noti must have the type that is available to all user (.i.e announcement)
+    */
     public func pushToAll(noti: PushNotification) {
         var data = noti.toSendableDict()
         data["app_id"] = Secret.oneSignalAppId
@@ -20,6 +28,9 @@ class NotiPusher {
         
     }
     
+    /**
+        
+    */    
     public func push(noti: PushNotification, toUserWithUid uid: String) {
         var data = noti.toSendableDict()
         data["app_id"] = Secret.oneSignalAppId
