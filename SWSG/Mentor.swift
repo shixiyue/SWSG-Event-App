@@ -67,7 +67,6 @@ class Mentor {
         var dict = [String: Any]()
         
         for day in days {
-            print(day.date)
             dict[Utility.fbDateFormatter.string(from: day.date)] = day.toDictionary()
         }
         

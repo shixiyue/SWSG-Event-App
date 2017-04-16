@@ -16,7 +16,6 @@ struct System {
         client.getMentors(completion: { (mentors, error) in
             users += mentors
         })
-        print("\(users.count)")
         return users
     }()
    

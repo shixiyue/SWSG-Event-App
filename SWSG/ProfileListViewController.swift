@@ -44,24 +44,23 @@ class ProfileListViewController: BaseViewController {
         
         addSlideMenuButton()
         setUpSearchBar()
+        setUpTable()
         observeFavourites()
         observeUsers()
-        
-        profileList.delegate = self
-        profileList.dataSource = self
     }
     
     // MARK: Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
-        if segue.identifier == Config.profileListToProfile, let user = sender as? User {
-            guard let profileVC = segue.destination as? ProfileViewController else {
-                return
-            }
-            
-            profileVC.user = user
+        guard segue.identifier == Config.profileListToProfile, let user = sender as? User else {
+            return
         }
+        guard let profileVC = segue.destination as? ProfileViewController else {
+            return
+        }
+            
+        profileVC.user = user
     }
     
     // MARK: Layout methods
@@ -72,6 +71,11 @@ class ProfileListViewController: BaseViewController {
     
     func donePressed() {
         self.view.endEditing(true)
+    }
+    
+    private func setUpTable() {
+        profileList.delegate = self
+        profileList.dataSource = self
     }
     
     // MARK: Firebase related methods
@@ -135,6 +139,7 @@ class ProfileListViewController: BaseViewController {
 
 // MARK: UITableViewDataSource
 extension ProfileListViewController: UITableViewDataSource {
+    
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchActive {
             return filteredUsers.count
@@ -146,7 +151,6 @@ extension ProfileListViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let user: User
-        print(searchActive)
         if searchActive && filteredUsers.count > indexPath.item {
             user = filteredUsers[indexPath.item]
         } else {
@@ -158,21 +162,17 @@ extension ProfileListViewController: UITableViewDataSource {
                 return ProfileCell()
         }
         
-        cell.colorBorder.backgroundColor = Config.themeColor
-        cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
-        cell.iconIV.image = Config.placeholderImg
-        cell.nameLbl.text = user.profile.name
-        cell.jobLbl.text = user.profile.job
-        cell.companyLbl.text = user.profile.company
+        cell.setUp(name: user.profile.name, job: user.profile.job, company: user.profile.company)
         
         Utility.getTeamLbl(user: user, completion: { (teamLblText) in
-            cell.teamLbl.text = teamLblText
+            cell.setTeamLabel(teamLblText)
         })
         
         Utility.getProfileImg(uid: uid, completion: { (image) in
-            if let image = image {
-                cell.iconIV.image = image
+            guard let image = image else {
+                return
             }
+            cell.setIconImage(image)
         })
         
         return cell
@@ -202,22 +202,22 @@ extension ProfileListViewController: UITextFieldDelegate {
     }
     
     public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            print(indexPath.row)
-            let favourite = favourites[indexPath.row]
-            
-            guard let favouriteUID = favourite.uid else {
-                return
-            }
-            
-            System.client.removeFavourte(uid: favouriteUID)
-            print("tst")
+        guard editingStyle == .delete else {
+            return
         }
+        let favourite = favourites[indexPath.row]
+            
+        guard let favouriteUID = favourite.uid else {
+            return
+        }
+            
+        System.client.removeFavourte(uid: favouriteUID)
     }
 }
 
 // MARK: UISearchResultsUpdating
 extension ProfileListViewController: UISearchBarDelegate {
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filteredUsers = users.filter { user in
             return user.profile.name.lowercased().contains(searchText.lowercased()) ||

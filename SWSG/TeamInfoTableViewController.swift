@@ -277,8 +277,6 @@ extension TeamInfoTableViewController {
                 cell.jobLbl.text = user.profile.job
                 cell.companyLbl.text = user.profile.company
                 cell.descLbl.text = user.profile.desc
-            } else {
-                print("error reading user")
             }
         })
         cell.profileimage = Utility.roundUIImageView(for: cell.profileimage)

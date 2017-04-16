@@ -713,10 +713,19 @@
 			name = PushNotification;
 			sourceTree = "<group>";
 		};
-		CC168B2F1E7FBF4C00F8725A /* UI Supporting */ = {
+		CC1237CA1EA373F50055EE56 /* Archive */ = {
 			isa = PBXGroup;
 			children = (
 				E348D56D1E8415C500947B3F /* SegueFromRight.swift */,
+				CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */,
+			);
+			name = Archive;
+			sourceTree = "<group>";
+		};
+		CC168B2F1E7FBF4C00F8725A /* UI Supporting */ = {
+			isa = PBXGroup;
+			children = (
+				CC1237CA1EA373F50055EE56 /* Archive */,
 				CC1F15391E8F8C7000293488 /* DescriptionTableViewCell.swift */,
 				3F3284221E92185B0062490D /* MultiDirectionCollectionViewLayout.swift */,
 				CC95008A1E8639B400EC871F /* PhotoPageViewController.swift */,
@@ -727,7 +736,6 @@
 				CCE7DDD91E8A4E440044A863 /* TemplateEditViewController.swift */,
 				E3220C4E1E7B99CF008AFA85 /* UISubclasses.swift */,
 				CC168B2B1E7E8C5800F8725A /* UISupporting.storyboard */,
-				CC168B2D1E7E8E4600F8725A /* ImageCropperViewController.swift */,
 				CC8A4E111E8CB5C3005E2AC5 /* ImagePickerViewController.swift */,
 				3FC6219C1E95EED700661305 /* ImagePickerPopoverViewController.swift */,
 				CC18E1911E9A722400BE8B67 /* ImagePickCropperPopoverViewController.swift */,

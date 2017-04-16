@@ -82,9 +82,7 @@ class Event {
         
         var comments = [Comment]()
         if let commentsSnapshot = snapshotValue[Config.comments] as? [[String: String]] {
-            print("test2\(commentsSnapshot)")
             for commentSnapshot in commentsSnapshot {
-                print("test\(commentSnapshot)")
                 if let comment = Comment(snapshot: commentSnapshot) {
                     comments.append(comment)
                 }

@@ -10,10 +10,27 @@ import UIKit
 
 class ProfileCell: UITableViewCell {
     
-    @IBOutlet weak var colorBorder: UIView!
-    @IBOutlet weak var iconIV: UIImageView!
-    @IBOutlet weak var nameLbl: UILabel!
-    @IBOutlet weak var jobLbl: UILabel!
-    @IBOutlet weak var companyLbl: UILabel!
-    @IBOutlet weak var teamLbl: UILabel!
+    @IBOutlet private var colorBorder: UIView!
+    @IBOutlet private var iconIV: UIImageView!
+    @IBOutlet private var nameLbl: UILabel!
+    @IBOutlet private var jobLbl: UILabel!
+    @IBOutlet private var companyLbl: UILabel!
+    @IBOutlet private var teamLbl: UILabel!
+    
+    func setUp(name: String, job: String, company: String) {
+        colorBorder.backgroundColor = Config.themeColor
+        iconIV = Utility.roundUIImageView(for: iconIV)
+        iconIV.image = Config.placeholderImg
+        nameLbl.text = name
+        jobLbl.text = job
+        companyLbl.text = company
+    }
+    
+    func setTeamLabel(_ teamLblText: String) {
+        teamLbl.text = teamLblText
+    }
+    
+    func setIconImage(_ image: UIImage) {
+        iconIV.image = image
+    }
 }

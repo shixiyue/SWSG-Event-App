@@ -121,7 +121,6 @@ class ChannelInfoViewController: UIViewController {
         })
         
         membersRemovedHandle = channelRef?.child(Config.members).observe(.childRemoved, with: { (snapshot) -> Void in
-            print(snapshot)
         })
     }
     
