@@ -15,45 +15,41 @@ import FacebookLogin
 import SwiftSpinner
 
 /// `EditProfileTableViewController` represents the controller for signup table.
-class EditProfileTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class EditProfileTableViewController: UITableViewController {
     
     var doneButton: RoundCornerButton!
     
-    private let countryPickerView = UIPickerView()
-    private let skillsPlaceholder = "Skills"
-    private let descPlaceholder = "Description"
-    private let updateProblem = "There was a problem updating profile."
-    
-    private var user: User!
-    
     @IBOutlet private var profileTableView: UITableView!
     @IBOutlet private var profileImageButton: UIButton!
-    @IBOutlet var changeImageButton: UIButton!
-    @IBOutlet weak var usernameTextField: UILabel!
+    @IBOutlet private var changeImageButton: UIButton!
+    @IBOutlet private var usernameTextField: UILabel!
     @IBOutlet private var nameTextField: UITextField!
-    @IBOutlet private var countryTextField: UITextField!
+    @IBOutlet fileprivate var countryTextField: UITextField!
     @IBOutlet private var jobTextField: UITextField!
     @IBOutlet private var companyTextField: UITextField!
     @IBOutlet private var educationTextField: UITextField!
     @IBOutlet fileprivate var skillsTextView: GrayBorderTextView!
     @IBOutlet private var descTextView: GrayBorderTextView!
     
-    @IBOutlet weak var googleView: UIView!
-    @IBOutlet weak var facebookView: UIView!
+    @IBOutlet private var googleView: UIView!
+    @IBOutlet private var facebookView: UIView!
     
     @IBOutlet weak var unlinkFacebookBtn: UIButton!
     @IBOutlet weak var unlinkGoogleBtn: UIButton!
     @IBOutlet weak var changePasswordBtn: RoundCornerButton!
     
-    fileprivate var imagePicker = ImagePickCropperPopoverViewController()
+    private let imagePicker = ImagePickCropperPopoverViewController()
+    private var user: User!
+    
+    fileprivate let countryPickerView = UIPickerView()
     fileprivate let fbLoginButton = LoginButton(readPermissions: [.publicProfile, .email])
     fileprivate let googleLoginButton = GIDSignInButton()
-    
     fileprivate var textFields: [UITextField]!
     fileprivate var auth: [AuthType]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setUpUser()
         setUpButton()
         setUpAuthTypes()
@@ -67,7 +63,7 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        SwiftSpinner.show("Loading Data...")
+        SwiftSpinner.show(Config.loadingData)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -109,9 +105,9 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
         Utility.signOutSocialMedia()
         
         if !auth.contains(.email) {
-            changePasswordBtn.setTitle("Add Password", for: .normal)
+            changePasswordBtn.setTitle(Config.addPassword, for: .normal)
         } else {
-            changePasswordBtn.setTitle("Change Password", for: .normal)
+            changePasswordBtn.setTitle(Config.changePassword, for: .normal)
         }
         
         if !auth.contains(.facebook) {
@@ -184,7 +180,7 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
             textField.tag = index
         }
         nameTextField.text = user.profile.name
-        usernameTextField.text = "@\(user.profile.username)"
+        usernameTextField.text = Config.userNamePrefix + user.profile.username
         countryTextField.text = user.profile.country
         jobTextField.text = user.profile.job
         companyTextField.text = user.profile.company
@@ -233,22 +229,6 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
         jobTextField.becomeFirstResponder()
     }
     
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return Utility.countries.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return Utility.countries[row]
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        countryTextField.text = Utility.countries[row]
-    }
-    
     @objc private func update(sender: UIButton) {
         guard System.client.isConnected else {
             present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
@@ -259,7 +239,6 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
         }
         user.profile.updateProfile(username: user.profile.username, name: name, image: image, job: job, company: company, country: country, education: education, skills: skills, description: desc)
         System.activeUser?.profile.updateProfile(to: user.profile)
-        // Error handling?
         System.client.updateUser(newUser: user)
         
         Utility.popViewController(no: 1, viewController: self)
@@ -270,11 +249,11 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
             present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
             return
         }
-        let title = "Removed Facebook"
-        let message = "Facebook Login has been removed from your account"
+        let title = Config.removeFacebookTitle
+        let message = Config.removeFacebookMessage
         Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { () in
             System.client.removeAdditionalAuth(authType: .facebook)
-            SwiftSpinner.show("Loading Data...")
+            SwiftSpinner.show(Config.loadingData)
             
             for (index, authType) in self.auth.enumerated() {
                 if authType == .facebook {
@@ -291,11 +270,11 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
             present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
             return
         }
-        let title = "Removed Google"
-        let message = "Google Login has been removed from your account"
+        let title = Config.removeGoogleTitle
+        let message = Config.removeGoogleMessage
         Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { () in
             System.client.removeAdditionalAuth(authType: .google)
-            SwiftSpinner.show("Loading Data...")
+            SwiftSpinner.show(Config.loadingData)
             
             for (index, authType) in self.auth.enumerated() {
                 if authType == .google {
@@ -320,16 +299,16 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
     }
     
     fileprivate func showAddPassword() {
-        let title = "Add Password"
-        let message = "Please key in your password:"
-        let btnText = "Add"
-        let placeholderText = "Password"
-        Utility.createPopUpWithTextField(title: title, message: message, btnText: btnText, placeholderText: placeholderText, existingText: "", isSecure: true, viewController: self, completion: { (password) in
+        let title = Config.addPassword
+        let message = Config.addPasswordMessage
+        let btnText = Config.addButtonText
+        let placeholderText = Config.passwordPlaceholder
+        Utility.createPopUpWithTextField(title: title, message: message, btnText: btnText, placeholderText: placeholderText, existingText: Config.emptyString, isSecure: true, viewController: self, completion: { (password) in
             guard let user = self.user, let credential =
                 System.client.getEmailCredential(email: user.email, password: password) else {
                 return
             }
-            SwiftSpinner.show("Loading Data...")
+            SwiftSpinner.show(Config.loadingData)
             
             System.client.addAdditionalAuth(credential: credential, completion: { (error) in
                 self.auth.append(.email)
@@ -340,9 +319,9 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
     }
     
     fileprivate func showChangePassword() {
-        let alertController = UIAlertController(title: "Change Password", message: nil, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Config.changePassword, message: nil, preferredStyle: .alert)
         
-        let updateAction = UIAlertAction(title: "OK", style: .default) { [weak alertController] _ in
+        let updateAction = UIAlertAction(title: Config.ok, style: .default) { [weak alertController] _ in
             guard let alertController = alertController else {
                 return
             }
@@ -356,14 +335,14 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
         }
         updateAction.isEnabled = false
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: Config.cancel, style: .cancel)
         
         alertController.addTextField { textField in
-            textField.placeholder = "Current Password"
+            textField.placeholder = Config.currentPassword
             textField.isSecureTextEntry = true
         }
         alertController.addTextField { textField in
-            textField.placeholder = "New Password"
+            textField.placeholder = Config.newPassword
             textField.isSecureTextEntry = true
         }
         
@@ -414,6 +393,26 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
 
 }
 
+extension EditProfileTableViewController: UIPickerViewDataSource, UIPickerViewDelegate {
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return Utility.countries.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return Utility.countries[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        countryTextField.text = Utility.countries[row]
+    }
+    
+}
+
 extension EditProfileTableViewController: UITextViewDelegate, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -439,7 +438,7 @@ extension EditProfileTableViewController: UITextViewDelegate, UITextFieldDelegat
     }
     
     private func updateButtonState() {
-        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmptyContent ?? true) }) || skillsTextView.text.isEmpty
+        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmptyContent ?? true) }) || skillsTextView.isEmpty
         doneButton.isEnabled = !isAnyEmpty
         doneButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
@@ -458,7 +457,7 @@ extension EditProfileTableViewController: GIDSignInDelegate, GIDSignInUIDelegate
         }
         
         System.client.addAdditionalAuth(credential: credential, completion: { (error) in
-            SwiftSpinner.show("Communicating with Google...")
+            SwiftSpinner.show(Config.communicateGoogle)
             
             self.auth.append(.google)
             
@@ -477,7 +476,7 @@ extension EditProfileTableViewController: LoginButtonDelegate {
             }
             
             System.client.addAdditionalAuth(credential: credential, completion: { (error) in
-                SwiftSpinner.show("Communicating with Facebook...")
+                SwiftSpinner.show(Config.communicateFacebook)
                 
                 self.auth.append(.facebook)
                 

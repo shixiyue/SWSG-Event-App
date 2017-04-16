@@ -10,7 +10,12 @@ import UIKit
 
 class ProfileTableViewCell: UITableViewCell {
 
-    @IBOutlet var field: UILabel!
-    @IBOutlet var content: UILabel!
+    @IBOutlet private var field: UILabel!
+    @IBOutlet private var content: UILabel!
+    
+    func setUp(field: String, content: String) {
+        self.field.text = field
+        self.content.text = content
+    }
 
 }

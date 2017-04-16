@@ -22,8 +22,5 @@ class EditProfileViewController: UIViewController {
         }
         editProfileViewController.doneButton = doneButton
     }
-    
-    @IBAction func back(_ sender: UIButton) {
-        dismiss(animated: false, completion: nil)
-    }
+
 }
