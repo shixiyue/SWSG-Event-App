@@ -126,9 +126,9 @@ class TeamRegistrationTableViewController: BaseViewController {
         switch(index) {
         case 0:
             cell.mmbrImage1 = Utility.roundUIImageView(for: cell.mmbrImage1)
-            if team.members.count <= index {
+           if team.members.count <= index {
                 cell.mmbrImage1.image = nil
-                break
+                return
             }
             Utility.getProfileImg(uid: team.members[0], completion: {(image) in
                 cell.mmbrImage1.image = image
@@ -136,9 +136,9 @@ class TeamRegistrationTableViewController: BaseViewController {
         case 1:
             
             cell.mmbrImage2 = Utility.roundUIImageView(for: cell.mmbrImage2)
-            if team.members.count <= index {
+           if team.members.count <= index {
                 cell.mmbrImage2.image = nil
-                break
+                return
             }
             Utility.getProfileImg(uid: team.members[1], completion: {(image) in
                 cell.mmbrImage2.image = image
@@ -146,9 +146,9 @@ class TeamRegistrationTableViewController: BaseViewController {
             
         case 2:
             cell.mmbrImage3 = Utility.roundUIImageView(for: cell.mmbrImage3)
-            if team.members.count <= index {
-                cell.mmbrImage1.image = nil
-                break
+           if team.members.count <= index {
+                  cell.mmbrImage3.image = nil
+                return
             }
             Utility.getProfileImg(uid: team.members[2], completion: {(image) in
                 cell.mmbrImage3.image = image
@@ -156,8 +156,8 @@ class TeamRegistrationTableViewController: BaseViewController {
         case 3:
             cell.mmbrImage4 = Utility.roundUIImageView(for: cell.mmbrImage4)
             if team.members.count <= index {
-                cell.mmbrImage1.image = nil
-                break
+                cell.mmbrImage4.image = nil
+                return
             }
             Utility.getProfileImg(uid: team.members[3], completion: {(image) in
                 cell.mmbrImage4.image = image
