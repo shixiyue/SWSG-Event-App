@@ -30,6 +30,7 @@ class Team {
         self.lookingFor = lookingFor
         self.isPrivate = isPrivate
         self.tags = tags
+        checkRep()
     }
     
     init?(id: String, snapshot: FIRDataSnapshot) {
@@ -58,9 +59,7 @@ class Team {
         } else {
             self.tags = []
         }
-       // tags = tags.sort(by: {$0.timestamp < $1.timestamp})
-        
-        
+        checkRep()
     }
     
     func addMember(member: User) {
@@ -68,6 +67,7 @@ class Team {
             return
         }
         members.append(uid)
+        checkRep()
     }
     
     func removeMember(member: User) {
@@ -88,6 +88,13 @@ class Team {
     
     func setId(id: String) {
         self.id = id
+        checkRep()
+    }
+    
+    private func checkRep() {
+        #if DEBUG
+        assert(members.count != 0 && !name.isEmpty && lookingFor != nil && !lookingFor!.isEmpty && tags != nil && tags!.count != 0)
+        #endif
     }
 }
 
