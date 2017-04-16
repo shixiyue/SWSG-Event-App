@@ -13,6 +13,7 @@ import Firebase
 import EventKit
 import Google
 import GoogleSignIn
+import SwiftSpinner
 
 struct Utility {
     
@@ -70,14 +71,14 @@ struct Utility {
         tableViewController.dismiss(animated: false, completion: nil)
     }
     
-    static func onBackButtonClick(tableViewController: UIViewController) {
+    static func onBackButtonClick(UIViewController: UIViewController) {
         let transition: CATransition = CATransition()
         transition.duration = 0.5
         transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         transition.type = kCATransitionReveal
         transition.subtype = kCATransitionFromLeft
-        tableViewController.view.window!.layer.add(transition, forKey: nil)
-        tableViewController.dismiss(animated: false, completion: nil)
+        UIViewController.view.window!.layer.add(transition, forKey: nil)
+        UIViewController.dismiss(animated: false, completion: nil)
     }
     
     static func logOutUser(currentViewController: UIViewController) {
@@ -221,9 +222,28 @@ struct Utility {
             }
         })
     }
+    
     static func strtok(string: String, delimiter: String) -> [Int] {
         let values = string.components(separatedBy: delimiter).flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
         return values
+    }
+    
+    static func channelsSortedByLatestMessage(channels: [Channel]) -> [Channel] {
+        let sortedChannels = channels.sorted(by: {
+            guard let msgFirst = $0.latestMessage, let msgSecond = $1.latestMessage else {
+                if let _ = $0.latestMessage {
+                    return true
+                } else if let _ = $1.latestMessage {
+                    return false
+                } else {
+                    return $0.id! < $1.id!
+                }
+            }
+            
+            return msgFirst.timestamp > msgSecond.timestamp
+        })
+        
+        return sortedChannels
     }
     
     static func getProfileImg(uid: String, completion: @escaping (UIImage?) -> Void) {
@@ -407,11 +427,20 @@ struct Utility {
             viewController.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
         } else {
             System.client.getCurrentUser(completion: { (user, userError) in
-                if let firebaseError = userError, user == nil {
-                    viewController.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
-                } else {
-                    Utility.logInUser(user: user!, currentViewController: viewController)
+                guard let user = user else {
+                    var msg = "An error has occured"
+                    if let error = userError {
+                        msg = error.errorMessage
+                    }
+                    
+                    viewController.present(Utility.getFailAlertController(message: msg), animated: true, completion: { () in
+                        SwiftSpinner.hide()
+                    })
+                    
+                    return
                 }
+                
+                Utility.logInUser(user: user, currentViewController: viewController)
             })
         }
     }
@@ -474,6 +503,74 @@ struct Utility {
         })
     }
     
+    static func getTeamLbl(user: User, completion: @escaping (String) -> Void) {
+        if user.type.isParticipant {
+            if user.team != Config.noTeam {
+                Teams().retrieveTeamWith(id: user.team, completion: { (team) in
+                    guard let team = team else {
+                        completion(Config.noTeamLabel)
+                        return
+                    }
+                    completion(team.name)
+                })
+            } else {
+                completion(Config.noTeamLabel)
+            }
+        } else if user.type.isMentor {
+            completion(Config.mentorLabel)
+        } else if user.type.isSpeaker {
+            completion(Config.speakerLabel)
+        } else if user.type.isOrganizer {
+            completion(Config.organizerLabel)
+        } else if user.type.isAdmin {
+            completion(Config.adminLabel)
+        }
+    }
+    
+    static func validChannel(_ channel: Channel) -> Bool {
+        guard let uid = System.client.getUid() else {
+            return false
+        }
+        
+        if channel.type != .publicChannel {
+            if !channel.members.contains(uid) {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    static func getOtherUser(in channel: Channel, completion: @escaping (User?) -> Void) {
+        for memberID in channel.members {
+            if memberID != System.client.getUid() {
+                System.client.getUserWith(uid: memberID, completion: { (user, error) in
+                    completion(user)
+                })
+                return
+            }
+        }
+        
+        completion(nil)
+    }
+    
+    static func getLatestMessage(channel: Channel, snapshot: FIRDataSnapshot,
+                                  completion: @escaping () -> Void) {
+        let query = System.client.getLatestMessageQuery(for: snapshot.key)
+        query.observe(.value, with: { (snapshot) in
+            for child in snapshot.children {
+                guard let mentorSnapshot = child as? FIRDataSnapshot,
+                    let message = Message(snapshot: mentorSnapshot) else {
+                        completion()
+                        return
+                }
+                channel.latestMessage = message
+            }
+            completion()
+            
+        })
+    }
+    
     static func showImagePicker(imagePicker: ImagePickerPopoverViewController, viewController: UIViewController, completion: @escaping (UIImage?)->Void) {
         imagePicker.modalPresentationStyle = .overCurrentContext
         imagePicker.completionHandler = completion
@@ -505,6 +602,21 @@ struct Utility {
         let previousButton  = UIBarButtonItem(title: "<", style: .plain, target: self, action: previous)
         
         toolbar.setItems([fixedSpaceButton, previousButton, nextButton, fixedSpaceButton, flexibleSpaceButton, doneButton], animated: false)
+        toolbar.isUserInteractionEnabled = true
+        
+        return toolbar
+    }
+    
+    static func getDoneToolbar(done: Selector) -> UIToolbar {
+        let toolbar = UIToolbar()
+        toolbar.barStyle = .default
+        toolbar.isTranslucent = true
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: done)
+        let flexibleSpaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        toolbar.setItems([flexibleSpaceButton, doneButton], animated: false)
         toolbar.isUserInteractionEnabled = true
         
         return toolbar
@@ -575,4 +687,70 @@ struct Utility {
         viewController.view.endEditing(true)
     }
     
+    static func getUserFullName(uid: String, label: UILabel, prefix: String = Config.emptyString) {
+        System.client.getUserWith(uid: uid, completion: { (user, error) in
+            guard let user = user else {
+                label.text = prefix
+                return
+            }
+            label.text = prefix + user.profile.name
+        })
+    }
+    
+    static func setUpSearchBar(_ searchBar: UISearchBar, viewController: UISearchBarDelegate, selector: Selector) {
+        searchBar.delegate = viewController
+        searchBar.inputAccessoryView = Utility.getDoneToolbar(done: selector)
+    }
+    
+    static func styleSearchBar(_ searchBar: UISearchBar) {
+        searchBar.barTintColor = Config.themeColor
+        searchBar.layer.borderWidth = 1
+        searchBar.layer.borderColor = Config.themeColor.cgColor
+    }
+    
+    static func setSearchActive(_ searchActive: inout Bool, searchBar: UISearchBar) {
+        guard let searchText = searchBar.text else {
+            return
+        }
+        
+        if searchText.characters.count == 0 {
+            searchActive = false
+        } else {
+            searchActive = true
+        }
+    }
+    
+    static func searchBtnPressed(viewController: UIViewController) {
+        viewController.view.endEditing(true)
+    }
+    
+    static func updateVotes(idea: Idea, votesLabel: UILabel, upvoteButton: UIButton, downvoteButton: UIButton) {
+        votesLabel.text = "\(idea.votes)"
+        let state = idea.getVotingState()
+        let upvoteImage = state.upvote ? Config.upvoteFilled : Config.upvoteDefault
+        upvoteButton.setImage(upvoteImage, for: .normal)
+        let downvoteImage = state.downvote ? Config.downvoteFilled : Config.downvoteDefault
+        downvoteButton.setImage(downvoteImage, for: .normal)
+    }
+    
+    static func getVideoId(for videoLink: String) -> String {
+        let substring = videoLink.components(separatedBy: Config.youtubePrefix)
+        let videoId = substring.count > Config.youtubeIdComponent ? substring[Config.youtubeIdComponent] : Config.emptyString
+        return videoId
+    }
+    
+    static func getVideoLink(for videoId: String) -> String {
+        let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? Config.emptyString : Config.youtubePrefix + videoId
+        return videoLink
+    }
+    
+    static func showSwiftSpinnerErrorMsg() {
+        let title = Config.unexpectedError
+        let message = Config.tryAgain
+        SwiftSpinner.show(title, animated: false).addTapHandler({
+            SwiftSpinner.hide({
+            })
+        }, subtitle: message)
+    }
+
 }

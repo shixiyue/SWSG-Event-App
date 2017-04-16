@@ -18,6 +18,7 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
     @IBOutlet fileprivate var profileList: UITableView!
     @IBOutlet private var changeProfileImageToolbar: UIToolbar!
     
+    @IBOutlet weak var composeBtn: UIImageView!
     @IBOutlet weak var topRightBtn: UIBarButtonItem!
     private var fullScreenImageView: UIImageView!
 
@@ -41,11 +42,25 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         
         
         setUpTopRightBtn()
+        setUpChatButton() 
     }
     
     override func viewWillAppear(_ animated: Bool) {
         profileList.reloadData()
         setUpUserInfo()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.profileToChannel, let channel = sender as? Channel {
+            guard let chatVc = segue.destination as? ChannelViewController else {
+                return
+            }
+            
+            chatVc.senderDisplayName = System.activeUser?.profile.username
+            chatVc.channel = channel
+        }
     }
     
     // MARK: Firebase related methods
@@ -56,12 +71,13 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         
         userRef = System.client.getUserRef(for: uid)
         userExistingHandle = userRef?.observe(.value, with: { (snapshot) in
-            guard let user = User(snapshot: snapshot) else {
+            guard let user = User(uid: uid, snapshot: snapshot) else {
                 return
             }
             
-            user.setUid(uid: uid)
             self.user = user
+            self.setUpUserInfo()
+            self.profileList.reloadData()
             
             Utility.getProfileImg(uid: uid, completion: { (image) in
                 if let image = image {
@@ -83,22 +99,17 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         
         profileItems = ProfileItems.getItems(user: user)
         
-        profileImgButton.setImage(user.profile.image, for: .normal)
+        if let image = user.profile.image {
+            profileImgButton.setImage(image, for: .normal)
+        }
         profileImgButton.addTarget(self, action: #selector(showFullScreenImage), for: .touchUpInside)
         
         nameLbl.text = user.profile.name
         usernameLbl.text = "@\(user.profile.username)"
         
-        guard user.type.isParticipant else {
-            teamLbl.text = user.type.toString()
-            return
-        }
-        
-        if user.team != -1 {
-            teamLbl.text = Teams.sharedInstance().retrieveTeamAt(index: user.team).name
-        } else {
-            teamLbl.text = Config.noTeamLabel
-        }
+        Utility.getTeamLbl(user: user, completion: { (teamLblText) in
+            self.teamLbl.text = teamLblText
+        })
     }
     
     private func setUpTopRightBtn() {
@@ -125,6 +136,32 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         } else {
             isActiveUser = true
         }
+    }
+    
+    private func setUpChatButton() {
+        if !isActiveUser {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(composeBtnPressed))
+            composeBtn.addGestureRecognizer(tapGesture)
+            composeBtn.isHidden = false
+        }
+    }
+    
+    func composeBtnPressed(_ sender: UITapGestureRecognizer) {
+        guard let currentUID = System.client.getUid(), let user = user, let userUID = user.uid else {
+            return
+        }
+        
+        var members = [String]()
+        members.append(currentUID)
+        members.append(userUID)
+        
+        let channel = Channel(type: .directMessage, members: members)
+        System.client.createChannel(for: channel, completion: { (channel, error) in
+            guard error == nil else {
+                return
+            }
+            self.performSegue(withIdentifier: Config.profileToChannel, sender: channel)
+        })
     }
     
     @IBAction func topRightBtnPressed(_ sender: Any) {
@@ -161,6 +198,7 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         }
         fullScreenImageView.image = image.cropSquareToCircle()
         user.profile.updateImage(image: image)
+        System.activeUser?.profile.updateImage(image: image)
         // Error handling?
         System.client.updateUser(newUser: user)
         
@@ -180,6 +218,9 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         tap.delegate = self
         fullScreenImageView.addGestureRecognizer(tap)
         self.view.addSubview(fullScreenImageView)
+        guard let currentUser = System.activeUser, let user = user, currentUser == user else {
+            return
+        }
         changeProfileImageToolbar.isHidden = false
         view.bringSubview(toFront: changeProfileImageToolbar)
     }
@@ -193,8 +234,11 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
     }
 
     @IBAction func changeProfileImage(_ sender: UIBarButtonItem) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
         showImageOptions()
-        alertControllerPosition = CGPoint(x: view.frame.width / 2, y: profileImgButton.bounds.maxY)
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -232,6 +276,11 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.field.text = field
         cell.content.text = content
+        
+        if content.trimmingCharacters(in: .whitespaces).characters.count == 0 {
+            cell.isHidden = true
+        }
+        
         return cell
     }
     

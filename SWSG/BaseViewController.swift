@@ -8,12 +8,20 @@
 //
 import UIKit
 
+/**
+ SlideMenuDelegate is a Protocol used by MenuViewController to tell 
+ BaseViewController which option was selected
+ */
 protocol SlideMenuDelegate {
     func slideMenuItemSelectedAtIndex(_ index : Int)
 }
 
+/**
+ BaseViewController is a UIViewController used to set up the button adn navigation
+ bar to display the hamburger menu
+ */
 class BaseViewController: UIViewController, SlideMenuDelegate {
-    
+    //MARK: Properties
     var menuYOffset: CGFloat {
         if let navigationBarHeight = navigationController?.navigationBar.frame.size.height {
             return navigationBarHeight
@@ -21,57 +29,16 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             return 0
         }
     }
-    
     private var btnShowMenu: UIButton!
     private var tapGesture: UITapGestureRecognizer!
     
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideMenu))
         tapGesture.isEnabled = false
         view.addGestureRecognizer(tapGesture)
-    }
-    
-    func slideMenuItemSelectedAtIndex(_ index: Int) {
-        guard let item = MenuItems.MenuOrder(rawValue: index) else {
-            return
-        }
-        switch(item){
-        case .home:
-            self.open(viewController: Config.homeViewController, from: Config.mainStoryboard)
-        case .information:
-            self.open(viewController: Config.informationViewController,
-                      from: Config.informationStoryboard)
-        case .schedule:
-            self.open(viewController: Config.eventViewController, from: Config.eventStoryboard)
-        case .mentors:
-            self.open(viewController: Config.mentorViewController, from: Config.mentorStoryboard)
-        case .teams:
-            self.open(viewController: Config.teamRegistrationViewController, from: Config.teamStoryboard)
-        case .chat:
-            self.open(viewController: Config.chatViewController, from: Config.chatStoryboard)
-        case .ideas:
-            self.open(viewController: Config.ideasViewController, from: Config.ideasStoryboard)
-        case .people:
-            self.open(viewController: Config.profileListViewController, from: Config.profileStoryboard)
-        case .logout:
-            Utility.logOutUser(currentViewController: self)
-        }
-    }
-    
-    func open(viewController: String, from storyboard: String){
-        let storyboard = UIStoryboard(name: storyboard, bundle: nil)
-        let destViewController : UIViewController = storyboard.instantiateViewController(withIdentifier: viewController)
-        
-        let topViewController : UIViewController = self.navigationController!.topViewController!
-        
-        if (topViewController.restorationIdentifier! == destViewController.restorationIdentifier!){
-            print("Same VC")
-            hideMenu()
-        } else {
-            self.navigationController!.pushViewController(destViewController, animated: true)
-        }
     }
     
     func addSlideMenuButton(){
@@ -83,7 +50,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         self.navigationItem.leftBarButtonItem = customBarItem;
     }
     
-    func defaultMenuImage() -> UIImage {
+    fileprivate func defaultMenuImage() -> UIImage {
         var defaultMenuImage = UIImage()
         
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 30, height: 22), false, 0.0)
@@ -105,6 +72,56 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         return defaultMenuImage;
     }
     
+    //MARK: Handle User Interactions
+    func slideMenuItemSelectedAtIndex(_ index: Int) {
+        guard let item = MenuItems.MenuOrder(rawValue: index), let type = System.activeUser?.type else {
+            return
+        }
+        
+        switch(item){
+        case .home:
+            self.open(viewController: Config.homeViewController, from: Config.mainStoryboard)
+        case .information:
+            self.open(viewController: Config.informationViewController,
+                      from: Config.informationStoryboard)
+        case .schedule:
+            self.open(viewController: Config.eventViewController, from: Config.eventStoryboard)
+        case .mentors:
+            self.open(viewController: Config.mentorViewController, from: Config.mentorStoryboard)
+        case .teams:
+            self.open(viewController: Config.teamRegistrationViewController, from: Config.teamStoryboard)
+        case .chat:
+            self.open(viewController: Config.chatViewController, from: Config.chatStoryboard)
+        case .ideas:
+            self.open(viewController: Config.ideasViewController, from: Config.ideasStoryboard)
+        case .people:
+            self.open(viewController: Config.profileListViewController, from: Config.profileStoryboard)
+        case .registration:
+            if type.isOrganizer {
+                self.open(viewController: Config.registrationListViewController, from: Config.registrationStoryboard)
+            } else {
+                self.open(viewController: Config.participantRegistrationViewController, from: Config.registrationStoryboard)
+            }
+        case .logout:
+            Utility.logOutUser(currentViewController: self)
+        }
+    }
+    
+    //MARK: Navigation
+    fileprivate func open(viewController: String, from storyboard: String){
+        let storyboard = UIStoryboard(name: storyboard, bundle: nil)
+        let destViewController : UIViewController = storyboard.instantiateViewController(withIdentifier: viewController)
+        
+        let topViewController : UIViewController = self.navigationController!.topViewController!
+        
+        if (topViewController.restorationIdentifier! == destViewController.restorationIdentifier!){
+            hideMenu()
+        } else {
+            self.navigationController!.pushViewController(destViewController, animated: true)
+        }
+    }
+    
+    //MARK: Handle Menu Interactions
     func onSlideMenuButtonPressed(_ sender : UIButton){
         if (sender.tag == 10)
         {
@@ -117,9 +134,10 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         sender.tag = 10
         
         tapGesture.isEnabled = true
+        self.view.endEditing(true)
         
-        let storyboard = UIStoryboard(name: "Menu", bundle: nil)
-        let menuVC : MenuViewController = storyboard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
+        let storyboard = UIStoryboard(name: Config.menuStoryboard, bundle: nil)
+        let menuVC : MenuViewController = storyboard.instantiateViewController(withIdentifier: Config.menuViewController) as! MenuViewController
         menuVC.btnMenu = sender
         menuVC.delegate = self
         self.view.addSubview(menuVC.view)

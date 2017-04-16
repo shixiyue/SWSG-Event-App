@@ -8,8 +8,18 @@
 
 import Foundation
 
+/**
+ ChannelType is an class used to represent the type of channel
+ 
+ Specifications:
+    - publicChannel: Open to All Users (Only Admin can create)
+    - privateChannel: Open only to Members
+    - directMessage: Only between two people
+    - team: Same as Private Channel except Channel Info cannot be edited
+ */
 enum ChannelType: String {
     case publicChannel
     case privateChannel
     case directMessage
+    case team
 }

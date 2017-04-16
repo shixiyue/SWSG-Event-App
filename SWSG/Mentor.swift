@@ -12,7 +12,7 @@ class Mentor {
     var days = [ConsultationDate]()
     var field: Field
     
-    init(profile: Profile, field: Field) {
+    init(field: Field) {
         self.field = field
     }
     

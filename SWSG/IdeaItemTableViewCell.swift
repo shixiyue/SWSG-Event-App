@@ -12,7 +12,7 @@ class IdeaItemTableViewCell: UITableViewCell {
     
     @IBOutlet private var name: UILabel!
     @IBOutlet private var desc: UILabel!
-    @IBOutlet private var team: UILabel!
+    @IBOutlet private var user: UILabel!
     @IBOutlet private var ideaImageView: UIImageView!
     @IBOutlet private var votes: UILabel!
     @IBOutlet private var upvoteButton: UIButton!
@@ -24,9 +24,9 @@ class IdeaItemTableViewCell: UITableViewCell {
         self.idea = idea
         name.text = idea.name
         desc.text = idea.description
-        team.text = idea.teamName
         ideaImageView.image = idea.mainImage
-        updateVotes()
+        Utility.getUserFullName(uid: idea.user, label: user, prefix: Config.ideaUserNamePrefix)
+        Utility.updateVotes(idea: idea, votesLabel: votes, upvoteButton: upvoteButton, downvoteButton: downvoteButton)
     }
     
     @IBAction func upvote(_ sender: UIButton) {
@@ -35,7 +35,6 @@ class IdeaItemTableViewCell: UITableViewCell {
             return
         }
         idea.upvote()
-        updateVotes()
     }
     
     @IBAction func downvote(_ sender: UIButton) {
@@ -44,16 +43,6 @@ class IdeaItemTableViewCell: UITableViewCell {
             return
         }
         idea.downvote()
-        updateVotes()
-    }
-    
-    private func updateVotes() {
-        votes.text = "\(idea.votes)"
-        let state = idea.getVotingState()
-        let upvoteImage = state.upvote ? Config.upvoteFilled : Config.upvoteDefault
-        upvoteButton.setImage(upvoteImage, for: .normal)
-        let downvoteImage = state.downvote ? Config.downvoteFilled : Config.downvoteDefault
-        downvoteButton.setImage(downvoteImage, for: .normal)
     }
     
 }

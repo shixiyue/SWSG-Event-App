@@ -9,19 +9,26 @@
 import UIKit
 import Firebase
 
+/**
+    EventPageViewController is a UIPageViewController that displays the
+    Latest Events Widget on the HomeViewConteollet
+ */
 class EventPageViewController: UIPageViewController {
     
+    //MARK: Properties
     fileprivate var events = [Event]()
+    fileprivate var eventIdentifier = [Int: Event]()
     fileprivate var eventViewControllers = [UIViewController]()
-    
     fileprivate var firstLoaded = false
+    fileprivate var isBefore = true
+    fileprivate var index = 0
     
+    //MARK: Firebase References
     fileprivate var eventsRef: FIRDatabaseReference?
     private var eventsAddedHandle: FIRDatabaseHandle?
     private var eventsRemovedHandle: FIRDatabaseHandle?
     
-    fileprivate var index = 0
-    
+    //MARK: Intialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,6 +38,20 @@ class EventPageViewController: UIPageViewController {
         observeDayEvents()
     }
     
+    //MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.homeToEventDetails, let event = sender as? Event {
+            guard let detailsVC = segue.destination as? EventDetailsTableViewController else {
+                return
+            }
+            
+            detailsVC.event = event
+        }
+    }
+    
+    //MARK: Firebase Functions
     private func observeDayEvents() {
         let currentDateTime = Date.init()
         eventsRef = System.client.getEventRef(date: currentDateTime)
@@ -41,14 +62,21 @@ class EventPageViewController: UIPageViewController {
             }
             
             self.events.append(event)
-            let viewController = self.getViewController(event: event)
-            self.eventViewControllers.append(viewController)
+            self.events = self.events.sorted(by: { $0.startDateTime < $1.startDateTime })
             
-            if !self.firstLoaded {
-                self.setViewController()
-                self.firstLoaded = true
-            } else if currentDateTime < event.startDateTime {
-                self.setViewController(viewController: viewController)
+            for (index, childEvent) in self.events.enumerated() {
+                if childEvent.id == event.id {
+                    let viewController = self.getViewController(event: event)
+                    self.eventViewControllers.insert(viewController, at: index)
+                    
+                    if !self.firstLoaded {
+                        self.setViewController()
+                        self.firstLoaded = true
+                    } else if currentDateTime < event.startDateTime && self.isBefore {
+                        self.setViewController(viewController: viewController)
+                        self.isBefore = false
+                    }
+                }
             }
         })
         
@@ -65,6 +93,7 @@ class EventPageViewController: UIPageViewController {
         })
     }
     
+    //MARK: UI Supporting Functions
     fileprivate func setViewController() {
         guard index >= 0, index < eventViewControllers.count else {
             return
@@ -99,6 +128,12 @@ class EventPageViewController: UIPageViewController {
         viewController.descTV.text = event.shortDesc
         viewController.imageView.isHidden = true
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showEvent))
+        viewController.stackView.addGestureRecognizer(tapGesture)
+        viewController.stackView.tag = eventIdentifier.count
+        
+        eventIdentifier[eventIdentifier.count] = event
+        
         Utility.getEventIcon(id: id, completion: { (image) in
             guard let image = image else {
                 return
@@ -109,6 +144,16 @@ class EventPageViewController: UIPageViewController {
         })
         
         return viewController
+    }
+    
+    func showEvent(_ sender: UIGestureRecognizer){
+        guard let view = sender.view else {
+            return
+        }
+        
+        let event = eventIdentifier[view.tag]
+        
+        performSegue(withIdentifier: Config.homeToEventDetails, sender: event)
     }
 }
 

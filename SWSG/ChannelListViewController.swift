@@ -9,12 +9,29 @@
 import UIKit
 import Firebase
 
+/**
+    ChannelListViewController is a UIViewController, inherits from BaseViewController
+    for the menu, that displays a list of all channels available to the user.
+ 
+    It also allows the user to press a button to create a new Channel either as
+    a group chat or a direct chat.
+
+*/
+
 class ChannelListViewController: BaseViewController {
     @IBOutlet weak var chatList: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     // MARK: Properties
     fileprivate var channels = [Channel]()
+    fileprivate var filteredChannels = [Channel]()
+    fileprivate var directMessageChannelName = [String: String]()
     fileprivate var client = System.client
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            chatList.reloadData()
+        }
+    }
     
     //MARK: Firebase References
     private var channelsRef: FIRDatabaseReference!
@@ -22,6 +39,7 @@ class ChannelListViewController: BaseViewController {
     private var channelsNewHandle: FIRDatabaseHandle?
     private var channelsDeletedHandle: FIRDatabaseHandle?
     
+    //MARK: Intialization and Deinitialization
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()
@@ -31,8 +49,33 @@ class ChannelListViewController: BaseViewController {
         chatList.delegate = self
         chatList.dataSource = self
         
+        setUpSearchBar()
         observeChannels()
         chatList.reloadData()
+    }
+    
+    deinit {
+        if let existingHandle = channelsExistingHandle {
+            channelsRef.removeObserver(withHandle: existingHandle)
+        }
+        
+        if let newHandle = channelsNewHandle {
+            channelsRef.removeObserver(withHandle: newHandle)
+        }
+        
+        if let deletedHandle = channelsDeletedHandle {
+            channelsRef.removeObserver(withHandle: deletedHandle)
+        }
+    }
+    
+    //MARK: UI Set Up
+    private func setUpSearchBar() {
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
+        Utility.styleSearchBar(searchBar)
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
     }
     
     // MARK: Firebase related methods
@@ -45,13 +88,18 @@ class ChannelListViewController: BaseViewController {
         channelsExistingHandle = channelsRef.observe(.childChanged, with: { (snapshot) in
             var removedObjects = 0
             
+            guard let uid = System.client.getUid() else {
+                Utility.logOutUser(currentViewController: self)
+                return
+            }
+            
             for (index, channel) in self.channels.enumerated() {
                 if snapshot.key == channel.id {
                     guard let channel = Channel(id: snapshot.key, snapshot: snapshot) else {
                         return
                     }
                     
-                    guard channel.members.contains(self.client.getUid()) else {
+                    guard channel.members.contains(uid) else {
                         let indexToRemove = index - removedObjects
                         self.channels.remove(at: indexToRemove)
                         self.chatList.reloadData()
@@ -64,7 +112,8 @@ class ChannelListViewController: BaseViewController {
                     
                     let indexPath = IndexPath(row: index, section: 0)
                     
-                    self.getLatestMessage(channel: channel, snapshot: snapshot, completion: { _ in
+                    Utility.getLatestMessage(channel: channel, snapshot: snapshot, completion: { _ in
+                        self.channels = Utility.channelsSortedByLatestMessage(channels: self.channels)
                         self.chatList.reloadRows(at: [indexPath], with: .automatic)
                     })
                     self.chatList.reloadRows(at: [indexPath], with: .automatic)
@@ -87,58 +136,38 @@ class ChannelListViewController: BaseViewController {
     private func addNewChannel(snapshot: Any) {
         guard let channelSnapshot = snapshot as? FIRDataSnapshot,
             let channel = Channel(id: channelSnapshot.key, snapshot: channelSnapshot),
-            validChannel(channel) else {
+            Utility.validChannel(channel) else {
                 return
         }
         
-        Utility.getChatIcon(id: channelSnapshot.key, completion: { (image) in
-            if let image = image {
-                channel.icon = image
-                self.chatList.reloadData()
-            }
-        })
-        
-        getLatestMessage(channel: channel, snapshot: channelSnapshot, completion: { _ in
+        Utility.getLatestMessage(channel: channel, snapshot: channelSnapshot, completion: { _ in
             self.chatList.reloadData()
         })
         self.channels.append(channel)
-        
     }
     
-    private func validChannel(_ channel: Channel) -> Bool {
-        if channel.type != .publicChannel {
-            if !channel.members.contains(client.getUid()) {
-                return false
-            }
-        }
-        
-        return true
-    }
     
-    private func getLatestMessage(channel: Channel, snapshot: FIRDataSnapshot,
-                                  completion: @escaping () -> Void) {
-        let query = self.client.getLatestMessageQuery(for: snapshot.key)
-        query.observe(.value, with: { (snapshot) in
-            for child in snapshot.children {
-                guard let mentorSnapshot = child as? FIRDataSnapshot,
-                    let message = Message(snapshot: mentorSnapshot) else {
-                        continue
-                }
-                channel.latestMessage = message
-                completion()
-            }
-            completion()
-            
-        })
-        
-    }
-    
+/**
+     When pressing the Compose Button, an action sheet will be displayed showing
+     the various options available for creating a new chat.
+     
+     Most Users are able to create Group Channels and Direct Messages
+     Only Admin/Organizers are able to create Public Channels
+ */
     @IBAction func composeBtnPressed(_ sender: Any) {
         let composeController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
+        if System.activeUser?.type.isAdmin == true || System.activeUser?.type.isOrganizer == true {
+            let publicChannelAction = UIAlertAction(title: "Public Channel", style: .default, handler: {
+                _ in
+                self.performSegue(withIdentifier: Config.channelListToCreateChannel, sender: true)
+            })
+            composeController.addAction(publicChannelAction)
+        }
+        
         let channelAction = UIAlertAction(title: "Group Channel", style: .default, handler: {
             _ in
-            self.performSegue(withIdentifier: Config.channelListToCreateChannel, sender: self)
+            self.performSegue(withIdentifier: Config.channelListToCreateChannel, sender: false)
         })
         composeController.addAction(channelAction)
         
@@ -148,14 +177,12 @@ class ChannelListViewController: BaseViewController {
         })
         composeController.addAction(directAction)
         
-        //Add a Cancel Action to the Popup
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
         }
         composeController.addAction(cancelAction)
         
         composeController.popoverPresentationController?.sourceView = self.view
         
-        //Displays the Compose Popup
         self.present(composeController, animated: true, completion: nil)
     }
     
@@ -165,6 +192,12 @@ class ChannelListViewController: BaseViewController {
         let title = "Direct Message"
         let btnText = "Create"
         let placeholder = "Username"
+        
+        guard let uid = client.getUid() else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
         Utility.createPopUpWithTextField(title: title, message: message,
                                          btnText: btnText, placeholderText: placeholder,
                                          existingText: existingText,
@@ -180,7 +213,7 @@ class ChannelListViewController: BaseViewController {
                 }
                 
                 var members = [String]()
-                members.append(self.client.getUid())
+                members.append(uid)
                 members.append(userUID)
                 
                 let channel = Channel(type: .directMessage, members: members)
@@ -199,23 +232,15 @@ class ChannelListViewController: BaseViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
-        if let channel = sender as? Channel {
-            guard let chatVc = segue.destination as? ChannelViewController else {
-                return
-            }
-            
+        if segue.identifier == Config.channelListToCreateChannel,
+            let isPublic = sender as? Bool,
+            let createVc = segue.destination as? CreateChannelViewController {
+            createVc.isPublic = isPublic
+        } else if segue.identifier == Config.channelListToChannel,
+            let channel = sender as? Channel,
+            let chatVc = segue.destination as? ChannelViewController {
             chatVc.senderDisplayName = System.activeUser?.profile.username
             chatVc.channel = channel
-        }
-    }
-    
-    deinit {
-        if let existingHandle = channelsExistingHandle {
-            channelsRef.removeObserver(withHandle: existingHandle)
-        }
-        
-        if let newHandle = channelsNewHandle {
-            channelsRef.removeObserver(withHandle: newHandle)
         }
     }
 }
@@ -223,6 +248,9 @@ class ChannelListViewController: BaseViewController {
 // MARK: UITableViewDataSource
 extension ChannelListViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if searchActive && searchBar.text != "" {
+            return filteredChannels.count
+        }
         return channels.count
     }
     
@@ -234,41 +262,38 @@ extension ChannelListViewController: UITableViewDataSource {
         }
         
         let index = indexPath.item
-        let channel = channels[index]
+        let channel: Channel
+        if searchActive && searchBar.text != "" {
+            channel = filteredChannels[index]
+        } else {
+            channel = channels[index]
+        }
         cell.iconIV = Utility.roundUIImageView(for: cell.iconIV)
+        cell.iconIV.image = Config.placeholderImg
+        
+        guard let channelID = channel.id else {
+            return ChannelCell()
+        }
         
         if channel.type == .directMessage {
-            var otherUID: String?
-            
-            for member in channel.members {
-                if member != client.getUid() {
-                    otherUID = member
-                    break
+            Utility.getOtherUser(in: channel, completion: { (user) in
+                if let user = user, let uid = user.uid {
+                    cell.nameLbl.text = user.profile.name
+                    self.directMessageChannelName[channelID] = user.profile.name
+                    
+                    Utility.getProfileImg(uid: uid, completion: { (image) in
+                        if let image = image {
+                            cell.iconIV.image = image
+                        }
+                    })
                 }
-            }
-            
-            guard let uid = otherUID else {
-                return ChannelCell()
-            }
-            
-            cell.iconIV.image = Config.placeholderImg
-            
-            Utility.getProfileImg(uid: uid, completion: { (image) in
+            })
+        } else if channel.type != .directMessage {
+            Utility.getChatIcon(id: channelID, completion: { (image) in
                 if let image = image {
                     cell.iconIV.image = image
                 }
             })
-            
-            client.getUserWith(uid: uid, completion: { (user, error) in
-                cell.nameLbl.text = user?.profile.name
-            })
-        } else if channel.type != .directMessage {
-            
-            if channel.icon == nil {
-                cell.iconIV.image = Config.placeholderImg
-            } else {
-                cell.iconIV.image = channel.icon
-            }
             
             cell.nameLbl.text = channel.name
         }
@@ -279,7 +304,7 @@ extension ChannelListViewController: UITableViewDataSource {
             var senderName = message.senderName
             
             if message.senderId == client.getUid() {
-                senderName = "Me"
+                senderName = "You"
             }
             
             if let msgText = message.text {
@@ -315,7 +340,15 @@ extension ChannelListViewController: UITableViewDataSource {
 // MARK: UITableViewDelegate
 extension ChannelListViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let channel = channels[indexPath.item]
+        let channel: Channel
+        let index = indexPath.item
+        
+        if searchActive && searchBar.text != "" {
+            channel = filteredChannels[index]
+        } else {
+            channel = channels[index]
+        }
+        
         self.performSegue(withIdentifier: Config.channelListToChannel, sender: channel)
     }
     
@@ -330,8 +363,9 @@ extension ChannelListViewController: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         let channel = channels[indexPath.row]
+        let canDeletePublic = System.activeUser?.type.isAdmin == true || System.activeUser?.type.isOrganizer == true
         
-        if channel.type == .directMessage {
+        if channel.type == .directMessage || (channel.type == .publicChannel && canDeletePublic) {
             return true
         } else {
             return false
@@ -344,5 +378,44 @@ extension ChannelListViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
+    }
+}
+
+// MARK: UISearchResultsUpdating
+extension ChannelListViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredChannels = channels.filter { channel in
+            if channel.type == .directMessage, let channelID = channel.id  {
+                guard directMessageChannelName.keys.contains(channelID),
+                    let otherPersonName = directMessageChannelName[channelID] else {
+                        return false
+                }
+                
+                return otherPersonName.lowercased().contains(searchText.lowercased())
+            } else if let name = channel.name {
+                return name.lowercased().contains(searchText.lowercased())
+            } else {
+                return false
+            }
+        }
+        
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        Utility.searchBtnPressed(viewController: self)
     }
 }

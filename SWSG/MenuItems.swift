@@ -8,8 +8,12 @@
 
 import UIKit
 
+/**
+ MenuItems is a Struct used by MenuViewController to display the Images for
+ items as well as an enum of MenuOrder to display the different menu options
+ */
 struct MenuItems {
-    static let items = ["Home", "Information", "Schedule", "Mentors", "Teams", "Chat", "Ideas",  "People", "Logout"]
+    static let items = ["Home", "Information", "Schedule", "Mentors", "Teams", "Chat", "Ideas",  "People", "Registration", "Logout"]
     
     static var count: Int {
         return items.count
@@ -24,7 +28,8 @@ struct MenuItems {
         case chat = 5
         case ideas = 6
         case people = 7
-        case logout = 8
+        case registration = 8
+        case logout = 9
     }
 
 }

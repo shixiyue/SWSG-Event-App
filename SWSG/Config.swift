@@ -10,7 +10,7 @@ import UIKit
 
 struct Config {
     
-    static let noTeam = -1
+    static let noTeam = ""
     static let defaultCountry = "Singapore"
     static let joinTeam = "Request to Join"
     static let quitTeam = "Quit Team"
@@ -69,6 +69,11 @@ struct Config {
     static let end = "end"
     static let date = "date"
 
+    static let mentorLabel = "Mentor"
+    static let speakerLabel = "Speaker"
+    static let organizerLabel = "Organizer"
+    static let adminLabel = "Admin"
+    
     static let speakers = "Speakers"
     static let organizers = "Organizing Team"
     static let judges = "Judges"
@@ -77,6 +82,7 @@ struct Config {
     static let photo = "photo"
     static let question = "question"
     static let answer = "answer"
+    static let link = "link"
     
     // Parameters for UI:
     static let defaultButtonFont = UIFont(name: "Futura", size: 15)
@@ -99,6 +105,7 @@ struct Config {
     static let defaultPersonImage = UIImage(named: "Profile")!
     static let emptyStar = UIImage(named: "Star-Empty")!
     static let fullStar = UIImage(named: "Star-Full")!
+    static let defaultSponsorImage = UIImage(named: "default-sponsor-image")!
     static let chatIconWidth: CGFloat = 40
     static let headerBuffer: CGFloat = 45
     static let scrollViewOffset: CGFloat = 300
@@ -109,12 +116,15 @@ struct Config {
     static let navigationController = "NavigationController"
     static let logInSignUp = "LoginSignup"
     static let initialScreen = "InitialScreen"
+    static let menuStoryboard = "Menu"
+    static let menuViewController = "MenuViewController"
     static let mainStoryboard = "Main"
     static let homeViewController = "HomeViewController"
     static let informationStoryboard = "Information"
     static let informationViewController = "InformationViewController"
     static let mentorStoryboard = "Mentor"
     static let mentorViewController = "MentorViewController"
+    static let mentorAdminViewController = "MentorAdminViewController"
     static let eventStoryboard = "EventSystem"
     static let eventViewController = "EventCalendarViewController"
     static let teamStoryboard = "TeamRegistration"
@@ -132,8 +142,14 @@ struct Config {
     static let uiSupporting = "UISupporting"
     static let eventPageCellView = "eventPageCellView"
     static let emptyEventView = "emptyEventView"
-    
+    static let emptyChatView = "emptyChatView"
+    static let eventDetailsTableViewController = "EventDetailsTableViewController"
+    static let channelPageCellView = "channelPageCellView"
     static let channelViewController = "ChannelViewController"
+    static let registrationStoryboard = "Registration"
+    static let registrationListViewController = "RegistrationListViewController"
+    static let participantRegistrationViewController = "ParticipantRegistrationViewController"
+    static let teamInfoTableViewController = "TeamInfoTableViewController"
     
     //Parameters for Segues:
     static let channelListToChannel = "showChannel"
@@ -155,9 +171,25 @@ struct Config {
     static let mentorToProfile = "mentorToProfile"
     static let eventToProfile = "eventToProfile"
     static let eventPageEmbed = "eventPageEmbed"
+    static let homeToEventDetails = "homeToEventDetails"
+    static let homeToChat = "homeToChat"
+    static let teamToChat = "teamToChannel"
+    static let teamToProfile = "teamToProfile"
+    static let profileToChannel = "profileToChannel"
+    static let registrationListToRegistration = "registrationListToRegistration"
+    static let registrationToProfile = "registrationToProfile"
+    static let ideaToProfile = "ideaToProfile"
+    static let showDetails = "showDetails"
+    static let addIdea = "addIdea"
+    static let container = "container"
+    static let editIdea = "editIdea"
+    static let mentorToTeamInfo = "mentorToTeamInfo"
     
     // Parameters for tableView:
     static let profileCell = "profileCell"
+    static let defaultSection = 0
+    static let ideaListTableCellHeight: CGFloat = 110
+    static let ideaItemCell = "ideaItemCell"
 
     
     // Parameters for information message:
@@ -165,6 +197,21 @@ struct Config {
     static let noTeamLabel = "No Team yet"
     static let defaultContent = " "
     static let emptyString = ""
+    static let ideaCreateErrorMessage = "Sorry, only participants of SWSG can create an idea!"
+    static let ideaUserNamePrefix = "by "
+    static let deleteIdea = "Delete Idea"
+    static let deleteIdeaWarning = "Are you sure to delete this idea?"
+    static let no = "No"
+    static let yes = "Yes"
+    static let emptyIdeaNameError = "Idea name cannot be empty!"
+    static let emptyDescriptionError = "Description cannot be empty!"
+    static let generalErrorMessage = "Error!"
+    static let emailExists = "Already Exists"
+    static let logInWithOriginal = "User with Email already exists, please log in with the original client first."
+    static let unexpectedError = "An unexpected error has occured"
+    static let tryAgain = "Please try again"
+    static let communicateFacebook = "Communicating with Facebook"
+    static let communicateGoogle = "Communicating with Google"
     
     static let passwordMinLength = 6
     
@@ -178,7 +225,8 @@ struct Config {
     }
     
     static let duration = 60
-    
+    static let consultationSlotCell = "consultationSlotCell"
+    static let relatedMentorCell = "relatedMentorCell"
     static let slotCollectionTag = 1
     static let relatedCollectionTag = 2
     
@@ -197,6 +245,14 @@ struct Config {
     static let photoURL = "photoURL"
     static let channelType = "channelType"
     static let typingIndicator = "typingIndicator"
+    static let channelID = "channelID"
+    static let createPublicHeaderLabel = "Create Public Channel"
+    static let createPublicMembersHeaderLabel = "Members (Only for Private Channel"
+    
+    
+    // Parameters for Profile
+    static let headerFavourites = "Favourites"
+    static let headerSearchResults = "Search Results"
     
     //Parameters for storage
     static let commentsFileName = "commentsFileName"
@@ -215,6 +271,11 @@ struct Config {
     
     // Parameters for notification:
     static let fullScreenImage = "fullScreenImage"
+    static let update = "update"
+    static let reload = "reload"
+    static let isSuccess = "isSuccess"
+    static let videoId = "videoId"
+    static let height = "height"
     
     //Parameters for Event
     static let calendarStartDate = Utility.fbDateFormatter.date(from: "01-01-2017")!
@@ -223,4 +284,13 @@ struct Config {
     static let startDateTime = "startDateTime"
     static let endDateTime = "endDateTime"
     static let shortDesc = "shortDesc"
+    
+    //Parameters for Registration
+    static let registeredUsers = "registeredUsers"
+    static let registrationCell = "RegistrationCell"
+    static let registeredUserCell = "RegisteredUserCell"
+    
+    // Other
+    static let youtubePrefix = "https://www.youtube.com/embed/"
+    static let youtubeIdComponent = 1
 }

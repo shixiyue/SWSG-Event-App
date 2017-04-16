@@ -16,7 +16,7 @@ struct FBRequest: GraphRequestProtocol {
                 user = nil
                 return
             }
-            print(response)
+            
             guard let id = response[Config.id] as? String,
                 let name = response[Config.name] as? String,
                 let email = response[Config.email] as? String else {

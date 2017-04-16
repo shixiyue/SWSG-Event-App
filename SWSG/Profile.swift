@@ -72,6 +72,7 @@ class Profile {
         guard let imageURL = snapshotValue[Config.image] as? String else {
             return
         }
+        
         System.client.fetchImageDataAtURL(imageURL, completion: { (image, url) in
             if let image = image {
                 self.image = image
@@ -79,7 +80,7 @@ class Profile {
         })
     }
     
-    func updateProfile(username: String,name: String, image: UIImage, job: String, company: String, country: String, education: String, skills: String, description: String) {
+    func updateProfile(username: String,name: String, image: UIImage?, job: String, company: String, country: String, education: String, skills: String, description: String) {
         _checkRep()
         
         self.username = username
@@ -95,6 +96,10 @@ class Profile {
         _checkRep()
     }
     
+    func updateProfile(to profile: Profile) {
+        updateProfile(username: profile.username, name: profile.name, image: profile.image, job: profile.job, company: profile.company, country: profile.country, education: profile.education, skills: profile.skills, description: profile.desc)
+    }
+    
     func updateImage(image: UIImage?) {
         _checkRep()
         self.image = image ?? Config.placeholderImg
@@ -106,6 +111,8 @@ class Profile {
     }
     
     private func _checkRep() {
+        #if DEBUG
         assert(!(name.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty))
+        #endif
     }
 }

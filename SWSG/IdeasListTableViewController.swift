@@ -16,33 +16,58 @@ class IdeasListTableViewController: BaseViewController {
     }
     
     fileprivate let ideas = Ideas.sharedInstance()
+    fileprivate var filteredIdeas = [Idea]()
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            ideaListTableView.reloadData()
+        }
+    }
     
+    @IBOutlet private var searchBar: UISearchBar!
     @IBOutlet private var ideaListTableView: UITableView!
     
     private var ideasRef: FIRDatabaseReference?
     private var ideasAddRefHandle: FIRDatabaseHandle?
     private var ideasChangeRefHandle: FIRDatabaseHandle?
     private var ideasDeleteRefHandle: FIRDatabaseHandle?
-    
-    private enum ideaCreateErrorMsg: String {
-        case notParticipant = "Sorry, only participants of SWSG can create an idea!"
-        case noTeam = "Sorry, only participants who have joined teams can create an idea!"
-    }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "showDetails", let detailsViewController = segue.destination as? IdeaDetailsTableViewController, let index = sender as? Int else {
+        guard segue.identifier == Config.showDetails, let detailsViewController = segue.destination as? IdeaDetailsTableViewController, let index = sender as? Int else {
             return
         }
-        detailsViewController.idea = ideas.retrieveIdeaAt(index: index)
+        
+        if searchActive && filteredIdeas.count > index {
+            detailsViewController.setIdea(filteredIdeas[index])
+        } else {
+            detailsViewController.setIdea(ideas.retrieveIdeaAt(index: index))
+        }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        ideaListTableView.dataSource = self
-        ideaListTableView.delegate = self
         addSlideMenuButton()
+        setUpIdeaListTableView()
+        setUpLayout()
         ideasRef = System.client.getIdeasRef()
         observeIdeas()
+    }
+    
+    private func setUpIdeaListTableView() {
+        ideaListTableView.dataSource = self
+        ideaListTableView.delegate = self
+    }
+    
+    private func setUpLayout() {
+        if System.activeUser?.type.isParticipant == false {
+            self.navigationItem.rightBarButtonItem = nil
+        }
+        
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
+        Utility.styleSearchBar(searchBar)
+    }
+    
+    @objc private func donePressed() {
+        self.view.endEditing(true)
     }
     
     private func observeIdeas() {
@@ -70,7 +95,7 @@ class IdeasListTableViewController: BaseViewController {
             guard let index = self.ideas.remove(snapshot: snapshot) else {
                 return
             }
-            let indexPath = [IndexPath(row: index, section: 0)]
+            let indexPath = [IndexPath(row: index, section: Config.defaultSection)]
             DispatchQueue.main.async {
                 self.ideaListTableView.deleteRows(at: indexPath, with: .none)
             }
@@ -92,14 +117,10 @@ class IdeasListTableViewController: BaseViewController {
     
     @IBAction func addIdea() {
         guard let user = System.activeUser, user.type.isParticipant else {
-            present(Utility.getFailAlertController(message: ideaCreateErrorMsg.notParticipant.rawValue), animated: true, completion: nil)
+            present(Utility.getFailAlertController(message: Config.ideaCreateErrorMessage), animated: true, completion: nil)
             return
         }
-        guard user.hasTeam else {
-            present(Utility.getFailAlertController(message: ideaCreateErrorMsg.noTeam.rawValue), animated: true, completion: nil)
-            return
-        }
-        performSegue(withIdentifier: "addIdea", sender: nil)
+        performSegue(withIdentifier: Config.addIdea, sender: nil)
     }
     
     deinit {
@@ -118,29 +139,65 @@ class IdeasListTableViewController: BaseViewController {
 
 extension IdeasListTableViewController: UITableViewDataSource, UITableViewDelegate {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ideas.count
+        if searchActive {
+            return filteredIdeas.count
+        } else {
+            return ideas.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ideaItemCell", for: indexPath) as! IdeaItemTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Config.ideaItemCell, for: indexPath) as? IdeaItemTableViewCell else {
+            return UITableViewCell()
+        }
         
-        let idea = ideas.retrieveIdeaAt(index: indexPath.row)
+        let idea: Idea
+        
+        if searchActive && filteredIdeas.count > indexPath.row {
+            idea = filteredIdeas[indexPath.row]
+        } else {
+            idea = ideas.retrieveIdeaAt(index: indexPath.row)
+        }
+        
         cell.setIdea(idea)
-        
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 110
+        return Config.ideaListTableCellHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "showDetails", sender: indexPath.row)
+        performSegue(withIdentifier: Config.showDetails, sender: indexPath.row)
     }
 
+}
+
+// MARK: UISearchResultsUpdating
+extension IdeasListTableViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredIdeas = ideas.getAllIdeas().filter { idea in
+            return idea.name.lowercased().contains(searchText.lowercased())
+        }
+        
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        Utility.searchBtnPressed(viewController: self)
+    }
 }

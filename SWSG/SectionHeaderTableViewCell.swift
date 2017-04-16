@@ -6,20 +6,16 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ SectionHeaderTableViewCell inherits from UITableViewCell, which represents the section header
+ 
+ -Parameter: `sectionHeaderLbl` which represents the label on the header cell
+ */
+
 import UIKit
 
 class SectionHeaderTableViewCell: UITableViewCell {
 
     @IBOutlet weak var sectionHeaderLbl: UILabel!
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
 
 }

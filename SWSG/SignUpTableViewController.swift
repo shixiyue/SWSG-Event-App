@@ -12,18 +12,17 @@ import FirebaseAuth
 import FacebookCore
 import FacebookLogin
 
-/// `SignUpTableViewController` represents the controller for signup table.
+/**
+ SignUpTableViewController is a UIViewController that displays the Form for Sign Up
+ 
+ Specifications:
+ - socialUser: Existing Details from a Social Media Login, an optional value
+               Details would be used to fill Name, Email and Profile Image
+ */
 class SignUpTableViewController: UIViewController {
-
-    var signUpButton: RoundCornerButton!
-    var loginStack: UIStackView!
     
+    //MARK: IBOutlets
     @IBOutlet fileprivate var scrollView: UIScrollView!
-    fileprivate let countryPickerView = UIPickerView()
-    private let educationPlaceholder = "(e.g. Computer Science at National University of Singapore)"
-    private let skillsPlaceholder = "(e.g. UI/UX Designer)"
-    private let descPlaceholder = "Description"
-    
     @IBOutlet private var profileIV: UIImageView!
     @IBOutlet private var nameTextField: UITextField!
     @IBOutlet private var usernameTextField: UITextField!
@@ -35,22 +34,30 @@ class SignUpTableViewController: UIViewController {
     @IBOutlet fileprivate var educationTextView: PlaceholderTextView!
     @IBOutlet fileprivate var skillsTextView: PlaceholderTextView!
     @IBOutlet fileprivate var descTextView: PlaceholderTextView!
-    
     @IBOutlet weak var passwordStackView: UIView!
     @IBOutlet fileprivate var educationTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate var skillsTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate var descTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate var stackViewHeightConstraint: NSLayoutConstraint!
     
+    //MARK: Properties
     fileprivate var textFields: [UITextField]!
     fileprivate var textViews: [UITextView]!
     fileprivate var toolbar = UIToolbar()
     fileprivate var activeTextField: UITextField?
     fileprivate var activeTextView: UITextView?
     fileprivate var imagePicker = ImagePickCropperPopoverViewController()
+    fileprivate var profileImgSet = false
     fileprivate var currentCredential: FIRAuthCredential?
-    public var socialUser: SocialUser?
+    fileprivate let countryPickerView = UIPickerView()
+    private let educationPlaceholder = "(e.g. Computer Science at National University of Singapore)"
+    private let skillsPlaceholder = "(e.g. UI/UX Designer)"
+    private let descPlaceholder = "Description"
+    var socialUser: SocialUser?
+    var signUpButton: RoundCornerButton!
+    var loginStack: UIStackView!
 
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpButtons()
@@ -90,7 +97,6 @@ class SignUpTableViewController: UIViewController {
         toolbar = Utility.getToolbar(previous: #selector(previousTextField), next: #selector(nextTextField), done: #selector(donePressed))
     }
     
-    //Sets the Keyboard to push and lower the view when it appears and disappears
     private func addKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow),
                                                name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -139,6 +145,7 @@ class SignUpTableViewController: UIViewController {
         loginStack.isHidden = true
     }
     
+    //MAR: Handle User Interactions
     @objc private func donePicker(sender: UIBarButtonItem) {
         let row = countryPickerView.selectedRow(inComponent: 0)
         pickerView(countryPickerView, didSelectRow: row, inComponent: 0)
@@ -153,21 +160,32 @@ class SignUpTableViewController: UIViewController {
         Utility.showImagePicker(imagePicker: imagePicker, viewController: self, completion: { (image) in
             if let image = image {
                 self.profileIV.image = image
+                self.profileImgSet = true
             }
             self.textFields.first?.becomeFirstResponder()
         })
     }
     
     @objc private func signUp(sender: UIButton) {
-        guard let image = profileIV.image, let name = nameTextField.text, let username = usernameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text,let job = jobTextField.text, let company = companyTextField.text, let education = educationTextView.text, let skills = skillsTextView.content, let desc = descTextView.content else {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
             return
+        }
+        guard let name = nameTextField.text, let username = usernameTextField.text, let email = emailTextField.text?.trim(), let password = passwordTextField.text, let country = countryTextField.text, let job = jobTextField.text, let company = companyTextField.text, let education = educationTextView.text, let skills = skillsTextView.content, let desc = descTextView.content else {
+            return
+        }
+        
+        var image = profileIV.image
+        
+        if !profileImgSet {
+            image = nil
         }
         
         Utility.attemptRegistration(email: email, auth: .email, newCredential: nil, viewController: self, completion: { (exists, arr) in
             
             if let arr = arr {
-                let title = "Already Exists"
-                let message = "User with Email already exists, please log in with the original client first."
+                let title = Config.emailExists
+                let message = Config.logInWithOriginal
                 Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { () in
                     
                     self.currentCredential = System.client.getEmailCredential(email: email, password: password)
@@ -176,6 +194,8 @@ class SignUpTableViewController: UIViewController {
             } else {
                 //Account does not exist, proceed with registration
                 let type = UserTypes(isParticipant: true, isSpeaker: false, isMentor: false, isOrganizer: false, isAdmin: false)
+                
+                
                 let profile = Profile(name: name, username: username, image: image, job: job, company: company, country: country,
                                       education: education, skills: skills, description: desc)
                 let user = User(profile: profile, type: type, email: email)
@@ -232,6 +252,7 @@ class SignUpTableViewController: UIViewController {
     
 }
 
+//MARK: UIPickerViewDataSource, UIPickerViewDelegate
 extension SignUpTableViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -250,6 +271,7 @@ extension SignUpTableViewController: UIPickerViewDataSource, UIPickerViewDelegat
     }
 }
 
+//MARK: UITextViewDelegate, UITextFieldDelegate
 extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -304,7 +326,7 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     }
     
     private func updateButtonState() {
-        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmpty ?? true) }) || educationTextView.isEmpty || skillsTextView.isEmpty
+        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmptyContent ?? true) }) || educationTextView.isEmpty || skillsTextView.isEmpty
         signUpButton.isEnabled = !isAnyEmpty
         signUpButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
@@ -393,9 +415,7 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
     }
     
     //When the keyboard closes, shift the UIView Back
-    //
     func keyboardWillHide(notification: NSNotification) {
-        // Changed it to the "hardcoded" value 0 because the previous method is not working when there's a prediction bar on top of the keyboard
         if self.view.frame.origin.y != 0 {
             self.view.frame.origin.y = 0
         }
@@ -406,13 +426,6 @@ extension SignUpTableViewController: UITextViewDelegate, UITextFieldDelegate {
         } else if scrollView.contentOffset.y > maxOffset {
             scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: maxOffset)
         }
-        /*
-         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey]
-         as? NSValue)?.cgRectValue {
-         if self.view.frame.origin.y != 0 {
-         self.view.frame.origin.y += (keyboardSize.height - Config.keyboardOffsetSignUp)
-         }
-         */
     }
     
 }

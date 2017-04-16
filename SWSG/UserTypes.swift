@@ -28,7 +28,9 @@ struct UserTypes {
     }
     
     private func _checkRep() {
+        #if DEBUG
         assert(isParticipant || isSpeaker || isMentor || isOrganizer || isAdmin)
+        #endif
     }
     
     func toDictionary() -> [String: Bool] {

@@ -8,33 +8,37 @@
 
 import UIKit
 
-class Idea: ImagesContent {
+class Idea: ImagesContent, TemplateContent {
     
     var votes: Int { return upvotes.count - downvotes.count }
-    var teamName: String { return "by Team \(Teams.sharedInstance().retrieveTeamAt(index: team).name)" }
     
     var id: String?
 
     public private(set) var name: String
-    public private(set) var team: Int
+    public private(set) var user: String
     public private(set) var description: String
     public private(set) var mainImage: UIImage = Config.defaultIdeaImage
     public internal(set) var images: [UIImage] = []
     public private(set) var videoLink: String
-    
-    public internal(set) var imagesState = ImagesState()
+
+    public internal(set) var imagesState = IdeasImagesState()
     
     fileprivate var upvotes = Set<String>()
     fileprivate var downvotes = Set<String>()
-    
-    init(name: String, team: Int, description: String, mainImage: UIImage, images: [UIImage], videoLink: String, id: String? = nil) {
+
+    init(name: String, user: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String, id: String? = nil) {
+
         self.name = name
-        self.team = team
+        self.user = user
         self.description = description
         self.mainImage = mainImage
         self.images = images
         self.videoLink = videoLink
         self.id = id
+        
+        if mainImage == Config.defaultIdeaImage {
+            imagesState.mainImageHasChanged = false
+        }
     }
     
     init?(snapshotValue: [String: Any]) {
@@ -46,10 +50,10 @@ class Idea: ImagesContent {
             return nil
         }
         self.name = name
-        guard let team = snapshotValue[Config.team] as? Int else {
+        guard let user = snapshotValue[Config.user] as? String else {
             return nil
         }
-        self.team = team
+        self.user = user
         guard let description = snapshotValue[Config.description] as? String else {
             return nil
         }
@@ -59,13 +63,7 @@ class Idea: ImagesContent {
         }
         self.videoLink = videoLink
         if let votes = snapshotValue[Config.votes] as? [String: Bool] {
-            for (user, vote) in votes {
-                if vote == true {
-                    upvotes.insert(user)
-                } else {
-                    downvotes.insert(user)
-                }
-            }
+            setVotes(votes: votes)
         }
         if let mainImageURL = snapshotValue[Config.mainImage] as? String {
             imagesState.mainImageURL = mainImageURL
@@ -97,7 +95,7 @@ class Idea: ImagesContent {
     }
     
     func getUpdatedIdea(name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) -> Idea {
-        let idea = Idea(name: name, team: team, description: description, mainImage: mainImage, images: images, videoLink: videoLink, id: id)
+        let idea = Idea(name: name, user: user, description: description, mainImage: mainImage, images: images, videoLink: videoLink, id: id)
         idea.imagesState.mainImageHasChanged = self.mainImage != mainImage
         idea.imagesState.imagesHasChanged = self.images != images
         return idea
@@ -111,15 +109,26 @@ class Idea: ImagesContent {
         self.videoLink = videoLink
     }
     
+    func setVotes(votes: [String: Bool]) {
+        for (user, vote) in votes {
+            if vote {
+                upvotes.insert(user)
+            } else {
+                downvotes.insert(user)
+            }
+        }
+    }
+    
     func upvote() {
         guard let uid = System.activeUser?.uid, let id = id else {
             return
         }
-        System.client.updateIdeaVote(for: id, user: uid, vote: true)
         guard !upvotes.contains(uid) else {
+            System.client.removeIdeaVote(for: id, user: uid)
             upvotes.remove(uid)
             return
         }
+        System.client.updateIdeaVote(for: id, user: uid, vote: true)
         upvotes.insert(uid)
         if downvotes.contains(uid) {
             downvotes.remove(uid)
@@ -130,11 +139,12 @@ class Idea: ImagesContent {
         guard let uid = System.activeUser?.uid, let id = id else {
             return
         }
-        System.client.updateIdeaVote(for: id, user: uid, vote: false)
         guard !downvotes.contains(uid) else {
+            System.client.removeIdeaVote(for: id, user: uid)
             downvotes.remove(uid)
             return
         }
+        System.client.updateIdeaVote(for: id, user: uid, vote: false)
         downvotes.insert(uid)
         if upvotes.contains(uid) {
             upvotes.remove(uid)
@@ -142,13 +152,16 @@ class Idea: ImagesContent {
     }
     
     func getVotingState() -> (upvote: Bool, downvote: Bool) {
-        let uid = System.client.getUid()
+        guard let uid = System.client.getUid() else {
+            return (false, false)
+        }
+        
         return (upvotes.contains(uid), downvotes.contains(uid))
     }
     
     func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [Config.name: self.name,
-                                   Config.team: self.team,
+                                   Config.user: self.user,
                                    Config.description: self.description,
                                    Config.videoLink: self.videoLink]
         if let id = id {
@@ -158,7 +171,9 @@ class Idea: ImagesContent {
     }
     
     private func _checkRep() {
+        #if DEBUG
         assert(upvotes.intersection(downvotes).isEmpty)
+        #endif
     }
     
 }
@@ -171,7 +186,7 @@ func ==(lhs: Idea, rhs: Idea) -> Bool {
         return lhsId == rhsId
     }
     return lhs.name == rhs.name
-        && lhs.team == rhs.team
+        && lhs.user == rhs.user
         && lhs.description == rhs.description
         && lhs.mainImage == rhs.mainImage
         && lhs.images == rhs.images

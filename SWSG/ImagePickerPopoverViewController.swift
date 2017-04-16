@@ -9,6 +9,7 @@
 import UIKit
 
 class ImagePickerPopoverViewController: ImagePickerViewController {
+    
     var image: UIImage?
     var completionHandler : ((_ image: UIImage?) -> Void)?
     

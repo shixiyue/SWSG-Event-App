@@ -20,7 +20,7 @@ class User {
     public private (set) var uid: String?
     public private (set) var favourites: [String]?
     
-    init(profile: Profile, type: UserTypes, team: Int, email: String) {
+    init(profile: Profile, type: UserTypes, team: String, email: String) {
         self.type = type
         self.team = team
         self.profile = profile
@@ -33,7 +33,9 @@ class User {
         self.init(profile: profile, type: type, team: Config.noTeam, email: email)
     }
     
-    init?(snapshot: FIRDataSnapshot) {
+    init?(uid: String, snapshot: FIRDataSnapshot) {
+        self.uid = uid
+        
         guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
             return nil
         }
@@ -41,10 +43,11 @@ class User {
             return nil
         }
         self.type = UserTypes(isParticipant: isParticipant, isSpeaker: isSpeaker, isMentor: isMentor, isOrganizer: isOrganizer, isAdmin: isAdmin)
-        guard let team = snapshotValue[Config.team] as? Int else {
-            return nil
+
+        if let team = snapshotValue[Config.team] as? String {
+            self.team = team
         }
-        self.team = team
+        
         guard let profileSnapshot = snapshotValue[Config.profile] as? [String: Any], let profile = Profile(snapshotValue: profileSnapshot) else {
             return nil
         }
@@ -65,11 +68,11 @@ class User {
         return team != Config.noTeam
     }
     
-    func setTeamIndex(index: Int) {
+    func setTeamId(id: String) {
         guard type.isParticipant else {
             return
         }
-        team = index
+        team = id
     }
     
     func setMentor(mentor: Mentor) {
@@ -77,10 +80,6 @@ class User {
             return
         }
         self.mentor = mentor
-    }
-    
-    func setUid(uid: String) {
-        self.uid = uid
     }
     
     func setFavourites(favourites: [String]?) {
@@ -102,12 +101,27 @@ class User {
         return dict
     }
     
-    internal func _checkRep() {
-        // Assumption: type, profile and team have met their representation invariants.
+    // Assumption: type, profile and team have met their representation invariants.
+    private func _checkRep() {
+        #if DEBUG
         assert (Utility.isValidEmail(testStr: email))
         if !type.isParticipant {
-            assert(team == -1)
+            assert(team == Config.noTeam)
         }
+        if !type.isMentor {
+            assert(mentor == nil)
+        }
+        #endif
     }
     
+}
+
+extension User: Equatable { }
+
+func ==(lhs: User, rhs: User) -> Bool {
+    
+    if let lhsId = lhs.uid, let rhsId = rhs.uid {
+        return lhsId == rhsId
+    }
+    return false
 }

@@ -9,16 +9,29 @@
 import UIKit
 import Firebase
 
+/**
+ MentorGridViewController is a BaseViewController used to display all the
+ mentors in a UICollectionView
+ */
 class MentorGridViewController: BaseViewController {
     @IBOutlet weak var mentorCollection: UICollectionView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
+    //MAR: Properties
     fileprivate var insets: CGFloat!
     fileprivate var mentors = [User]()
+    fileprivate var filteredMentors = [User]()
+    fileprivate var searchActive = false {
+        willSet(newSearchActive) {
+            mentorCollection.reloadData()
+        }
+    }
     
     //MARK: Firebase References
     private var mentorsRef: FIRDatabaseQuery?
     private var mentorsRefHandle: FIRDatabaseHandle?
     
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()
@@ -30,14 +43,34 @@ class MentorGridViewController: BaseViewController {
         
         mentorsRef = System.client.getMentorsRef()
         observeMentors()
+        setUpSearchBar()
     }
     
+    private func setUpSearchBar() {
+        Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
+        Utility.styleSearchBar(searchBar)
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
+    }
+    
+    //MARK: Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Config.mentorGridToMentor {
             if let mentorVC = segue.destination as? MentorViewController,
                 let indexPaths = mentorCollection.indexPathsForSelectedItems {
                 let index = indexPaths[0].item
-                mentorVC.mentorAcct = mentors[index]
+                
+                let mentor: User
+                
+                if searchActive {
+                    mentor = filteredMentors[index]
+                } else {
+                    mentor = mentors[index]
+                }
+                
+                mentorVC.mentorAcct = mentor
             }
         }
     }
@@ -60,13 +93,11 @@ class MentorGridViewController: BaseViewController {
             self.mentors = [User]()
             for mentorData in snapshot.children {
                 guard let mentorSnapshot = mentorData as? FIRDataSnapshot,
-                    let mentorAcct = User(snapshot: mentorSnapshot) else {
+                    let mentorAcct = User(uid: mentorSnapshot.key, snapshot: mentorSnapshot) else {
                     continue
                 }
-                let uid = mentorSnapshot.key
-                mentorAcct.setUid(uid: uid)
                 
-                Utility.getProfileImg(uid: uid, completion: { (image) in
+                Utility.getProfileImg(uid: mentorSnapshot.key, completion: { (image) in
                     mentorAcct.profile.updateImage(image: image)
                     self.mentorCollection.reloadData()
                 })
@@ -79,10 +110,15 @@ class MentorGridViewController: BaseViewController {
     }
 }
 
+//MARK: UICollectionViewDelegate, UICollectionViewDataSource
 extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
-        return mentors.count
+        if searchActive {
+            return filteredMentors.count
+        } else {
+            return mentors.count
+        }
     }
     
     public func collectionView(_ collectionView: UICollectionView,
@@ -93,7 +129,13 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
         }
         
         let index = indexPath.item
-        let profile = mentors[index].profile
+        let profile: Profile
+            
+        if searchActive {
+            profile = filteredMentors[index].profile
+        } else {
+            profile = mentors[index].profile
+        }
         
         if profile.image != nil {
             cell.iconIV.image = profile.image
@@ -110,3 +152,30 @@ extension MentorGridViewController: UICollectionViewDelegate, UICollectionViewDa
     }
 }
 
+// MARK: UISearchBarDelegate
+extension MentorGridViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredMentors = mentors.filter { mentor in
+            return mentor.profile.name.lowercased().contains(searchText.lowercased())
+        }
+        
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        Utility.setSearchActive(&searchActive, searchBar: searchBar)
+        Utility.searchBtnPressed(viewController: self)
+    }
+}

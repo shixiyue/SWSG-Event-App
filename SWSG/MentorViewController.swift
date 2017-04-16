@@ -9,28 +9,35 @@
 import UIKit
 import Firebase
 
+/**
+ MentorViewController is a UIViewController used to details for a Mentor.
+ 
+ Specifications:
+    - mentorAcct: Mentor whose account to display
+ */
 class MentorViewController: UIViewController {
+    
+    //MARK: IBOutlets
     @IBOutlet weak var profileImg: UIImageView!
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var positionLbl: UILabel!
     @IBOutlet weak var companyLbl: UILabel!
     @IBOutlet weak var descriptionTB: UITextView!
     @IBOutlet weak var mentorView: UIView!
-    
     @IBOutlet weak var consultationSlotCollection: UICollectionView!
     @IBOutlet weak var relatedMentorCollection: UICollectionView!
     
-    private let mentorBookingErrorMsg = "Sorry, only participants of SWSG can book a slot!"
-    
+    //MARK: Properties
     public var mentorAcct: User?
-    fileprivate var mentor: Mentor?
     fileprivate var relatedMentors = [User]()
     fileprivate var cvLayout = MultiDirectionCollectionViewLayout()
+    private let mentorBookingErrorMsg = "Sorry, only participants of SWSG can book a slot!"
     
     //MARK: Firebase References
     private var mentorRef: FIRDatabaseReference!
     private var mentorRefHandle: FIRDatabaseHandle?
     
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -64,6 +71,18 @@ class MentorViewController: UIViewController {
             return
         }
         
+        mentorRef = System.client.getUserRef(for: uid)
+        
+    }
+    
+    private func setUpDescription() {
+        guard let mentorAcct = mentorAcct, let uid = mentorAcct.uid else {
+            return
+        }
+        let profile = mentorAcct.profile
+        
+        nameLbl.text = profile.name
+        
         profileImg = Utility.roundUIImageView(for: profileImg)
         profileImg.image = Config.placeholderImg
         
@@ -73,30 +92,9 @@ class MentorViewController: UIViewController {
             }
         })
         
-        mentorRef = System.client.getUserRef(for: uid)
-        
-    }
-    
-    deinit {
-        if let refHandle = mentorRefHandle {
-            mentorRef.removeObserver(withHandle: refHandle)
-        }
-    }
-    
-    // MARK: Firebase related methods
-    private func observeSlots() {
-        // Use the observe method to listen for new
-        // channels being written to the Firebase DB
-        mentorRefHandle = mentorRef.observe(.value, with: { (snapshot) -> Void in
-            guard let userSnapshot = snapshot.value as? [String: Any],
-                let mentorSnapshot = userSnapshot[Config.mentor] as? [String: Any],
-                let mentor = Mentor(snapshot: mentorSnapshot) else {
-                    return
-            }
-            self.mentor = mentor
-            self.cvLayout.dataSourceDidUpdate = true
-            self.consultationSlotCollection.reloadData()
-        })
+        positionLbl.text = profile.job
+        companyLbl.text = profile.company
+        descriptionTB.text = profile.desc
     }
     
     private func getRelatedMentors() {
@@ -120,21 +118,36 @@ class MentorViewController: UIViewController {
         })
     }
     
-    func setUpDescription() {
-        guard let mentorAcct = mentorAcct else {
-            return
+    deinit {
+        if let refHandle = mentorRefHandle {
+            mentorRef.removeObserver(withHandle: refHandle)
         }
-        let profile = mentorAcct.profile
-        
-        profileImg.image = profile.image
-        nameLbl.text = profile.name
-        positionLbl.text = profile.job
-        companyLbl.text = profile.company
-        descriptionTB.text = profile.desc
     }
     
-    func bookSlot(on dayIndex: Int, at index: Int) {
-        guard let mentor = mentor else {
+    // MARK: Firebase related methods
+    private func observeSlots() {
+        // Use the observe method to listen for new
+        // channels being written to the Firebase DB
+        mentorRefHandle = mentorRef.observe(.value, with: { (snapshot) -> Void in
+            guard let userSnapshot = snapshot.value as? [String: Any],
+                let mentorSnapshot = userSnapshot[Config.mentor] as? [String: Any],
+                let mentor = Mentor(snapshot: mentorSnapshot) else {
+                    return
+            }
+            self.mentorAcct?.setMentor(mentor: mentor)
+            self.cvLayout.dataSourceDidUpdate = true
+            self.consultationSlotCollection.reloadData()
+        })
+    }
+    
+    //MARK: Booking Function
+    fileprivate func setSlot(on dayIndex: Int, at index: Int, status: ConsultationSlotStatus) {
+        guard System.client.isConnected else {
+            present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
+            return
+        }
+        
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
             return
         }
         
@@ -143,24 +156,32 @@ class MentorViewController: UIViewController {
         let slot = day.slots[index]
         let slotTimeString = Utility.fbDateTimeFormatter.string(from: slot.startDateTime)
         
-        let slotRef = mentorRef.child("mentor/consultationDays/\(dateString)/\(slotTimeString)")
-        slotRef.child(Config.consultationStatus).setValue(ConsultationSlotStatus.booked.rawValue)
-        slotRef.child(Config.team).setValue(System.activeUser?.team)
+        mentor.days[dayIndex].slots[index].status = status
+        
+        let slotRef = mentorRef.child("\(Config.mentor)/\(Config.consultationDays)/\(dateString)/\(slotTimeString)")
+        slotRef.child(Config.consultationStatus).setValue(status.rawValue)
+        
+        if status == .booked {
+            mentor.days[dayIndex].slots[index].team = System.activeUser?.team
+            slotRef.child(Config.team).setValue(System.activeUser?.team)
+        }
     }
     
-    func goToProfile(_ sender: UITapGestureRecognizer) {
-        performSegue(withIdentifier: Config.mentorToProfile, sender: nil)
-    }
-    
+    //MARK: User Interaction Functions
     @IBAction func composeBtnPressed(_ sender: Any) {
         
-        guard let mentorAcct = mentorAcct, let uid = mentorAcct.uid else {
+        guard let uid = System.client.getUid() else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
+        guard let mentorAcct = mentorAcct, let mentorID = mentorAcct.uid else {
             return
         }
         
         var members = [String]()
-        members.append(System.client.getUid())
         members.append(uid)
+        members.append(mentorID)
         
         let channel = Channel(type: .directMessage, members: members)
         System.client.createChannel(for: channel, completion: { (channel, error) in
@@ -171,6 +192,10 @@ class MentorViewController: UIViewController {
         })
     }
     
+    //MARK: Navigation
+    func goToProfile(_ sender: UITapGestureRecognizer) {
+        performSegue(withIdentifier: Config.mentorToProfile, sender: nil)
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
@@ -188,17 +213,21 @@ class MentorViewController: UIViewController {
                 let index = indexPaths[0].item
                 mentorVC.mentorAcct = relatedMentors[index]
             }
-        } else if Config.mentorToProfile == Config.mentorToProfile,
+        } else if segue.identifier == Config.mentorToProfile,
             let profileVC = segue.destination as? ProfileViewController,
             let mentorAcct = mentorAcct {
             profileVC.user = mentorAcct
+        } else if segue.identifier == Config.mentorToTeamInfo, let team = sender as? Team,
+            let teamInfoVC = segue.destination as? TeamInfoTableViewController {
+            teamInfoVC.team = team
         }
     }
 }
 
+//MARK: UICollectionViewDelegate, UICollectionViewDataSource
 extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        guard let mentor = mentor else {
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
                 return 1
         }
         
@@ -211,14 +240,13 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
-        guard let mentor = mentor else {
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
             return 0
         }
         
         if collectionView.tag == Config.slotCollectionTag {
             return mentor.days[section].slots.count + 1
         } else if collectionView.tag == Config.relatedCollectionTag {
-            print(relatedMentors.count)
             return relatedMentors.count
         } else {
             return 0
@@ -241,7 +269,8 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func getConsultationDayCell(for collectionView: UICollectionView,
                                       at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let mentor = mentor, let cell = collectionView.dequeueReusableCell(
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor,
+            let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier:"consultationDayCell",
             for: indexPath) as? ConsultationDayCell
             else {
@@ -263,8 +292,9 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func getConsultationSlotCell(for collectionView: UICollectionView,
                                          at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let mentor = mentor, let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier:"consultationSlotCell",
+        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor,
+            let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: Config.consultationSlotCell,
             for: indexPath) as? ConsultationSlotCell
             else {
                 return ConsultationSlotCell()
@@ -280,10 +310,8 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func getRelatedMentorCell(for collectionView: UICollectionView,
                                       at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier:"relatedMentorCell",
-            for: indexPath) as? MentorCell
-            else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier:
+            Config.relatedMentorCell, for: indexPath) as? MentorCell else {
                 return MentorCell()
         }
         
@@ -311,13 +339,80 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     private func selectedSlot(for collectionView: UICollectionView,
                               at indexPath: IndexPath) {
-        guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
+        
+        guard let mentor = mentorAcct?.mentor else {
             return
         }
         
         let dayIndex = indexPath.section
         let index = indexPath.item - 1
         let slot = mentor.days[dayIndex].slots[index]
+        
+        if System.activeUser?.uid == mentorAcct?.uid, slot.status == .booked, let team = slot.team {
+            System.client.getTeam(with: team, completion: { (team, error) in
+                if let team = team {
+                    let title = "\(slot.startDateTime.string(format: "dd/M - Ha"))"
+                    let message = "Has been booked by \(team.name)"
+                    let slotController = UIAlertController(title: title, message: message,
+                                                              preferredStyle: UIAlertControllerStyle.alert)
+                                        
+                    let dismissAction = UIAlertAction(title: "Dismiss", style: .default) { _ in
+                    }
+                    slotController.addAction(dismissAction)
+                    
+                    let viewAction = UIAlertAction(title: "View Profile", style: .default) { _ in
+                        self.performSegue(withIdentifier: Config.mentorToTeamInfo, sender: team)
+                    }
+                    slotController.addAction(viewAction)
+                    
+                    //Present the Popup
+                    self.present(slotController, animated: true, completion: nil)
+                    return
+                }
+            })
+            return
+        } else if System.activeUser?.uid == mentorAcct?.uid {
+            let title = "Slot Status"
+            let message = "Set Slot Status"
+            let slotController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+            
+            if slot.status != .vacant {
+                let availableAction = UIAlertAction(title: "Vacant", style: .default, handler: {
+                    _ in
+                    self.setSlot(on: dayIndex, at: index, status: .vacant)
+                    return
+                })
+                slotController.addAction(availableAction)
+            }
+            
+            if slot.status != .unavailable {
+                let unavailableAction = UIAlertAction(title: "Unavailable", style: .default, handler: {
+                    _ in
+                    self.setSlot(on: dayIndex, at: index, status: .unavailable)
+                    return
+                })
+                slotController.addAction(unavailableAction)
+            }
+            
+            //Add a Cancel Action to the Popup
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                return
+            }
+            slotController.addAction(cancelAction)
+            
+            slotController.popoverPresentationController?.sourceView = self.view
+            
+            //Displays the Compose Popup
+            self.present(slotController, animated: true, completion: nil)
+        }
+        
+        guard System.activeUser?.type.isParticipant == true, System.activeUser?.team != Config.noTeam else {
+            let title = "Error"
+            let message = "You need to be part of a team to book a slot"
+            Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { _ in
+            })
+            return
+        }
         
         guard slot.status == .vacant else {
             return
@@ -327,20 +422,15 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let bookingController = UIAlertController(title: "Book Slot", message: message,
                                                   preferredStyle: UIAlertControllerStyle.alert)
         
-        //Add an Action to Confirm the Deletion with the Destructive Style
         let confirmAction = UIAlertAction(title: "Confirm", style: .default) { _ -> Void in
-            self.bookSlot(on: dayIndex, at: index)
-            
-            //collectionView.reloadItems(at: [indexPath])
+            self.setSlot(on: dayIndex, at: index, status: .booked)
         }
         bookingController.addAction(confirmAction)
         
-        //Add a Cancel Action to the Popup
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
         }
         bookingController.addAction(cancelAction)
         
-        //Present the Popup
         self.present(bookingController, animated: true, completion: nil)
     }
 }

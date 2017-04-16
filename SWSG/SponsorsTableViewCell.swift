@@ -52,11 +52,7 @@ class SponsorsTableViewCell: UITableViewCell {
         guard let url = URL(string: link) else {
             return
         }
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url)
-        } else {
-            UIApplication.shared.openURL(url)
-        }
+        UIApplication.shared.open(url)
     }
     
 }

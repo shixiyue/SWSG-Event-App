@@ -8,16 +8,20 @@
 
 import Foundation
 
-struct ImagesState {
-    
-    var mainImageHasChanged = true
+class ImagesState {
+
     var imagesHasChanged = true
-    
-    var mainImageHasFetched = false
     var imagesHasFetched = false
     
-    var mainImageURL: String?
     var imagesURL: [String: String]?
     var imagesDict = [String: UIImage]()
+    
+}
+
+class IdeasImagesState: ImagesState {
+    
+    var mainImageHasChanged = true
+    var mainImageHasFetched = false
+    var mainImageURL: String?
     
 }

@@ -14,6 +14,10 @@ import Google
 import GoogleSignIn
 import OneSignal
 
+/**
+    FirebaseClient is the main interface between the App and Firebase
+ */
+
 class FirebaseClient {
     
     typealias GeneralErrorCallback = (FirebaseError?) -> Void
@@ -36,6 +40,9 @@ class FirebaseClient {
     typealias GetEventsCallback = ([Date: [Event]], FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
     typealias GetNotificationsCallback = ([PushNotification], FirebaseError?) -> Void
+    typealias GetTeamCallback = (Team?, FirebaseError?) -> Void
+    typealias GetTeamsCallback = ([Team], FirebaseError?) -> Void
+    typealias RegistrationCallback = (FirebaseError?) -> Void
     typealias ImageURLCallback = (String?, FirebaseError?) -> Void
     typealias ImageCallback = (UIImage?, String?) -> Void
     typealias ImagesCallback = ([UIImage]?, String?) -> Void
@@ -49,6 +56,7 @@ class FirebaseClient {
     private let informationRef = FIRDatabase.database().reference(withPath: "information")
     private let notisIndividualRef = FIRDatabase.database().reference(withPath: "notifications_individual")
     private let notisAllRef = FIRDatabase.database().reference(withPath: "notifications_all")
+    private let registrationRef = FIRDatabase.database().reference(withPath: "registration")
     private let storageRef = FIRStorage.storage().reference(forURL: Config.appURL)
     private let auth = FIRAuth.auth()
     
@@ -157,7 +165,6 @@ class FirebaseClient {
             case .success(let response):
                 completion(response.user, nil)
             case .failed(let error):
-                print("Custom Graph Request Failed: \(error)")
                 completion(nil, nil)
             }
         }
@@ -224,11 +231,10 @@ class FirebaseClient {
         mentorRef.observeSingleEvent(of: .value, with: {(snapshot) in
             var mentors = [User]()
             for mentor in snapshot.children {
-                guard let mentor = mentor as? FIRDataSnapshot, let user = User(snapshot: mentor) else {
+                guard let mentor = mentor as? FIRDataSnapshot, let user = User(uid: mentor.key, snapshot: mentor) else {
                     continue
                 }
                 
-                user.setUid(uid: mentor.key)
                 mentors.append(user)
             }
             completion(mentors, nil)
@@ -242,16 +248,25 @@ class FirebaseClient {
         }
         getUserWith(uid: uid, completion: completion)
     }
+    
+    public func addMentorSlots(to uid: String) {
+        let mentor = Mentor(field: .business)
+        mentor.addSlots(on: Utility.fbDateFormatter.date(from: "12-04-2017")!)
+        mentor.addSlots(on: Utility.fbDateFormatter.date(from: "13-04-2017")!)
+        mentor.addSlots(on: Utility.fbDateFormatter.date(from: "14-04-2017")!)
+        
+        let userRef = usersRef.child(uid)
+        userRef.child(Config.mentor).setValue(mentor.toDictionary())
+    }
 
     public func getUserWith(uid: String, completion: @escaping GetUserCallback) {
         let userRef = usersRef.child(uid)
         // TODO: handle error
         userRef.observeSingleEvent(of: .value, with: {(snapshot) in
-            guard let user = User(snapshot: snapshot) else {
+            guard let user = User(uid: uid, snapshot: snapshot) else {
                 completion(nil, nil)
                 return
             }
-            user.setUid(uid: uid)
             completion(user, nil)
         })
     }
@@ -266,11 +281,10 @@ class FirebaseClient {
                 var userAcct: User?
                 for userSnapshot in snapshot.children {
                     guard let userSnapshot = userSnapshot as? FIRDataSnapshot,
-                        let user = User(snapshot: userSnapshot) else {
+                        let user = User(uid: userSnapshot.key, snapshot: userSnapshot) else {
                         continue
                     }
                     
-                    user.setUid(uid: userSnapshot.key)
                     userAcct = user
                 }
                 
@@ -375,6 +389,99 @@ class FirebaseClient {
         })
     }
 
+    public func createTeam(_team: Team, completion: @escaping CreateTeamCallback) {
+        let teamRef = teamsRef.childByAutoId()
+        _team.id = teamRef.key
+        teamRef.setValue(_team.toDictionary(), withCompletionBlock: { (err, _) in
+            guard err == nil else {
+                completion(self.checkError(err))
+                return
+            }
+            completion(nil)
+            
+            let channel = Channel(type: .team, icon: nil, name: _team.name, members: _team.members)
+            
+            self.createNewChannel(for: channel, completion: { (channel, error) in
+                if let channel = channel {
+                    teamRef.child(Config.channelID).setValue(channel.id)
+                }
+            })
+        })
+    }
+    
+    func updateTeam(for team: Team) {
+        guard let id = team.id else {
+            return
+        }
+        
+        let teamRef = getTeamRef(for: id)
+        teamRef.updateChildValues(team.toDictionary())
+        
+        teamRef.child(Config.channelID).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let channelID = snapshot.value as? String {
+                self.updateChannel(members: team.members, for: channelID)
+            }
+        })
+    }
+    
+    public func deleteTeam(for team: Team) {
+        guard let id = team.id else {
+            return
+        }
+        
+        let teamsRef = getTeamsRef()
+        let teamRef = teamsRef.child(id)
+        
+        teamRef.child(Config.channelID).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let channelID = snapshot.value as? String {
+                self.deleteChannel(for: channelID)
+            }
+        })
+        
+        teamRef.removeValue { (error, ref) in
+        }
+    }
+    
+    public func getTeamChannel(for team: Team, completion: @escaping GetChannelCallback) {
+        guard let id = team.id else {
+            return
+        }
+        
+        let teamRef = getTeamRef(for: id)
+        teamRef.updateChildValues(team.toDictionary())
+        
+        teamRef.child(Config.channelID).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let channelID = snapshot.value as? String {
+                self.getChannel(with: channelID, completion: completion)
+            } else {
+                completion(nil, nil)
+            }
+        })
+    }
+    
+    public func getTeam(snapshot: Any?) -> Team? {
+        guard let snapshot = snapshot as? FIRDataSnapshot else {
+            return nil
+        }
+        
+        return Team(id: snapshot.key, snapshot: snapshot)
+    }
+    
+
+    public func getTeam(with id: String, completion: @escaping GetTeamCallback) {
+            let teamRef = teamsRef.child(id)
+            // TODO: handle error
+            teamRef.observeSingleEvent(of: .value, with: {(snapshot) in
+                guard let team = Team(id: id, snapshot: snapshot) else {
+                    completion(nil, nil)
+                    return
+                }
+                
+                completion(team, nil)
+            })
+        
+    }
+    
     public func createEvent(_ event: Event, completion: @escaping CreateEventCallback) {
         let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
         let eventRef = eventsRef.child(dayString).childByAutoId()
@@ -551,9 +658,16 @@ class FirebaseClient {
         ideaRef.child(Config.votes).child(user).setValue(vote)
     }
     
-    func removeIdea(for id: String) {
+    func removeIdeaVote(for id: String, user: String) {
         let ideaRef = getIdeaRef(for: id)
-        ideaRef.removeValue()
+        ideaRef.child(Config.votes).child(user).removeValue()
+    }
+    
+    func removeIdea(for id: String, completion: @escaping GeneralErrorCallback) {
+        let ideaRef = getIdeaRef(for: id)
+        ideaRef.removeValue(completionBlock: { (error, _) in
+            completion(self.checkError(error))
+        })
     }
     
     public func createChannel(for channel: Channel, completion: @escaping GetChannelCallback) {
@@ -608,7 +722,6 @@ class FirebaseClient {
                 return
             }
             channelRef.child(Config.image).setValue(imageURL)
-            
         })
     }
     
@@ -621,15 +734,42 @@ class FirebaseClient {
         channelRef.child(Config.name).setValue(name)
     }
     
+    public func updateChannel(members: [String], for channel: Channel) {
+        guard let id = channel.id else {
+            return
+        }
+        
+        updateChannel(members: members, for: id)
+    }
+    
+    public func updateChannel(members: [String], for id: String) {
+        let channelRef = getChannelRef(for: id)
+        channelRef.child(Config.members).setValue(members)
+    }
+    
     public func deleteChannel(for channel: Channel) {
         guard let id = channel.id else {
             return
         }
         
+        deleteChannel(for: id)
+    }
+    
+    public func deleteChannel(for id: String) {
         let channelsRef = getChannelsRef()
         let channelRef = channelsRef.child(id)
         channelRef.removeValue { (error, ref) in
         }
+    }
+    
+    private func getChannel(with id: String, completion: @escaping GetChannelCallback) {
+        let channelRef = getChannelsRef().child(id)
+        
+        channelRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            let channel = Channel(id: snapshot.key, snapshot: snapshot)
+            
+            completion(channel, nil)
+        })
     }
     
     private func getChannel(with members: [String], completion: @escaping GetChannelCallback) {
@@ -744,10 +884,39 @@ class FirebaseClient {
     
     func saveInformation(faq: Faq, completion: @escaping GeneralErrorCallback) {
         let faqRef = getFaqRef().childByAutoId()
+        faq.id = faqRef.key
         
         faqRef.setValue(faq.toDictionary(), withCompletionBlock: { (error, _) in
             completion(self.checkError(error))
         })
+    }
+    
+    public func createRegistrationEvent(rEvent: RegistrationEvent, completion: @escaping RegistrationCallback) {
+        let rEventRef = registrationRef.childByAutoId()
+        rEventRef.setValue(rEvent.toDictionary())
+        completion(nil)
+    }
+    
+    public func editRegistrationEvent(rEvent: RegistrationEvent, completion: @escaping RegistrationCallback) {
+        guard let id = rEvent.id else {
+            completion(nil)
+            return
+        }
+        
+        let rEventRef = registrationRef.child(id)
+        rEventRef.setValue(rEvent.toDictionary())
+        completion(nil)
+    }
+    
+    public func deleteRegistrationEvent(rEvent: RegistrationEvent, completion: @escaping RegistrationCallback) {
+        guard let id = rEvent.id else {
+            completion(nil)
+            return
+        }
+        
+        let rEventRef = registrationRef.child(id)
+        rEventRef.setValue(nil)
+        completion(nil)
     }
     
     public func saveImage(image: UIImage, completion: @escaping ImageURLCallback) {
@@ -872,16 +1041,12 @@ class FirebaseClient {
         
         storageRef.data(withMaxSize: INT64_MAX){ (data, error) in
             if let error = error {
-                print("Error downloading image data: \(error)")
                 completion(nil, nil)
                 return
             }
             
             storageRef.metadata(completion: { (metadata, metadataErr) in
                 guard let data = data else {
-                    if let err = metadataErr {
-                        print("Error downloading metadata: \(err)")
-                    }
                     return
                 }
                 
@@ -934,8 +1099,12 @@ class FirebaseClient {
         })
     }
     
-    func getUid() -> String {
-        return auth?.currentUser?.uid ?? ""
+    func getUid() -> String? {
+        guard let auth = auth, let user = auth.currentUser else {
+            return nil
+        }
+        
+        return user.uid
     }
     
     private func checkError(_ err: Error?) -> FirebaseError? {
@@ -973,6 +1142,10 @@ class FirebaseClient {
         return ref.child(child).queryOrderedByValue().queryEqual(toValue: value)
     }
     
+    public func getUsersRef() -> FIRDatabaseReference {
+        return usersRef
+    }
+    
     public func getChannelsRef() -> FIRDatabaseReference {
         return databaseReference(for: Config.channelsRef)
     }
@@ -1005,6 +1178,10 @@ class FirebaseClient {
         return eventsRef
     }
     
+    public func getTeamsRef() -> FIRDatabaseReference {
+        return teamsRef
+    }
+    
     public func getEventRef(event: Event) -> FIRDatabaseReference {
         let dayString = Utility.fbDateFormatter.string(from: event.startDateTime)
         
@@ -1028,7 +1205,10 @@ class FirebaseClient {
     public func getIdeaRef(for ideaID: String) -> FIRDatabaseReference {
         return ideasRef.child(ideaID)
     }
-    
+
+    public func getTeamRef(for teamID: String) -> FIRDatabaseReference {
+        return teamsRef.child(teamID)
+    }
     public func getPeopleRef(for category: String) -> FIRDatabaseReference {
         return informationRef.child("people").child(category)
     }
@@ -1039,6 +1219,14 @@ class FirebaseClient {
     
     public func getFaqRef() -> FIRDatabaseReference {
         return informationRef.child("faq")
+    }
+    
+    public func getRegistrationRef() -> FIRDatabaseReference {
+        return registrationRef
+    }
+    
+    public func getRegisteredEventRef(id: String) -> FIRDatabaseReference {
+        return registrationRef.child(id)
     }
     
     private func databaseReference(for name: String) -> FIRDatabaseReference {

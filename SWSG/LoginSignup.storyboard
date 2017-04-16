@@ -128,7 +128,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="opb-ou-LYd">
-                                <rect key="frame" x="0.0" y="20" width="375" height="553"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="509"/>
                                 <connections>
                                     <segue destination="Atq-bp-qNQ" kind="embed" identifier="signUpTable" id="3ea-Qg-afe"/>
                                 </connections>
@@ -198,11 +198,11 @@
                         <viewControllerLayoutGuide type="bottom" id="uWK-2p-oVX"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="eJc-cf-vBm">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="553"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="509"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1SP-lv-7PC">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="553"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="509"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="HRv-lm-dfb">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="945"/>
@@ -794,7 +794,7 @@
         <image name="startup-weekend-logo" width="722" height="242"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="eqo-IT-cRh"/>
-        <segue reference="oMt-Jt-Tjf"/>
+        <segue reference="c3y-2F-oP0"/>
+        <segue reference="wbo-Yi-Mhq"/>
     </inferredMetricsTieBreakers>
 </document>

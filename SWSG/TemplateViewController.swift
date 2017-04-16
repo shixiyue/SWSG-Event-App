@@ -14,37 +14,21 @@ class TemplateViewController: UITableViewController {
     @IBOutlet private var overviewText: UILabel!
     @IBOutlet private var video: UIWebView!
     
-    private var desc: String!
-    private var images: [UIImage]!
-    private var videoLink: String!
+    private var content: TemplateContent!
     private var isScrollEnabled: Bool!
     private var photoPageViewController: PhotoPageViewController!
     
-    func presetInfo(desc: String, images: [UIImage], videoLink: String, isScrollEnabled: Bool) {
-        self.desc = desc
-        self.images = images
-        self.videoLink = videoLink
-        self.isScrollEnabled = isScrollEnabled
-    }
-    
-    func updateImages(images: [UIImage]) {
-        self.images = images
-        photoPageViewController.images = images
-        photoPageViewController.setUpPageViewController()
-        overviewTableView.reloadData()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setUpOverviewTableView()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == "images", let photoPageViewController = segue.destination as? PhotoPageViewController else {
             return
         }
-        photoPageViewController.images = images
+        photoPageViewController.images = content.images
         self.photoPageViewController = photoPageViewController
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setUpOverviewTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,22 +36,32 @@ class TemplateViewController: UITableViewController {
         setUp()
     }
     
-    func setUp() {
-        photoPageViewController.images = images
-        photoPageViewController.setUpPageViewController()
-        loadYoutube()
-        overviewText.text = desc
-        overviewTableView.reloadData()
-    }
-
     private func setUpOverviewTableView() {
         overviewTableView.tableFooterView = UIView(frame: CGRect.zero)
         overviewTableView.allowsSelection = false
-        overviewTableView.isScrollEnabled = isScrollEnabled
+        overviewTableView.isScrollEnabled = false
+        overviewTableView.layoutIfNeeded()
+    }
+    
+    func presetInfo(content: TemplateContent) {
+        self.content = content
+    }
+    
+    func setUp() {
+        loadYoutube()
+        overviewText.text = content.description
+        updateImages()
+        overviewTableView.reloadData()
+    }
+    
+    func updateImages() {
+        photoPageViewController.images = content.images
+        photoPageViewController.setUpPageViewController()
+        overviewTableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.row == 1 && images.count == 0) || (indexPath.row == 2 && videoLink.isEmpty) {
+        if (indexPath.row == 1 && content.images.count == 0) || (indexPath.row == 2 && content.videoLink.isEmpty) {
             return 0
         }
         return UITableViewAutomaticDimension
@@ -78,7 +72,7 @@ class TemplateViewController: UITableViewController {
     }
     
     private func loadYoutube() {
-        guard let youtubeURL = URL(string: videoLink) else {
+        guard let youtubeURL = URL(string: content.videoLink) else {
             return
         }
         video.loadRequest(URLRequest(url: youtubeURL))

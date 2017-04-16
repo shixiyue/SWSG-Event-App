@@ -9,42 +9,34 @@
 import UIKit
 import Firebase
 
+/**
+ MenuViewController is a UIViewController used to display the hamburger menu
+ */
 class MenuViewController: UIViewController {
-    @IBOutlet weak var menuList: UITableView! {
-        didSet{
-            let tapGesture = UITapGestureRecognizer(target:self,action:#selector(MenuViewController.menuItemTapHandler))
-            tapGesture.numberOfTapsRequired = 1
-            menuList.addGestureRecognizer(tapGesture)
-            menuList.isUserInteractionEnabled = true
-            
-        }
-    }
+    
+    //MARK: IBOutlets
+    @IBOutlet weak var menuList: UITableView!
     @IBOutlet private var btnCloseMenuOverlay : UIButton!
     @IBOutlet private var profileOverlay: UIButton!
-    
     @IBOutlet weak var profileImg: UIImageView!
     @IBOutlet private weak var nameLbl: UILabel!
     @IBOutlet private weak var usernameLbl: UILabel!
     @IBOutlet private weak var teamLbl: UILabel!
     
+    //MARK: Properties
+    fileprivate var teams = Teams()
+    var btnMenu : UIButton!
+    var delegate : SlideMenuDelegate?
+    
     //MARK: Firebase References
     private var userRef: FIRDatabaseReference?
     private var userRefHandle: FIRDatabaseHandle?
     
-    var teams = Teams.sharedInstance()
-    var btnMenu : UIButton!
-    var delegate : SlideMenuDelegate?
-    
+    //MARK: Initialization Functions
     override func viewDidLoad() {
-        menuList.delegate = self
-        menuList.dataSource = self
-        menuList.tableFooterView = UIView(frame: CGRect.zero)
+        setUpMenu()
         setUpUserInfo()
         observeImage()
-        
-        userRef = System.client.getUserRef(for: System.client.getUid())
-        profileImg = Utility.roundUIImageView(for: profileImg)
-        profileImg.image = Config.placeholderImg
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -57,18 +49,24 @@ class MenuViewController: UIViewController {
         }
     }
     
-    private func observeImage() {
-        guard let userRef = userRef, let uid = System.activeUser?.uid else {
+    private func setUpMenu() {
+        menuList.delegate = self
+        menuList.dataSource = self
+        menuList.tableFooterView = UIView(frame: CGRect.zero)
+        
+        let tapGesture = UITapGestureRecognizer(target:self,action:#selector(MenuViewController.menuItemTapHandler))
+        tapGesture.numberOfTapsRequired = 1
+        menuList.addGestureRecognizer(tapGesture)
+        menuList.isUserInteractionEnabled = true
+        
+        guard let uid = System.client.getUid() else {
+            Utility.logOutUser(currentViewController: self)
             return
         }
         
-        userRefHandle = userRef.observe(.value, with: { (snapshot) -> Void in
-            Utility.getProfileImg(uid: uid, completion: { (image) in
-                if let image = image {
-                    self.profileImg.image = image
-                }
-            })
-        })
+        userRef = System.client.getUserRef(for: uid)
+        profileImg = Utility.roundUIImageView(for: profileImg)
+        profileImg.image = Config.placeholderImg
     }
     
     private func setUpUserInfo() {
@@ -84,20 +82,29 @@ class MenuViewController: UIViewController {
         nameLbl.text = user.profile.name
         usernameLbl.text = "@\(user.profile.username)"
         
-        guard user.type.isParticipant else {
-            teamLbl.text = user.type.toString()
+        Utility.getTeamLbl(user: user, completion: { (teamLblText) in
+            self.teamLbl.text = teamLblText
+        })
+    }
+    
+    //MARK: Firebase Methods
+    private func observeImage() {
+        guard let userRef = userRef, let uid = System.activeUser?.uid else {
             return
         }
         
-        if user.team != -1 && teams.count != 0 {
-            teamLbl.text = teams.retrieveTeamAt(index: user.team).name
-        } else {
-            teamLbl.text = Config.noTeamLabel
-        }
+        userRefHandle = userRef.observe(.value, with: { (snapshot) -> Void in
+            Utility.getProfileImg(uid: uid, completion: { (image) in
+                if let image = image {
+                    self.profileImg.image = image
+                }
+            })
+        })
     }
 
+    //MARK: Handle User Interactions
     @IBAction func onProfileClick(_ sender: UIButton) {
-        let storyboard = UIStoryboard(name: "Profile", bundle: nil)
+        let storyboard = UIStoryboard(name: Config.profileStoryboard, bundle: nil)
         if let destViewController = storyboard.instantiateViewController(withIdentifier: Config.profileViewController) as? ProfileViewController {
             destViewController.user = System.activeUser
             
@@ -141,6 +148,7 @@ class MenuViewController: UIViewController {
     }
 }
 
+//MARK: UITableViewDelegate, UITableViewDataSource
 extension MenuViewController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return MenuItems.count

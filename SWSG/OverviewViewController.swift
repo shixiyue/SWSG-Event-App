@@ -8,32 +8,39 @@
 
 import UIKit
 
-class OverviewViewController: FullScreenImageViewController {
+// TODO: Figure out how to extract common parts from OverviewViewController and IdeaDetailsTableViewController better
+class OverviewViewController: FullScreenImageTableViewController {
+    
+    private var overview = OverviewContent() // Placeholder
     
     private var containerViewController: TemplateViewController!
-    private var overview = OverviewContent() // Placeholder
+    fileprivate var containerHeight: CGFloat!
+    private var editButton: UIBarButtonItem?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setNavigationBar()
         observeOverviewContent()
     }
-    
-    // TODO: Hide Edit button and disable it before images are fetched
     
     private func observeOverviewContent() {
         let overviewRef = System.client.getOverviewRef()
         overviewRef.observeSingleEvent(of : .value, with : {(snapshot) in
             self.overview = OverviewContent(snapshot: snapshot)
-            self.loadContent()
+            self.containerViewController.presetInfo(content: self.overview)
             self.containerViewController.setUp()
+            self.updateCellHeight()
             self.loadOverviewImages()
         })
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "container", let containerViewController = segue.destination as? TemplateViewController {
+            containerViewController.presetInfo(content: self.overview)
+            containerViewController.tableView.layoutIfNeeded()
+            containerHeight = containerViewController.tableView.contentSize.height
             self.containerViewController = containerViewController
-            loadContent()
         } else if segue.identifier == "edit", let editViewController = segue.destination as? OverviewEditViewController {
             editViewController.overview = overview
         }
@@ -41,25 +48,60 @@ class OverviewViewController: FullScreenImageViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadContent()
+        containerViewController.setUp()
+        updateCellHeight()
     }
     
-    private func loadContent() {
-         containerViewController.presetInfo(desc: overview.description, images: overview.images, videoLink: overview.videoLink, isScrollEnabled: true)
+    private func updateCellHeight() {
+        DispatchQueue.main.async {
+            self.containerViewController.tableView.layoutIfNeeded()
+            self.containerHeight = self.containerViewController.tableView.contentSize.height
+            self.tableView.reloadData()
+        }
     }
     
     private func loadOverviewImages() {
         guard !overview.imagesState.imagesHasFetched, let id = overview.id else {
             return
         }
+        if let edit = editButton {
+            edit.isEnabled = false
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(updateImages), name: Notification.Name(rawValue: id), object: nil)
         overview.loadImages()
     }
     
     @objc private func updateImages(_ notification: NSNotification) {
-        containerViewController.updateImages(images: overview.images)
-        NotificationCenter.default.removeObserver(self)
+        containerViewController.updateImages()
+        updateCellHeight()
+        if let edit = editButton {
+            edit.isEnabled = true
+        }
+    }
+    
+    private func setNavigationBar() {
+        guard let user = System.activeUser, user.type.isOrganizer else {
+            return
+        }
+        let edit = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(jumpToEdit))
+        self.editButton = edit
+        navigationItem.rightBarButtonItems = [edit]
+    }
+    
+    @objc private func jumpToEdit() {
+        performSegue(withIdentifier: "edit", sender: self)
     }
 
+}
+
+extension OverviewViewController {
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.row {
+        case 1: return containerHeight
+        default: return 44
+        }
+    }
+    
 }
 

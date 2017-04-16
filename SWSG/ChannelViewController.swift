@@ -12,9 +12,18 @@ import JSQMessagesViewController
 import Photos
 import SwiftGifOrigin
 
+/**
+    ChannelViewController is a JSQMessagesViewController from the JSQMessagesViewController
+    library. It displays the contents of a Channel, and relies on the UI from the library
+    to do so.
+ 
+    Specifications:
+        - channel: Channel to be displayed
+ */
+
 final class ChannelViewController: JSQMessagesViewController {
     
-    //MARK: Class Variables
+    //MARK: Properties
     var channel: Channel?
     fileprivate var client = System.client
     fileprivate var otherUser: User?
@@ -23,8 +32,12 @@ final class ChannelViewController: JSQMessagesViewController {
     fileprivate var avatarCache = [String: UIImage]()
     fileprivate let imageURLNotSetKey = "NOTSET"
     fileprivate var localTyping = false
+<<<<<<< HEAD
     fileprivate let notiPusher = NotiPusher()
     var isTyping: Bool {
+=======
+    fileprivate var isTyping: Bool {
+>>>>>>> master
         get {
             return localTyping
         }
@@ -47,6 +60,7 @@ final class ChannelViewController: JSQMessagesViewController {
     fileprivate var storageRef: FIRStorageReference!
     
     //MARK: Firebase Handles
+    fileprivate var channelRefHandle: FIRDatabaseHandle?
     fileprivate var newMessageRefHandle: FIRDatabaseHandle?
     fileprivate var updatedMessageRefHandle: FIRDatabaseHandle?
     
@@ -56,7 +70,13 @@ final class ChannelViewController: JSQMessagesViewController {
     //MARK: Initialization Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.senderId = client.getUid()
+        
+        guard let uid = client.getUid() else {
+            Utility.logOutUser(currentViewController: self)
+            return
+        }
+        
+        self.senderId = uid
         setUpFirebase()
         setUpChannelInfo()
         
@@ -65,6 +85,7 @@ final class ChannelViewController: JSQMessagesViewController {
         collectionView?.collectionViewLayout.incomingAvatarViewSize = defaultAvatarSize
         collectionView?.collectionViewLayout.outgoingAvatarViewSize = defaultAvatarSize
         
+        observeChannel()
         observeMessages()
     }
     
@@ -72,20 +93,6 @@ final class ChannelViewController: JSQMessagesViewController {
         super.viewDidAppear(animated)
         
         observeTyping()
-    }
-    
-    // MARK: Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        
-        if segue.identifier == Config.channelToChannelInfo,
-            let dest = segue.destination as? ChannelInfoViewController,
-            let channel = channel {
-            dest.channel = channel
-        } else if segue.identifier == Config.chatToProfile,
-            let user = sender as? User, let dest = segue.destination as? ProfileViewController {
-            dest.user = user
-        }
     }
     
     deinit {
@@ -119,21 +126,23 @@ final class ChannelViewController: JSQMessagesViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(iconIVTapped))
         iconIV.addGestureRecognizer(tapGesture)
         
+        setInfo()
+    }
+    
+    private func setInfo() {
         if let channel = channel, channel.type == .directMessage {
-            for memberId in channel.members {
-                if memberId != senderId {
-                    client.getUserWith(uid: memberId, completion: { (user, error) in
-                        self.title = user?.profile.name
-                        self.otherUser = user
-                    })
+            Utility.getOtherUser(in: channel, completion: { (user) in
+                if let user = user, let uid = user.uid {
+                    self.title = user.profile.name
+                    self.otherUser = user
                     
-                    Utility.getProfileImg(uid: memberId, completion: { (image) in
+                    Utility.getProfileImg(uid: uid, completion: { (image) in
                         if let image = image {
                             self.iconIV.image = image
                         }
                     })
                 }
-            }
+            })
         } else {
             title = channel?.name
             
@@ -169,6 +178,20 @@ final class ChannelViewController: JSQMessagesViewController {
     private func setupIncomingBubble() -> JSQMessagesBubbleImage {
         let bubbleImageFactory = JSQMessagesBubbleImageFactory()
         return bubbleImageFactory!.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
+    }
+    
+    // MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == Config.channelToChannelInfo,
+            let dest = segue.destination as? ChannelInfoViewController,
+            let channel = channel {
+            dest.channel = channel
+        } else if segue.identifier == Config.chatToProfile,
+            let user = sender as? User, let dest = segue.destination as? ProfileViewController {
+            dest.user = user
+        }
     }
     
     //MARK: Message Display Methods
@@ -212,7 +235,6 @@ final class ChannelViewController: JSQMessagesViewController {
             if let image = image, let key = self.sendPhotoMessage() {
                 self.client.saveImage(image: image, completion: { (url, error) in
                     if let error = error {
-                        print("Error uploading photo: \(error)")
                         return
                     } else if let url = url {
                         let itemRef = self.messageRef.child(key)
@@ -252,6 +274,17 @@ final class ChannelViewController: JSQMessagesViewController {
     }
     
     //MARK: Firebase Observation Methods
+    private func observeChannel() {
+        channelRefHandle = channelRef.observe(.value, with: { (snapshot) in
+            guard let channel = Channel(id: snapshot.key, snapshot: snapshot) else {
+                return
+            }
+            
+            self.channel = channel
+            self.setInfo()
+        })
+    }
+    
     private func observeMessages() {
         let messageQuery = messageRef.queryLimited(toLast:25)
         
@@ -272,8 +305,6 @@ final class ChannelViewController: JSQMessagesViewController {
                     self.addPhotoMessage(withId: id, key: snapshot.key, mediaItem: mediaItem)
                     self.fetchImageDataAtURL(photoURL: photoURL, mediaItem: mediaItem, key: snapshot.key)
                 }
-            } else {
-                print("Error! Could not decode message data")
             }
         })
         
@@ -449,9 +480,6 @@ extension ChannelViewController {
             
             if message.date.lessThan(interval: Config.hourInterval, from: previous.date) {
                 return false
-            } else {
-                print(message.date)
-                print(previous.date)
             }
         }
         

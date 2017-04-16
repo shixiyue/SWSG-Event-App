@@ -9,8 +9,17 @@
 import UIKit
 import Firebase
 
+/**
+    CreateChannelViewController is a UIViewController that presents a form for
+    a user to create a Public or Private Channel
+ 
+    Specifications:
+        - isPublic: Bool of whether the channel is a Public or Private channel
+ */
+
 class CreateChannelViewController: UIViewController {
     
+    //MARK: IBOutlets
     @IBOutlet weak var nameTF: UITextField!
     @IBOutlet weak var memberTF: UITextField!
     @IBOutlet weak var addBtn: RoundCornerButton!
@@ -18,14 +27,37 @@ class CreateChannelViewController: UIViewController {
     @IBOutlet weak var editBtn: UIButton!
     @IBOutlet weak var memberList: UITableView!
     @IBOutlet weak var iconIV: UIImageView!
+    @IBOutlet weak var headerLbl: UILabel!
+    @IBOutlet weak var membersHeaderLbl: UILabel!
 
+    //MARK: Properties
+    var isPublic = false
     fileprivate let client = System.client
     fileprivate var members = [User]()
     fileprivate var iconAdded = false
-    fileprivate var imagePicker = ImagePickerPopoverViewController()
+    fileprivate var imagePicker = ImagePickCropperPopoverViewController()
     
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setUpLayout()
+        setUpTextFieldAndButtons()
+        setUpMemberList()
+        setUpIcon()
+    }
+    
+    fileprivate func setUpLayout() {
+        if isPublic {
+            headerLbl.text = Config.createPublicHeaderLabel
+            membersHeaderLbl.isHidden = true
+            memberTF.isHidden = true
+            addBtn.isHidden = true
+            memberList.isHidden = true
+        }
+    }
+    
+    fileprivate func setUpTextFieldAndButtons() {
         nameTF.delegate = self
         memberTF.delegate = self
         doneBtn.isEnabled = false
@@ -33,11 +65,25 @@ class CreateChannelViewController: UIViewController {
         btnNotifier(textField: nameTF, button: doneBtn)
         btnNotifier(textField: memberTF, button: addBtn)
         
-        members.append(System.activeUser!)
+        addDoneToolbar(textField: nameTF)
+        addDoneToolbar(textField: memberTF)
+        
+        self.hideKeyboardWhenTappedAround()
+    }
+    
+    fileprivate func setUpMemberList() {
+        guard let activeUser = System.activeUser else {
+            return
+        }
+        
+        members.append(activeUser)
         
         memberList.delegate = self
         memberList.dataSource = self
         
+    }
+    
+    fileprivate func setUpIcon() {
         iconIV = Utility.roundUIImageView(for: iconIV)
         iconIV.image = Config.placeholderImg
         
@@ -45,15 +91,31 @@ class CreateChannelViewController: UIViewController {
         iconIV.addGestureRecognizer(gestureRecognizer)
         editBtn.addTarget(self, action: #selector(showImagePicker), for: .touchUpInside)
         
-        self.hideKeyboardWhenTappedAround()
     }
     
+    fileprivate func addDoneToolbar(textField: UITextField) {
+        textField.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
+    }
+    
+    func donePressed() {
+        self.view.endEditing(true)
+    }
+    
+    //MARK: IBOutlet Methods
+    
+    /**
+        Function to handle Save Button Pressed
+     
+        Specifications:
+            - Check that the Name is not empty
+            - Check that if it is a Private Channel there must be more than 1 member
+     */
     @IBAction func saveBtnPressed(_ sender: Any) {
         guard let name = nameTF.text else {
             return
         }
         
-        guard members.count > 1 else {
+        guard members.count > 1 || isPublic else {
             Utility.displayDismissivePopup(title: "Not Enough Members", message: "You need at least 1 other member", viewController: self, completion: { _ in })
             return
         }
@@ -74,8 +136,15 @@ class CreateChannelViewController: UIViewController {
             image = iconIV.image
         }
         
-        let channel = Channel(id: nil, type: .privateChannel, icon: image, name: name,
+        let channel: Channel
+         
+        if isPublic {
+            channel = Channel(id: nil, type: .publicChannel, icon: image, name: name,
                               members: memberUIDs)
+        } else {
+            channel = Channel(id: nil, type: .privateChannel, icon: image, name: name,
+                              members: memberUIDs)
+        }
         
         client.createChannel(for: channel, completion: { (channel, error) in
             Utility.popViewController(no: 1, viewController: self)
@@ -88,6 +157,12 @@ class CreateChannelViewController: UIViewController {
         addMember()
     }
     
+    /**
+        Add a Member to the Channel
+     
+        Specfications:
+            - Check if Username Exists
+     */
     fileprivate func addMember() {
         guard let username = memberTF.text else {
             return

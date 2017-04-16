@@ -6,6 +6,15 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ CommentsInputTableViewCell inherits from UITableViewcell
+ 
+ -parameters:
+     -`addBtn`: a mutable UIButton object, upon clicking, comments will be added, and saved to database
+     -`commentInputField`: a mutable TextView object, inherits from GrayBorderTextView, which in turn, inherits from UITextView
+     -`event`: a mutable event object which is the event that the comment is added to
+ */
+
 import UIKit
 
 class CommentsInputTableViewCell: UITableViewCell {
@@ -41,9 +50,7 @@ extension CommentsInputTableViewCell: UITextViewDelegate {
         guard var text = commentInputField.text else {
             return
         }
-        
         text = text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        
         if text.characters.count > 0 {
             addBtn.isEnabled = true
         } else {
@@ -61,7 +68,6 @@ extension CommentsInputTableViewCell: UITextViewDelegate {
             return false
         }
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
-        
         if updatedText.isEmpty {
             textView.setPlaceholder()
             updateButtonState()

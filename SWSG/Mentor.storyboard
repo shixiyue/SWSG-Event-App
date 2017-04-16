@@ -39,8 +39,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <searchBar contentMode="redraw" placeholder="Mentor Name" translatesAutoresizingMaskIntoConstraints="NO" id="qET-av-ESb">
+                                <rect key="frame" x="0.0" y="64" width="375" height="44"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="Skv-vo-Pnr"/>
+                                </constraints>
+                                <color key="barTintColor" red="0.92751079800000003" green="0.25944149490000001" blue="0.2446874976" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="aro-8t-PQo">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="108" width="375" height="559"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="QZJ-qR-mGn">
                                     <size key="itemSize" width="180" height="180"/>
@@ -136,15 +145,20 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="qET-av-ESb" firstAttribute="leading" secondItem="kjx-oS-cvc" secondAttribute="leading" id="2bj-vh-BOy"/>
                             <constraint firstAttribute="trailing" secondItem="aro-8t-PQo" secondAttribute="trailing" id="46h-ga-n5C"/>
-                            <constraint firstItem="aro-8t-PQo" firstAttribute="top" secondItem="kjx-oS-cvc" secondAttribute="top" id="QHK-ja-L5a"/>
+                            <constraint firstItem="aro-8t-PQo" firstAttribute="top" secondItem="kjx-oS-cvc" secondAttribute="top" constant="108" id="QHK-ja-L5a"/>
+                            <constraint firstItem="aro-8t-PQo" firstAttribute="top" secondItem="qET-av-ESb" secondAttribute="bottom" id="cE8-Xc-sK6"/>
+                            <constraint firstAttribute="trailing" secondItem="qET-av-ESb" secondAttribute="trailing" id="car-KI-xCj"/>
                             <constraint firstItem="gcf-1r-gPs" firstAttribute="top" secondItem="aro-8t-PQo" secondAttribute="bottom" id="fKb-cZ-Q5W"/>
                             <constraint firstItem="aro-8t-PQo" firstAttribute="leading" secondItem="kjx-oS-cvc" secondAttribute="leading" id="jeo-yT-WVy"/>
+                            <constraint firstItem="qET-av-ESb" firstAttribute="top" secondItem="qdh-oX-Dic" secondAttribute="bottom" id="kV0-yd-r59"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Mentors" id="rZE-rF-kXO"/>
                     <connections>
                         <outlet property="mentorCollection" destination="aro-8t-PQo" id="qUn-Kx-MEE"/>
+                        <outlet property="searchBar" destination="qET-av-ESb" id="eqy-iH-ooL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ng6-Xf-IJa" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -421,7 +435,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Mentor" id="T7v-nL-AhR">
                         <barButtonItem key="backBarButtonItem" title="Back" id="JcI-KA-kL6"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="eKh-r3-jYL">
+                        <barButtonItem key="rightBarButtonItem" image="Chat" id="eKh-r3-jYL">
                             <connections>
                                 <action selector="composeBtnPressed:" destination="S0B-9p-C9T" id="Uxx-Qz-AnE"/>
                             </connections>
@@ -438,6 +452,7 @@
                         <outlet property="relatedMentorCollection" destination="OKC-K1-ZYz" id="1BY-Ep-t71"/>
                         <segue destination="dOz-DW-2xN" kind="show" identifier="mentorToChat" id="l8I-C2-6vZ"/>
                         <segue destination="ynG-OB-VPo" kind="show" identifier="mentorToProfile" id="hKY-GH-IrY"/>
+                        <segue destination="cgy-Xc-tDY" kind="show" identifier="mentorToTeamInfo" id="PmO-Ju-0Go"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dBW-gL-sTj" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -450,7 +465,15 @@
                 <viewControllerPlaceholder storyboardName="Profile" referencedIdentifier="ProfileViewController" id="ynG-OB-VPo" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lTC-Uj-yCv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2509" y="23"/>
+            <point key="canvasLocation" x="2473" y="107"/>
+        </scene>
+        <!--TeamInfoTableViewController-->
+        <scene sceneID="QW7-MK-gof">
+            <objects>
+                <viewControllerPlaceholder storyboardName="TeamRegistration" referencedIdentifier="TeamInfoTableViewController" id="cgy-Xc-tDY" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="T7T-kr-h6c" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2359" y="325"/>
         </scene>
         <!--ChannelViewController-->
         <scene sceneID="Ckp-tJ-2pz">
@@ -458,10 +481,11 @@
                 <viewControllerPlaceholder storyboardIdentifier="Chat" storyboardName="Chat" referencedIdentifier="ChannelViewController" id="dOz-DW-2xN" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xxO-n9-8ac" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2471" y="-164"/>
+            <point key="canvasLocation" x="2329" y="-162"/>
         </scene>
     </scenes>
     <resources>
+        <image name="Chat" width="22" height="22"/>
         <image name="Profile" width="133" height="133"/>
     </resources>
     <inferredMetricsTieBreakers>

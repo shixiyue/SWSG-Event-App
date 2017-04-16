@@ -18,6 +18,8 @@ platform :ios, '9.0'
   pod "SwiftSpinner"
   pod 'TextFieldEffects'
   pod 'OneSignal', '~> 2.0'
+  pod 'QRCodeReader.swift'
+  pod 'QRCode'
   
 end
 

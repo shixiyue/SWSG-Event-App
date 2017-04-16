@@ -6,21 +6,17 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ TeamLookingForTableViewCell inherits from UITableViewCell, it is responsible for displaying the 
+ skills that the team is looking for
+ 
+ -Parameter: `lookingForLbl` is a mutable object representing the skills that the team is looking for
+ */
+
 import UIKit
 
 class TeamLookingForTableViewCell: UITableViewCell {
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
     
     @IBOutlet weak var lookingForLbl: UILabel!
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
 
 }
