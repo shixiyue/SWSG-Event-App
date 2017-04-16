@@ -11,7 +11,7 @@ import Firebase
 
 class Channel {
     var id: String?
-    var type: ChannelType
+    private (set) var type: ChannelType
     var icon: UIImage?
     var name: String?
     var latestMessage: Message?

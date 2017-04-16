@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Firebase
 import SwiftSpinner
 
 /**
@@ -19,6 +18,8 @@ import SwiftSpinner
 class HomeViewController: BaseViewController {
 
     @IBOutlet weak var eventsView: UIView!
+    @IBOutlet weak var chatView: UIView!
+    @IBOutlet weak var registrationView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

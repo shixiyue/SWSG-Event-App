@@ -14,7 +14,7 @@
         <scene sceneID="1yk-d8-8sn">
             <objects>
                 <navigationController storyboardIdentifier="NavigationController" title="Navigation Controller" useStoryboardIdentifierAsRestorationIdentifier="YES" id="537-R6-jC3" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="XIJ-Tx-l4T">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="XIJ-Tx-l4T">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -98,7 +98,9 @@
                     </view>
                     <navigationItem key="navigationItem" title="Home" id="rOe-MP-MyG"/>
                     <connections>
+                        <outlet property="chatView" destination="k4R-87-UqZ" id="yCF-JF-PB1"/>
                         <outlet property="eventsView" destination="quM-4g-mj3" id="XGI-ze-Hhf"/>
+                        <outlet property="registrationView" destination="Ef7-Cw-34w" id="CH8-k8-VuA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JnS-PT-F90" userLabel="First Responder" sceneMemberID="firstResponder"/>

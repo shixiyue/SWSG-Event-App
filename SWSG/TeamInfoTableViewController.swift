@@ -43,13 +43,10 @@ class TeamInfoTableViewController: UITableViewController {
         }
         if team.containsMember(member: user) {
             buttonLbl.setTitle(Config.quitTeam, for: .normal)
-            chatBtn.isEnabled = true
         } else if team.members.count < Config.maxTeamMember {
             buttonLbl.setTitle(Config.joinTeam, for: .normal)
-            chatBtn.isEnabled = false
         } else {
             buttonLbl.setTitle(Config.fullTeam, for: .normal)
-            chatBtn.isEnabled = false
         }
     }
     
@@ -79,6 +76,14 @@ class TeamInfoTableViewController: UITableViewController {
     fileprivate func setUpLayout() {
         if System.activeUser?.type.isParticipant == false {
             joinView.isHidden = true
+        }
+        
+        guard let team = team, let user = System.activeUser else {
+            return
+        }
+        
+        if !team.containsMember(member: user) {
+            self.navigationItem.rightBarButtonItem = nil
         }
     }
     

@@ -10,6 +10,8 @@ import Foundation
 
 enum Field: String {
     case business
-    case engineer
+    case finance
     case softwareEngineer
+    case entrepreneur
+    case science
 }
