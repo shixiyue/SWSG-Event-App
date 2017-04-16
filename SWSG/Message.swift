@@ -26,30 +26,25 @@ struct Message {
     
     init?(snapshot: FIRDataSnapshot) {
         guard let snapshotValue = snapshot.value as? [String: AnyObject] else {
-            print("test2")
             return nil
         }
         
         guard let id = snapshotValue[Config.senderId] as? String else {
-            print("test3")
             return nil
         }
         self.senderId = id
         
         guard let name = snapshotValue[Config.senderName] as? String else {
-            print("test4")
             return nil
         }
         self.senderName = name
         
         guard let timestamp = snapshotValue[Config.timestamp] as? String else {
-            print("test5")
             return nil
         }
         self.timestamp = Utility.fbDateTimeFormatter.date(from: timestamp)!
         
         if let text = snapshotValue[Config.text] as? String {
-            print("test6")
             self.text = text
         }
         

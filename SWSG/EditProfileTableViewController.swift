@@ -107,7 +107,6 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
     
     fileprivate func setUpAuthButtons() {
         Utility.signOutSocialMedia()
-        print(self.auth)
         
         if !auth.contains(.email) {
             changePasswordBtn.setTitle("Add Password", for: .normal)

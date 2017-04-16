@@ -162,7 +162,6 @@ class FirebaseClient {
             case .success(let response):
                 completion(response.user, nil)
             case .failed(let error):
-                print("Custom Graph Request Failed: \(error)")
                 completion(nil, nil)
             }
         }
@@ -252,9 +251,6 @@ class FirebaseClient {
         mentor.addSlots(on: Utility.fbDateFormatter.date(from: "12-04-2017")!)
         mentor.addSlots(on: Utility.fbDateFormatter.date(from: "13-04-2017")!)
         mentor.addSlots(on: Utility.fbDateFormatter.date(from: "14-04-2017")!)
-        
-        print(mentor.days.count)
-        print(mentor.toDictionary())
         
         let userRef = usersRef.child(uid)
         userRef.child(Config.mentor).setValue(mentor.toDictionary())
@@ -994,16 +990,12 @@ class FirebaseClient {
         
         storageRef.data(withMaxSize: INT64_MAX){ (data, error) in
             if let error = error {
-                print("Error downloading image data: \(error)")
                 completion(nil, nil)
                 return
             }
             
             storageRef.metadata(completion: { (metadata, metadataErr) in
                 guard let data = data else {
-                    if let err = metadataErr {
-                        print("Error downloading metadata: \(err)")
-                    }
                     return
                 }
                 

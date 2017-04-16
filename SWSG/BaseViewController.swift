@@ -73,7 +73,6 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         let topViewController : UIViewController = self.navigationController!.topViewController!
         
         if (topViewController.restorationIdentifier! == destViewController.restorationIdentifier!){
-            print("Same VC")
             hideMenu()
         } else {
             self.navigationController!.pushViewController(destViewController, animated: true)

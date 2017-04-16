@@ -230,7 +230,6 @@ final class ChannelViewController: JSQMessagesViewController {
             if let image = image, let key = self.sendPhotoMessage() {
                 self.client.saveImage(image: image, completion: { (url, error) in
                     if let error = error {
-                        print("Error uploading photo: \(error)")
                         return
                     } else if let url = url {
                         let itemRef = self.messageRef.child(key)
@@ -301,8 +300,6 @@ final class ChannelViewController: JSQMessagesViewController {
                     self.addPhotoMessage(withId: id, key: snapshot.key, mediaItem: mediaItem)
                     self.fetchImageDataAtURL(photoURL: photoURL, mediaItem: mediaItem, key: snapshot.key)
                 }
-            } else {
-                print("Error! Could not decode message data")
             }
         })
         
@@ -478,9 +475,6 @@ extension ChannelViewController {
             
             if message.date.lessThan(interval: Config.hourInterval, from: previous.date) {
                 return false
-            } else {
-                print(message.date)
-                print(previous.date)
             }
         }
         

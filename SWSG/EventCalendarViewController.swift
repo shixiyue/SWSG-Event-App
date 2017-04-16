@@ -173,7 +173,6 @@ class EventCalendarViewController: BaseViewController {
         // channels being written to the Firebase DB
         eventRef = System.client.getEventsRef()
         eventAddedHandle = eventRef.observe(.childAdded, with: { (snapshot) -> Void in
-            print(snapshot)
             guard let date = Utility.fbDateFormatter.date(from: snapshot.key) else {
                 return
             }
@@ -182,7 +181,6 @@ class EventCalendarViewController: BaseViewController {
         })
         
         eventChangedHandle = eventRef.observe(.childChanged, with: { (snapshot) -> Void in
-            print(snapshot)
             guard let date = Utility.fbDateFormatter.date(from: snapshot.key) else {
                 return
             }

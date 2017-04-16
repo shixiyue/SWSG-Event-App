@@ -62,7 +62,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //TODO: Automatic Login with Firebase
     private func checkLogin() {
-        print("test2")
         if System.client.alreadySignedIn() {
             showLaunchScreen()
             var requestTimedOut = true
