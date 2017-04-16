@@ -26,8 +26,6 @@ class NotiHandler {
             handleAnnouncement(noti)
         case .message:
             handleMessage(noti)
-        default:
-            break
         }
     }
     
