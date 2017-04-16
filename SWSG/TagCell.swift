@@ -6,9 +6,19 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ TagCell inherits from UICollectionViewCell class, it displays a single tag message
+ 
+ -Parameters:
+     - `tagName`: represents a skill label
+     - `tagNameMaxWidthConstraint`: maximum width constraint used for auto-size the collection cell width
+     - `delete`: delete button which handles the deletion of a tag
+ */
+
 import UIKit
 
 class TagCell: UICollectionViewCell {
+    
     @IBOutlet weak var tagName: UILabel!
     @IBOutlet weak var tagNameMaxWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var delete: UIButton!
@@ -20,23 +30,9 @@ class TagCell: UICollectionViewCell {
         self.tagNameMaxWidthConstraint.constant = UIScreen.main.bounds.width - 8 * 2 - 8 * 2
         self.contentView.autoresizingMask = UIViewAutoresizing.flexibleHeight
     }
+
     override func layoutSubviews() {
         self.layoutIfNeeded()
         bringSubview(toFront: delete)
-    }
-    
-    func preferredLayoutSizeFittingSize(targetSize: CGSize)-> CGSize {
-        let originalFrame = self.frame
-        let originalPreferredMaxLayoutWidth = self.tagName.preferredMaxLayoutWidth
-        var frame = self.frame
-        frame.size = targetSize
-        self.frame = frame
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-        let computedSize = self.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
-        let newSize = CGSize(width:targetSize.width, height:computedSize.height)
-        self.frame = originalFrame
-        self.tagName.preferredMaxLayoutWidth = originalPreferredMaxLayoutWidth
-        return newSize
     }
 }
