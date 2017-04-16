@@ -8,7 +8,7 @@
 
 import UIKit
 
-class IdeaPostTableViewController: ImagePickerTableViewController {
+class IdeaPostTableViewController: UITableViewController {
     
     private var currentIdea: Idea?
     
@@ -16,124 +16,127 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
     @IBOutlet private var userName: UILabel!
     @IBOutlet private var mainImage: UIButton!
     
-    private var containerViewController: TemplateEditViewController!
+    fileprivate var containerHeight: CGFloat!
+    fileprivate var containerRowIndex = 3
+    fileprivate var containerViewController: TemplateEditViewController!
+    fileprivate var textView: UITextView!
     
-    private var textView: UITextView!
-    
-    private var containerHeight: CGFloat!
-
     private var ideas = Ideas.sharedInstance()
-    private var teams = Teams()
+    private var imagePicker = ImagePickCropperPopoverViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let user = System.activeUser else {
-            return
-        }
-        cropMode = .square
-        userName.text = Config.ideaUserNamePrefix + user.profile.name
-        preset()
-        NotificationCenter.default.addObserver(self, selector: #selector(addIdea), name: Notification.Name(rawValue: "update"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: "reload"), object: nil)
+        setUpIdea()
+        setUpNotifications()
         hideKeyboardWhenTappedAround()
     }
     
-    func setUpIdea(_ idea: Idea) {
+    func setIdea(_ idea: Idea) {
         self.currentIdea = idea
     }
     
-    private func preset() {
+    private func setUpIdea() {
+        guard let user = System.activeUser else {
+            return
+        }
+        userName.text = Config.ideaUserNamePrefix + user.profile.name
         guard let idea = currentIdea else {
             return
         }
         ideaName.text = idea.name
+        ideaName.becomeFirstResponder()
+        ideaName.delegate = self
         mainImage.setImage(idea.mainImage, for: .normal)
     }
     
-    @IBAction func changeMainImage(_ sender: UIButton) {
-        alertControllerPosition = CGPoint(x: view.frame.width / 2, y: mainImage.bounds.maxY)
-        showImageOptions()
-    }
-    
-    override func updateImage(to image: UIImage) {
-        mainImage.setImage(image, for: .normal)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Config.image), object: nil)
+    private func setUpNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(donePressed), name: Notification.Name(rawValue: Config.update), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name(rawValue: Config.reload), object: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "container", let containerViewController = segue.destination as? TemplateEditViewController else {
+        guard segue.identifier == Config.container, let containerViewController = segue.destination as? TemplateEditViewController else {
             return
         }
         if let idea = currentIdea {
-            let substring = idea.videoLink.components(separatedBy: "https://www.youtube.com/embed/")
-            let videoId = substring.count > 1 ? substring[1] : ""
+            let videoId = Utility.getVideoId(for: idea.videoLink)
             containerViewController.presetInfo(desc: idea.description, images: idea.images, videoId: videoId, isScrollEnabled: false)
         }
-        containerViewController.tableView.layoutIfNeeded()
         containerHeight = containerViewController.tableView.contentSize.height
         self.containerViewController = containerViewController
         textView = containerViewController.descriptionTextView
-        textView.delegate = self
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.row {
-        case 0: return 130
-        case 1: return 65
-        case 3: return containerHeight
-        default: return 44
+    @IBAction func changeMainImage(_ sender: UIButton) {
+        showImagePicker()
+    }
+    
+    private func showImagePicker() {
+        imagePicker.cropMode = .square
+        Utility.showImagePicker(imagePicker: imagePicker, viewController: self, completion: { (image) in
+            if let image = image {
+                self.mainImage.setImage(image, for: .normal)
+            }
+            self.ideaName.becomeFirstResponder()
+        })
+    }
+    
+    @objc private func reload(_ notification: NSNotification) {
+        guard let containerHeight = notification.userInfo?[Config.height] as? CGFloat else {
+            return
         }
+        self.containerHeight = containerHeight
+        textView = containerViewController.descriptionTextView
+        
+        tableView.reloadData()
     }
     
-    @objc private func addIdea(_ notification: NSNotification) {
+    @objc private func donePressed(_ notification: NSNotification) {
         guard System.client.isConnected else {
             present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
             return
         }
         guard let name = ideaName.text, !name.isEmptyContent else {
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": false])
-            present(Utility.getFailAlertController(message: "Idea name cannot be empty!"), animated: true, completion: nil)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: Config.done), object: nil, userInfo: [Config.isSuccess: false])
+            present(Utility.getFailAlertController(message: Config.emptyIdeaNameError), animated: true, completion: nil)
             return
         }
-        guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String, let image = mainImage.image(for: .normal), let user = System.activeUser else {
+        guard let description = notification.userInfo?[Config.description] as? String, !description.isEmptyContent else {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: Config.done), object: nil, userInfo: [Config.isSuccess: false])
+            present(Utility.getFailAlertController(message: Config.emptyDescriptionError), animated: true, completion: nil)
             return
         }
-        guard !description.isEmptyContent else {
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": false])
-            present(Utility.getFailAlertController(message: "Description cannot be empty!"), animated: true, completion: nil)
+        guard let images = notification.userInfo?[Config.images] as? [UIImage], let videoId = notification.userInfo?[Config.videoId] as? String, let mainImage = mainImage.image(for: .normal) else {
+            present(Utility.getFailAlertController(message: Config.generalErrorMessage), animated: true, completion: nil)
             return
         }
-        
-        let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
+        let videoLink = Utility.getVideoLink(for: videoId)
         if let idea = currentIdea {
-            let updatedIdea = idea.getUpdatedIdea(name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
-            System.client.updateIdeaContent(for: updatedIdea, completion: { (error) in
-                if error == nil {
-                    idea.update(name: name, description: description, mainImage: image, images: images, videoLink: videoLink)
-                }
-                self.getResult(error: error)
-            })
+            updateIdea(idea: idea, name: name, description: description, mainImage: mainImage, images: images, videoLink: videoLink)
             return
         }
-        guard let uid = user.uid else {
-            present(Utility.getFailAlertController(message: "Error!"), animated: true, completion: nil)
-            return
-        }
-        let idea = Idea(name: name, user: uid, description: description, mainImage: image, images: images, videoLink: videoLink)
-        System.client.createIdea(idea: idea, completion: { (error) in
+        createIdea(name: name, description: description, mainImage: mainImage, images: images, videoLink: videoLink)
+    }
+    
+    private func updateIdea(idea: Idea, name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
+        let updatedIdea = idea.getUpdatedIdea(name: name, description: description, mainImage: mainImage, images: images, videoLink: videoLink)
+        System.client.updateIdeaContent(for: updatedIdea, completion: { (error) in
+            if error == nil {
+                idea.update(name: name, description: description, mainImage: mainImage, images: images, videoLink: videoLink)
+            }
             self.getResult(error: error)
         })
     }
     
-    @objc private func reload(_ notification: NSNotification) {
-        guard let containerHeight = notification.userInfo?["height"] as? CGFloat else {
+    private func createIdea(name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
+        guard let user = System.activeUser, let uid = user.uid else {
+            present(Utility.getFailAlertController(message: Config.generalErrorMessage), animated: true, completion: nil)
             return
         }
-        self.containerHeight = containerHeight
-        textView = containerViewController.descriptionTextView
-        textView.delegate = self
-        
-        tableView.reloadData()
+        let idea = Idea(name: name, user: uid, description: description, mainImage: mainImage, images: images, videoLink: videoLink)
+        System.client.createIdea(idea: idea, completion: { (error) in
+            self.getResult(error: error)
+        })
     }
     
     private func getResult(error: FirebaseError?) {
@@ -145,16 +148,34 @@ class IdeaPostTableViewController: ImagePickerTableViewController {
             NotificationCenter.default.removeObserver(self)
             isSuccess = true
         }
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": isSuccess])
+        NotificationCenter.default.post(name: Notification.Name(rawValue: Config.done), object: nil, userInfo: [Config.isSuccess: isSuccess])
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
 }
 
-extension IdeaPostTableViewController: UITextViewDelegate {
+extension IdeaPostTableViewController {
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        ideaName.resignFirstResponder()
-        textView.becomeFirstResponder()
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == containerRowIndex {
+            return containerHeight
+        }
+        return UITableViewAutomaticDimension
+    }
+    
+}
+
+extension IdeaPostTableViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textView.becomeFirstResponder()
+        return false
+    }
 }

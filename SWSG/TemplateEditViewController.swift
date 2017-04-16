@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TemplateEditViewController: ImagePickerTableViewController {
+class TemplateEditViewController: UITableViewController {
     
     private let photoIndexOffset = 2
     private enum Rows: Int {
@@ -17,11 +17,12 @@ class TemplateEditViewController: ImagePickerTableViewController {
 
     @IBOutlet private var editOverviewTableView: UITableView!
     
+    private var imagePicker = ImagePickerPopoverViewController()
     private var doneButton: UIButton!
     var descriptionTextView: UITextView = UITextView()
-    private var desc: String = ""
+    private var desc: String = Config.emptyString
     private var images: [UIImage] = []
-    private var videoId: String = ""
+    private var videoId: String = Config.emptyString
     private var videoLinkTextField: UITextField = UITextField()
     private var isScrollEnabled: Bool = false
     private var isSetDescription = false
@@ -41,17 +42,23 @@ class TemplateEditViewController: ImagePickerTableViewController {
         editOverviewTableView.allowsSelection = false
         hideKeyboardWhenTappedAround()
         editOverviewTableView.isScrollEnabled = self.isScrollEnabled
+        editOverviewTableView.layoutIfNeeded()
     }
     
     @IBAction func addPhoto(_ sender: UIButton) {
-        showImageOptions()
+        showImagePicker()
     }
     
-    override func handleImage(chosenImage: UIImage) {
-        images.append(chosenImage)
-        editOverviewTableView.reloadData()
-        editOverviewTableView.layoutIfNeeded()
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil, userInfo: ["height": editOverviewTableView.contentSize.height])
+    private func showImagePicker() {
+        Utility.showImagePicker(imagePicker: imagePicker, viewController: self, completion: { (image) in
+            guard let image = image else {
+                return
+            }
+            self.images.append(image)
+            self.editOverviewTableView.reloadData()
+            self.editOverviewTableView.layoutIfNeeded()
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Config.reload), object: nil, userInfo: [Config.height: self.editOverviewTableView.contentSize.height])
+        })
     }
     
     @IBAction func deleteImage(_ sender: UIButton) {
@@ -61,7 +68,7 @@ class TemplateEditViewController: ImagePickerTableViewController {
         images.remove(at: indexPath.row - photoIndexOffset)
         editOverviewTableView.reloadData()
         editOverviewTableView.layoutIfNeeded()
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil, userInfo: ["height": editOverviewTableView.contentSize.height])
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Config.reload), object: nil, userInfo: [Config.height: editOverviewTableView.contentSize.height])
     }
     
     @IBAction func update(_ sender: UIButton) {
@@ -72,16 +79,16 @@ class TemplateEditViewController: ImagePickerTableViewController {
         doneButton.isEnabled = false
         doneButton.alpha = 0.5
         
-        let infoDict: [String: Any] = ["description": description, "images": images, "videoId": videoId]
-        NotificationCenter.default.addObserver(self, selector: #selector(done), name: Notification.Name(rawValue: "done"), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "update"), object: nil, userInfo: infoDict)
+        let infoDict: [String: Any] = [Config.description: description, Config.images: images, Config.videoId: videoId]
+        NotificationCenter.default.addObserver(self, selector: #selector(done), name: Notification.Name(rawValue: Config.done), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Config.update), object: nil, userInfo: infoDict)
     }
     
     @objc private func done(_ notification: NSNotification) {
         print(true)
         doneButton.isEnabled = true
         doneButton.alpha = 1
-        guard let isSuccess = notification.userInfo?["isSuccess"] as? Bool, isSuccess else {
+        guard let isSuccess = notification.userInfo?[Config.isSuccess] as? Bool, isSuccess else {
             return
         }
         _ = navigationController?.popViewController(animated: true)
@@ -154,6 +161,11 @@ class TemplateEditViewController: ImagePickerTableViewController {
             cell.photoView.image = images[index]
             return cell
         }
+    }
+    
+    override func dismissKeyboard() {
+        super.dismissKeyboard()
+        view.superview?.superview?.superview?.superview?.endEditing(true)
     }
     
 }

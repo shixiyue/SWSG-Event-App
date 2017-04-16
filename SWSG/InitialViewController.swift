@@ -35,7 +35,6 @@ class InitialViewController: UIViewController {
     //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUpButtons()
     }
     
@@ -93,11 +92,9 @@ class InitialViewController: UIViewController {
     
     fileprivate func attemptLogin(email: String, user: SocialUser, auth: AuthType) {
         Utility.attemptRegistration(email: email, auth: auth, newCredential: nil, viewController: self, completion: { (exists, arr) in
-            
-            print(exists)
             if !exists, let arr = arr {
-                let title = "Email already exists"
-                let message = "Please log in with the original client first."
+                let title = Config.emailExists
+                let message = Config.logInWithOriginal
                 SwiftSpinner.show(title, animated: false).addTapHandler({
                     SwiftSpinner.hide({
                         self.currentAuth = auth
@@ -111,36 +108,31 @@ class InitialViewController: UIViewController {
         })
     }
     
-    fileprivate func showErrorMsg() {
-        let title = "An unexpected error has occured"
-        let message = "Please try again"
-        SwiftSpinner.show(title, animated: false).addTapHandler({
-            SwiftSpinner.hide({
-            })
-        }, subtitle: message)
-    }
 }
 
 //MARK: GIDSignInDelegate, GIDSignInUIDelegate
 extension InitialViewController: GIDSignInDelegate, GIDSignInUIDelegate {
-    public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        if error == nil {
-            SwiftSpinner.show("Communicating with Google")
-            let user = SocialUser(gUser: user)
-            self.attemptLogin(email: user.email, user: user, auth: .google)
-        } else {
-            self.showErrorMsg()
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        guard error == nil else {
+            Utility.showSwiftSpinnerErrorMsg()
+            return
         }
+        SwiftSpinner.show(Config.communicateGoogle)
+        let user = SocialUser(gUser: user)
+        attemptLogin(email: user.email, user: user, auth: .google)
     }
 }
 
 //MARK: LoginButtonDelegate
 extension InitialViewController: LoginButtonDelegate {
-    func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult){
-        SwiftSpinner.show("Communicating with Facebook")
+    
+    func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
+        
+        SwiftSpinner.show(Config.communicateFacebook)
         client.getFBProfile(completion: { (user, error) in
             guard let user = user else {
-                self.showErrorMsg()
+                Utility.showSwiftSpinnerErrorMsg()
                 return
             }
             

@@ -23,7 +23,7 @@ class IdeasListTableViewController: BaseViewController {
         }
     }
     
-    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet private var searchBar: UISearchBar!
     @IBOutlet private var ideaListTableView: UITableView!
     
     private var ideasRef: FIRDatabaseReference?
@@ -32,26 +32,29 @@ class IdeasListTableViewController: BaseViewController {
     private var ideasDeleteRefHandle: FIRDatabaseHandle?
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "showDetails", let detailsViewController = segue.destination as? IdeaDetailsTableViewController, let index = sender as? Int else {
+        guard segue.identifier == Config.showDetails, let detailsViewController = segue.destination as? IdeaDetailsTableViewController, let index = sender as? Int else {
             return
         }
         
         if searchActive && filteredIdeas.count > index {
-            detailsViewController.idea = filteredIdeas[index]
+            detailsViewController.setIdea(filteredIdeas[index])
         } else {
-            detailsViewController.idea = ideas.retrieveIdeaAt(index: index)
+            detailsViewController.setIdea(ideas.retrieveIdeaAt(index: index))
         }
-        
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        ideaListTableView.dataSource = self
-        ideaListTableView.delegate = self
         addSlideMenuButton()
+        setUpIdeaListTableView()
         setUpLayout()
         ideasRef = System.client.getIdeasRef()
         observeIdeas()
+    }
+    
+    private func setUpIdeaListTableView() {
+        ideaListTableView.dataSource = self
+        ideaListTableView.delegate = self
     }
     
     private func setUpLayout() {
@@ -63,7 +66,7 @@ class IdeasListTableViewController: BaseViewController {
         Utility.styleSearchBar(searchBar)
     }
     
-    func donePressed() {
+    @objc private func donePressed() {
         self.view.endEditing(true)
     }
     
@@ -92,7 +95,7 @@ class IdeasListTableViewController: BaseViewController {
             guard let index = self.ideas.remove(snapshot: snapshot) else {
                 return
             }
-            let indexPath = [IndexPath(row: index, section: 0)]
+            let indexPath = [IndexPath(row: index, section: Config.defaultSection)]
             DispatchQueue.main.async {
                 self.ideaListTableView.deleteRows(at: indexPath, with: .none)
             }
@@ -117,7 +120,7 @@ class IdeasListTableViewController: BaseViewController {
             present(Utility.getFailAlertController(message: Config.ideaCreateErrorMessage), animated: true, completion: nil)
             return
         }
-        performSegue(withIdentifier: "addIdea", sender: nil)
+        performSegue(withIdentifier: Config.addIdea, sender: nil)
     }
     
     deinit {
@@ -137,7 +140,6 @@ class IdeasListTableViewController: BaseViewController {
 extension IdeasListTableViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         if searchActive {
             return filteredIdeas.count
         } else {
@@ -146,7 +148,9 @@ extension IdeasListTableViewController: UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ideaItemCell", for: indexPath) as! IdeaItemTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Config.ideaItemCell, for: indexPath) as? IdeaItemTableViewCell else {
+            return UITableViewCell()
+        }
         
         let idea: Idea
         
@@ -157,16 +161,15 @@ extension IdeasListTableViewController: UITableViewDataSource, UITableViewDelega
         }
         
         cell.setIdea(idea)
-        
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 110
+        return Config.ideaListTableCellHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "showDetails", sender: indexPath.row)
+        performSegue(withIdentifier: Config.showDetails, sender: indexPath.row)
     }
 
 }

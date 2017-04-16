@@ -67,11 +67,13 @@ class Ideas {
         return ideas
     }
     
-    func removeIdea(idea: Idea) {
+    func removeIdea(idea: Idea, completion: @escaping (FirebaseError?) -> Void) {
         guard let id = idea.id else {
             return
         }
-        System.client.removeIdea(for: id)
+        System.client.removeIdea(for: id, completion: { (error) in
+            completion(error)
+        })
     }
     
 }
