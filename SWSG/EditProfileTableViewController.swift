@@ -302,6 +302,8 @@ class EditProfileTableViewController: UITableViewController {
         let title = Config.addPassword
         let message = Config.addPasswordMessage
         let btnText = Config.addButtonText
+        let placeholderText = Config.passwordPlaceholder
+
         Utility.createPopUpWithTextField(title: title, message: message, btnText: btnText,
                                          placeholderText: placeholderText, existingText: "",
                                          isSecure: true, viewController: self,
@@ -485,7 +487,7 @@ extension EditProfileTableViewController: LoginButtonDelegate {
             }
             
             System.client.addAdditionalAuth(credential: credential, completion: { (_) in
-                SwiftSpinner.show(Config.commucateFacebook)
+                SwiftSpinner.show(Config.communicateFacebook)
                 
                 self.auth.append(.facebook)
                 
