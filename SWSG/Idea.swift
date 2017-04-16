@@ -66,7 +66,9 @@ class Idea: ImagesContent, TemplateContent {
             return nil
         }
         self.videoLink = videoLink
-        updateVotes(snapshotValue: snapshotValue)
+        if let votes = snapshotValue[Config.votes] as? [String: Bool] {
+            setVotes(votes: votes)
+        }
         if let mainImageURL = snapshotValue[Config.mainImage] as? String {
             imagesState.mainImageURL = mainImageURL
         } else {
@@ -111,12 +113,9 @@ class Idea: ImagesContent, TemplateContent {
         self.videoLink = videoLink
     }
     
-    func updateVotes(snapshotValue: [String: Any]) {
-        guard let votes = snapshotValue[Config.votes] as? [String: Bool] else {
-            return
-        }
+    func setVotes(votes: [String: Bool]) {
         for (user, vote) in votes {
-            if vote == true {
+            if vote {
                 upvotes.insert(user)
             } else {
                 downvotes.insert(user)
@@ -128,11 +127,12 @@ class Idea: ImagesContent, TemplateContent {
         guard let uid = System.activeUser?.uid, let id = id else {
             return
         }
-        System.client.updateIdeaVote(for: id, user: uid, vote: true)
         guard !upvotes.contains(uid) else {
+            System.client.removeIdeaVote(for: id, user: uid)
             upvotes.remove(uid)
             return
         }
+        System.client.updateIdeaVote(for: id, user: uid, vote: true)
         upvotes.insert(uid)
         if downvotes.contains(uid) {
             downvotes.remove(uid)
@@ -143,11 +143,12 @@ class Idea: ImagesContent, TemplateContent {
         guard let uid = System.activeUser?.uid, let id = id else {
             return
         }
-        System.client.updateIdeaVote(for: id, user: uid, vote: false)
         guard !downvotes.contains(uid) else {
+            System.client.removeIdeaVote(for: id, user: uid)
             downvotes.remove(uid)
             return
         }
+        System.client.updateIdeaVote(for: id, user: uid, vote: false)
         downvotes.insert(uid)
         if upvotes.contains(uid) {
             upvotes.remove(uid)
