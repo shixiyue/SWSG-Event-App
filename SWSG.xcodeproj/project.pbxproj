@@ -468,12 +468,14 @@
 			path = SWSG;
 			sourceTree = "<group>";
 		};
-		3F178FF11E99068400057929 /* Backend */ = {
+		3F178FF11E99068400057929 /* Social Media */ = {
 			isa = PBXGroup;
 			children = (
 				3F178FF21E99069E00057929 /* FBRequest.swift */,
+				3F178FEF1E98D7A600057929 /* SocialUser.swift */,
+				3F20D4B41E9A37070082146B /* AuthType.swift */,
 			);
-			name = Backend;
+			name = "Social Media";
 			sourceTree = "<group>";
 		};
 		3F408CC51E83BE6B00E2B787 /* Chat */ = {
@@ -543,8 +545,6 @@
 				3F9482B01E7E3DDC00016259 /* Profile.swift */,
 				3F9482B11E7E3DDC00016259 /* User.swift */,
 				E3220C461E7B9776008AFA85 /* UserTypes.swift */,
-				3F178FEF1E98D7A600057929 /* SocialUser.swift */,
-				3F20D4B41E9A37070082146B /* AuthType.swift */,
 			);
 			name = Users;
 			sourceTree = "<group>";
@@ -589,7 +589,6 @@
 		3FED302A1E77A5F300C007AD /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				3F178FF11E99068400057929 /* Backend */,
 				3F408CCC1E83C1D900E2B787 /* Chat */,
 				3FF653071E9A825C00B9E64F /* Events */,
 				CC6CB12E1E90FC2F00C71793 /* Idea */,
@@ -597,6 +596,7 @@
 				3F9795661E7A9005004BC26C /* Mentor */,
 				3FEE49DF1E9F580100DC4EE1 /* Registration */,
 				C2A8A6881E9B0F43008D50BC /* PushNotification */,
+				3F178FF11E99068400057929 /* Social Media */,
 				3F9795671E7A9010004BC26C /* Users */,
 			);
 			name = Model;
