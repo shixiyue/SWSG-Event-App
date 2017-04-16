@@ -12,7 +12,7 @@ class SponsorsTitleTableViewCell: UITableViewCell {
 
     @IBOutlet private var title: UILabel!
     
-    func setTitle(_ title: String) {
+    func setSponsorTitle(_ title: String) {
         self.title.text = title
     }
 

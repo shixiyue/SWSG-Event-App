@@ -79,7 +79,7 @@ class SponsorsViewController: UIViewController, UITableViewDataSource, UITableVi
         guard let cell = sponsorsTableView.dequeueReusableCell(withIdentifier: Config.titleCell, for: indexPath) as? SponsorsTitleTableViewCell else {
             return SponsorsTitleTableViewCell()
         }
-        cell.setTitle(title)
+        cell.setSponsorTitle(title)
         return cell
     }
     

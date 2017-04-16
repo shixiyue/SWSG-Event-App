@@ -249,7 +249,14 @@ struct Config {
                                                                     ("Organizing Team", "Organizers"),
                                                                     ("Frequently Asked Questions", "Questions")]
     static let sponsorsHeader = "Sponsors"
+    static let faqHeader = "Frequently Asked Questions"
     static let numOfSponsorsInRow: Double = 3
+    static let overviewContainerIndex = 1
+    static let defaultTableHeight: CGFloat = 44
+    static let edit = "edit"
+    static let personCell = "personCell"
+    static let faqCell = "faqCell"
+    static let blueColor = UIColor(red: 0, green: 0, blue: 238/255, alpha: 1)
 
     static let passwordMinLength = 6
     

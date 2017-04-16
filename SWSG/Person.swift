@@ -71,12 +71,12 @@ class Person {
             self.photoURL = nil
             guard let photo = photo else {
                 completion(false)
-                _checkRep()
+                self._checkRep()
                 return
             }
             self.photo = photo
             completion(true)
-            _checkRep()
+            self._checkRep()
         })
     }
     

@@ -14,7 +14,12 @@ class SponsorsTableViewCell: UITableViewCell {
     @IBOutlet private var secondImage: UIImageView!
     @IBOutlet private var thirdImage: UIImageView!
     
-    func setFirst(image: UIImage, link: String) {
+    private var firstLink: String!
+    private var secondLink: String!
+    private var thirdLink: String!
+    
+    
+    func setFirst(image: UIImage?, link: String) {
         firstImage.image = image
         firstLink = link
         
@@ -23,7 +28,7 @@ class SponsorsTableViewCell: UITableViewCell {
         firstImage.isUserInteractionEnabled = true
     }
     
-    func setSecond(image: UIImage, link: String) {
+    func setSecond(image: UIImage?, link: String) {
         secondImage.image = image
         secondLink = link
         
@@ -32,7 +37,7 @@ class SponsorsTableViewCell: UITableViewCell {
         secondImage.isUserInteractionEnabled = true
     }
     
-    func setThird(image: UIImage, link: String) {
+    func setThird(image: UIImage?, link: String) {
         thirdImage.image = image
         thirdLink = link
         

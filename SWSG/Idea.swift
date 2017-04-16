@@ -115,7 +115,7 @@ class Idea: ImagesContent, TemplateContent {
             self.mainImage = image
             self.imagesState.mainImageHasFetched = true
             completion(true)
-            _checkRep()
+            self._checkRep()
         })
     }
     

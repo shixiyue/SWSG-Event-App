@@ -46,7 +46,7 @@ extension InformationViewController: UITableViewDataSource, UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return informationItems.count
+        return Config.informationItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -63,7 +63,7 @@ extension InformationViewController: UITableViewDataSource, UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = informationItems[indexPath.row]
+        let item = Config.informationItems[indexPath.row]
         performSegue(withIdentifier: item.name, sender: nil)
     }
     

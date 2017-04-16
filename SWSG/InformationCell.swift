@@ -14,7 +14,7 @@ class InformationCell: UITableViewCell {
     @IBOutlet private var name: UILabel!
     
     func setUp(name: String, icon: String) {
-        self.icon.image = UIImage(named: image)
+        self.icon.image = UIImage(named: icon)
         self.name.text = name
     }
     

@@ -13,16 +13,16 @@ class OverviewEditViewController: UIViewController {
     var overview: OverviewContent!
 
     func updateOverviewContent(_ notification: NSNotification) {
-        guard let description = notification.userInfo?["description"] as? String, let images = notification.userInfo?["images"] as? [UIImage], let videoId = notification.userInfo?["videoId"] as? String else {
+        guard let description = notification.userInfo?[Config.description] as? String, let images = notification.userInfo?[Config.images] as? [UIImage], let videoId = notification.userInfo?[Config.videoId] as? String else {
             return
         }
         guard !description.isEmptyContent else {
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": false])
-            present(Utility.getFailAlertController(message: "Description cannot be empty!"), animated: true, completion: nil)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: Config.done), object: nil, userInfo: [Config.isSuccess: false])
+            present(Utility.getFailAlertController(message: Config.emptyDescriptionError), animated: true, completion: nil)
             return
         }
         
-        let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? "" : "https://www.youtube.com/embed/\(videoId)"
+        let videoLink = Utility.getVideoLink(for: videoId)
         let updatedOverview = overview.getUpdatedOverview(description: description, images: images, videoLink: videoLink)
         System.client.updateInformation(overview: updatedOverview, completion: { (error) in
             var isSuccess: Bool
@@ -34,21 +34,20 @@ class OverviewEditViewController: UIViewController {
                 NotificationCenter.default.removeObserver(self)
                 isSuccess = true
             }
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "done"), object: nil, userInfo: ["isSuccess": isSuccess])
+            NotificationCenter.default.post(name: Notification.Name(rawValue: Config.done), object: nil, userInfo: [Config.isSuccess: isSuccess])
         })
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateOverviewContent), name: Notification.Name(rawValue: "update"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateOverviewContent), name: Notification.Name(rawValue: Config.update), object: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "container", let containerViewController = segue.destination as? TemplateEditViewController else {
+        guard segue.identifier == Config.container, let containerViewController = segue.destination as? TemplateEditViewController else {
             return
         }
-        let substring = overview.videoLink.components(separatedBy: "https://www.youtube.com/embed/")
-        let videoId = substring.count > 1 ? substring[1] : ""
+        let videoId = Utility.getVideoId(for: idea.videoLink)
         containerViewController.presetInfo(desc: overview.description, images: overview.images, videoId: videoId, isScrollEnabled: true)
     }
     
