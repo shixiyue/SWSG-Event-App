@@ -9,25 +9,21 @@
 import Foundation
 import OneSignal
 
+/**
+    NotiHandler is a class that provide method to handle notifications received by the app.
+ */
+
 class NotiHandler {
     
     public func handleNoti(_ osNoti: OSNotification) {
-        print("body")
-        print(osNoti.payload.body)
-        print("data")
-        print(osNoti.payload.additionalData)
         guard let noti = PushNotification(noti: osNoti) else {
             return
         }
-        print("noti obj")
-        print(noti)
         switch noti.type {
         case .announcement:
             handleAnnouncement(noti)
         case .message:
             handleMessage(noti)
-        default:
-            break
         }
     }
     

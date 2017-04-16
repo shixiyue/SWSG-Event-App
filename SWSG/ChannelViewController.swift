@@ -30,6 +30,7 @@ final class ChannelViewController: JSQMessagesViewController {
     fileprivate var imagePicker = ImagePickerPopoverViewController()
     fileprivate var iconIV = UIImageView()
     fileprivate var avatarCache = [String: UIImage]()
+    fileprivate var tagMap = [Int: String]()
     fileprivate let imageURLNotSetKey = "NOTSET"
     fileprivate var localTyping = false
     fileprivate let notiPusher = NotiPusher()
@@ -208,6 +209,36 @@ final class ChannelViewController: JSQMessagesViewController {
             
             collectionView.reloadData()
         }
+    }
+    
+    func showFullImage(_ sender: UITapGestureRecognizer) {
+        guard let tag = sender.view?.tag else {
+            return
+        }
+        
+        let message = messages[tag]
+        
+        if message.isMediaMessage, let mediaData = message.media, let photoData = mediaData as? JSQPhotoMediaItem {
+            let fullScreenImageView = UIImageView()
+            fullScreenImageView.frame = self.view.frame
+            fullScreenImageView.backgroundColor = .black
+            fullScreenImageView.contentMode = .scaleAspectFit
+            fullScreenImageView.isUserInteractionEnabled = true
+            fullScreenImageView.image = photoData.image
+            
+            let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullScreenImage))
+            fullScreenImageView.addGestureRecognizer(tap)
+            self.view.addSubview(fullScreenImageView)
+        }
+        
+    }
+    
+    func dismissFullScreenImage(sender: UITapGestureRecognizer) {
+        guard sender.state == .ended else {
+            return
+        }
+        
+        sender.view?.removeFromSuperview()
     }
     
     // MARK: Message Sending Methods
@@ -438,6 +469,11 @@ extension ChannelViewController {
         } else {
             cell.textView?.textColor = UIColor.black
         }
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showFullImage))
+        cell.tag = indexPath.item
+        cell.addGestureRecognizer(tap)
+        
         return cell
     }
     

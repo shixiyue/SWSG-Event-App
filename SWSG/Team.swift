@@ -8,7 +8,17 @@
 import Foundation
 import Firebase
 
-/// `Team` represents a team of SWSG.
+/**
+    Team represents a team within the Team system
+ 
+    Specifications:
+        - members: A String Array of the UIDs of Members
+        - name: The Name of the Team
+        - lookingFor: The type of people the team is looking for
+        - isPrivate: Whether the team is a private team
+        - id: ID of the Team as assigned by Firebase
+        - tags: String Array of Tags of the existing Skill Set of the Team
+ */
 class Team {
     typealias uid = String
     

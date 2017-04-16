@@ -8,6 +8,9 @@
 
 import UIKit
 
+/**
+ Config is a helper struct that consists of global level variables
+ */
 struct Config {
     
     static let noTeam = ""

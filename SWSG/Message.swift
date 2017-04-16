@@ -68,8 +68,10 @@ struct Message {
     }
     
     fileprivate func checkRep() {
+        #if DEBUG
         if text == nil && image == nil {
             assert(false)
         }
+        #endif
     }
 }

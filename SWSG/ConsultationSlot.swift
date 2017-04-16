@@ -16,17 +16,10 @@ import Foundation
  - startDateTime: The Date when the slot starts
  - status: An enum of ConsultationSlotStatus detailing the status of the slot
  - team: If booked, it is the Team ID of the team that booked it
- 
- Representation Invariant:
- - If the slot is booked, it should have a team ID
  */
 struct ConsultationSlot {
     var startDateTime: Date
-    var status: ConsultationSlotStatus {
-        willSet(newStatus) {
-            _checkRep()
-        }
-    }
+    var status: ConsultationSlotStatus
     var team: String?
     
     init(start date: Date, status: ConsultationSlotStatus) {
@@ -46,8 +39,6 @@ struct ConsultationSlot {
             return nil
         }
         self.status = status
-        
-        _checkRep()
     }
     
     func toDictionary() -> [String: Any] {
@@ -58,11 +49,5 @@ struct ConsultationSlot {
         }
         
         return dict
-    }
-    
-    fileprivate func _checkRep() {
-        if status == .booked && team == nil {
-            assert(false)
-        }
     }
 }
