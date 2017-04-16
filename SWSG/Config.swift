@@ -194,6 +194,10 @@ struct Config {
     static let defaultSection = 0
     static let ideaListTableCellHeight: CGFloat = 110
     static let ideaItemCell = "ideaItemCell"
+    static let informationCell = "informationCell"
+    static let informationHeaderCell = "informationHeaderCell"
+    static let titleCell = "titleCell"
+    static let sponsorsCell = "sponsorsCell"
 
     // Parameters for information message:
     static let done = "Done"
@@ -238,7 +242,15 @@ struct Config {
     static let defaultValue: CGFloat = 1
     static let needOverriden = "This method must be overridden"
     static let noCamera = "Sorry, this device has no camera"
-    
+    static let informationItems: [(name: String, image: String)] = [("Overview", "Overview"),
+                                                                    ("Speakers", "Speakers"),
+                                                                    ("Judges", "Judges"),
+                                                                    ("Sponsors", "Sponsors"),
+                                                                    ("Organizing Team", "Organizers"),
+                                                                    ("Frequently Asked Questions", "Questions")]
+    static let sponsorsHeader = "Sponsors"
+    static let numOfSponsorsInRow: Double = 3
+
     static let passwordMinLength = 6
     
     // Parameters for Mentor Booking:

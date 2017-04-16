@@ -12,13 +12,6 @@ class InformationViewController: BaseViewController {
     
     @IBOutlet private var informationTable: UITableView!
     
-    fileprivate let informationItems: [(name: String, image: String)] = [("Overview", "Overview"),
-                                                                         ("Speakers", "Speakers"),
-                                                                         ("Judges", "Judges"),
-                                                                         ("Sponsors", "Sponsors"),
-                                                                         ("Organizing Team", "Organizers"),
-                                                                         ("Frequently Asked Questions", "Questions")]
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTable()
@@ -58,15 +51,14 @@ extension InformationViewController: UITableViewDataSource, UITableViewDelegate 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = indexPath.item
-        let item =  informationItems[index]
+        let item =  Config.informationItems[index]
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "informationCell",
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Config.informationCell,
                                                        for: indexPath) as? InformationCell else {
             return InformationCell()
         }
         
-        cell.icon.image = UIImage(named: item.image)
-        cell.name.text = item.name
+        cell.setUp(name: item.name, icon: item.image)
         return cell
     }
     

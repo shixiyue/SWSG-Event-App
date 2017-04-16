@@ -10,7 +10,12 @@ import UIKit
 
 class InformationCell: UITableViewCell {
     
-    @IBOutlet var icon: UIImageView!
-    @IBOutlet var name: UILabel!
+    @IBOutlet private var icon: UIImageView!
+    @IBOutlet private var name: UILabel!
+    
+    func setUp(name: String, icon: String) {
+        self.icon.image = UIImage(named: image)
+        self.name.text = name
+    }
     
 }

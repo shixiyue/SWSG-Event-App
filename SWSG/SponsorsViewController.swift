@@ -32,7 +32,7 @@ class SponsorsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var count = 1
         for tuple in sponsors {
-            count += 1 + Int(ceil(Double(tuple.list.count) / 3))
+            count += 1 + Int(ceil(Double(tuple.list.count) / Config.numOfSponsorsInRow))
         }
         return count
     }
@@ -48,48 +48,58 @@ class SponsorsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = indexPath.item
         guard index != 0 else {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "informationHeaderCell", for: indexPath) as? InformationHeaderTableViewCell else {
-                return InformationHeaderTableViewCell()
-            }
-            cell.informationHeader.text = "Sponsors"
-            return cell
+            return getSponsorsHeaderCell(indexPath: indexPath)
         }
         var count = 1
         var titleIndex = 0
         for tuple in sponsors {
             if count == index {
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath) as? SponsorsTitleTableViewCell else {
-                    return SponsorsTitleTableViewCell()
-                }
-                cell.title.text = tuple.title
-                return cell
+                return getSponsorTitleTabelViewCell(indexPath: indexPath)
             }
             count += 1
             titleIndex += 1
-            guard index < count + Int(ceil(Double(tuple.list.count) / 3)) else {
-                count += Int(ceil(Double(tuple.list.count) / 3))
+            guard index < count + Int(ceil(Double(tuple.list.count) / Config.numOfSponsorsInRow)) else {
+                count += Int(ceil(Double(tuple.list.count) / Config.numOfSponsorsInRow))
                 continue
             }
-            var sponsorIndex = (index - count) * 3
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "sponsorsCell", for: indexPath) as? SponsorsTableViewCell else {
-                return UITableViewCell()
-            }
-            cell.firstImage.image = UIImage(named: tuple.list[sponsorIndex].image)
-            cell.firstLink = tuple.list[sponsorIndex].link
-            sponsorIndex += 1
-            if sponsorIndex >= tuple.list.count {
-                return cell
-            }
-            cell.secondImage.image = UIImage(named: tuple.list[sponsorIndex].image)
-            cell.secondLink = tuple.list[sponsorIndex].link
-            sponsorIndex += 1
-            if sponsorIndex >= tuple.list.count {
-                return cell
-            }
-            cell.thirdImage.image = UIImage(named: tuple.list[sponsorIndex].image)
-            cell.thirdLink = tuple.list[sponsorIndex].link
-            return cell
+            return getSponsorsTableViewCell(indexPath: indexPath, index: index, count: count, list: tuple.list)
         }
         return UITableViewCell()
     }
+    
+    private func getSponsorsHeaderCell(indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = sponsorsTableView.dequeueReusableCell(withIdentifier: Config.informationHeaderCell, for: indexPath) as? InformationHeaderTableViewCell else {
+            return InformationHeaderTableViewCell()
+        }
+        cell.setHeader(Config.sponsorsHeader)
+        return cell
+    }
+    
+    private func getSponsorTitleTabelViewCell(indexPath: IndexPath, title: String) -> UITableViewCell {
+        guard let cell = sponsorsTableView.dequeueReusableCell(withIdentifier: Config.titleCell, for: indexPath) as? SponsorsTitleTableViewCell else {
+            return SponsorsTitleTableViewCell()
+        }
+        cell.setTitle(title)
+        return cell
+    }
+    
+    private func getSponsorsTableViewCell(indexPath: IndexPath, index: Int, count: Int, list: [(image: String, link: String)]) -> UITableViewCell {
+        var sponsorIndex = (index - count) * Int(Config.numOfSponsorsInRow)
+        guard let cell = sponsorsTableView.dequeueReusableCell(withIdentifier: Config.sponsorsCell, for: indexPath) as? SponsorsTableViewCell else {
+            return UITableViewCell()
+        }
+        cell.setFirst(image: list[sponsorIndex].image, link: list[sponsorIndex].link)
+        sponsorIndex += 1
+        if sponsorIndex >= list.count {
+            return cell
+        }
+        cell.setSecond(image: list[sponsorIndex].image, link: list[sponsorIndex].link)
+        sponsorIndex += 1
+        if sponsorIndex >= list.count {
+            return cell
+        }
+        cell.setThird(image: list[sponsorIndex].image, link: list[sponsorIndex].link)
+        return cell
+    }
+    
 }
