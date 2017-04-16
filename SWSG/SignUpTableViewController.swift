@@ -50,9 +50,7 @@ class SignUpTableViewController: UIViewController {
     fileprivate var profileImgSet = false
     fileprivate var currentCredential: FIRAuthCredential?
     fileprivate let countryPickerView = UIPickerView()
-    private let educationPlaceholder = "(e.g. Computer Science at National University of Singapore)"
-    private let skillsPlaceholder = "(e.g. UI/UX Designer)"
-    private let descPlaceholder = "Description"
+    
     var socialUser: SocialUser?
     var signUpButton: RoundCornerButton!
     var loginStack: UIStackView!
@@ -113,9 +111,9 @@ class SignUpTableViewController: UIViewController {
             textView.tag = index
         }
         
-        educationTextView.setPlaceholder(educationPlaceholder)
-        skillsTextView.setPlaceholder(skillsPlaceholder)
-        descTextView.setPlaceholder(descPlaceholder)
+        educationTextView.setPlaceholder(Config.educationPlaceholder)
+        skillsTextView.setPlaceholder(Config.skillsPlaceholder)
+        descTextView.setPlaceholder(Config.descPlaceholder)
     }
     
     private func setUpCountryTextField() {

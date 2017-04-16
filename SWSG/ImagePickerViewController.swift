@@ -22,11 +22,11 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
     func showImageOptions() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        let takePhotoAction = UIAlertAction(title: "Take a photo", style: .default) { _ in
+        let cancelAction = UIAlertAction(title: Config.cancel, style: .cancel)
+        let takePhotoAction = UIAlertAction(title: Config.takePhoto, style: .default) { _ in
             self.takePhoto()
         }
-        let selectPhotoAction = UIAlertAction(title: "Select a photo", style: .default) { _ in
+        let selectPhotoAction = UIAlertAction(title: Config.selectPhoto, style: .default) { _ in
             self.selectPhoto()
         }
         
@@ -37,15 +37,15 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
         alertController.popoverPresentationController?.sourceView = view
         alertController.popoverPresentationController?.sourceRect = CGRect(x: alertControllerPosition.x,
                                                                            y: alertControllerPosition.y,
-                                                                           width: 1, height: 1)
-        
+                                                                           width: Config.defaultValue,
+                                                                           height: Config.defaultValue)
         present(alertController, animated: true, completion: nil)
     }
     
     private func takePhoto() {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-            present(Utility.getFailAlertController(message: "Sorry, this device has no camera"),
-                    animated: true, completion: nil)
+            present(Utility.getFailAlertController(message: Config.noCamera),
+            animated: true, completion: nil)
             return
         }
         imagePicker.allowsEditing = false
@@ -76,34 +76,8 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
         dismiss(animated: true, completion: nil)
     }
     
-    func updateImage(to image: UIImage) {
-        fatalError("This method must be overridden")
-    }
-    
-}
-
-extension ImagePickerViewController: RSKImageCropViewControllerDelegate {
-    
-    func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    func imageCropViewController(_ controller: RSKImageCropViewController,
-                                 didCropImage croppedImage: UIImage,
-                                 usingCropRect cropRect: CGRect) {
-        updateImage(to: croppedImage.cropToSquare())
-        dismiss(animated: true, completion: nil)
-    }
-    
-    fileprivate func jumpToCropImage(imageToCrop: UIImage) {
-        var imageCropVC: RSKImageCropViewController!
-        imageCropVC = RSKImageCropViewController(image: imageToCrop, cropMode: RSKImageCropMode.circle)
-        imageCropVC.delegate = self
-        self.present(imageCropVC, animated: false, completion: nil)
-    }
-    
     func handleImage(chosenImage: UIImage) {
-        jumpToCropImage(imageToCrop: chosenImage)
+        fatalError(Config.needOverriden)
     }
-    
+
 }

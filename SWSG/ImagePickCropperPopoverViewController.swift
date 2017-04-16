@@ -15,25 +15,28 @@ class ImagePickCropperPopoverViewController: ImagePickerPopoverViewController {
     override func handleImage(chosenImage: UIImage) {
         jumpToCropImage(imageToCrop: chosenImage)
     }
+
+}
+
+extension ImagePickCropperPopoverViewController: RSKImageCropViewControllerDelegate {
     
-    override func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
+    func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
         dismiss(animated: true, completion: nil)
         dismissController()
     }
     
-    override func imageCropViewController(_ controller: RSKImageCropViewController,
-                                          didCropImage croppedImage: UIImage,
-                                          usingCropRect cropRect: CGRect) {
+    func imageCropViewController(_ controller: RSKImageCropViewController,
+                                 didCropImage croppedImage: UIImage,
+                                 usingCropRect cropRect: CGRect) {
         self.image = croppedImage.cropToSquare()
         dismiss(animated: true, completion: nil)
         dismissController()
     }
     
     fileprivate func jumpToCropImage(imageToCrop: UIImage) {
-        var imageCropVC: RSKImageCropViewController!
-        imageCropVC = RSKImageCropViewController(image: imageToCrop, cropMode: .circle)
+        var imageCropVC = RSKImageCropViewController(image: imageToCrop, cropMode: cropMode)
         imageCropVC.delegate = self
         self.present(imageCropVC, animated: false, completion: nil)
     }
-
+    
 }
