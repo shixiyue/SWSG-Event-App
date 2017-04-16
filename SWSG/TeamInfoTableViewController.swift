@@ -19,10 +19,11 @@ class TeamInfoTableViewController: UITableViewController {
     fileprivate var sizingCell: TagCell?
     
     private let teams = Teams()
-
+    
     private let joinTeamErrorMsg = "You can not join more than one team"
     private let quitTeamErrorMsg = "You do not belong to this team"
     private let fullTeamErrorMsg = "Team is full"
+    
     private var teamRef: FIRDatabaseReference!
     private var teamChangedHandle: FIRDatabaseHandle?
     
@@ -31,9 +32,9 @@ class TeamInfoTableViewController: UITableViewController {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "reload"), object: self)
         }
     }
-
+    
     @IBOutlet weak var joinView: UIView!
-
+    
     @IBAction func onBackButtonClick(_ sender: Any) {
         Utility.onBackButtonClick(tableViewController: self)
     }
@@ -63,7 +64,7 @@ class TeamInfoTableViewController: UITableViewController {
         
         guard let user = System.activeUser, let rBBItems = self.navigationItem.rightBarButtonItems,
             let team = team else {
-            return
+                return
         }
         
         for (index, item) in rBBItems.enumerated() {
@@ -196,7 +197,6 @@ extension TeamInfoTableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            print("\(team!.members.count+1)")
             return team!.members.count+1
         } else {
             return 4
@@ -241,10 +241,10 @@ extension TeamInfoTableViewController {
         }
     }
     
-
+    
     private func configureTeamMemberCell(cell: TeamMemberTableViewCell, at index: Int) {
         guard let team = team else {
-              return
+            return
         }
         System.client.getUserWith(uid: team.members[index], completion: {
             (user, error) in
@@ -272,10 +272,10 @@ extension TeamInfoTableViewController {
         cell.tagCollectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
         cell.tagCollectionView.backgroundColor = UIColor.clear
         self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
-            cell.tagCollectionView.reloadData()
-            if cell.tagCollectionView.contentSize.height > self.containerHeight {
-                self.containerHeight = cell.tagCollectionView.contentSize.height
-            }
+        cell.tagCollectionView.reloadData()
+        if cell.tagCollectionView.contentSize.height > self.containerHeight {
+            self.containerHeight = cell.tagCollectionView.contentSize.height
+        }
     }
 }
 /// UITableViewDelegate methods
@@ -306,7 +306,7 @@ extension TeamInfoTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
-
+        
         guard let team = team, indexPath.section == 0 else {
             return
         }
@@ -354,7 +354,4 @@ extension TeamInfoTableViewController: UICollectionViewDelegateFlowLayout {
         let size = self.sizingCell!.tagName.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
         return CGSize(width: size.width, height: size.height*2)
     }
-}
-
-extension TeamInfoTableViewController: UICollectionViewDelegate {
 }

@@ -12,12 +12,6 @@ class TeamEditViewController: UIViewController {
     
     var team: Team?
     var delegate: TeamEditDelegate?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
 
     @IBAction func onDoneBtnPressed(_ sender: Any) {
         guard let delegate = delegate else {
@@ -27,10 +21,7 @@ class TeamEditViewController: UIViewController {
            Utility.popViewController(no: 1, viewController: self)
         }
     }
-    
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let destVC = segue.destination as? TeamCreateTableViewController else {
             return

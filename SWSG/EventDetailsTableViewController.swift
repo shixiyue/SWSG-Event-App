@@ -79,7 +79,6 @@ class EventDetailsTableViewController: UITableViewController {
             guard let profileVC = segue.destination as? ProfileViewController else {
                 return
             }
-            
             profileVC.user = user
         }
     }
@@ -91,16 +90,12 @@ class EventDetailsTableViewController: UITableViewController {
         }
         
         eventRef = System.client.getEventRef(event: event)
-        
         eventChangedHandle = eventRef.observe(.value, with: { (snapshot) in
             guard let event = Event(id: snapshot.key, snapshot: snapshot) else {
                 return
             }
-            
             self.event = event
-            
             self.setUpImageView()
-            
             self.eventDetailsTableView.reloadData()
             
         })
@@ -111,7 +106,6 @@ class EventDetailsTableViewController: UITableViewController {
         guard let event = event else{
             return
         }
-
         Utility.addEventToCalendar(title: event.name, description: event.description, startDate: event.startDateTime, endDate: event.endDateTime)
     }
     
@@ -126,22 +120,60 @@ class EventDetailsTableViewController: UITableViewController {
         }
     }
     
-    // MARK: UITableViewDataSource
+    func showProfile(_ sender: UITapGestureRecognizer) {
+        guard let view = sender.view else {
+            return
+        }
+        let tag = view.tag
+        performSegue(withIdentifier: Config.eventToProfile, sender: commenters[tag])
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+}
+
+// UITableViewDelegate methods
+extension EventDetailsTableViewController {
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 44
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "EventHeader") as! EventHeaderTableViewCell
+            cell.eventHeaderLabel.text = self.event?.name
+            return cell.contentView
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CommentsHeader")
+            return cell?.contentView
+        }
+    }
+}
+
+// UITableViewDataSource methods
+extension EventDetailsTableViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         if section == 0 {
             return 5
         } else {
             guard let event = event else {
                 return 1
             }
-            
             return event.comments.count + 1
         }
     }
@@ -219,44 +251,7 @@ class EventDetailsTableViewController: UITableViewController {
             }
         }
     }
-    
-    func showProfile(_ sender: UITapGestureRecognizer) {
-        guard let view = sender.view else {
-            return
-        }
-        
-        let tag = view.tag
-        
-        performSegue(withIdentifier: Config.eventToProfile, sender: commenters[tag])
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
-    
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 44
-    }
-    
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "EventHeader") as! EventHeaderTableViewCell
-            cell.eventHeaderLabel.text = self.event?.name
-            return cell.contentView
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "CommentsHeader")
-            return cell?.contentView
-        }
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+
 }
 
 extension EventDetailsTableViewController: UITextViewDelegate {

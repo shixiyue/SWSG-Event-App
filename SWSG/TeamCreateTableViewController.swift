@@ -160,9 +160,6 @@ extension TeamCreateTableViewController {
     }
 }
 
-extension TeamCreateTableViewController: UICollectionViewDelegate {
-}
-
 extension TeamCreateTableViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

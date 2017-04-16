@@ -41,9 +41,7 @@ extension CommentsInputTableViewCell: UITextViewDelegate {
         guard var text = commentInputField.text else {
             return
         }
-        
         text = text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        
         if text.characters.count > 0 {
             addBtn.isEnabled = true
         } else {
@@ -61,7 +59,6 @@ extension CommentsInputTableViewCell: UITextViewDelegate {
             return false
         }
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
-        
         if updatedText.isEmpty {
             textView.setPlaceholder()
             updateButtonState()
