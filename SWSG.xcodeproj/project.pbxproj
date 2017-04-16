@@ -78,6 +78,7 @@
 		3FEE49E51E9F5F6800DC4EE1 /* RegisteredUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEE49E41E9F5F6800DC4EE1 /* RegisteredUserCell.swift */; };
 		3FEE49E71E9F9BC700DC4EE1 /* ParticipantRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEE49E61E9F9BC700DC4EE1 /* ParticipantRegistrationViewController.swift */; };
 		3FF6530A1E9AB08200B9E64F /* CreateEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF653091E9AB08200B9E64F /* CreateEventViewController.swift */; };
+		A565FAC548FF0924C63AFC81 /* Pods_SWSGTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFA3165E0E74C4958DF6B8FB /* Pods_SWSGTests.framework */; };
 		C21774EC1E9CEC0000352155 /* NotiHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21774EB1E9CEC0000352155 /* NotiHandler.swift */; };
 		C28B2ED81E86601300F6DD67 /* FirebaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28B2ED71E86601300F6DD67 /* FirebaseClient.swift */; };
 		C28B2EDA1E86665000F6DD67 /* FirebaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28B2ED91E86665000F6DD67 /* FirebaseError.swift */; };
@@ -172,6 +173,7 @@
 		E355BB841E94E399002E29DD /* TagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB831E94E399002E29DD /* TagCell.swift */; };
 		E355BB8C1E97C657002E29DD /* CreateEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */; };
 		E3B545101EA1182200FFB63E /* TeamEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B5450F1EA1182200FFB63E /* TeamEditViewController.swift */; };
+		E3B545121EA3AF2500FFB63E /* TeamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B545111EA3AF2500FFB63E /* TeamTests.swift */; };
 		E3E3B2E51E9A2E9800778B9C /* TagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E3B2E41E9A2E9800778B9C /* TagTableViewCell.swift */; };
 		E3F1378F1E827BF600E26394 /* SectionHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */; };
 		E3F137911E827C0500E26394 /* TeamMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */; };
@@ -210,6 +212,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		052469BF6BB3863B0A1335FF /* Pods-SWSGTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWSGTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SWSGTests/Pods-SWSGTests.release.xcconfig"; sourceTree = "<group>"; };
 		14A94E75A8D03D28BA2C7862 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		2B937AC8DA867D3B81F52554 /* Pods_OneSignalNotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneSignalNotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F12AFC71E711CBB00B26D67 /* SWSG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SWSG.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -282,7 +285,9 @@
 		3FF653091E9AB08200B9E64F /* CreateEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateEventViewController.swift; sourceTree = "<group>"; };
 		47768B1F37EFBCE271E85CCA /* Pods-SWSG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWSG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SWSG/Pods-SWSG.debug.xcconfig"; sourceTree = "<group>"; };
 		54B8245B6BA99CC5301E1F07 /* Pods_SWSG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SWSG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		655549209275DFC8C6FF0EB2 /* Pods-SWSGTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SWSGTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SWSGTests/Pods-SWSGTests.debug.xcconfig"; sourceTree = "<group>"; };
 		77F278356DF3CB18712C6624 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
+		AFA3165E0E74C4958DF6B8FB /* Pods_SWSGTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SWSGTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C21774EB1E9CEC0000352155 /* NotiHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotiHandler.swift; sourceTree = "<group>"; };
 		C28B2ED71E86601300F6DD67 /* FirebaseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseClient.swift; sourceTree = "<group>"; };
 		C28B2ED91E86665000F6DD67 /* FirebaseError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseError.swift; sourceTree = "<group>"; };
@@ -381,6 +386,7 @@
 		E355BB831E94E399002E29DD /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
 		E355BB8B1E97C657002E29DD /* CreateEventTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateEventTableViewController.swift; sourceTree = "<group>"; };
 		E3B5450F1EA1182200FFB63E /* TeamEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamEditViewController.swift; sourceTree = "<group>"; };
+		E3B545111EA3AF2500FFB63E /* TeamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamTests.swift; sourceTree = "<group>"; };
 		E3E3B2E41E9A2E9800778B9C /* TagTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagTableViewCell.swift; sourceTree = "<group>"; };
 		E3F1378E1E827BF600E26394 /* SectionHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		E3F137901E827C0500E26394 /* TeamMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamMemberTableViewCell.swift; sourceTree = "<group>"; };
@@ -408,6 +414,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A565FAC548FF0924C63AFC81 /* Pods_SWSGTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -668,6 +675,7 @@
 			children = (
 				54B8245B6BA99CC5301E1F07 /* Pods_SWSG.framework */,
 				2B937AC8DA867D3B81F52554 /* Pods_OneSignalNotificationServiceExtension.framework */,
+				AFA3165E0E74C4958DF6B8FB /* Pods_SWSGTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -814,6 +822,7 @@
 			isa = PBXGroup;
 			children = (
 				CCDCCD7A1E7D6E7600931AC0 /* UtilityTests.swift */,
+				E3B545111EA3AF2500FFB63E /* TeamTests.swift */,
 				CCDCCD7C1E7D6E7600931AC0 /* Info.plist */,
 			);
 			path = SWSGTests;
@@ -871,6 +880,8 @@
 				DC67D8BBD09AC257C9A9D108 /* Pods-SWSG.release.xcconfig */,
 				14A94E75A8D03D28BA2C7862 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
 				77F278356DF3CB18712C6624 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
+				655549209275DFC8C6FF0EB2 /* Pods-SWSGTests.debug.xcconfig */,
+				052469BF6BB3863B0A1335FF /* Pods-SWSGTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -924,9 +935,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CCDCCD811E7D6E7600931AC0 /* Build configuration list for PBXNativeTarget "SWSGTests" */;
 			buildPhases = (
+				D9497677E248EFC1F707ECBF /* [CP] Check Pods Manifest.lock */,
 				CCDCCD741E7D6E7600931AC0 /* Sources */,
 				CCDCCD751E7D6E7600931AC0 /* Frameworks */,
 				CCDCCD761E7D6E7600931AC0 /* Resources */,
+				5A842733068F4293A8130F68 /* [CP] Embed Pods Frameworks */,
+				9C0C3E6FE802E3F189BD80F3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1079,6 +1093,36 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		5A842733068F4293A8130F68 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SWSGTests/Pods-SWSGTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9C0C3E6FE802E3F189BD80F3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SWSGTests/Pods-SWSGTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		B598FFAF8D8F05C75DA72100 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1110,6 +1154,21 @@
 			showEnvVarsInLog = 0;
 		};
 		CE58A26105C035C34AE5AA46 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		D9497677E248EFC1F707ECBF /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1292,6 +1351,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3B545121EA3AF2500FFB63E /* TeamTests.swift in Sources */,
 				CCDCCD7B1E7D6E7600931AC0 /* UtilityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1504,6 +1564,7 @@
 		};
 		CCDCCD7F1E7D6E7600931AC0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 655549209275DFC8C6FF0EB2 /* Pods-SWSGTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = SWSGTests/Info.plist;
@@ -1517,6 +1578,7 @@
 		};
 		CCDCCD801E7D6E7600931AC0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 052469BF6BB3863B0A1335FF /* Pods-SWSGTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = SWSGTests/Info.plist;
