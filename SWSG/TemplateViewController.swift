@@ -8,6 +8,11 @@
 
 import UIKit
 
+/**
+ TemplateViewController is a UITableViewController, inherits from UITableViewController.
+ 
+ It provides a template layout to display information.
+ */
 class TemplateViewController: UITableViewController {
     
     private let imagesRowIndex = 1
