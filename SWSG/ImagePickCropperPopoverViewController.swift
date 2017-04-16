@@ -8,6 +8,10 @@
 
 import UIKit
 
+/**
+ ImagePickCropperPopoverViewController is a ImagePickerViewController. 
+ It supprots user to crop a selected image.
+ */
 class ImagePickCropperPopoverViewController: ImagePickerPopoverViewController {
     
     var cropMode = RSKImageCropMode.circle

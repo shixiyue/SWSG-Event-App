@@ -15,6 +15,7 @@ import UIKit
  */
 class PhotoPageViewController: UIPageViewController {
     
+    // MARK: Properties
     var images: [UIImage]!
     
     fileprivate var pages: [UIViewController]!
@@ -59,6 +60,7 @@ class PhotoPageViewController: UIPageViewController {
     
 }
 
+// MARK: UIPageViewControllerDataSource and UIPageViewControllerDelegate
 extension PhotoPageViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {

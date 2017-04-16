@@ -100,6 +100,7 @@ class Idea: ImagesContent, TemplateContent {
         _checkRep()
     }
     
+    /// Loads main image of the idea.
     func loadMainImage(completion: @escaping (Bool) -> Void) {
         _checkRep()
         guard let mainImageURL = imagesState.mainImageURL, !imagesState.mainImageHasFetched else {
@@ -119,6 +120,7 @@ class Idea: ImagesContent, TemplateContent {
         })
     }
     
+    /// Returns an updated idea (the current idea is not changed).
     func getUpdatedIdea(name: String, description: String, mainImage: UIImage,
                         images: [UIImage], videoLink: String) -> Idea {
         _checkRep()
@@ -130,6 +132,7 @@ class Idea: ImagesContent, TemplateContent {
         return idea
     }
     
+    /// Updates the current idea.
     func update(name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
         _checkRep()
         self.name = name
@@ -140,7 +143,8 @@ class Idea: ImagesContent, TemplateContent {
         _checkRep()
     }
     
-    func setVotes(votes: [String: Bool]) {
+    /// Sets votes.
+    private func setVotes(votes: [String: Bool]) {
         _checkRep()
         for (user, vote) in votes {
             if vote {
@@ -152,6 +156,7 @@ class Idea: ImagesContent, TemplateContent {
         _checkRep()
     }
     
+    /// Upvotes the idea.
     func upvote() {
         _checkRep()
         guard let uid = System.activeUser?.uid, let id = id else {
@@ -172,6 +177,7 @@ class Idea: ImagesContent, TemplateContent {
         _checkRep()
     }
     
+    /// Downvotes the idea.
     func downvote() {
         _checkRep()
         guard let uid = System.activeUser?.uid, let id = id else {
@@ -192,6 +198,7 @@ class Idea: ImagesContent, TemplateContent {
         _checkRep()
     }
     
+    /// Returns whether the current user has voted for the idea.
     func getVotingState() -> (upvote: Bool, downvote: Bool) {
         _checkRep()
         guard let uid = System.client.getUid() else {

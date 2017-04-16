@@ -8,6 +8,12 @@
 
 import UIKit
 
+/**
+ VideoLinkTableViewCell is a UITableViewCell that is used in TemplateEditViewController
+ to support user to input a video link.
+ 
+ It has a Video Link Text Field.
+ */
 class VideoLinkTableViewCell: UITableViewCell {
 
     @IBOutlet var videoLinkTextField: UITextField!

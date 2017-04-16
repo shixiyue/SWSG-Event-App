@@ -10,14 +10,15 @@ import UIKit
 
 class SponsorsTableViewCell: UITableViewCell {
 
+    // MARK: IBOutlets
     @IBOutlet private var firstImage: UIImageView!
     @IBOutlet private var secondImage: UIImageView!
     @IBOutlet private var thirdImage: UIImageView!
     
+    // MARK: Properties
     private var firstLink: String!
     private var secondLink: String!
     private var thirdLink: String!
-    
     
     func setFirst(image: UIImage?, link: String) {
         firstImage.image = image

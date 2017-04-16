@@ -878,7 +878,7 @@ class FirebaseClient {
             guard error == nil else {
                 return
             }
-            self.saveDetailImages(path: "information/overview", images: overview.images,
+            self.saveDetailImages(path: Config.overviewFirebase, images: overview.images,
                                   ref: overviewRef.child(Config.images))
         })
     }
@@ -891,7 +891,7 @@ class FirebaseClient {
             guard error == nil, overview.imagesState.imagesHasChanged else {
                 return
             }
-            self.saveDetailImages(path: "information/overview", images: overview.images,
+            self.saveDetailImages(path: Config.overviewFirebase, images: overview.images,
                                   ref: overviewRef.child(Config.images))
         })
     }
@@ -1225,15 +1225,15 @@ class FirebaseClient {
         return teamsRef.child(teamID)
     }
     public func getPeopleRef(for category: String) -> FIRDatabaseReference {
-        return informationRef.child("people").child(category)
+        return informationRef.child(Config.people).child(category)
     }
     
     public func getOverviewRef() -> FIRDatabaseReference {
-        return informationRef.child("overview")
+        return informationRef.child(Config.overview)
     }
     
     public func getFaqRef() -> FIRDatabaseReference {
-        return informationRef.child("faq")
+        return informationRef.child(Config.faq)
     }
     
     public func getRegistrationRef() -> FIRDatabaseReference {

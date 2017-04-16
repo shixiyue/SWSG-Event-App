@@ -16,9 +16,11 @@ import UIKit
  */
 class FaqTableViewCell: UITableViewCell {
 
+    // MARK: IBOutlet
     @IBOutlet var question: UILabel!
     @IBOutlet var answer: UILabel!
     
+    // MARK: Properties
     private var link: String?
     
     func setUp(question: String, answer: String, link: String?) {

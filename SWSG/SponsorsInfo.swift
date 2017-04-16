@@ -8,6 +8,9 @@
 
 import Foundation
 
+/**
+ Hard-coded dummy data.
+ */
 struct SponsorsInfo {
     
     static var sponsors: [(title: String, list: [(image: String, link: String)])] = [

@@ -16,6 +16,7 @@ import UIKit
  */
 class PeopleTableViewCell: UITableViewCell {
 
+    // MARK: IBOutlets
     @IBOutlet private var photo: UIImageView!
     @IBOutlet private var name: UILabel!
     @IBOutlet private var title: UILabel!

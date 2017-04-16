@@ -33,13 +33,13 @@ class ChannelListViewController: BaseViewController {
         }
     }
     
-    //MARK: Firebase References
+    // MARK: Firebase References
     private var channelsRef: FIRDatabaseReference!
     private var channelsExistingHandle: FIRDatabaseHandle?
     private var channelsNewHandle: FIRDatabaseHandle?
     private var channelsDeletedHandle: FIRDatabaseHandle?
     
-    //MARK: Intialization and Deinitialization
+    // MARK: Intialization and Deinitialization
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()

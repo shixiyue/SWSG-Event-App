@@ -16,6 +16,7 @@ import UIKit
  */
 class InformationViewController: BaseViewController {
     
+    // MARK: IBOutlets
     @IBOutlet private var informationTable: UITableView!
     
     override func viewDidLoad() {
@@ -45,6 +46,7 @@ class InformationViewController: BaseViewController {
     
 }
 
+// MARK: UITableViewDelegate and UITableViewDataSource
 extension InformationViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {

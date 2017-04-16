@@ -61,30 +61,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //TODO: Automatic Login with Firebase
     private func checkLogin() {
-        if System.client.alreadySignedIn() {
-            showLaunchScreen()
-            var requestTimedOut = true
-            SwiftSpinner.show("Communicating with Servers...")
-            System.client.getCurrentUser(completion: { (user, userError) in
-                if let user = user {
-                    System.activeUser = user
-                    requestTimedOut = false
-                    self.showHomeScreen()
-                } else {
-                    requestTimedOut = false
-                    self.showLogInSignUpScreen()
-                }
-            })
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0, execute: {
-                if requestTimedOut{
-                    self.showLogInSignUpScreen()
-                }
-            })
-        } else {
+        guard System.client.alreadySignedIn() else {
             showLogInSignUpScreen()
             return
         }
+        showLaunchScreen()
+        var requestTimedOut = true
+        SwiftSpinner.show("Communicating with Servers...")
+        System.client.getCurrentUser(completion: { (user, userError) in
+            if let user = user {
+                System.activeUser = user
+                requestTimedOut = false
+                self.showHomeScreen()
+            } else {
+                requestTimedOut = false
+                self.showLogInSignUpScreen()
+            }
+        })
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0, execute: {
+            if requestTimedOut{
+                self.showLogInSignUpScreen()
+            }
+        })
     }
     
     /// Shows launchScreen while waiting for firebase screen if the user hasn't loged in.

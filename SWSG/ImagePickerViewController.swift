@@ -8,8 +8,15 @@
 
 import UIKit
 
+/**
+ ImagePickerViewController is a UIViewController, inherits from UIViewController.
+ 
+ It implements UIImagePickerControllerDelegate and UINavigationControllerDelegate.
+ It supports user to select a photo or take a photo.
+ */
 class ImagePickerViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    // MARK: Property
     private let imagePicker = UIImagePickerController()
     var alertControllerPosition: CGPoint!
 

@@ -260,6 +260,10 @@ struct Config {
     static let personCell = "personCell"
     static let faqCell = "faqCell"
     static let blueColor = UIColor(red: 0, green: 0, blue: 238/255, alpha: 1)
+    static let overviewFirebase = "information/overview"
+    static let overview = "overview"
+    static let faq = "faq"
+    static let people = "people"
 
     static let passwordMinLength = 6
     

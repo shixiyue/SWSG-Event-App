@@ -17,11 +17,13 @@ import UIKit
  */
 class IdeaPostTableViewController: UITableViewController {
     
-    private var currentIdea: Idea?
-    
+    // MARK: IBOutlets
     @IBOutlet fileprivate var ideaName: UITextField!
     @IBOutlet private var userName: UILabel!
     @IBOutlet private var mainImage: UIButton!
+    
+    // MARK: Properties
+    private var currentIdea: Idea?
     
     fileprivate var containerHeight: CGFloat!
     fileprivate var containerRowIndex = 3
@@ -29,7 +31,7 @@ class IdeaPostTableViewController: UITableViewController {
     fileprivate var textView: UITextView!
     
     private var ideas = Ideas.sharedInstance()
-    private var imagePicker = ImagePickCropperPopoverViewController()
+    private let imagePicker = ImagePickCropperPopoverViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,6 +100,7 @@ class IdeaPostTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
+    // MARK: Check whether input are valid. If valid, update or create idea.
     @objc private func donePressed(_ notification: NSNotification) {
         guard System.client.isConnected else {
             present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
@@ -125,6 +128,7 @@ class IdeaPostTableViewController: UITableViewController {
         createIdea(name: name, description: description, mainImage: mainImage, images: images, videoLink: videoLink)
     }
     
+    // MARK: Update Idea
     private func updateIdea(idea: Idea, name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
         let updatedIdea = idea.getUpdatedIdea(name: name, description: description, mainImage: mainImage, images: images, videoLink: videoLink)
         System.client.updateIdeaContent(for: updatedIdea, completion: { (error) in
@@ -135,6 +139,7 @@ class IdeaPostTableViewController: UITableViewController {
         })
     }
     
+    // MARK: Create a new Idea
     private func createIdea(name: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String) {
         guard let user = System.activeUser, let uid = user.uid else {
             present(Utility.getFailAlertController(message: Config.generalErrorMessage), animated: true, completion: nil)
@@ -146,6 +151,7 @@ class IdeaPostTableViewController: UITableViewController {
         })
     }
     
+    // MARK: Handle Firebase Error
     private func getResult(error: FirebaseError?) {
         var isSuccess: Bool
         if let firebaseError = error {
@@ -164,6 +170,7 @@ class IdeaPostTableViewController: UITableViewController {
 
 }
 
+// MARK: UITableViewDelegate
 extension IdeaPostTableViewController {
     
     override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -179,6 +186,7 @@ extension IdeaPostTableViewController {
     
 }
 
+// MARK: UITextFieldViewDelegate
 extension IdeaPostTableViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

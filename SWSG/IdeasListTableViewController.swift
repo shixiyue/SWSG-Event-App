@@ -13,11 +13,12 @@ import Firebase
  IdeaListViewController is a UIViewController, inherits from BaseViewController
  for the menu, that displays a list of all ideas.
  
- It also allows the user to press a button to create a new Idea 
+ It also allows the user to press a button to create a new Idea
  or vote for ideas.
  */
 class IdeasListTableViewController: BaseViewController {
     
+    // MARK: Properties
     override var menuYOffset: CGFloat {
         return super.menuYOffset + ideaListTableView.contentOffset.y
     }
@@ -30,19 +31,21 @@ class IdeasListTableViewController: BaseViewController {
         }
     }
     
+    // MARK: IBOutlets
     @IBOutlet private var searchBar: UISearchBar!
     @IBOutlet private var ideaListTableView: UITableView!
     
+    // MARK: Firebase References
     private var ideasRef: FIRDatabaseReference?
     private var ideasAddRefHandle: FIRDatabaseHandle?
     private var ideasChangeRefHandle: FIRDatabaseHandle?
     private var ideasDeleteRefHandle: FIRDatabaseHandle?
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == Config.showDetails,
             let detailsViewController = segue.destination as? IdeaDetailsTableViewController,
             let index = sender as? Int else {
-            return
+                return
         }
         
         if searchActive && filteredIdeas.count > index {
@@ -51,7 +54,8 @@ class IdeasListTableViewController: BaseViewController {
             detailsViewController.setIdea(ideas.retrieveIdeaAt(index: index))
         }
     }
-
+    
+    // MARK: Set up IdeaListTableViewController layout, and fetch ideas from Firebase
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()
@@ -124,6 +128,7 @@ class IdeasListTableViewController: BaseViewController {
         }
     }
     
+    // MARK: Jump to Idea Post page if user is a participant
     @IBAction func addIdea() {
         guard let user = System.activeUser, user.type.isParticipant else {
             present(Utility.getFailAlertController(message: Config.ideaCreateErrorMessage),
@@ -147,6 +152,7 @@ class IdeasListTableViewController: BaseViewController {
     
 }
 
+// MARK: UITableViewDelegate and UITableViewDataSource
 extension IdeasListTableViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -160,7 +166,7 @@ extension IdeasListTableViewController: UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Config.ideaItemCell,
                                                        for: indexPath) as? IdeaItemTableViewCell else {
-            return UITableViewCell()
+                                                        return UITableViewCell()
         }
         
         let idea: Idea
@@ -182,7 +188,7 @@ extension IdeasListTableViewController: UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: Config.showDetails, sender: indexPath.row)
     }
-
+    
 }
 
 // MARK: UISearchResultsUpdating

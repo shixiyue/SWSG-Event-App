@@ -18,9 +18,7 @@ import Firebase
  */
 class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
-    fileprivate var containerHeight: CGFloat!
-    fileprivate var containerRowIndex = 3
-    
+    // MARK: IBOutlets
     @IBOutlet private var mainImage: UIImageView!
     @IBOutlet private var ideaNameLabel: UILabel!
     @IBOutlet private var userNameLabel: UILabel!
@@ -28,9 +26,14 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     @IBOutlet private var upvoteButton: UIButton!
     @IBOutlet private var downvoteButton: UIButton!
     
+    // MARK: Properties
+    fileprivate var containerHeight: CGFloat!
+    fileprivate var containerRowIndex = 3
     private var idea: Idea!
     private var containerViewController: TemplateViewController!
     private var editButton: UIBarButtonItem?
+    
+    // MARK: Firebase References
     private var ideaRef: FIRDatabaseReference?
     private var ideaChangeRefHandle: FIRDatabaseHandle?
     
@@ -72,6 +75,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         self.idea = idea
     }
     
+    // MARK: Only the owner of the idea can edit or delete it.
     private func setUpNavigationBar() {
         guard let user = System.activeUser, user.uid == idea.user else {
             return
@@ -103,6 +107,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         userNameLabel.addGestureRecognizer(tapGesture)
     }
     
+    // MARK: Click on the main image to show full screen image
     private func setUpIdeaMainImage() {
         mainImage.image = idea.mainImage
         mainImage.isUserInteractionEnabled = true
@@ -110,6 +115,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         mainImage.addGestureRecognizer(tapGesture)
     }
     
+    // MARK: Update votes label if there's any change
     private func observeIdeaVotes() {
         guard let ideaRef = ideaRef else {
             return
@@ -170,6 +176,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         }
     }
     
+    // MARK: Click on the idea owner's name to view profile
     @objc private func showUserProfile() {
         System.client.getUserWith(uid: idea.user, completion: { (user, _) in
             guard let user = user else {
@@ -220,6 +227,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
 }
 
+// MARK: UITableViewDelegate
 extension IdeaDetailsTableViewController {
     
     override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -8,6 +8,11 @@
 
 import UIKit
 
+/**
+ PlaceholderTextView is a UITextView, inherits from UITextView.
+ 
+ It supports placeholder.
+ */
 class PlaceholderTextView: UITextView {
     
     var isEmpty: Bool {
@@ -41,6 +46,9 @@ class PlaceholderTextView: UITextView {
     
 }
 
+/**
+GrayBorderTextView is a PlaceholderTextView with gray border.
+ */
 class GrayBorderTextView: PlaceholderTextView {
     
     required init?(coder aDecoder: NSCoder) {
@@ -52,6 +60,9 @@ class GrayBorderTextView: PlaceholderTextView {
     
 }
 
+/**
+ RoundCornerButton is a round corner UIButton.
+ */
 class RoundCornerButton: UIButton {
     
     required init?(coder aDecoder: NSCoder) {
@@ -68,6 +79,9 @@ class RoundCornerButton: UIButton {
     
 }
 
+/**
+ RoundButton is a round UIButton.
+ */
 class RoundButton: UIButton {
     
     required init?(coder aDecoder: NSCoder) {

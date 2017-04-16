@@ -31,6 +31,7 @@ protocol ImagesContent: class {
 
 extension ImagesContent {
     
+    /// Loads images for the content.
     func loadImages() {
         guard let imagesURL = imagesState.imagesURL else {
             return
@@ -60,7 +61,7 @@ extension ImagesContent {
             return
         }
         imagesState.imagesHasFetched = true
-        let array = imagesState.imagesDict.sorted(by: { $0.0 < $1.0 })
+        let array = imagesState.imagesDict.sorted(by: { $0.0 < $1.0 }) // Sorts images by the id
         imagesState.imagesDict.removeAll()
         
         images = []

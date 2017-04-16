@@ -35,6 +35,7 @@ struct Message {
         self.timestamp = timestamp
         self.text = text
         self.image = image
+        checkRep()
     }
     
     init?(snapshot: FIRDataSnapshot) {
@@ -64,6 +65,7 @@ struct Message {
         if let image = snapshotValue[Config.image] as? String {
             self.image = image
         }
+        checkRep()
         
     }
     
