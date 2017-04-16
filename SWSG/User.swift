@@ -9,7 +9,25 @@
 import Foundation
 import Firebase
 
-/// `User` represents a User of SWSG App.
+/**
+ User contains the essential information about the user account, such as
+ email, type, team as well as optional values depending on the user type like
+ mentor
+ 
+ Specifications:
+ - email: The email of the User
+ - profile: The Profile of the User
+ - type: The UserType
+ - team: The User's Team
+ - mentor: Mentor Specific Variables like ConsultationSlot
+ - uid: ID for the User as assigned by Firebase
+ - favourites: An array of user IDs that have been favourited by the user
+ 
+ Representation Invariant:
+ - Email must be valid
+ - Non-Participants must not have teams
+ - If not a mentor, the Mentor variable should be nil
+ */
 class User {
     
     let email: String

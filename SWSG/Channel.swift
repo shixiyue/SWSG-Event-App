@@ -85,9 +85,11 @@ class Channel {
     }
     
     fileprivate func _checkRep() {
+        #if DEBUG
         if type != .directMessage && name == nil {
             assert(false)
         }
+        #endif
     }
     
 }

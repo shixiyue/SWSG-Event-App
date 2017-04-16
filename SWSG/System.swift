@@ -1,5 +1,9 @@
 import UIKit
 
+/**
+ System is a helper struct consisting of static functions that contains
+ important System level variables such as Active User and Caches
+ */
 struct System {
     
     static var client = FirebaseClient()

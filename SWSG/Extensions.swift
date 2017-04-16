@@ -8,6 +8,10 @@
 
 import UIKit
 
+/**
+ Extensions consists of extensions to various classes to perform additional
+ functionality
+ */
 extension UIViewController {
     
     func hideKeyboardWhenTappedAround() {

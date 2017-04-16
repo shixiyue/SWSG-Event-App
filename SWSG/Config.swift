@@ -8,6 +8,9 @@
 
 import UIKit
 
+/**
+ Config is a helper struct that consists of global level variables
+ */
 struct Config {
     
     static let noTeam = ""
@@ -110,6 +113,9 @@ struct Config {
     static let headerBuffer: CGFloat = 45
     static let scrollViewOffset: CGFloat = 300
     static let keyboardOffsetSignUp: CGFloat = 94
+    static let grayBorderColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
+    static let borderWidth: CGFloat = 1.0
+    static let cornerRadius: CGFloat = 5.0
     
     // Parameters for Storyboard:
     static let launchScreen = "LaunchScreen"
@@ -150,6 +156,7 @@ struct Config {
     static let registrationListViewController = "RegistrationListViewController"
     static let participantRegistrationViewController = "ParticipantRegistrationViewController"
     static let teamInfoTableViewController = "TeamInfoTableViewController"
+    static let photoContentViewController = "PhotoContentViewController"
     
     //Parameters for Segues:
     static let channelListToChannel = "showChannel"
@@ -211,6 +218,29 @@ struct Config {
     static let tryAgain = "Please try again"
     static let communicateFacebook = "Communicating with Facebook"
     static let communicateGoogle = "Communicating with Google"
+    static let educationPlaceholder = "(e.g. Computer Science at National University of Singapore)"
+    static let skillsPlaceholder = "(e.g. UI/UX Designer)"
+    static let descPlaceholder = "Description"
+    static let loadingData = "Loading Data..."
+    static let addPassword = "Add Password"
+    static let changePassword = "Change Password"
+    static let userNamePrefix = "@"
+    static let removeFacebookTitle = "Removed Facebook"
+    static let removeFacebookMessage = "Facebook Login has been removed from your account"
+    static let removeGoogleTitle = "Removed Google"
+    static let removeGoogleMessage = "Google Login has been removed from your account"
+    static let addPasswordMessage = "Please key in your password:"
+    static let addButtonText = "Add"
+    static let passwordPlaceholder = "Password"
+    static let ok = "OK"
+    static let cancel = "Cancel"
+    static let currentPassword = "Current Password"
+    static let newPassword = "New Password"
+    static let takePhoto = "Take a photo"
+    static let selectPhoto = "Select a photo"
+    static let defaultValue: CGFloat = 1
+    static let needOverriden = "This method must be overridden"
+    static let noCamera = "Sorry, this device has no camera"
     
     static let passwordMinLength = 6
     
