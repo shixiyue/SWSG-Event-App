@@ -132,6 +132,11 @@ class User {
         #endif
     }
     
+    // this method is for unit testing with teams only, not called elsewhere
+    func setUid(uid: String) {
+        self.uid = uid
+    }
+    
 }
 
 extension User: Equatable { }
