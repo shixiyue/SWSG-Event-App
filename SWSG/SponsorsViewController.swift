@@ -54,7 +54,7 @@ class SponsorsViewController: UIViewController, UITableViewDataSource, UITableVi
         var titleIndex = 0
         for tuple in sponsors {
             if count == index {
-                return getSponsorTitleTabelViewCell(indexPath: indexPath)
+                return getSponsorTitleTabelViewCell(indexPath: indexPath, title: tuple.title)
             }
             count += 1
             titleIndex += 1
@@ -88,17 +88,17 @@ class SponsorsViewController: UIViewController, UITableViewDataSource, UITableVi
         guard let cell = sponsorsTableView.dequeueReusableCell(withIdentifier: Config.sponsorsCell, for: indexPath) as? SponsorsTableViewCell else {
             return UITableViewCell()
         }
-        cell.setFirst(image: list[sponsorIndex].image, link: list[sponsorIndex].link)
+        cell.setFirst(image: UIImage(named: list[sponsorIndex].image), link: list[sponsorIndex].link)
         sponsorIndex += 1
         if sponsorIndex >= list.count {
             return cell
         }
-        cell.setSecond(image: list[sponsorIndex].image, link: list[sponsorIndex].link)
+        cell.setSecond(image: UIImage(named: list[sponsorIndex].image), link: list[sponsorIndex].link)
         sponsorIndex += 1
         if sponsorIndex >= list.count {
             return cell
         }
-        cell.setThird(image: list[sponsorIndex].image, link: list[sponsorIndex].link)
+        cell.setThird(image: UIImage(named: list[sponsorIndex].image), link: list[sponsorIndex].link)
         return cell
     }
     

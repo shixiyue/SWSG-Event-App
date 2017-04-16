@@ -9,6 +9,15 @@
 import Foundation
 import Firebase
 
+/**
+ Ideas is a collection of all ideas object which represents a local cache of all ideas.
+ It will also communicate with Firebase client, and update the model
+ correspondingly.
+ It follows singleton pattern.
+ 
+Specifications:
+ -ideas: A mutable [Idea] object which represents all idea
+ */
 class Ideas {
     
     var count: Int { return ideas.count }

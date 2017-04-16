@@ -8,6 +8,19 @@
 
 import Foundation
 
+/**
+ImagesState is a class to indicate whether images have been fetched or changed. 
+It helps to achieve a better performance for loading and uploading images.
+ 
+ Specifications:
+ - imagesHasChanged: Whether images have changed
+ - imagesHasFetched: Whether images have fetched
+ - imagesURL: A link to images
+ - imagesDict: Fetched images
+ 
+ Representation Invariant:
+ - None
+ */
 class ImagesState {
 
     var imagesHasChanged = true

@@ -6,6 +6,19 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+
+/**
+ ImagesContent is a protocol that represents a content which has multiple images.
+ It has some default implementation to fetch images.
+
+ Specifications:
+ - id: The ID of the content, to be used for notification
+ - images: Image Array of supplementary images as details
+ - imagesState: Store whether images have been fetched or changed
+ 
+ Representation Invariant:
+ - None
+ */
 protocol ImagesContent: class {
     associatedtype State: ImagesState
     
