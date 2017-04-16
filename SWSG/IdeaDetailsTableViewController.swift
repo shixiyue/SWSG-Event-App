@@ -32,7 +32,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         
         setUpNavigationBar()
         setUpIdea()
-        observeIdeas()
+        observeIdeaVotes()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -100,7 +100,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
         mainImage.addGestureRecognizer(tapGesture)
     }
     
-    private func observeIdeas() {
+    private func observeIdeaVotes() {
         guard let ideaRef = ideaRef else {
             return
         }

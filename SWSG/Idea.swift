@@ -26,10 +26,6 @@ class Idea: ImagesContent, TemplateContent {
     fileprivate var upvotes = Set<String>()
     fileprivate var downvotes = Set<String>()
 
-    private var done = false
-    private var imagesURL: [String: String]?
-    private var imagesDict = [String: UIImage]()
-
     init(name: String, user: String, description: String, mainImage: UIImage, images: [UIImage], videoLink: String, id: String? = nil) {
 
         self.name = name
@@ -175,7 +171,9 @@ class Idea: ImagesContent, TemplateContent {
     }
     
     private func _checkRep() {
+        #if DEBUG
         assert(upvotes.intersection(downvotes).isEmpty)
+        #endif
     }
     
 }

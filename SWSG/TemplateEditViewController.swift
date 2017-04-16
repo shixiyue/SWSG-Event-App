@@ -85,7 +85,6 @@ class TemplateEditViewController: UITableViewController {
     }
     
     @objc private func done(_ notification: NSNotification) {
-        print(true)
         doneButton.isEnabled = true
         doneButton.alpha = 1
         guard let isSuccess = notification.userInfo?[Config.isSuccess] as? Bool, isSuccess else {

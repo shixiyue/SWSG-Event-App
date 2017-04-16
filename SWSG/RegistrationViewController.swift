@@ -83,7 +83,6 @@ class RegistrationViewController: UIViewController {
         let registeredUsersRef = registrationEventRef?.child(Config.registeredUsers)
         
         rUserAddedHandle = registeredUsersRef?.observe(.childAdded, with: { (snapshot) in
-            print(snapshot)
             guard let id = snapshot.value as? String else {
                 return
             }
