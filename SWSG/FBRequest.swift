@@ -8,6 +8,14 @@
 
 import FacebookCore
 
+/**
+ FBRequest is a struct that helps with the request and deserialization of data
+ from the Facebook API
+ 
+ Specifications:
+ - Directly accesses the Facebook Access Token that is valid only if user logged in
+ - Response contains a SocialUser with the deserialized data.
+ */
 struct FBRequest: GraphRequestProtocol {
     struct Response: GraphResponseProtocol {
         let user: SocialUser?

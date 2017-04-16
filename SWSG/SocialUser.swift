@@ -9,6 +9,16 @@
 import Foundation
 import GoogleSignIn
 
+/**
+ SocialUser is a struct that helps with the request and deserialization of data
+ from Social Media, both Facebook and Goodl
+ 
+ Specifications:
+ - id: ID for the respective Social Media account
+ - name: Name on the Social Media Account
+ - email: Email from the Social Media Account
+ - type: AuthType representing who is the Authentication Provider (FB, Google etc.)
+ */
 struct SocialUser {
     var id: String
     var name: String
