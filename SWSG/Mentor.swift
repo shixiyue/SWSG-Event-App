@@ -8,6 +8,13 @@
 
 import Foundation
 
+/**
+ Mentor is a class used to hold mentor specific variables in User
+ 
+ Specifications:
+ - days: An Array of Consultation Dates that contain Consultation Slots
+ - field: Field an enum of work fields, user to group related mentors together by field
+ */
 class Mentor {
     var days = [ConsultationDate]()
     var field: Field
@@ -37,6 +44,8 @@ class Mentor {
         self.days = self.days.sorted(by: { $0.date < $1.date })
     }
     
+    //Automatically add slots on a single day from the default start to end time in Config
+    //at 1 hour intervals
     func addSlots(on date: Date) {
         var day = ConsultationDate(on: date)
         

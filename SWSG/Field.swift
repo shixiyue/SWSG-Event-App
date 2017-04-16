@@ -8,6 +8,9 @@
 
 import Foundation
 
+/**
+ Field is an enum that represents the field of a Mentor
+ */
 enum Field: String {
     case business
     case finance

@@ -161,7 +161,7 @@ class RegistrationViewController: UIViewController {
                 return
             }
             
-            registrationEvent.registerUser(uid: uid)
+            registrationEvent.registeredUsers.append(uid)
             
             System.client.editRegistrationEvent(rEvent: registrationEvent, completion: { (error) in
                 

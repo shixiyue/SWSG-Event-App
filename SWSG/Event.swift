@@ -9,8 +9,21 @@
 import UIKit
 import Firebase
 
+/**
+ Event is a class used to represent a Events in the Events System
+ 
+ Specifications:
+ - id: ID of the Event as given by Firebase
+ - image: Image Icon for the Event
+ - name: Name of the Event
+ - startDateTime: Date for the start of the event
+ - endDateTime: Date for the end of the event
+ - shortDesc: A Short Description to display on the List/Calendar View
+ - description: A Full Description to display in the Details View
+ - venue: Vanue for the Event
+ - comments: An Array of comments for that event
+ */
 class Event {
-    
     var id: String?
     var image: UIImage?
     var name : String

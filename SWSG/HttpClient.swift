@@ -54,17 +54,17 @@ class HttpClient {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             // check for fundamental networking error
             guard let data = data, error == nil else {
-                completion(nil, .networkError)
+                completion?(nil, .networkError)
                 return
             }
             
             // check for http errors
             if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
-                completion(nil, .httpError)
+                completion?(nil, .httpError)
             }
             
             let responseString = String(data: data, encoding: .utf8)
-            completion(responseString, nil)
+            completion?(responseString, nil)
         }
         
         task.resume()

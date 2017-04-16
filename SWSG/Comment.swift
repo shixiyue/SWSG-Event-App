@@ -9,6 +9,14 @@
 import Foundation
 import Firebase
 
+/**
+ Comment is a class used to represent a Comment in an Event
+ 
+ Specifications:
+ - authorID: User ID of the User who posted the comment
+ - timestamp: Date that the timestamp was posted
+ - text: Contents of the Comment
+ */
 class Comment {
     
     var authorID: String

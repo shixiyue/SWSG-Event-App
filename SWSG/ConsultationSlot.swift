@@ -8,9 +8,25 @@
 
 import Foundation
 
+/**
+ ConsultationSlot is a struct used to hold details about a Consultation Slot
+ for a Mentor within ConsultationDate
+ 
+ Specifications:
+ - startDateTime: The Date when the slot starts
+ - status: An enum of ConsultationSlotStatus detailing the status of the slot
+ - team: If booked, it is the Team ID of the team that booked it
+ 
+ Representation Invariant:
+ - If the slot is booked, it should have a team ID
+ */
 struct ConsultationSlot {
     var startDateTime: Date
-    var status: ConsultationSlotStatus
+    var status: ConsultationSlotStatus {
+        willSet(newStatus) {
+            _checkRep()
+        }
+    }
     var team: String?
     
     init(start date: Date, status: ConsultationSlotStatus) {
@@ -30,6 +46,8 @@ struct ConsultationSlot {
             return nil
         }
         self.status = status
+        
+        _checkRep()
     }
     
     func toDictionary() -> [String: Any] {
@@ -40,5 +58,11 @@ struct ConsultationSlot {
         }
         
         return dict
+    }
+    
+    fileprivate func _checkRep() {
+        if status == .booked && team == nil {
+            assert(false)
+        }
     }
 }

@@ -9,6 +9,15 @@
 import Foundation
 import Firebase
 
+/**
+ RegistrationEvent is a class that represents a Registration Event in the
+ Registration System
+ 
+ Specifications:
+ - id: ID of the Registration Event as assigned by Firebase
+ - name: Name of the Registration Event
+ - registeredUsers: Array of user IDs who have been registered for that event
+ */
 class RegistrationEvent {
     var id: String?
     var name: String
@@ -37,10 +46,6 @@ class RegistrationEvent {
             self.registeredUsers = [String]()
         }
         
-    }
-    
-    func registerUser(uid: String) {
-        registeredUsers.append(uid)
     }
     
     func toDictionary() -> [String: Any] {

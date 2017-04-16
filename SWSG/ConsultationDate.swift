@@ -8,6 +8,14 @@
 
 import Foundation
 
+/**
+ ConsultationDate is a struct within Mentor used to hold information about
+ ConsultationSlots for a day
+ 
+ Specifications:
+ - date: Date whose ConsultationSlots are contained
+ - slots: An array of ConsultationSlots for the day
+ */
 struct ConsultationDate {
     var date: Date
     var slots = [ConsultationSlot]()
