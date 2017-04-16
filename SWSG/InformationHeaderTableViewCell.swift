@@ -16,6 +16,7 @@ import UIKit
  */
 class InformationHeaderTableViewCell: UITableViewCell {
 
+    // MARK: IBOutlets
     @IBOutlet private var informationHeader: UILabel!
     
     func setHeader(_ text: String) {

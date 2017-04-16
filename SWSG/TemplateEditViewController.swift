@@ -15,8 +15,10 @@ import UIKit
  */
 class TemplateEditViewController: UITableViewController {
 
+    // MARK: IBOutlet
     @IBOutlet private var editTemplateTableView: UITableView!
     
+    // MARK: Property
     var descriptionTextView: UITextView = UITextView()
     
     private var imagePicker = ImagePickerPopoverViewController()
@@ -74,6 +76,7 @@ class TemplateEditViewController: UITableViewController {
         })
     }
     
+    // MARK: Delete an image
     @IBAction func deleteImage(_ sender: UIButton) {
         guard let superview = sender.superview, let cell = superview.superview as? UITableViewCell, let indexPath = editTemplateTableView.indexPath(for: cell) else {
             return
@@ -85,12 +88,13 @@ class TemplateEditViewController: UITableViewController {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Config.reload), object: nil, userInfo: [Config.height: editTemplateTableView.contentSize.height])
     }
     
+    // MARK: Finish editing
     @IBAction func update(_ sender: UIButton) {
         guard let description = descriptionTextView.text, let videoId = videoLinkTextField.text else {
             return
         }
         
-        doneButton = sender
+        doneButton = sender // Disable the button to prevent the user from tapping the button multiple time and creating multple entries
         doneButton.isEnabled = false
         doneButton.alpha = Config.disableAlpha
         
@@ -99,6 +103,7 @@ class TemplateEditViewController: UITableViewController {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Config.update), object: nil, userInfo: infoDict)
     }
     
+    /// Backs to previous page if the result is successful. Otherwise remain on the same page.
     @objc private func done(_ notification: NSNotification) {
         doneButton.isEnabled = true
         doneButton.alpha = Config.enableAlpha
@@ -115,6 +120,7 @@ class TemplateEditViewController: UITableViewController {
     
 }
 
+// MARK: UITableViewDelegate and UITableViewDataSource
 extension TemplateEditViewController {
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {

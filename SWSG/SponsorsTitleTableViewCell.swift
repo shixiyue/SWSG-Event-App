@@ -10,6 +10,7 @@ import UIKit
 
 class SponsorsTitleTableViewCell: UITableViewCell {
 
+    // MARK: Properties
     @IBOutlet private var title: UILabel!
     
     func setSponsorTitle(_ title: String) {

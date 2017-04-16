@@ -8,6 +8,12 @@
 
 import UIKit
 
+/**
+ PhotoTableViewCell is a UITableViewCell that is used in TemplateEditViewController
+ to display a photo.
+ 
+ It has a Photo Image View.
+ */
 class PhotoTableViewCell: UITableViewCell {
 
     @IBOutlet var photoView: UIImageView!

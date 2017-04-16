@@ -8,10 +8,17 @@
 
 import UIKit
 
+/**
+ PhotoContentViewController is a UIViewController.
+ 
+ It is a page in PhotoPageViewController and contain a photo
+ */
 class PhotoContentViewController: UIViewController {
     
+    // MARK: IBOutlet
     @IBOutlet private var imageView: UIImageView!
     
+    // MARK: Property
     private var image: UIImage!
 
     override func viewDidLoad() {

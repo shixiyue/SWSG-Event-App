@@ -17,6 +17,7 @@ import UIKit
  */
 class OverviewViewController: FullScreenImageTableViewController {
     
+    // MARK: Properties
     private var overview = OverviewContent() // Placeholder
     
     private var containerViewController: TemplateViewController!
@@ -30,6 +31,7 @@ class OverviewViewController: FullScreenImageTableViewController {
         observeOverviewContent()
     }
     
+    // MARK: Observer Overview Content
     private func observeOverviewContent() {
         let overviewRef = System.client.getOverviewRef()
         overviewRef.observeSingleEvent(of : .value, with : {(snapshot) in
@@ -100,6 +102,7 @@ class OverviewViewController: FullScreenImageTableViewController {
 
 }
 
+// MARK: UITableViewDelegate
 extension OverviewViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

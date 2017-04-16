@@ -8,6 +8,9 @@
 
 import UIKit
 
+/**
+ FullScreenImageViewController is a UIViewController. It can display a image full screen.
+ */
 class FullScreenImageViewController: UIViewController {
     
     override func viewDidLoad() {

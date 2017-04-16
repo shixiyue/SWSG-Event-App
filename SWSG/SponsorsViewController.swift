@@ -10,7 +10,9 @@ import UIKit
 
 class SponsorsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    // MARK: IBOutlets
     @IBOutlet private var sponsorsTableView: UITableView!
+    // MARK: Properties
     var sponsors: [(title: String, list: [(image: String, link: String)])]  { return SponsorsInfo.sponsors }
     
     override func viewDidLoad() {

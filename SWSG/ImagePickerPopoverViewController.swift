@@ -8,6 +8,9 @@
 
 import UIKit
 
+/**
+ ImagePickerPopoverViewController is a ImagePickerViewController.
+ */
 class ImagePickerPopoverViewController: ImagePickerViewController {
     
     var image: UIImage?

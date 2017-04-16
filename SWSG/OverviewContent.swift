@@ -23,7 +23,7 @@ import Firebase
  */
 class OverviewContent: ImagesContent, TemplateContent {
     
-    var id: String? = "overview"
+    var id: String? = Config.overview
     public private(set) var description: String = Config.defaultContent
     public private(set) var videoLink: String = Config.emptyString
     

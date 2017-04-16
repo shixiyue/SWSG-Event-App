@@ -14,16 +14,17 @@ import UIKit
  It provides a template layout to display information.
  */
 class TemplateViewController: UITableViewController {
-    
-    private let imagesRowIndex = 1
-    private let videoRowIndex = 2
 
+    // MARK: IBOutlet
     @IBOutlet private var templateTableView: UITableView!
     @IBOutlet private var descriptionLabel: UILabel!
     @IBOutlet private var video: UIWebView!
     
-    private var content: TemplateContent!
-    private var photoPageViewController: PhotoPageViewController!
+    // MARK: Property
+    fileprivate let imagesRowIndex = 1
+    fileprivate let videoRowIndex = 2
+    fileprivate var content: TemplateContent!
+    fileprivate var photoPageViewController: PhotoPageViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +68,18 @@ class TemplateViewController: UITableViewController {
         templateTableView.reloadData()
     }
     
+    private func loadYoutube() {
+        guard let youtubeURL = URL(string: content.videoLink) else {
+            return
+        }
+        video.loadRequest(URLRequest(url: youtubeURL))
+    }
+
+}
+
+// MARK: UITableViewDelegate
+extension TemplateViewController {
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.row == imagesRowIndex && content.images.count == 0) || (indexPath.row == videoRowIndex && content.videoLink.isEmpty) {
             return 0
@@ -78,11 +91,4 @@ class TemplateViewController: UITableViewController {
         return UITableViewAutomaticDimension
     }
     
-    private func loadYoutube() {
-        guard let youtubeURL = URL(string: content.videoLink) else {
-            return
-        }
-        video.loadRequest(URLRequest(url: youtubeURL))
-    }
-
 }

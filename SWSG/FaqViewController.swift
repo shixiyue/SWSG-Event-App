@@ -18,8 +18,10 @@ import Firebase
  */
 class FaqViewController: UIViewController {
     
+    // MARK: IBOutlet
     @IBOutlet private var faqTableView: UITableView!
     
+    // MARK: Properties
     fileprivate var faqs = Faqs()
     fileprivate var faqInfo: [Faq]!
     
@@ -60,6 +62,7 @@ class FaqViewController: UIViewController {
     
 }
 
+// MARK: UITableViewDelegate and UITabelViewDataSource
 extension FaqViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {

@@ -16,6 +16,7 @@ import UIKit
  */
 class InformationCell: UITableViewCell {
     
+    // MARK: IBOutlets
     @IBOutlet private var icon: UIImageView!
     @IBOutlet private var name: UILabel!
     

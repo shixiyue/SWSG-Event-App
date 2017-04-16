@@ -18,10 +18,11 @@ import Firebase
  */
 class PeopleViewController: FullScreenImageViewController {
     
-    var category: String!
-    
+    // MARK: IBOutlet
     @IBOutlet fileprivate var peopleTableView: UITableView!
     
+    // MARK: Properties
+    var category: String!
     fileprivate var people = People.getPeopleInstance()
     fileprivate var peopleInCategory: [Person]!
 
@@ -76,6 +77,7 @@ class PeopleViewController: FullScreenImageViewController {
     }
 }
 
+// MARK: UITableViewDelegate and UITableViewDataSource
 extension PeopleViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
