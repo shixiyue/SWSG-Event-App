@@ -103,12 +103,17 @@ class User {
         return dict
     }
     
-    internal func _checkRep() {
-        // Assumption: type, profile and team have met their representation invariants.
+    // Assumption: type, profile and team have met their representation invariants.
+    private func _checkRep() {
+        #if DEBUG
         assert (Utility.isValidEmail(testStr: email))
         if !type.isParticipant {
             assert(team == Config.noTeam)
         }
+        if !type.isMentor {
+            assert(mentor == nil)
+        }
+        #endif
     }
     
 }

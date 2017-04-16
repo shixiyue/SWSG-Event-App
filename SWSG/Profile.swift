@@ -111,6 +111,8 @@ class Profile {
     }
     
     private func _checkRep() {
+        #if DEBUG
         assert(!(name.isEmpty || country.isEmpty || job.isEmpty || company.isEmpty || education.isEmpty || skills.isEmpty || desc.isEmpty))
+        #endif
     }
 }
