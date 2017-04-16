@@ -742,5 +742,14 @@ struct Utility {
         let videoLink = videoId.trimTrailingWhiteSpace().isEmpty ? Config.emptyString : Config.youtubePrefix + videoId
         return videoLink
     }
+    
+    static func showSwiftSpinnerErrorMsg() {
+        let title = Config.unexpectedError
+        let message = Config.tryAgain
+        SwiftSpinner.show(title, animated: false).addTapHandler({
+            SwiftSpinner.hide({
+            })
+        }, subtitle: message)
+    }
 
 }

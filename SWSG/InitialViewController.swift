@@ -102,26 +102,18 @@ class InitialViewController: UIViewController {
         })
     }
     
-    fileprivate func showErrorMsg() {
-        let title = Config.unexpectedError
-        let message = Config.tryAgain
-        SwiftSpinner.show(title, animated: false).addTapHandler({
-            SwiftSpinner.hide({
-            })
-        }, subtitle: message)
-    }
 }
 
 extension InitialViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     
-    public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        if error == nil {
-            SwiftSpinner.show(Config.communicateGoogle)
-            let user = SocialUser(gUser: user)
-            self.attemptLogin(email: user.email, user: user, auth: .google)
-        } else {
-            self.showErrorMsg()
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        guard error == nil else {
+            Utility.showSwiftSpinnerErrorMsg()
+            return
         }
+        SwiftSpinner.show(Config.communicateGoogle)
+        let user = SocialUser(gUser: user)
+        attemptLogin(email: user.email, user: user, auth: .google)
     }
 }
 
@@ -132,7 +124,7 @@ extension InitialViewController: LoginButtonDelegate {
         SwiftSpinner.show(Config.communicateFacebook)
         client.getFBProfile(completion: { (user, error) in
             guard let user = user else {
-                self.showErrorMsg()
+                Utility.showSwiftSpinnerErrorMsg()
                 return
             }
             

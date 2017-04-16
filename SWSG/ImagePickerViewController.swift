@@ -16,7 +16,7 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         imagePicker.delegate = self
-        alertControllerPosition =  CGPoint(x: view.frame.width / 2, y: view.frame.height - 300)
+        alertControllerPosition =  CGPoint(x: view.frame.width / 2, y: view.frame.height)
     }
     
     func showImageOptions() {

@@ -178,8 +178,8 @@ class SignUpTableViewController: UIViewController {
         Utility.attemptRegistration(email: email, auth: .email, newCredential: nil, viewController: self, completion: { (exists, arr) in
             
             if let arr = arr {
-                let title = "Already Exists"
-                let message = "User with Email already exists, please log in with the original client first."
+                let title = Config.emailExists
+                let message = Config.logInWithOriginal
                 Utility.displayDismissivePopup(title: title, message: message, viewController: self, completion: { () in
                     
                     self.currentCredential = System.client.getEmailCredential(email: email, password: password)
