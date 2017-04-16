@@ -253,11 +253,10 @@ extension EventCalendarViewController: JTAppleCalendarViewDataSource, JTAppleCal
         cell.dayLabel.text = cellState.text
         cell.dot.layer.cornerRadius = 5
         cell.dot.backgroundColor = Config.themeColor
-        //cell.dot.layer.cornerRadius = cell.frame.width / 2
+        
         if events.keys.contains(date) {
             cell.dot.isHidden = false
         } else {
-            //  print("does not contain date \(Date.date(from: Date.toString(date: date)))")
             cell.dot.isHidden = true
         }
         

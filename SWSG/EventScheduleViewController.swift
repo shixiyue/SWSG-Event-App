@@ -7,9 +7,9 @@
 //
 
 //Note: Unused
-
-import UIKit
 /*
+import UIKit
+
 class EventScheduleViewController: UIViewController {
     var date : Date?
     var events = Events.sharedInstance()

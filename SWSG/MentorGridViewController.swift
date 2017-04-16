@@ -88,13 +88,11 @@ class MentorGridViewController: BaseViewController {
             self.mentors = [User]()
             for mentorData in snapshot.children {
                 guard let mentorSnapshot = mentorData as? FIRDataSnapshot,
-                    let mentorAcct = User(snapshot: mentorSnapshot) else {
+                    let mentorAcct = User(uid: mentorSnapshot.key, snapshot: mentorSnapshot) else {
                     continue
                 }
-                let uid = mentorSnapshot.key
-                mentorAcct.setUid(uid: uid)
                 
-                Utility.getProfileImg(uid: uid, completion: { (image) in
+                Utility.getProfileImg(uid: mentorSnapshot.key, completion: { (image) in
                     mentorAcct.profile.updateImage(image: image)
                     self.mentorCollection.reloadData()
                 })

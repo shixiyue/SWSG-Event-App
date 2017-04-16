@@ -229,11 +229,10 @@ class FirebaseClient {
         mentorRef.observeSingleEvent(of: .value, with: {(snapshot) in
             var mentors = [User]()
             for mentor in snapshot.children {
-                guard let mentor = mentor as? FIRDataSnapshot, let user = User(snapshot: mentor) else {
+                guard let mentor = mentor as? FIRDataSnapshot, let user = User(uid: mentor.key, snapshot: mentor) else {
                     continue
                 }
                 
-                user.setUid(uid: mentor.key)
                 mentors.append(user)
             }
             completion(mentors, nil)
@@ -265,11 +264,10 @@ class FirebaseClient {
         let userRef = usersRef.child(uid)
         // TODO: handle error
         userRef.observeSingleEvent(of: .value, with: {(snapshot) in
-            guard let user = User(snapshot: snapshot) else {
+            guard let user = User(uid: uid, snapshot: snapshot) else {
                 completion(nil, nil)
                 return
             }
-            user.setUid(uid: uid)
             completion(user, nil)
         })
     }
@@ -284,11 +282,10 @@ class FirebaseClient {
                 var userAcct: User?
                 for userSnapshot in snapshot.children {
                     guard let userSnapshot = userSnapshot as? FIRDataSnapshot,
-                        let user = User(snapshot: userSnapshot) else {
+                        let user = User(uid: userSnapshot.key, snapshot: userSnapshot) else {
                         continue
                     }
                     
-                    user.setUid(uid: userSnapshot.key)
                     userAcct = user
                 }
                 

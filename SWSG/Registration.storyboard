@@ -100,8 +100,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Display this QR Code to Organizers" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RWd-hp-0gW">
-                                <rect key="frame" x="27" y="72" width="322" height="34"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Digital Pass" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RWd-hp-0gW">
+                                <rect key="frame" x="112.5" y="72" width="151" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="8rT-7t-2A0"/>
                                 </constraints>
@@ -118,11 +118,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="5DB-Db-mC1" firstAttribute="leading" secondItem="Aty-kB-O3Q" secondAttribute="leading" id="GK1-Tz-KGq"/>
                             <constraint firstItem="RWd-hp-0gW" firstAttribute="centerX" secondItem="Aty-kB-O3Q" secondAttribute="centerX" id="H6o-W2-aj3"/>
+                            <constraint firstItem="5DB-Db-mC1" firstAttribute="top" secondItem="RWd-hp-0gW" secondAttribute="bottom" constant="40" id="Vqg-Oz-tyh"/>
                             <constraint firstItem="5DB-Db-mC1" firstAttribute="centerY" secondItem="Aty-kB-O3Q" secondAttribute="centerY" id="Y9c-td-Dze"/>
                             <constraint firstItem="5DB-Db-mC1" firstAttribute="centerX" secondItem="Aty-kB-O3Q" secondAttribute="centerX" id="a3k-aP-YRz"/>
-                            <constraint firstAttribute="trailing" secondItem="5DB-Db-mC1" secondAttribute="trailing" id="fHU-qY-Ore"/>
                             <constraint firstItem="RWd-hp-0gW" firstAttribute="top" secondItem="DaW-tD-0oE" secondAttribute="bottom" constant="8" id="gO5-t2-gmD"/>
                         </constraints>
                     </view>

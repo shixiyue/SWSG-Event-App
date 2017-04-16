@@ -71,11 +71,10 @@ class ProfileViewController: ImagePickerViewController, UIGestureRecognizerDeleg
         
         userRef = System.client.getUserRef(for: uid)
         userExistingHandle = userRef?.observe(.value, with: { (snapshot) in
-            guard let user = User(snapshot: snapshot) else {
+            guard let user = User(uid: uid, snapshot: snapshot) else {
                 return
             }
             
-            user.setUid(uid: uid)
             self.user = user
             self.setUpUserInfo()
             self.profileList.reloadData()

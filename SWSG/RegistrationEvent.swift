@@ -23,7 +23,6 @@ class RegistrationEvent {
         self.id = id
         
         guard let snapshot = snapshot.value as? [String: Any] else {
-            print("test2")
             return nil
         }
         

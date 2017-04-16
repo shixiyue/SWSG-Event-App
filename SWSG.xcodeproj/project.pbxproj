@@ -137,7 +137,6 @@
 		E3220C311E7A3B99008AFA85 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C301E7A3B99008AFA85 /* Event.swift */; };
 		E3220C331E7A62F9008AFA85 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C321E7A62F9008AFA85 /* Events.swift */; };
 		E3220C351E7A8D0B008AFA85 /* EventDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */; };
-		E3220C3B1E7AE387008AFA85 /* EventImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C3A1E7AE387008AFA85 /* EventImageTableViewCell.swift */; };
 		E3220C3D1E7AE39D008AFA85 /* EventTimeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C3C1E7AE39D008AFA85 /* EventTimeTableViewCell.swift */; };
 		E3220C3F1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C3E1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift */; };
 		E3220C411E7AE3C6008AFA85 /* EventDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3220C401E7AE3C6008AFA85 /* EventDetailTableViewCell.swift */; };
@@ -346,7 +345,6 @@
 		E3220C301E7A3B99008AFA85 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = SWSG/Event.swift; sourceTree = SOURCE_ROOT; };
 		E3220C321E7A62F9008AFA85 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		E3220C341E7A8D0B008AFA85 /* EventDetailsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailsTableViewController.swift; sourceTree = "<group>"; };
-		E3220C3A1E7AE387008AFA85 /* EventImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventImageTableViewCell.swift; sourceTree = "<group>"; };
 		E3220C3C1E7AE39D008AFA85 /* EventTimeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTimeTableViewCell.swift; sourceTree = "<group>"; };
 		E3220C3E1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventVenueTableViewCell.swift; sourceTree = "<group>"; };
 		E3220C401E7AE3C6008AFA85 /* EventDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailTableViewCell.swift; sourceTree = "<group>"; };
@@ -468,12 +466,14 @@
 			path = SWSG;
 			sourceTree = "<group>";
 		};
-		3F178FF11E99068400057929 /* Backend */ = {
+		3F178FF11E99068400057929 /* Social Media */ = {
 			isa = PBXGroup;
 			children = (
 				3F178FF21E99069E00057929 /* FBRequest.swift */,
+				3F178FEF1E98D7A600057929 /* SocialUser.swift */,
+				3F20D4B41E9A37070082146B /* AuthType.swift */,
 			);
-			name = Backend;
+			name = "Social Media";
 			sourceTree = "<group>";
 		};
 		3F408CC51E83BE6B00E2B787 /* Chat */ = {
@@ -543,8 +543,6 @@
 				3F9482B01E7E3DDC00016259 /* Profile.swift */,
 				3F9482B11E7E3DDC00016259 /* User.swift */,
 				E3220C461E7B9776008AFA85 /* UserTypes.swift */,
-				3F178FEF1E98D7A600057929 /* SocialUser.swift */,
-				3F20D4B41E9A37070082146B /* AuthType.swift */,
 			);
 			name = Users;
 			sourceTree = "<group>";
@@ -589,7 +587,6 @@
 		3FED302A1E77A5F300C007AD /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				3F178FF11E99068400057929 /* Backend */,
 				3F408CCC1E83C1D900E2B787 /* Chat */,
 				3FF653071E9A825C00B9E64F /* Events */,
 				CC6CB12E1E90FC2F00C71793 /* Idea */,
@@ -597,6 +594,7 @@
 				3F9795661E7A9005004BC26C /* Mentor */,
 				3FEE49DF1E9F580100DC4EE1 /* Registration */,
 				C2A8A6881E9B0F43008D50BC /* PushNotification */,
+				3F178FF11E99068400057929 /* Social Media */,
 				3F9795671E7A9010004BC26C /* Users */,
 			);
 			name = Model;
@@ -644,7 +642,6 @@
 				E348D5771E895D7C00947B3F /* CalendarCell.swift */,
 				E348D57F1E8A830900947B3F /* CalendarHeaderView.swift */,
 				E3220C2C1E796CB8008AFA85 /* EventScheduleTableViewCell.swift */,
-				E3220C3A1E7AE387008AFA85 /* EventImageTableViewCell.swift */,
 				E3220C3C1E7AE39D008AFA85 /* EventTimeTableViewCell.swift */,
 				E3220C3E1E7AE3A9008AFA85 /* EventVenueTableViewCell.swift */,
 				E3220C401E7AE3C6008AFA85 /* EventDetailTableViewCell.swift */,
@@ -1154,7 +1151,6 @@
 				E3220C3D1E7AE39D008AFA85 /* EventTimeTableViewCell.swift in Sources */,
 				3F3284231E92185B0062490D /* MultiDirectionCollectionViewLayout.swift in Sources */,
 				3F12AFCD1E711CBB00B26D67 /* HomeViewController.swift in Sources */,
-				E3220C3B1E7AE387008AFA85 /* EventImageTableViewCell.swift in Sources */,
 				3FEE49E11E9F582100DC4EE1 /* RegistrationEvent.swift in Sources */,
 				CC18E1921E9A722400BE8B67 /* ImagePickCropperPopoverViewController.swift in Sources */,
 				E3220C671E7D385B008AFA85 /* TeamRegistrationTableViewController.swift in Sources */,
