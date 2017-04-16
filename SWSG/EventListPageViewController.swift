@@ -7,9 +7,9 @@
 //
 
 //Note: Unused
-
-import UIKit
 /*
+import UIKit
+
 class EventListPageViewController: UIPageViewController {
     
     var startDate: Date?

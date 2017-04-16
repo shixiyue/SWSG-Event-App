@@ -6,6 +6,10 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ This class display event header
+ */
+
 import UIKit
 
 class EventHeaderTableViewCell: UITableViewCell {

@@ -6,6 +6,9 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ this class display event detail
+ */
 import UIKit
 
 class EventDetailTableViewCell: UITableViewCell {

@@ -6,6 +6,11 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ TeamItemTableViewCell inherits from UITableViewCell, it represents the team's name, looking for skills, 
+ and member images.
+ */
+
 import UIKit
 
 class TeamItemTableViewCell: UITableViewCell {

@@ -6,10 +6,16 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ TeamCreateTableViewController inherits from UITableViewController, it is responsible for creating the team, also reused for team editing
+ 
+ -SeeAlso: `TeamEditViewController`
+ */
+
 import UIKit
 
 class TeamCreateTableViewController: UITableViewController {
-
+    //IB outlets
     @IBOutlet weak var teamName: UITextField!
     @IBOutlet weak var lookingFor: PlaceholderTextView!
     @IBOutlet weak var tag: UITextField!
@@ -23,7 +29,7 @@ class TeamCreateTableViewController: UITableViewController {
         }
     }
     fileprivate var sizingCell: TagCell?
-    
+    // error messages
     fileprivate let teamCreateErrorMsg = "Sorry, only participants of SWSG can create a team!"
     fileprivate let emptyFieldErrorMsg = "Fields cannot be empty!"
     fileprivate let mtplTeamErrorMsg = "You can not join more than 1 team!"
@@ -75,6 +81,8 @@ class TeamCreateTableViewController: UITableViewController {
         lookingFor.inputAccessoryView = Utility.getDoneToolbar(done: #selector(donePressed))
     }
     
+    /// Create the team and update on database
+    /// Set user teamId, add current user to team members list
     @IBAction func onDoneButtonClick(_ sender: Any) {
         guard System.client.isConnected else {
             present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
@@ -129,6 +137,7 @@ class TeamCreateTableViewController: UITableViewController {
         self.view.endEditing(true)
     }
     
+    ///Check to ensure that no duplicate tags exist
     private func checkForTagDuplicates(tag: String) -> Bool {
         return tags.contains(tag)
     }
@@ -180,6 +189,7 @@ extension TeamCreateTableViewController: UICollectionViewDataSource {
         cell.tagName.text = tag
     }
     
+    ///delete the tag and update on collectionview
    @objc private func deleteTag(sender: UIButton) {
         let index = sender.layer.value(forKey: "tagIndex") as! Int
         tags.remove(at: index)

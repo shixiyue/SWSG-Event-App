@@ -6,13 +6,25 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ TeamInfoTableViewController inherits from UITableViewController, which is responsible for displaying the team information
+ 
+ -Note: 
+     - Tap on chat button on navigation bar to chat in team
+     - Tap on `Edit` button on navigation bar to edit the team if you belong to that team
+     - Tap on any team member cell to view member profile
+ -SeeAlso: `Team`,`TagCell`,`TeamItemTableViewCell`,`SectionHeaderTableViewCell`
+ */
+
 import UIKit
 import Firebase
 
 class TeamInfoTableViewController: UITableViewController {
-    
+    //IB outlets
     @IBOutlet weak var buttonLbl: UIButton!
     @IBOutlet weak var chatBtn: UIBarButtonItem!
+    @IBOutlet weak var joinView: UIView!
+    @IBOutlet weak var editBtn: UIBarButtonItem!
     
     var team : Team?
     fileprivate var teamId : String?
@@ -20,10 +32,12 @@ class TeamInfoTableViewController: UITableViewController {
     
     private let teams = Teams()
     
+    //handling error message
     private let joinTeamErrorMsg = "You can not join more than one team"
     private let quitTeamErrorMsg = "You do not belong to this team"
     private let fullTeamErrorMsg = "Team is full"
     
+    //firebase handling variables
     private var teamRef: FIRDatabaseReference!
     private var teamChangedHandle: FIRDatabaseHandle?
     
@@ -33,11 +47,10 @@ class TeamInfoTableViewController: UITableViewController {
         }
     }
     
-    @IBOutlet weak var joinView: UIView!
-    
     @IBAction func onBackButtonClick(_ sender: Any) {
         Utility.onBackButtonClick(tableViewController: self)
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         guard let user = System.activeUser, user.type.isParticipant, let team = team else {
             return
@@ -45,12 +58,15 @@ class TeamInfoTableViewController: UITableViewController {
         if team.containsMember(member: user) {
             buttonLbl.setTitle(Config.quitTeam, for: .normal)
             chatBtn.isEnabled = true
+            editBtn.isEnabled = true
         } else if team.members.count < Config.maxTeamMember {
             buttonLbl.setTitle(Config.joinTeam, for: .normal)
             chatBtn.isEnabled = false
+            editBtn.isEnabled = false
         } else {
             buttonLbl.setTitle(Config.fullTeam, for: .normal)
             chatBtn.isEnabled = false
+            editBtn.isEnabled = false
         }
     }
     
@@ -61,18 +77,15 @@ class TeamInfoTableViewController: UITableViewController {
         if let team = team {
             self.title = team.name
         }
-        
         guard let user = System.activeUser, let rBBItems = self.navigationItem.rightBarButtonItems,
             let team = team else {
                 return
         }
-        
         for (index, item) in rBBItems.enumerated() {
             if item.tag == 1 && !team.containsMember(member: user) {
                 self.navigationItem.rightBarButtonItems?.remove(at: index)
             }
         }
-        
         setUpLayout()
         observeEvents()
     }
@@ -120,6 +133,8 @@ class TeamInfoTableViewController: UITableViewController {
         self.performSegue(withIdentifier: "teamEdit", sender: team)
     }
     
+    ///handles the creation or deletion of a team from the database, on `Request to Join` or `Quit team` button tapped
+    ///Update team members list and user team id
     @IBAction func onRqtToJoinButtonTapped(_ sender: Any) {
         let btnTitle = (sender as! UIButton).currentTitle ?? ""
         guard let user = System.activeUser, user.type.isParticipant else {
@@ -172,6 +187,7 @@ class TeamInfoTableViewController: UITableViewController {
         }
     }
     
+    ///firebase handling for any changes to the team object and display accordingly
     private func observeEvents() {
         guard let teamID = team?.id else {
             return
@@ -241,7 +257,7 @@ extension TeamInfoTableViewController {
         }
     }
     
-    
+    ///configure the team member cell
     private func configureTeamMemberCell(cell: TeamMemberTableViewCell, at index: Int) {
         guard let team = team else {
             return
@@ -266,6 +282,7 @@ extension TeamInfoTableViewController {
         })
     }
     
+    ///configure the tag cell, load tags collectionview
     private func configureTagCell(cell: TagTableViewCell) {
         cell.tagCollectionView.delegate = self
         let cellNib = UINib(nibName: "TagCell", bundle: nil)

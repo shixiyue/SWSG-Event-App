@@ -6,6 +6,10 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ EventScheduleTableViewCell inherits from UITableViewCell, it displays the brief event information
+ */
+
 import UIKit
 
 class EventScheduleTableViewCell: UITableViewCell {

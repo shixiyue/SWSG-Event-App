@@ -6,6 +6,10 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ CommentsTableViewCell display the comments created by user, it inherits from UITableViewCell 
+ */
+
 import UIKit
 
 class CommentsTableViewCell: UITableViewCell {

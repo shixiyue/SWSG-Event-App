@@ -5,9 +5,9 @@
 //  Created by Li Xiaowei on 4/7/17.
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
-
-import UIKit
 /*
+import UIKit
+
 class CreateEventTableViewController: UITableViewController {
 
     @IBOutlet weak var startTime: UITextField!

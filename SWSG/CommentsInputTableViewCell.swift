@@ -6,6 +6,15 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+/**
+ CommentsInputTableViewCell inherits from UITableViewcell
+ 
+ -parameters:
+     -`addBtn`: a mutable UIButton object, upon clicking, comments will be added, and saved to database
+     -`commentInputField`: a mutable TextView object, inherits from GrayBorderTextView, which in turn, inherits from UITextView
+     -`event`: a mutable event object which is the event that the comment is added to
+ */
+
 import UIKit
 
 class CommentsInputTableViewCell: UITableViewCell {
