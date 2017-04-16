@@ -126,13 +126,7 @@ class ProfileListViewController: BaseViewController {
         })
         
         usersRemovedHandle = usersRef?.observe(.childRemoved, with: { (snapshot) in
-            for (index, user) in self.favourites.enumerated() {
-                if user.uid == snapshot.key {
-                    self.users.remove(at: index)
-                    self.profileList.reloadData()
-                    return
-                }
-            }
+            self.profileList.reloadData()
         })
     }
 }
