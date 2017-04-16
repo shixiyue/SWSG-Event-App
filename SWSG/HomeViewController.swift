@@ -10,6 +10,12 @@ import UIKit
 import Firebase
 import SwiftSpinner
 
+/**
+    HomeViewController is a UIViewController, inherits from BaseViewController
+    for the menu, and contains two other Views EventPageViewController and
+    ChannelPageViewController
+ */
+
 class HomeViewController: BaseViewController {
 
     @IBOutlet weak var eventsView: UIView!
@@ -17,7 +23,6 @@ class HomeViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()
-        // Do any additional setup after loading the view, typically from a nib.
     }
     
     override func viewWillAppear(_ animated: Bool) {

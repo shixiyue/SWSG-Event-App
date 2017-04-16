@@ -9,18 +9,26 @@
 import UIKit
 import Firebase
 
+/**
+    ChannelPageViewController is a UIPageViewController that shows the Latest
+    Chats Widget on the Home View Controller
+ */
+
 class ChannelPageViewController: UIPageViewController {
+    
+    //MARK: Properties
     fileprivate var channels = [Channel]()
     fileprivate var channelIdentifier = [Int: Channel]()
     fileprivate var channelViewControllers = [UIViewController]()
-    
     fileprivate var firstLoaded = false
-    
-    fileprivate var channelsRef: FIRDatabaseReference?
-    private var channelsAddedHandle: FIRDatabaseHandle?
-    
     fileprivate var index = 0
     
+    //MARK: Firebase References
+    fileprivate var channelsRef: FIRDatabaseReference?
+    private var channelsAddedHandle: FIRDatabaseHandle?
+    private var channelsExistingHandle: FIRDatabaseHandle?
+    
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -44,16 +52,27 @@ class ChannelPageViewController: UIPageViewController {
         }
     }
     
+    //MARK: Firebase Functions
     private func observeChannels() {
         channelsRef = System.client.getChannelsRef()
         
-        channelsAddedHandle = channelsRef?.observe(.childAdded, with: { (snapshot) in
+        channelsAddedHandle = channelsRef?.observe(.value, with: { (snapshot) in
+            var validChannels = 0
+            for child in snapshot.children {
+                if let child = child as? FIRDataSnapshot, let channel = Channel(id: child.key, snapshot: child),
+                    Utility.validChannel(channel){
+                    validChannels += 1
+                }
+            }
+            
+            if validChannels == 0 {
+                self.setEmptyChat()
+            }
+        })
+        
+        channelsExistingHandle = channelsRef?.observe(.childAdded, with: { (snapshot) in
             guard let channel = Channel(id: snapshot.key, snapshot: snapshot),
                 Utility.validChannel(channel) else {
-                    if self.channelViewControllers.count == 0 {
-                        self.setEmptyChat()
-                    }
-                    
                     return
             }
             
@@ -71,9 +90,11 @@ class ChannelPageViewController: UIPageViewController {
                     }
                 }
             })
+            
         })
     }
     
+    //MARK: UI Supporting Functions
     fileprivate func setEmptyChat() {
         let storyboard = UIStoryboard(name: Config.mainStoryboard, bundle: nil)
         let emptyChat = storyboard.instantiateViewController(withIdentifier: Config.emptyChatView)
@@ -82,11 +103,12 @@ class ChannelPageViewController: UIPageViewController {
     }
     
     fileprivate func setViewController() {
-        guard index >= 0, index < channelViewControllers.count, channelViewControllers.count > 0 else {
+        guard index >= 0, index < channelViewControllers.count, channelViewControllers.count > 0,
+            let viewController = channelViewControllers.first else {
             return
         }
         
-        setViewController(viewController: channelViewControllers.first!)
+        setViewController(viewController: viewController)
     }
     
     fileprivate func setViewController(viewController: UIViewController) {
@@ -150,7 +172,6 @@ class ChannelPageViewController: UIPageViewController {
         guard let view = sender.view else {
             return
         }
-        
         
         let channel = channelIdentifier[view.tag]
         

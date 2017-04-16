@@ -9,21 +9,26 @@
 import UIKit
 import Firebase
 
+/**
+    EventPageViewController is a UIPageViewController that displays the
+    Latest Events Widget on the HomeViewConteollet
+ */
 class EventPageViewController: UIPageViewController {
     
+    //MARK: Properties
     fileprivate var events = [Event]()
     fileprivate var eventIdentifier = [Int: Event]()
     fileprivate var eventViewControllers = [UIViewController]()
-    
     fileprivate var firstLoaded = false
     fileprivate var isBefore = true
+    fileprivate var index = 0
     
+    //MARK: Firebase References
     fileprivate var eventsRef: FIRDatabaseReference?
     private var eventsAddedHandle: FIRDatabaseHandle?
     private var eventsRemovedHandle: FIRDatabaseHandle?
     
-    fileprivate var index = 0
-    
+    //MARK: Intialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,6 +51,7 @@ class EventPageViewController: UIPageViewController {
         }
     }
     
+    //MARK: Firebase Functions
     private func observeDayEvents() {
         let currentDateTime = Date.init()
         eventsRef = System.client.getEventRef(date: currentDateTime)
@@ -87,6 +93,7 @@ class EventPageViewController: UIPageViewController {
         })
     }
     
+    //MARK: UI Supporting Functions
     fileprivate func setViewController() {
         guard index >= 0, index < eventViewControllers.count else {
             return

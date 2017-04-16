@@ -9,8 +9,17 @@
 import UIKit
 import Firebase
 
+/**
+    CreateChannelViewController is a UIViewController that presents a form for
+    a user to create a Public or Private Channel
+ 
+    Specifications:
+        - isPublic: Bool of whether the channel is a Public or Private channel
+ */
+
 class CreateChannelViewController: UIViewController {
     
+    //MARK: IBOutlets
     @IBOutlet weak var nameTF: UITextField!
     @IBOutlet weak var memberTF: UITextField!
     @IBOutlet weak var addBtn: RoundCornerButton!
@@ -21,13 +30,14 @@ class CreateChannelViewController: UIViewController {
     @IBOutlet weak var headerLbl: UILabel!
     @IBOutlet weak var membersHeaderLbl: UILabel!
 
+    //MARK: Properties
     var isPublic = false
-    
     fileprivate let client = System.client
     fileprivate var members = [User]()
     fileprivate var iconAdded = false
     fileprivate var imagePicker = ImagePickCropperPopoverViewController()
     
+    //MARK: Initialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,6 +46,7 @@ class CreateChannelViewController: UIViewController {
         setUpMemberList()
         setUpIcon()
     }
+    
     fileprivate func setUpLayout() {
         if isPublic {
             headerLbl.text = Config.createPublicHeaderLabel
@@ -90,6 +101,15 @@ class CreateChannelViewController: UIViewController {
         self.view.endEditing(true)
     }
     
+    //MARK: IBOutlet Methods
+    
+    /**
+        Function to handle Save Button Pressed
+     
+        Specifications:
+            - Check that the Name is not empty
+            - Check that if it is a Private Channel there must be more than 1 member
+     */
     @IBAction func saveBtnPressed(_ sender: Any) {
         guard let name = nameTF.text else {
             return
@@ -137,6 +157,12 @@ class CreateChannelViewController: UIViewController {
         addMember()
     }
     
+    /**
+        Add a Member to the Channel
+     
+        Specfications:
+            - Check if Username Exists
+     */
     fileprivate func addMember() {
         guard let username = memberTF.text else {
             return

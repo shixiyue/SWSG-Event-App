@@ -46,11 +46,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         case .schedule:
             self.open(viewController: Config.eventViewController, from: Config.eventStoryboard)
         case .mentors:
-            if type.isMentor {
-                self.open(viewController: Config.mentorAdminViewController, from: Config.mentorStoryboard)
-            } else {
-                self.open(viewController: Config.mentorViewController, from: Config.mentorStoryboard)
-            }
+            self.open(viewController: Config.mentorViewController, from: Config.mentorStoryboard)
         case .teams:
             self.open(viewController: Config.teamRegistrationViewController, from: Config.teamStoryboard)
         case .chat:

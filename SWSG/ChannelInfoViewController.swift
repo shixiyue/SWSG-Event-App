@@ -9,7 +9,17 @@
 import UIKit
 import Firebase
 
+/**
+    ChannelInfoViewController is a UIViewController that displays the information
+    for a particular Channel.
+ 
+    Specifications:
+        - channel: Channel whose information to display
+ */
+
 class ChannelInfoViewController: UIViewController {
+    
+    //MARK: IBOutlets
     @IBOutlet weak var iconIV: UIImageView!
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var membersList: UITableView!
@@ -17,37 +27,46 @@ class ChannelInfoViewController: UIViewController {
     @IBOutlet weak var addBtn: RoundCornerButton!
     @IBOutlet weak var editNameBtn: UIButton!
     
+    //MARK: Properties
     var channel: Channel!
-    var members = [User]()
+    fileprivate var members = [User]()
     fileprivate let client = System.client
     fileprivate var imagePicker = ImagePickCropperPopoverViewController()
     
+    //MARK: Firebase References
     fileprivate var channelRef: FIRDatabaseReference?
     private var channelExistingHandle: FIRDatabaseHandle?
     private var membersNewHandle: FIRDatabaseHandle?
     private var membersRemovedHandle: FIRDatabaseHandle?
     
+    //MARK: Initialization Methods
     override func viewDidLoad() {
+        setUpIcon()
+        setUpMemberList()
+        observeChannel()
+        setUpName()
+        setUpLayout()
+    }
+    
+    private func setUpIcon() {
         iconIV = Utility.roundUIImageView(for: iconIV)
         iconIV.image = Config.placeholderImg
         
-        membersList.delegate = self
-        membersList.dataSource = self
-        
-        guard let id = channel.id else {
-            return
-        }
-        
-        channelRef = client.getChannelRef(for: id)
-        
-        observeChannel()
-        
         let tapIconGesture = UITapGestureRecognizer(target: self, action: #selector(editIcon))
         iconIV.addGestureRecognizer(tapIconGesture)
-        
+    }
+    
+    private func setUpMemberList() {
+        membersList.delegate = self
+        membersList.dataSource = self
+    }
+    
+    private func setUpName() {
         let tapNameGesture = UITapGestureRecognizer(target: self, action: #selector(editName))
         nameLbl.addGestureRecognizer(tapNameGesture)
-        
+    }
+    
+    private func setUpLayout() {
         if channel.type == .team {
             quitBtn.isHidden = true
             addBtn.isHidden = true
@@ -64,6 +83,12 @@ class ChannelInfoViewController: UIViewController {
     
     // MARK: Firebase related methods
     private func observeChannel() {
+        guard let id = channel.id else {
+            return
+        }
+        
+        channelRef = client.getChannelRef(for: id)
+        
         membersNewHandle = channelRef?.child(Config.members).observe(.childAdded, with: { (snapshot) -> Void in
             guard let memberUID = snapshot.value as? String else {
                 return
@@ -100,6 +125,7 @@ class ChannelInfoViewController: UIViewController {
         })
     }
     
+    //MARK: IBOUtlet Actions
     @IBAction func editIconBtnPressed(_ sender: Any) {
         editIcon()
     }
@@ -123,6 +149,7 @@ class ChannelInfoViewController: UIViewController {
         Utility.popViewController(no: 2, viewController: self)
     }
     
+    //MARK: Editing Functions
     func editIcon() {
         Utility.showImagePicker(imagePicker: imagePicker, viewController: self, completion: { (image) in
             if let image = image {
@@ -247,7 +274,7 @@ extension ChannelInfoViewController: UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if members[indexPath.item].uid == client.getUid() {
+        if members[indexPath.item].uid == client.getUid() || channel.type != .privateChannel {
             return false
         } else {
             return true

@@ -258,8 +258,11 @@ extension TeamInfoTableViewController {
             }
         })
         cell.profileimage = Utility.roundUIImageView(for: cell.profileimage)
+        cell.profileimage.image = Config.placeholderImg
         Utility.getProfileImg(uid: team.members[index], completion: {(image) in
-            cell.profileimage.image = image ?? Config.placeholderImg
+            if let image = image {
+                cell.profileimage.image = image
+            }
         })
     }
     
@@ -269,13 +272,10 @@ extension TeamInfoTableViewController {
         cell.tagCollectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
         cell.tagCollectionView.backgroundColor = UIColor.clear
         self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
-        cell.tagCollectionView.performBatchUpdates({() -> Void in
             cell.tagCollectionView.reloadData()
-        }, completion: {(_) -> Void in
             if cell.tagCollectionView.contentSize.height > self.containerHeight {
                 self.containerHeight = cell.tagCollectionView.contentSize.height
             }
-        })
     }
 }
 /// UITableViewDelegate methods

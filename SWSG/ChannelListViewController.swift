@@ -9,6 +9,15 @@
 import UIKit
 import Firebase
 
+/**
+    ChannelListViewController is a UIViewController, inherits from BaseViewController
+    for the menu, that displays a list of all channels available to the user.
+ 
+    It also allows the user to press a button to create a new Channel either as
+    a group chat or a direct chat.
+
+*/
+
 class ChannelListViewController: BaseViewController {
     @IBOutlet weak var chatList: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -30,6 +39,7 @@ class ChannelListViewController: BaseViewController {
     private var channelsNewHandle: FIRDatabaseHandle?
     private var channelsDeletedHandle: FIRDatabaseHandle?
     
+    //MARK: Intialization and Deinitialization
     override func viewDidLoad() {
         super.viewDidLoad()
         addSlideMenuButton()
@@ -44,6 +54,21 @@ class ChannelListViewController: BaseViewController {
         chatList.reloadData()
     }
     
+    deinit {
+        if let existingHandle = channelsExistingHandle {
+            channelsRef.removeObserver(withHandle: existingHandle)
+        }
+        
+        if let newHandle = channelsNewHandle {
+            channelsRef.removeObserver(withHandle: newHandle)
+        }
+        
+        if let deletedHandle = channelsDeletedHandle {
+            channelsRef.removeObserver(withHandle: deletedHandle)
+        }
+    }
+    
+    //MARK: UI Set Up
     private func setUpSearchBar() {
         Utility.setUpSearchBar(searchBar, viewController: self, selector: #selector(donePressed))
         Utility.styleSearchBar(searchBar)
@@ -122,6 +147,13 @@ class ChannelListViewController: BaseViewController {
     }
     
     
+/**
+     When pressing the Compose Button, an action sheet will be displayed showing
+     the various options available for creating a new chat.
+     
+     Most Users are able to create Group Channels and Direct Messages
+     Only Admin/Organizers are able to create Public Channels
+ */
     @IBAction func composeBtnPressed(_ sender: Any) {
         let composeController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
@@ -145,14 +177,12 @@ class ChannelListViewController: BaseViewController {
         })
         composeController.addAction(directAction)
         
-        //Add a Cancel Action to the Popup
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
         }
         composeController.addAction(cancelAction)
         
         composeController.popoverPresentationController?.sourceView = self.view
         
-        //Displays the Compose Popup
         self.present(composeController, animated: true, completion: nil)
     }
     
@@ -211,16 +241,6 @@ class ChannelListViewController: BaseViewController {
             let chatVc = segue.destination as? ChannelViewController {
             chatVc.senderDisplayName = System.activeUser?.profile.username
             chatVc.channel = channel
-        }
-    }
-    
-    deinit {
-        if let existingHandle = channelsExistingHandle {
-            channelsRef.removeObserver(withHandle: existingHandle)
-        }
-        
-        if let newHandle = channelsNewHandle {
-            channelsRef.removeObserver(withHandle: newHandle)
         }
     }
 }
