@@ -9,6 +9,13 @@
 import UIKit
 import Firebase
 
+/**
+ IdeaDetailsViewController is a UIViewController that displays the information
+ for a particular Idea.
+ 
+ Specifications:
+ - idea: Idea whose information to display
+ */
 class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     
     fileprivate var containerHeight: CGFloat!

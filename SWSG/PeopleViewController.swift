@@ -91,14 +91,14 @@ extension PeopleViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = indexPath.item
         guard index != 0 else {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "informationHeaderCell", for: indexPath) as? InformationHeaderTableViewCell else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: Config.informationHeaderCell, for: indexPath) as? InformationHeaderTableViewCell else {
                 return InformationHeaderTableViewCell()
             }
-            cell.informationHeader.text = category
+            cell.setHeader(category)
             return cell
         }
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "personCell", for: indexPath) as? PeopleTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Config.personCell, for: indexPath) as? PeopleTableViewCell else {
             return PeopleTableViewCell()
         }
         let person = peopleInCategory[index - 1]

@@ -8,6 +8,13 @@
 
 import Firebase
 
+/**
+ Faqs is a collection of all Faq object which represents a local cache of all faq
+ in Information System.
+ 
+ Specifications:
+ - faqs: A mutable [faq] object which represents all faq
+ */
 class Faqs {
     
     private var faqs: [Faq] = []

@@ -8,6 +8,13 @@
 
 import UIKit
 
+/**
+ IdeaPostTableViewController is a UIViewController that presents a form for
+ a user to create or edit an idea.
+ 
+ Specifications:
+ - currentIdea: Nil if it is to create a new idea, Idea if it is to edit.
+ */
 class IdeaPostTableViewController: UITableViewController {
     
     private var currentIdea: Idea?

@@ -9,6 +9,13 @@
 import UIKit
 import Firebase
 
+/**
+ IdeaListViewController is a UIViewController, inherits from BaseViewController
+ for the menu, that displays a list of all ideas.
+ 
+ It also allows the user to press a button to create a new Idea 
+ or vote for ideas.
+ */
 class IdeasListTableViewController: BaseViewController {
     
     override var menuYOffset: CGFloat {

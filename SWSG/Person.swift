@@ -6,6 +6,20 @@
 //  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
+
+/**
+ Person is a class that represents a person in the Information System
+ 
+ Specifications:
+ - id: The ID of the Person as given by Firebase
+ - name: Name of the Person
+ - photo: Photo of the Person
+ - title: Title of the Person
+ - intro: Intro of the Person
+ 
+ Representation Invariant:
+ - The name of the Person cannnot be empty
+ */
 class Person {
     
     var id: String?
@@ -21,6 +35,7 @@ class Person {
         self.name = name
         self.title = title
         self.intro = intro
+        _checkRep()
     }
     
     init?(snapshotValue: [String: String]) {
@@ -43,9 +58,11 @@ class Person {
         if let photoURL = snapshotValue[Config.photo] {
             self.photoURL = photoURL
         }
+        _checkRep()
     }
     
     func loadImage(completion: @escaping (Bool) -> Void) {
+        _checkRep()
         guard let photoURL = photoURL else {
             completion(false)
             return
@@ -54,10 +71,12 @@ class Person {
             self.photoURL = nil
             guard let photo = photo else {
                 completion(false)
+                self._checkRep()
                 return
             }
             self.photo = photo
             completion(true)
+            self._checkRep()
         })
     }
     
@@ -67,6 +86,12 @@ class Person {
             dict[Config.id] = id
         }
         return dict
+    }
+    
+    private func _checkRep() {
+        #if DEBUG
+        assert(!name.isEmpty)
+        #endif
     }
     
 }

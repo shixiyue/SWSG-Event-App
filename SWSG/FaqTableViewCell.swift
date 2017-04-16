@@ -22,7 +22,7 @@ class FaqTableViewCell: UITableViewCell {
         guard link != nil else {
             return
         }
-        self.answer.textColor = UIColor(red: 0, green: 0, blue: 238/255, alpha: 1)
+        self.answer.textColor = Config.blueColor
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(openLink))
         self.answer.addGestureRecognizer(tapGestureRecognizer)
         self.answer.isUserInteractionEnabled = true

@@ -8,7 +8,6 @@
 
 import UIKit
 
-// TODO: Figure out how to extract common parts from OverviewViewController and IdeaDetailsTableViewController better
 class OverviewViewController: FullScreenImageTableViewController {
     
     private var overview = OverviewContent() // Placeholder
@@ -36,12 +35,12 @@ class OverviewViewController: FullScreenImageTableViewController {
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "container", let containerViewController = segue.destination as? TemplateViewController {
+        if segue.identifier == Config.container, let containerViewController = segue.destination as? TemplateViewController {
             containerViewController.presetInfo(content: self.overview)
             containerViewController.tableView.layoutIfNeeded()
             containerHeight = containerViewController.tableView.contentSize.height
             self.containerViewController = containerViewController
-        } else if segue.identifier == "edit", let editViewController = segue.destination as? OverviewEditViewController {
+        } else if segue.identifier == Config.edit, let editViewController = segue.destination as? OverviewEditViewController {
             editViewController.overview = overview
         }
     }
@@ -89,7 +88,7 @@ class OverviewViewController: FullScreenImageTableViewController {
     }
     
     @objc private func jumpToEdit() {
-        performSegue(withIdentifier: "edit", sender: self)
+        performSegue(withIdentifier: Config.edit, sender: self)
     }
 
 }
@@ -98,8 +97,8 @@ extension OverviewViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.row {
-        case 1: return containerHeight
-        default: return 44
+        case Config.overviewContainerIndex: return containerHeight
+        default: return Config.defaultTableHeight
         }
     }
     

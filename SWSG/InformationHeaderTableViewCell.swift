@@ -10,6 +10,10 @@ import UIKit
 
 class InformationHeaderTableViewCell: UITableViewCell {
 
-    @IBOutlet var informationHeader: UILabel!
+    @IBOutlet private var informationHeader: UILabel!
+    
+    func setHeader(_ text: String) {
+        informationHeader.text = text
+    }
 
 }

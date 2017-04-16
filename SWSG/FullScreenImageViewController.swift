@@ -33,7 +33,7 @@ class FullScreenImageViewController: UIViewController {
     private func showFullScreenImage(image: UIImage) {
         let newImageView = UIImageView(image: image)
         newImageView.frame = self.view.frame
-        newImageView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
+        newImageView.backgroundColor = UIColor.black
         newImageView.contentMode = .scaleAspectFit
         newImageView.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreenImage))
@@ -80,7 +80,7 @@ class FullScreenImageTableViewController: UITableViewController {
         newImageView.frame = CGRect(x: self.view.frame.origin.x,
                                     y: self.view.frame.origin.y + scrollViewYOffset + navigationControllerOffset,
                                     width: self.view.frame.width, height: self.view.frame.height)
-        newImageView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
+        newImageView.backgroundColor = UIColor.black
         newImageView.contentMode = .scaleAspectFit
         newImageView.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreenImage))

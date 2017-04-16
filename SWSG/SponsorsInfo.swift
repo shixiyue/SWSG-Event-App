@@ -16,7 +16,16 @@ struct SponsorsInfo {
         ("Venue Sponsor",
          [("sponsor-2", "https://www.google.com.sg/")]),
         ("Dummy placeholders",
-         [("sponsor-2", "https://www.google.com.sg/"), ("sponsor-2", "https://www.google.com.sg/"), ("sponsor-2", "https://www.google.com.sg/"), ("sponsor-2", "https://www.google.com.sg/"), ("sponsor-2", "https://www.google.com.sg/"), ("sponsor-2", "https://www.google.com.sg/"), ("sponsor-2", "https://www.google.com.sg/"), ("sponsor-2", "https://www.google.com.sg/"), ("sponsor-2", "https://www.google.com.sg/"), ("sponsor-2", "https://www.google.com.sg/")])
+         [("sponsor-2", "https://www.google.com.sg/"),
+          ("sponsor-2", "https://www.google.com.sg/"),
+          ("sponsor-2", "https://www.google.com.sg/"),
+          ("sponsor-2", "https://www.google.com.sg/"),
+          ("sponsor-2", "https://www.google.com.sg/"),
+          ("sponsor-2", "https://www.google.com.sg/"),
+          ("sponsor-2", "https://www.google.com.sg/"),
+          ("sponsor-2", "https://www.google.com.sg/"),
+          ("sponsor-2", "https://www.google.com.sg/"),
+          ("sponsor-2", "https://www.google.com.sg/")])
     ]
     
 }

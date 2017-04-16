@@ -8,6 +8,14 @@
 
 import Firebase
 
+/**
+ People is a collection of all person object which represents a local cache of all person
+ in Information System.
+ It follows singleton pattern.
+ 
+ Specifications:
+ - people: A mutable [String: [Person]] object which represents all people
+ */
 class People {
     
     private var people = [String: [Person]]()

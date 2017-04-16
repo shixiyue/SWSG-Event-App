@@ -8,9 +8,22 @@
 
 import Firebase
 
+/**
+ OverviewContent is a class that represents an OverviewContent in the Information System
+ 
+ Specifications:
+ - id: The ID of the content, which is to comfrom protocol ImagesContent
+ - description: Description of the Idea
+ - images: Image Array of supplementary images as details
+ - videoLink: Link to an embedded video
+ - imagesState: Store whether images have been fetched or changed
+ 
+ Representation Invariant:
+ - The description cannot be empty.
+ */
 class OverviewContent: ImagesContent, TemplateContent {
     
-    var id: String? = "overview" // To conform the protocol
+    var id: String? = "overview"
     public private(set) var description: String = Config.defaultContent
     public private(set) var videoLink: String = Config.emptyString
     
@@ -23,6 +36,7 @@ class OverviewContent: ImagesContent, TemplateContent {
         self.description = description
         self.images = images
         self.videoLink = videoLink
+        _checkRep()
     }
     
     init(snapshot: FIRDataSnapshot) {
@@ -41,22 +55,33 @@ class OverviewContent: ImagesContent, TemplateContent {
         }
         self.images = [Config.loadingImage]
         imagesState.imagesURL = imagesURL
+        _checkRep()
     }
 
     func getUpdatedOverview(description: String, images: [UIImage], videoLink: String) -> OverviewContent {
+        _checkRep()
         let updatedOverview = OverviewContent(description: description, images: images, videoLink: videoLink)
         updatedOverview.imagesState.imagesHasChanged = self.images != images
+        _checkRep()
         return updatedOverview
     }
     
     func update(description: String, images: [UIImage], videoLink: String) {
+        _checkRep()
         self.description = description
         self.images = images
         self.videoLink = videoLink
+        _checkRep()
     }
     
     func toDictionary() -> [String: String] {
         return [Config.description: description, Config.videoLink: videoLink]
+    }
+    
+    private func _checkRep() {
+        #if DEBUG
+        assert(!description.isEmpty)
+        #endif
     }
     
 }
