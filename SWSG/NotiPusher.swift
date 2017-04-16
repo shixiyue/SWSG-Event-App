@@ -16,7 +16,7 @@ import OneSignal
 class NotiPusher {
     
     /**
-        Send the noti to all user.
+        Send the notification to all user.
             - requires: the type of noti must have the type that is available to all user (.i.e announcement)
     */
     public func pushToAll(noti: PushNotification) {
@@ -29,7 +29,8 @@ class NotiPusher {
     }
     
     /**
-        
+        Send the notification to a specific user by user id
+            - requires: user with this user id exists and subscribed for push notification otherwise the method has no effect
     */    
     public func push(noti: PushNotification, toUserWithUid uid: String) {
         var data = noti.toSendableDict()
@@ -40,6 +41,10 @@ class NotiPusher {
         http.post(urlString: "https://onesignal.com/api/v1/notifications", jsonData: data, authHeaderValue: Secret.oneSignalAuthHeaderValue, completion: nil)
     }
     
+    /**
+        Send the notification to a specific user by email
+            - requires: user with this email exists and subscribed for push notification otherwise the method has no effect
+    */
     public func push(noti: PushNotification, toUserWithEmail: String) {
         var data = noti.toSendableDict()
         data["app_id"] = Secret.oneSignalAppId
@@ -54,6 +59,9 @@ class NotiPusher {
 //        http.get(urlString: "https://onesignal.com/api/v1/notifications?app_id=\(Secret.oneSignalAppId)&limit=limit&offset=offset", authHeaderValue: Secret.oneSignalAuthHeaderValue)
 //    }
     
+    /**
+        Send a push notification of type PushNotificationType.message and with necessary additionalData (chat channel id) used to handle the notification.
+    */
     public func sendMessageNoti(fromUsername: String, fromUserId: String, toChannel: Channel) {
         guard let id = toChannel.id else {
             return

@@ -71,6 +71,10 @@ class FirebaseClient {
         })
     }
     
+    /**
+        Create new user using email and password. 
+        If successful, the firUser object will be passed to completion.
+    */
     public func createNewUser(_ user: User, email: String, password: String, completion: @escaping CreateUserCallback) {
         auth?.createUser(withEmail: email, password: password, completion: {(firUser, err) in
             if err == nil, let uid = firUser?.uid {
@@ -82,6 +86,10 @@ class FirebaseClient {
         
     }
     
+    /**
+     Create new user using firebase credential.
+     If successful, the firUser object will be passed to completion.
+     */
     public func createNewUser(_ user: User, credential: FIRAuthCredential, completion: @escaping CreateUserCallback) {
         auth?.signIn(with: credential) { (firUser, err) in
             if err == nil, let uid = firUser?.uid {
