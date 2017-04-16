@@ -32,7 +32,9 @@ class IdeasListTableViewController: BaseViewController {
     private var ideasDeleteRefHandle: FIRDatabaseHandle?
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == Config.showDetails, let detailsViewController = segue.destination as? IdeaDetailsTableViewController, let index = sender as? Int else {
+        guard segue.identifier == Config.showDetails,
+            let detailsViewController = segue.destination as? IdeaDetailsTableViewController,
+            let index = sender as? Int else {
             return
         }
         
@@ -117,7 +119,8 @@ class IdeasListTableViewController: BaseViewController {
     
     @IBAction func addIdea() {
         guard let user = System.activeUser, user.type.isParticipant else {
-            present(Utility.getFailAlertController(message: Config.ideaCreateErrorMessage), animated: true, completion: nil)
+            present(Utility.getFailAlertController(message: Config.ideaCreateErrorMessage),
+                    animated: true, completion: nil)
             return
         }
         performSegue(withIdentifier: Config.addIdea, sender: nil)
@@ -148,7 +151,8 @@ extension IdeasListTableViewController: UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: Config.ideaItemCell, for: indexPath) as? IdeaItemTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Config.ideaItemCell,
+                                                       for: indexPath) as? IdeaItemTableViewCell else {
             return UITableViewCell()
         }
         

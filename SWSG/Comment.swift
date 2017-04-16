@@ -51,7 +51,6 @@ class Comment {
         self.text = text
     }
     
-    
     func toDictionary() -> [String: String] {
         return [Config.id: authorID,
                 Config.timestamp: Utility.fbDateTimeFormatter.string(from: timestamp),

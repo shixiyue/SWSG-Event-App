@@ -50,7 +50,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         let notificationOpenedBlock: OSHandleNotificationActionBlock = { result in
             // This block gets called when the user reacts to a notification received
-            // TODO
         }
         OneSignal.initWithLaunchOptions(launchOptions, appId: Secret.oneSignalAppId, handleNotificationReceived: notificationReceivedBlock, handleNotificationAction: notificationOpenedBlock, settings: nil)
         OneSignal.inFocusDisplayType = .notification

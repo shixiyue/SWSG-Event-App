@@ -41,7 +41,7 @@ class Channel {
         _checkRep()
     }
     
-    convenience init(type: ChannelType, icon: UIImage?,  name: String, members: [String]) {
+    convenience init(type: ChannelType, icon: UIImage?, name: String, members: [String]) {
         self.init(id: nil, type: type, icon: icon, name: name, members: members)
     }
     
@@ -60,7 +60,8 @@ class Channel {
             self.name = name
         }
         
-        guard let typeRaw = snapshotValue[Config.channelType] as? String, let type = ChannelType(rawValue: typeRaw) else {
+        guard let typeRaw = snapshotValue[Config.channelType] as? String,
+            let type = ChannelType(rawValue: typeRaw) else {
             return nil
         }
         self.type = type

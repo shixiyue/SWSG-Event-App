@@ -317,8 +317,7 @@ extension ChannelListViewController: UITableViewDataSource {
             let textRange = NSMakeRange(0, senderName.characters.count + 1)
             let attributedString = NSMutableAttributedString(string: text)
             
-            nsText.enumerateSubstrings(in: textRange, options: .byWords, using: {
-                (substring, substringRange, _, _) in
+            nsText.enumerateSubstrings(in: textRange, options: .byWords, using: { (_, substringRange, _, _) in
                 
                 attributedString.addAttribute(NSForegroundColorAttributeName,
                                               value: Config.themeColor,
@@ -352,7 +351,8 @@ extension ChannelListViewController: UITableViewDelegate {
         self.performSegue(withIdentifier: Config.channelListToChannel, sender: channel)
     }
     
-    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView,
+                          commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let channel = channels[indexPath.row]
             client.deleteChannel(for: channel)
@@ -385,7 +385,7 @@ extension ChannelListViewController: UITextFieldDelegate {
 extension ChannelListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filteredChannels = channels.filter { channel in
-            if channel.type == .directMessage, let channelID = channel.id  {
+            if channel.type == .directMessage, let channelID = channel.id {
                 guard directMessageChannelName.keys.contains(channelID),
                     let otherPersonName = directMessageChannelName[channelID] else {
                         return false

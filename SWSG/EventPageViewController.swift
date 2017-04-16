@@ -15,7 +15,7 @@ import Firebase
  */
 class EventPageViewController: UIPageViewController {
     
-    //MARK: Properties
+    // MARK: Properties
     fileprivate var events = [Event]()
     fileprivate var eventIdentifier = [Int: Event]()
     fileprivate var eventViewControllers = [UIViewController]()
@@ -23,12 +23,12 @@ class EventPageViewController: UIPageViewController {
     fileprivate var isBefore = true
     fileprivate var index = 0
     
-    //MARK: Firebase References
+    // MARK: Firebase References
     fileprivate var eventsRef: FIRDatabaseReference?
     private var eventsAddedHandle: FIRDatabaseHandle?
     private var eventsRemovedHandle: FIRDatabaseHandle?
     
-    //MARK: Intialization Functions
+    // MARK: Intialization Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,7 +38,7 @@ class EventPageViewController: UIPageViewController {
         observeDayEvents()
     }
     
-    //MARK: Navigation
+    // MARK: Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
@@ -51,7 +51,7 @@ class EventPageViewController: UIPageViewController {
         }
     }
     
-    //MARK: Firebase Functions
+    // MARK: Firebase Functions
     private func observeDayEvents() {
         let currentDateTime = Date.init()
         eventsRef = System.client.getEventRef(date: currentDateTime)
@@ -80,7 +80,7 @@ class EventPageViewController: UIPageViewController {
             }
         })
         
-        System.client.checkHasEventsOn(by: Date.init(), completion: { (exists, error) in
+        System.client.checkHasEventsOn(by: Date.init(), completion: { (exists, _) in
             if !exists {
                 let storyboard = UIStoryboard(name: Config.mainStoryboard, bundle: nil)
                 let viewController = storyboard.instantiateViewController(withIdentifier: Config.emptyEventView)
@@ -93,7 +93,7 @@ class EventPageViewController: UIPageViewController {
         })
     }
     
-    //MARK: UI Supporting Functions
+    // MARK: UI Supporting Functions
     fileprivate func setViewController() {
         guard index >= 0, index < eventViewControllers.count else {
             return
@@ -112,7 +112,8 @@ class EventPageViewController: UIPageViewController {
     fileprivate func getViewController(event: Event) -> UIViewController {
         let storyboard = UIStoryboard(name: Config.mainStoryboard, bundle: nil)
         
-        guard let viewController = storyboard.instantiateViewController(withIdentifier: Config.eventPageCellView) as? EventPageCellViewController, let id = event.id else {
+        guard let viewController = storyboard.instantiateViewController(withIdentifier: Config.eventPageCellView)
+            as? EventPageCellViewController, let id = event.id else {
             return UIViewController()
         }
         
@@ -146,7 +147,7 @@ class EventPageViewController: UIPageViewController {
         return viewController
     }
     
-    func showEvent(_ sender: UIGestureRecognizer){
+    func showEvent(_ sender: UIGestureRecognizer) {
         guard let view = sender.view else {
             return
         }

@@ -23,10 +23,10 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        let takePhotoAction = UIAlertAction(title: "Take a photo", style: .default) { action in
+        let takePhotoAction = UIAlertAction(title: "Take a photo", style: .default) { _ in
             self.takePhoto()
         }
-        let selectPhotoAction = UIAlertAction(title: "Select a photo", style: .default) { action in
+        let selectPhotoAction = UIAlertAction(title: "Select a photo", style: .default) { _ in
             self.selectPhoto()
         }
         
@@ -35,21 +35,24 @@ class ImagePickerViewController: UIViewController, UIImagePickerControllerDelega
         alertController.addAction(selectPhotoAction)
         
         alertController.popoverPresentationController?.sourceView = view
-        alertController.popoverPresentationController?.sourceRect = CGRect(x: alertControllerPosition.x, y: alertControllerPosition.y, width: 1, height: 1)
+        alertController.popoverPresentationController?.sourceRect = CGRect(x: alertControllerPosition.x,
+                                                                           y: alertControllerPosition.y,
+                                                                           width: 1, height: 1)
         
         present(alertController, animated: true, completion: nil)
     }
     
     private func takePhoto() {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-            present(Utility.getFailAlertController(message: "Sorry, this device has no camera"), animated: true, completion: nil)
+            present(Utility.getFailAlertController(message: "Sorry, this device has no camera"),
+                    animated: true, completion: nil)
             return
         }
         imagePicker.allowsEditing = false
         imagePicker.sourceType = .camera
         imagePicker.cameraCaptureMode = .photo
         imagePicker.modalPresentationStyle = .fullScreen
-        present(imagePicker,animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
     
     private func selectPhoto() {
@@ -85,13 +88,15 @@ extension ImagePickerViewController: RSKImageCropViewControllerDelegate {
         dismiss(animated: true, completion: nil)
     }
     
-    func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
+    func imageCropViewController(_ controller: RSKImageCropViewController,
+                                 didCropImage croppedImage: UIImage,
+                                 usingCropRect cropRect: CGRect) {
         updateImage(to: croppedImage.cropToSquare())
         dismiss(animated: true, completion: nil)
     }
     
     fileprivate func jumpToCropImage(imageToCrop: UIImage) {
-        var imageCropVC : RSKImageCropViewController!
+        var imageCropVC: RSKImageCropViewController!
         imageCropVC = RSKImageCropViewController(image: imageToCrop, cropMode: RSKImageCropMode.circle)
         imageCropVC.delegate = self
         self.present(imageCropVC, animated: false, completion: nil)

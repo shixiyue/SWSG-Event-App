@@ -23,7 +23,7 @@ import SwiftGifOrigin
 
 final class ChannelViewController: JSQMessagesViewController {
     
-    //MARK: Properties
+    // MARK: Properties
     var channel: Channel?
     fileprivate var client = System.client
     fileprivate var otherUser: User?
@@ -42,27 +42,27 @@ final class ChannelViewController: JSQMessagesViewController {
         }
     }
     
-    //MARK: JSQ Variables
+    // MARK: JSQ Variables
     fileprivate var messages = [JSQMessage]()
     fileprivate var photoMessageMap = [String: JSQPhotoMediaItem]()
     lazy var outgoingBubbleImageView: JSQMessagesBubbleImage = self.setupOutgoingBubble()
     lazy var incomingBubbleImageView: JSQMessagesBubbleImage = self.setupIncomingBubble()
     
-    //MARK: Firebase References
+    // MARK: Firebase References
     fileprivate var channelRef: FIRDatabaseReference!
     fileprivate var messageRef: FIRDatabaseReference!
     fileprivate var userIsTypingRef: FIRDatabaseReference!
     fileprivate var storageRef: FIRStorageReference!
     
-    //MARK: Firebase Handles
+    // MARK: Firebase Handles
     fileprivate var channelRefHandle: FIRDatabaseHandle?
     fileprivate var newMessageRefHandle: FIRDatabaseHandle?
     fileprivate var updatedMessageRefHandle: FIRDatabaseHandle?
     
-    //MARK: Firebase Queries
+    // MARK: Firebase Queries
     fileprivate var usersTypingQuery: FIRDatabaseQuery!
     
-    //MARK: Initialization Methods
+    // MARK: Initialization Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -75,7 +75,8 @@ final class ChannelViewController: JSQMessagesViewController {
         setUpFirebase()
         setUpChannelInfo()
         
-        let defaultAvatarSize = CGSize(width: kJSQMessagesCollectionViewAvatarSizeDefault, height:kJSQMessagesCollectionViewAvatarSizeDefault )
+        let defaultAvatarSize = CGSize(width: kJSQMessagesCollectionViewAvatarSizeDefault,
+                                       height:kJSQMessagesCollectionViewAvatarSizeDefault )
         
         collectionView?.collectionViewLayout.incomingAvatarViewSize = defaultAvatarSize
         collectionView?.collectionViewLayout.outgoingAvatarViewSize = defaultAvatarSize
@@ -189,7 +190,7 @@ final class ChannelViewController: JSQMessagesViewController {
         }
     }
     
-    //MARK: Message Display Methods
+    // MARK: Message Display Methods
     private func addMessage(withId id: String, name: String, text: String) {
         if let message = JSQMessage(senderId: id, displayName: name, text: text) {
             messages.append(message)
@@ -200,7 +201,7 @@ final class ChannelViewController: JSQMessagesViewController {
         if let message = JSQMessage(senderId: id, displayName: "", media: mediaItem) {
             messages.append(message)
             
-            if (mediaItem.image == nil) {
+            if mediaItem.image == nil {
                 photoMessageMap[key] = mediaItem
             }
             
@@ -208,14 +209,15 @@ final class ChannelViewController: JSQMessagesViewController {
         }
     }
     
-    //MARK: Message Sending Methods
-    override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
+    // MARK: Message Sending Methods
+    override func didPressSend(_ button: UIButton!, withMessageText text: String!,
+                               senderId: String!, senderDisplayName: String!, date: Date!) {
         let itemRef = messageRef.childByAutoId()
         let messageItem = [
             Config.senderId: senderId!,
             Config.senderName: senderDisplayName!,
             Config.text: text!,
-            Config.timestamp: Utility.fbDateTimeFormatter.string(from: Date.init()),
+            Config.timestamp: Utility.fbDateTimeFormatter.string(from: Date.init())
             ]
         
         itemRef.setValue(messageItem)
@@ -226,10 +228,10 @@ final class ChannelViewController: JSQMessagesViewController {
     }
     
     override func didPressAccessoryButton(_ sender: UIButton) {
-        let completionHandler: (UIImage?)->Void = { (image) in
+        let completionHandler: (UIImage?) -> Void = { (image) in
             if let image = image, let key = self.sendPhotoMessage() {
                 self.client.saveImage(image: image, completion: { (url, error) in
-                    if let error = error {
+                    if error != nil {
                         return
                     } else if let url = url {
                         let itemRef = self.messageRef.child(key)
@@ -257,7 +259,7 @@ final class ChannelViewController: JSQMessagesViewController {
             Config.image: imageURLNotSetKey,
             Config.senderName: senderDisplayName!,
             Config.senderId: senderId!,
-            Config.timestamp: Utility.fbDateTimeFormatter.string(from: Date.init()),
+            Config.timestamp: Utility.fbDateTimeFormatter.string(from: Date.init())
             ]
         
         itemRef.setValue(messageItem)
@@ -268,7 +270,7 @@ final class ChannelViewController: JSQMessagesViewController {
         return itemRef.key
     }
     
-    //MARK: Firebase Observation Methods
+    // MARK: Firebase Observation Methods
     private func observeChannel() {
         channelRefHandle = channelRef.observe(.value, with: { (snapshot) in
             guard let channel = Channel(id: snapshot.key, snapshot: snapshot) else {
@@ -284,7 +286,9 @@ final class ChannelViewController: JSQMessagesViewController {
         let messageQuery = messageRef.queryLimited(toLast:25)
         
         newMessageRefHandle = messageQuery.observe(.childAdded, with: { (snapshot) -> Void in
-            let messageData = snapshot.value as! Dictionary<String, String>
+            guard let messageData = snapshot.value as? Dictionary<String, String> else {
+                return
+            }
             
             if let id = messageData[Config.senderId] as String!,
                 let name = messageData[Config.senderName] as String!,
@@ -305,7 +309,9 @@ final class ChannelViewController: JSQMessagesViewController {
         
         updatedMessageRefHandle = messageRef.observe(.childChanged, with: { (snapshot) in
             let key = snapshot.key
-            let messageData = snapshot.value as! [String: String]
+            guard let messageData = snapshot.value as? [String: String] else {
+                return
+            }
             
             if let photoURL = messageData[Config.image] as String! {
                 if let mediaItem = self.photoMessageMap[key] {
@@ -316,7 +322,7 @@ final class ChannelViewController: JSQMessagesViewController {
     }
     
     private func fetchImageDataAtURL(photoURL: String, mediaItem: JSQPhotoMediaItem, key: String) {
-        self.client.fetchImageDataAtURL(photoURL, completion: { (image, url) in
+        self.client.fetchImageDataAtURL(photoURL, completion: { (image, _) in
             guard let image = image else {
                 return
             }
@@ -327,7 +333,7 @@ final class ChannelViewController: JSQMessagesViewController {
         })
     }
     
-    //MARK: Typing Indicator Methods
+    // MARK: Typing Indicator Methods
     private func observeTyping() {
         userIsTypingRef = client.getTypingRef(for: channelRef, by: senderId)
         userIsTypingRef.onDisconnectRemoveValue()
@@ -344,9 +350,10 @@ final class ChannelViewController: JSQMessagesViewController {
     
 }
 
-//MARK: JSQMessagesCollectionView DataSource Methods
+// MARK: JSQMessagesCollectionView DataSource Methods
 extension ChannelViewController {
-    override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageDataForItemAt indexPath: IndexPath!) -> JSQMessageData! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!,
+                                 messageDataForItemAt indexPath: IndexPath!) -> JSQMessageData! {
         return messages[indexPath.item]
     }
     
@@ -354,7 +361,8 @@ extension ChannelViewController {
         return messages.count
     }
     
-    override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!,
+                                 messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
         let message = messages[indexPath.item]
         if message.senderId == senderId {
             return outgoingBubbleImageView
@@ -363,7 +371,8 @@ extension ChannelViewController {
         }
     }
     
-    override func collectionView(_ collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!,
+                                 avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource! {
         let message = messages[indexPath.item]
         let placeholder = JSQMessagesAvatarImageFactory
             .circularAvatarImage(Config.placeholderImg,
@@ -389,7 +398,8 @@ extension ChannelViewController {
         }
     }
     
-    override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!,
+                                 attributedTextForMessageBubbleTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
         let message = messages[indexPath.item]
         
         if shouldShowNameLabel(index: indexPath.item) {
@@ -399,7 +409,8 @@ extension ChannelViewController {
         }
     }
     
-    override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!,
+                                 attributedTextForCellTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
         let message = messages[indexPath.item]
         
         if shouldShowDateLabel(index: indexPath.item) {
@@ -413,8 +424,12 @@ extension ChannelViewController {
         }
     }
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = super.collectionView(collectionView, cellForItemAt: indexPath) as! JSQMessagesCollectionViewCell
+    override func collectionView(_ collectionView: UICollectionView,
+                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = super.collectionView(collectionView, cellForItemAt: indexPath) as?JSQMessagesCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        
         let message = messages[indexPath.item]
         
         if message.senderId == senderId {
@@ -425,7 +440,9 @@ extension ChannelViewController {
         return cell
     }
     
-    override func collectionView(_ collectionView: JSQMessagesCollectionView, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout, heightForMessageBubbleTopLabelAt indexPath: IndexPath) -> CGFloat {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView,
+                                 layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout,
+                                 heightForMessageBubbleTopLabelAt indexPath: IndexPath) -> CGFloat {
         
         if shouldShowNameLabel(index: indexPath.item) {
             return kJSQMessagesCollectionViewCellLabelHeightDefault
@@ -434,7 +451,9 @@ extension ChannelViewController {
         }
     }
     
-    override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAt indexPath: IndexPath!) -> CGFloat {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!,
+                                 layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!,
+                                 heightForCellTopLabelAt indexPath: IndexPath!) -> CGFloat {
         
         if shouldShowDateLabel(index: indexPath.item) {
             return kJSQMessagesCollectionViewCellLabelHeightDefault
@@ -445,7 +464,7 @@ extension ChannelViewController {
     
 }
 
-//MARK: JSQMessagesCollectionView Delegate Methods
+// MARK: JSQMessagesCollectionView Delegate Methods
 extension ChannelViewController {
     override func textViewDidChange(_ textView: UITextView) {
         super.textViewDidChange(textView)

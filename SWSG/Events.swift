@@ -13,7 +13,7 @@ class Events {
     private var events = [Date: [Event]]()
     
     private init() {
-        System.client.getEvents(completion: { (events, error) in
+        System.client.getEvents(completion: { (events, _) in
             self.events = events
         })
     }
@@ -53,7 +53,4 @@ class Events {
         }
         return false
     }
-    
-    
 }
-

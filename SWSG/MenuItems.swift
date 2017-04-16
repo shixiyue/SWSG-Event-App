@@ -13,7 +13,16 @@ import UIKit
  items as well as an enum of MenuOrder to display the different menu options
  */
 struct MenuItems {
-    static let items = ["Home", "Information", "Schedule", "Mentors", "Teams", "Chat", "Ideas",  "People", "Registration", "Logout"]
+    static let items = ["Home",
+                        "Information",
+                        "Schedule",
+                        "Mentors",
+                        "Teams",
+                        "Chat",
+                        "Ideas",
+                        "People",
+                        "Registration",
+                        "Logout"]
     
     static var count: Int {
         return items.count

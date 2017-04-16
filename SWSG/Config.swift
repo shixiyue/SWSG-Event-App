@@ -184,7 +184,6 @@ struct Config {
     static let ideaListTableCellHeight: CGFloat = 110
     static let ideaItemCell = "ideaItemCell"
 
-    
     // Parameters for information message:
     static let done = "Done"
     static let noTeamLabel = "No Team yet"
@@ -241,7 +240,6 @@ struct Config {
     static let channelID = "channelID"
     static let createPublicHeaderLabel = "Create Public Channel"
     static let createPublicMembersHeaderLabel = "Members (Only for Private Channel"
-    
     
     // Parameters for Profile
     static let headerFavourites = "Favourites"

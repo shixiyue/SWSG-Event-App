@@ -46,14 +46,17 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Config.container, let containerViewController = segue.destination as? TemplateViewController {
+        if segue.identifier == Config.container,
+            let containerViewController = segue.destination as? TemplateViewController {
             containerViewController.presetInfo(content: idea)
             containerViewController.tableView.layoutIfNeeded()
             containerHeight = containerViewController.tableView.contentSize.height
             self.containerViewController = containerViewController
-        } else if segue.identifier == Config.editIdea, let ideaPostTableViewController = segue.destination as? IdeaPostTableViewController {
+        } else if segue.identifier == Config.editIdea,
+            let ideaPostTableViewController = segue.destination as? IdeaPostTableViewController {
             ideaPostTableViewController.setIdea(idea)
-        } else if segue.identifier == Config.ideaToProfile, let profileVC = segue.destination as? ProfileViewController, let user = sender as? User {
+        } else if segue.identifier == Config.ideaToProfile,
+            let profileVC = segue.destination as? ProfileViewController, let user = sender as? User {
             profileVC.user = user
         }
     }
@@ -105,14 +108,15 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
             return
         }
         
-        ideaChangeRefHandle = ideaRef.observe(.value, with: { (snapshot) -> Void in
+        ideaChangeRefHandle = ideaRef.observe(.value, with: { (_) -> Void in
             DispatchQueue.main.async {
-                Utility.updateVotes(idea: self.idea, votesLabel: self.votes, upvoteButton: self.upvoteButton, downvoteButton: self.downvoteButton)
+                Utility.updateVotes(idea: self.idea, votesLabel: self.votes,
+                                    upvoteButton: self.upvoteButton,
+                                    downvoteButton: self.downvoteButton)
             }
         })
     }
     
-    // TODO: Move it to Template
     private func loadIdeaImages() {
         guard !idea.imagesState.imagesHasFetched, let id = idea.id else {
             return
@@ -160,7 +164,7 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     }
     
     @objc private func showUserProfile() {
-        System.client.getUserWith(uid: idea.user, completion: { (user, error) in
+        System.client.getUserWith(uid: idea.user, completion: { (user, _) in
             guard let user = user else {
                 return
             }
@@ -173,12 +177,14 @@ class IdeaDetailsTableViewController: FullScreenImageTableViewController {
     }
     
     @objc private func showDeleteWarning() {
-        let alertController = UIAlertController(title: Config.deleteIdea, message: Config.deleteIdeaWarning, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Config.deleteIdea,
+                                                message: Config.deleteIdeaWarning,
+                                                preferredStyle: .alert)
         
         let cancelAction = UIAlertAction(title: Config.no, style: .cancel)
         alertController.addAction(cancelAction)
         
-        let confirmAction = UIAlertAction(title: Config.yes, style: .destructive) { action in
+        let confirmAction = UIAlertAction(title: Config.yes, style: .destructive) { _ in
             self.deleteIdea()
         }
         alertController.addAction(confirmAction)

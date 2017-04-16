@@ -88,7 +88,7 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
     fileprivate func setUpAuthTypes() {
         auth = [AuthType]()
         
-        System.client.checkIfEmailAlreadyExists(email: user.email, completion: { (arr, error) in
+        System.client.checkIfEmailAlreadyExists(email: user.email, completion: { (arr, _) in
             guard let arr = arr else {
                 return
             }
@@ -324,14 +324,17 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
         let message = "Please key in your password:"
         let btnText = "Add"
         let placeholderText = "Password"
-        Utility.createPopUpWithTextField(title: title, message: message, btnText: btnText, placeholderText: placeholderText, existingText: "", isSecure: true, viewController: self, completion: { (password) in
+        Utility.createPopUpWithTextField(title: title, message: message, btnText: btnText,
+                                         placeholderText: placeholderText, existingText: "",
+                                         isSecure: true, viewController: self,
+                                         completion: { (password) in
             guard let user = self.user, let credential =
                 System.client.getEmailCredential(email: user.email, password: password) else {
                 return
             }
             SwiftSpinner.show("Loading Data...")
             
-            System.client.addAdditionalAuth(credential: credential, completion: { (error) in
+            System.client.addAdditionalAuth(credential: credential, completion: { (_) in
                 self.auth.append(.email)
                 
                 self.setUpAuthButtons()
@@ -349,7 +352,8 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
             let currentPasswordTextField = alertController.textFields![0] as UITextField
             let newPasswordTextField = alertController.textFields![1] as UITextField
             
-            guard let currentPassword = currentPasswordTextField.text, let newPassword = newPasswordTextField.text else {
+            guard let currentPassword = currentPasswordTextField.text,
+                let newPassword = newPasswordTextField.text else {
                 return
             }
             self.changePassword(from: currentPassword, to: newPassword)
@@ -367,20 +371,25 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
             textField.isSecureTextEntry = true
         }
         
-        NotificationCenter.default.addObserver(forName: Notification.Name.UITextFieldTextDidChange, object: alertController.textFields?[0], queue: OperationQueue.main) { notification in
+        NotificationCenter.default.addObserver(forName: Notification.Name.UITextFieldTextDidChange,
+                                               object: alertController.textFields?[0],
+                                               queue: OperationQueue.main) { notification in
             let currentPasswordTextField = alertController.textFields![0] as UITextField
             let newPasswordTextField = alertController.textFields![1] as UITextField
-            guard let currentPassword = currentPasswordTextField.text, let newPassword = newPasswordTextField.text else {
+            guard let currentPassword = currentPasswordTextField.text,
+                let newPassword = newPasswordTextField.text else {
                 return
             }
             
             updateAction.isEnabled = !currentPassword.isEmpty && !newPassword.isEmpty
         }
         
-        NotificationCenter.default.addObserver(forName: Notification.Name.UITextFieldTextDidChange, object: alertController.textFields?[1], queue: OperationQueue.main) { notification in
+        NotificationCenter.default.addObserver(forName: Notification.Name.UITextFieldTextDidChange,
+                                               object: alertController.textFields?[1], queue: OperationQueue.main) { notification in
             let currentPasswordTextField = alertController.textFields![0] as UITextField
             let newPasswordTextField = alertController.textFields![1] as UITextField
-            guard let currentPassword = currentPasswordTextField.text, let newPassword = newPasswordTextField.text else {
+            guard let currentPassword = currentPasswordTextField.text,
+                let newPassword = newPasswordTextField.text else {
                 return
             }
             
@@ -399,12 +408,14 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
         }
         System.client.reauthenticateUser(email: user.email, password: currentPassword, completion: { (error) in
             if let firebaseError = error {
-                self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+                self.present(Utility.getFailAlertController(message: firebaseError.errorMessage),
+                             animated: true, completion: nil)
                 return
             }
             System.client.changePassword(newPassword: newPassword, completion: { (error) in
                 if let firebaseError = error {
-                    self.present(Utility.getFailAlertController(message: firebaseError.errorMessage), animated: true, completion: nil)
+                    self.present(Utility.getFailAlertController(message: firebaseError.errorMessage),
+                                 animated: true, completion: nil)
                     return
                 }
                 self.present(Utility.getSuccessAlertController(), animated: true, completion: nil)
@@ -417,7 +428,7 @@ class EditProfileTableViewController: UITableViewController, UIPickerViewDataSou
 extension EditProfileTableViewController: UITextViewDelegate, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        let nextTag = textField.tag + 1;
+        let nextTag = textField.tag + 1
         if nextTag < textFields.count {
             textFields[nextTag].becomeFirstResponder()
         } else {
@@ -439,13 +450,13 @@ extension EditProfileTableViewController: UITextViewDelegate, UITextFieldDelegat
     }
     
     private func updateButtonState() {
-        let isAnyEmpty = textFields.reduce(false, { $0 || ($1.text?.isEmptyContent ?? true) }) || skillsTextView.text.isEmpty
+        let isAnyEmpty = textFields.reduce(false, {
+            $0 || ($1.text?.isEmptyContent ?? true) }) || skillsTextView.text.isEmpty
         doneButton.isEnabled = !isAnyEmpty
         doneButton.alpha = isAnyEmpty ? Config.disableAlpha : Config.enableAlpha
     }
     
 }
-
 
 extension EditProfileTableViewController: GIDSignInDelegate, GIDSignInUIDelegate {
     func googleLoginBtnPressed(sender: UITapGestureRecognizer) {
@@ -457,7 +468,7 @@ extension EditProfileTableViewController: GIDSignInDelegate, GIDSignInUIDelegate
             return
         }
         
-        System.client.addAdditionalAuth(credential: credential, completion: { (error) in
+        System.client.addAdditionalAuth(credential: credential, completion: { (_) in
             SwiftSpinner.show("Communicating with Google...")
             
             self.auth.append(.google)
@@ -469,14 +480,13 @@ extension EditProfileTableViewController: GIDSignInDelegate, GIDSignInUIDelegate
 }
 
 extension EditProfileTableViewController: LoginButtonDelegate {
-    
-    func loginButtonDidCompleteLogin(_ fbLoginButton: LoginButton, result: LoginResult){
-        System.client.getFBProfile(completion: { (user, error) in
+    func loginButtonDidCompleteLogin(_ fbLoginButton: LoginButton, result: LoginResult) {
+        System.client.getFBProfile(completion: { (_, error) in
             guard error == nil, let credential = System.client.getFBCredential() else {
                 return
             }
             
-            System.client.addAdditionalAuth(credential: credential, completion: { (error) in
+            System.client.addAdditionalAuth(credential: credential, completion: { (_) in
                 SwiftSpinner.show("Communicating with Facebook...")
                 
                 self.auth.append(.facebook)
@@ -487,7 +497,7 @@ extension EditProfileTableViewController: LoginButtonDelegate {
         })
     }
     
-    func loginButtonDidLogOut(_ fbLoginButton: LoginButton){
+    func loginButtonDidLogOut(_ fbLoginButton: LoginButton) {
         
     }
 }

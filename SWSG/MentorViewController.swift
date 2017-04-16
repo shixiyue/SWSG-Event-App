@@ -17,7 +17,7 @@ import Firebase
  */
 class MentorViewController: UIViewController {
     
-    //MARK: IBOutlets
+    // MARK: IBOutlets
     @IBOutlet weak var profileImg: UIImageView!
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var positionLbl: UILabel!
@@ -27,13 +27,13 @@ class MentorViewController: UIViewController {
     @IBOutlet weak var consultationSlotCollection: UICollectionView!
     @IBOutlet weak var relatedMentorCollection: UICollectionView!
     
-    //MARK: Properties
+    // MARK: Properties
     public var mentorAcct: User?
     fileprivate var relatedMentors = [User]()
     fileprivate var cvLayout = MultiDirectionCollectionViewLayout()
     private let mentorBookingErrorMsg = "Sorry, only participants of SWSG can book a slot!"
     
-    //MARK: Firebase References
+    // MARK: Firebase References
     private var mentorRef: FIRDatabaseReference!
     private var mentorRefHandle: FIRDatabaseHandle?
     
@@ -98,7 +98,7 @@ class MentorViewController: UIViewController {
     }
     
     private func getRelatedMentors() {
-        System.client.getMentors(completion: { (mentors, error) in
+        System.client.getMentors(completion: { (mentors, _) in
             self.relatedMentors = [User]()
             
             for mentorAcct in mentors {
@@ -140,7 +140,7 @@ class MentorViewController: UIViewController {
         })
     }
     
-    //MARK: Booking Function
+    // MARK: Booking Function
     fileprivate func setSlot(on dayIndex: Int, at index: Int, status: ConsultationSlotStatus) {
         guard System.client.isConnected else {
             present(Utility.getNoInternetAlertController(), animated: true, completion: nil)
@@ -167,7 +167,7 @@ class MentorViewController: UIViewController {
         }
     }
     
-    //MARK: User Interaction Functions
+    // MARK: User Interaction Functions
     @IBAction func composeBtnPressed(_ sender: Any) {
         
         guard let uid = System.client.getUid() else {
@@ -192,7 +192,7 @@ class MentorViewController: UIViewController {
         })
     }
     
-    //MARK: Navigation
+    // MARK: Navigation
     func goToProfile(_ sender: UITapGestureRecognizer) {
         performSegue(withIdentifier: Config.mentorToProfile, sender: nil)
     }
@@ -224,7 +224,7 @@ class MentorViewController: UIViewController {
     }
 }
 
-//MARK: UICollectionViewDelegate, UICollectionViewDataSource
+// MARK: UICollectionViewDelegate, UICollectionViewDataSource
 extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         guard let mentorAcct = mentorAcct, let mentor = mentorAcct.mentor else {
@@ -349,7 +349,7 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let slot = mentor.days[dayIndex].slots[index]
         
         if System.activeUser?.uid == mentorAcct?.uid, slot.status == .booked, let team = slot.team {
-            System.client.getTeam(with: team, completion: { (team, error) in
+            System.client.getTeam(with: team, completion: { (team, _) in
                 if let team = team {
                     let title = "\(slot.startDateTime.string(format: "dd/M - Ha"))"
                     let message = "Has been booked by \(team.name)"
@@ -377,8 +377,8 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
             let slotController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
             
             if slot.status != .vacant {
-                let availableAction = UIAlertAction(title: "Vacant", style: .default, handler: {
-                    _ in
+                let availableAction = UIAlertAction(title: "Vacant", style: .default,
+                                                    handler: { _ in
                     self.setSlot(on: dayIndex, at: index, status: .vacant)
                     return
                 })
@@ -386,8 +386,8 @@ extension MentorViewController: UICollectionViewDelegate, UICollectionViewDataSo
             }
             
             if slot.status != .unavailable {
-                let unavailableAction = UIAlertAction(title: "Unavailable", style: .default, handler: {
-                    _ in
+                let unavailableAction = UIAlertAction(title: "Unavailable", style: .default,
+                                                      handler: { _ in
                     self.setSlot(on: dayIndex, at: index, status: .unavailable)
                     return
                 })

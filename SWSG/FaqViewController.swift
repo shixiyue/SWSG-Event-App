@@ -75,13 +75,15 @@ extension FaqViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = indexPath.item
         guard index != 0 else {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "informationHeaderCell", for: indexPath) as? InformationHeaderTableViewCell else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "informationHeaderCell",
+                                                           for: indexPath) as? InformationHeaderTableViewCell else {
                 return InformationHeaderTableViewCell()
             }
             cell.informationHeader.text = "Frequently Asked Questions"
             return cell
         }
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "faqCell", for: indexPath) as? FaqTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "faqCell",
+                                                       for: indexPath) as? FaqTableViewCell else {
             return FaqTableViewCell()
         }
         let faq = faqInfo[index - 1]

@@ -20,7 +20,7 @@ platform :ios, '9.0'
   pod 'OneSignal', '~> 2.0'
   pod 'QRCodeReader.swift'
   pod 'QRCode'
-  
+  pod 'SwiftLint'  
 end
 
 target 'OneSignalNotificationServiceExtension' do

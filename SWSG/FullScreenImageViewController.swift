@@ -12,7 +12,8 @@ class FullScreenImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(showFullScreenImage as (NSNotification) -> Void), name: Notification.Name(rawValue: Config.fullScreenImage), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showFullScreenImage as (NSNotification) -> Void),
+                                               name: Notification.Name(rawValue: Config.fullScreenImage), object: nil)
     }
     
     func showFullScreenImage(sender: UITapGestureRecognizer) {
@@ -54,7 +55,8 @@ class FullScreenImageTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(showFullScreenImage as (NSNotification) -> Void), name: Notification.Name(rawValue: Config.fullScreenImage), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showFullScreenImage as (NSNotification) -> Void),
+                                               name: Notification.Name(rawValue: Config.fullScreenImage), object: nil)
     }
     
     func showFullScreenImage(sender: UITapGestureRecognizer) {
@@ -75,7 +77,9 @@ class FullScreenImageTableViewController: UITableViewController {
         let newImageView = UIImageView(image: image)
         let scrollViewYOffset = tableView.contentOffset.y
         let navigationControllerOffset = self.navigationController?.navigationBar.frame.size.height ?? 0
-        newImageView.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y + scrollViewYOffset + navigationControllerOffset, width: self.view.frame.width, height: self.view.frame.height)
+        newImageView.frame = CGRect(x: self.view.frame.origin.x,
+                                    y: self.view.frame.origin.y + scrollViewYOffset + navigationControllerOffset,
+                                    width: self.view.frame.width, height: self.view.frame.height)
         newImageView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
         newImageView.contentMode = .scaleAspectFit
         newImageView.isUserInteractionEnabled = true

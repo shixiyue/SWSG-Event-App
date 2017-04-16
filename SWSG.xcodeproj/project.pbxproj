@@ -886,6 +886,7 @@
 				CBF123FCAD2E27D5F4C3D728 /* [CP] Embed Pods Frameworks */,
 				12CCBB3508AF93C5B8F76C69 /* [CP] Copy Pods Resources */,
 				C2A8A67E1E9B0BF8008D50BC /* Embed App Extensions */,
+				3FEA51641EA3936E00370372 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1046,6 +1047,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SWSG/Pods-SWSG-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		3FEA51641EA3936E00370372 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "";
 		};
 		556769A65687CFF6359A68C5 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;

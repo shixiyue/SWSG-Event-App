@@ -89,14 +89,14 @@ class FirebaseClient {
     }
     
     public func signIn(email: String, password: String, completion: @escaping SignInCallback) {
-        auth?.signIn(withEmail: email, password: password, completion: {(user, err) in
+        auth?.signIn(withEmail: email, password: password, completion: {(_, err) in
             OneSignal.syncHashedEmail(email)
             completion(self.checkError(err))
         })
     }
     
     public func signIn(credential: FIRAuthCredential, completion: @escaping SignInCallback) {
-        auth?.signIn(with: credential) { (user, err) in
+        auth?.signIn(with: credential) { (_, err) in
             completion(self.checkError(err))
         }
     }
@@ -106,7 +106,7 @@ class FirebaseClient {
         userRef.setValue(user.toDictionary() as Any)
         
         if let img = user.profile.image {
-            self.saveImage(image: img, completion: { (photoURL, error) in
+            self.saveImage(image: img, completion: { (photoURL, _) in
                 userRef.child(Config.profile).child(Config.image).setValue(photoURL)
                 completion(nil)
             })
@@ -136,7 +136,7 @@ class FirebaseClient {
                                                 accessToken: authentication.accessToken)
     }
     
-    public func getEmailCredential(email: String?, password:String?) -> FIRAuthCredential? {
+    public func getEmailCredential(email: String?, password: String?) -> FIRAuthCredential? {
         guard let email = email, let password = password else {
             return nil
         }
@@ -144,7 +144,7 @@ class FirebaseClient {
         return FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
     }
     
-    public func fbSignIn(completion: @escaping SignInCallback){
+    public func fbSignIn(completion: @escaping SignInCallback) {
         guard let credential = getFBCredential() else {
             completion(nil)
             return
@@ -161,7 +161,7 @@ class FirebaseClient {
             switch result {
             case .success(let response):
                 completion(response.user, nil)
-            case .failed(let error):
+            case .failed(_):
                 completion(nil, nil)
             }
         }
@@ -186,7 +186,7 @@ class FirebaseClient {
     }
     
     public func checkIfEmailAlreadyExists(email: String, completion: @escaping CheckEmailCallback) {
-        auth?.fetchProviders(forEmail: email, completion: { (arr, err) in
+        auth?.fetchProviders(forEmail: email, completion: { (arr, _) in
             completion(arr, nil)
         })
     }
@@ -212,7 +212,7 @@ class FirebaseClient {
     }
     
     public func removeAdditionalAuth(authType: AuthType) {
-        FIRAuth.auth()?.currentUser?.unlink(fromProvider: authType.rawValue) { (user, error) in
+        FIRAuth.auth()?.currentUser?.unlink(fromProvider: authType.rawValue) { (_, _) in
         }
     }
     
@@ -258,7 +258,7 @@ class FirebaseClient {
 
     public func getUserWith(uid: String, completion: @escaping GetUserCallback) {
         let userRef = usersRef.child(uid)
-        // TODO: handle error
+        
         userRef.observeSingleEvent(of: .value, with: {(snapshot) in
             guard let user = User(uid: uid, snapshot: snapshot) else {
                 completion(nil, nil)
@@ -298,7 +298,7 @@ class FirebaseClient {
         userRef.setValue(newUser.toDictionary() as Any)
         
         if let img = newUser.profile.image {
-            self.saveImage(image: img, completion: { (photoURL, error) in
+            self.saveImage(image: img, completion: { (photoURL, _) in
                 userRef.child(Config.profile).child(Config.image).setValue(photoURL)
             })
         }
@@ -350,7 +350,7 @@ class FirebaseClient {
             
             let channel = Channel(type: .team, icon: nil, name: _team.name, members: _team.members)
             
-            self.createNewChannel(for: channel, completion: { (channel, error) in
+            self.createNewChannel(for: channel, completion: { (channel, _) in
                 if let channel = channel {
                     teamRef.child(Config.channelID).setValue(channel.id)
                 }
@@ -387,7 +387,7 @@ class FirebaseClient {
             }
         })
         
-        teamRef.removeValue { (error, ref) in
+        teamRef.removeValue { (_, _) in
         }
     }
     
@@ -416,10 +416,9 @@ class FirebaseClient {
         return Team(id: snapshot.key, snapshot: snapshot)
     }
     
-
     public func getTeam(with id: String, completion: @escaping GetTeamCallback) {
             let teamRef = teamsRef.child(id)
-            // TODO: handle error
+        
             teamRef.observeSingleEvent(of: .value, with: {(snapshot) in
                 guard let team = Team(id: id, snapshot: snapshot) else {
                     completion(nil, nil)
@@ -437,7 +436,7 @@ class FirebaseClient {
         eventRef.setValue(event.toDictionary())
         
         if let image = event.image {
-            saveImage(image: image, completion: { (imageURL, firError) in
+            saveImage(image: image, completion: { (imageURL, _) in
                 guard let imageURL = imageURL else {
                     return
                 }
@@ -707,7 +706,7 @@ class FirebaseClient {
     public func deleteChannel(for id: String) {
         let channelsRef = getChannelsRef()
         let channelRef = channelsRef.child(id)
-        channelRef.removeValue { (error, ref) in
+        channelRef.removeValue { (_, _) in
         }
     }
     
@@ -795,7 +794,8 @@ class FirebaseClient {
                 completion(self.checkError(error))
                 return
             }
-            self.saveImage(path: "information/\(category)/\(person.name.trim()).jpg", image: person.photo, completion: { (photoURL, error) in
+            self.saveImage(path: "information/\(category)/\(person.name.trim()).jpg",
+                image: person.photo, completion: { (photoURL, error) in
                 guard error == nil, let url = photoURL else {
                     completion(self.checkError(error))
                     return
@@ -815,7 +815,8 @@ class FirebaseClient {
             guard error == nil else {
                 return
             }
-            self.saveDetailImages(path: "information/overview", images: overview.images, ref: overviewRef.child(Config.images))
+            self.saveDetailImages(path: "information/overview", images: overview.images,
+                                  ref: overviewRef.child(Config.images))
         })
     }
     
@@ -827,7 +828,8 @@ class FirebaseClient {
             guard error == nil, overview.imagesState.imagesHasChanged else {
                 return
             }
-            self.saveDetailImages(path: "information/overview", images: overview.images, ref: overviewRef.child(Config.images))
+            self.saveDetailImages(path: "information/overview", images: overview.images,
+                                  ref: overviewRef.child(Config.images))
         })
     }
     
@@ -891,7 +893,8 @@ class FirebaseClient {
         }
     }
     
-    private func saveMainImage(mainImage: UIImage, ref: FIRDatabaseReference, completion: @escaping GeneralErrorCallback) {
+    private func saveMainImage(mainImage: UIImage, ref: FIRDatabaseReference,
+                               completion: @escaping GeneralErrorCallback) {
         saveImage(image: mainImage, completion: { (imageURL, error) in
             completion(error)
             guard error == nil, let url = imageURL else {
@@ -988,13 +991,13 @@ class FirebaseClient {
         
         let storageRef = FIRStorage.storage().reference(forURL: imageURL)
         
-        storageRef.data(withMaxSize: INT64_MAX){ (data, error) in
-            if let error = error {
+        storageRef.data(withMaxSize: INT64_MAX) { (data, error) in
+            if error != nil {
                 completion(nil, nil)
                 return
             }
             
-            storageRef.metadata(completion: { (metadata, metadataErr) in
+            storageRef.metadata(completion: { (_, _) in
                 guard let data = data else {
                     return
                 }
@@ -1017,7 +1020,7 @@ class FirebaseClient {
     }
     
     public func fetchEventImage(for id: String, completion: @escaping ImageCallback) {
-        getEventImageURL(with: id, completion: { (url, error) in
+        getEventImageURL(with: id, completion: { (url, _) in
             if let url = url {
                 self.fetchImageDataAtURL(url, completion: { (image, url)  in
                     completion(image, url)
@@ -1183,4 +1186,3 @@ class FirebaseClient {
     }
     
 }
-
