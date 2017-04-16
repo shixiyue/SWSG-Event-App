@@ -49,6 +49,23 @@ class NotiPusher {
         http.post(urlString: "https://onesignal.com/api/v1/notifications", jsonData: data, authHeaderValue: Secret.oneSignalAuthHeaderValue, completion: nil)
     }
     
+//    public func crawlNoti() {
+//        let http = HttpClient()
+//        http.get(urlString: "https://onesignal.com/api/v1/notifications?app_id=\(Secret.oneSignalAppId)&limit=limit&offset=offset", authHeaderValue: Secret.oneSignalAuthHeaderValue)
+//    }
+    
+    public func sendMessageNoti(fromUsername: String, fromUserId: String, toChannel: Channel) {
+        guard let id = toChannel.id else {
+            return
+        }
+        let noti = PushNotification(type: .message, additionData: [Config.channelId: id], message: fromUsername + " sends you a message")
+        for member in toChannel.members {
+            if member != fromUserId {
+                push(noti: noti, toUserWithUid: member)
+            }
+        }
+    }
+    
 }
 
 enum UserGroup {
@@ -61,13 +78,3 @@ enum UserGroup {
     case participant
 }
 
-class NotiHandler {
-    
-    public func handleNoti(_ noti: OSNotification) {
-        print("body")
-        print(noti.payload.body)
-        print("data")
-        print(noti.payload.additionalData)
-    }
-    
-}

@@ -39,6 +39,7 @@ class FirebaseClient {
     typealias GetEventCallback = (Event?, FirebaseError?) -> Void
     typealias GetEventsCallback = ([Date: [Event]], FirebaseError?) -> Void
     typealias GetEventByDayCallback = ([Event], FirebaseError?) -> Void
+    typealias GetNotificationsCallback = ([PushNotification], FirebaseError?) -> Void
     typealias GetTeamCallback = (Team?, FirebaseError?) -> Void
     typealias GetTeamsCallback = ([Team], FirebaseError?) -> Void
     typealias RegistrationCallback = (FirebaseError?) -> Void
@@ -53,6 +54,8 @@ class FirebaseClient {
     private let eventsRef = FIRDatabase.database().reference(withPath: "events")
     private let ideasRef = FIRDatabase.database().reference(withPath: "ideas")
     private let informationRef = FIRDatabase.database().reference(withPath: "information")
+    private let notisIndividualRef = FIRDatabase.database().reference(withPath: "notifications_individual")
+    private let notisAllRef = FIRDatabase.database().reference(withPath: "notifications_all")
     private let registrationRef = FIRDatabase.database().reference(withPath: "registration")
     private let storageRef = FIRStorage.storage().reference(forURL: Config.appURL)
     private let auth = FIRAuth.auth()
@@ -338,6 +341,58 @@ class FirebaseClient {
         
     }
     
+    public func createNotiIndividual(_ noti: PushNotification, uid: String, completion: GeneralErrorCallback?) {
+        let timestamp = NSDate().timeIntervalSince1970
+        let notiRef = notisIndividualRef.child(uid).child(String(timestamp)).childByAutoId()
+        var value = noti.toDictionary()
+        value[Config.timestamp] = timestamp
+        notiRef.setValue(value)
+        if let completion = completion {
+            completion(nil)
+        }
+    }
+
+    public func getNotiIndividual(uid: String, count: Int, completion: @escaping GetNotificationsCallback) {
+        let notiRef = notisIndividualRef.child(uid)
+        let query = notiRef.queryOrdered(byChild: Config.timestamp).queryLimited(toLast: UInt(count))
+        query.observeSingleEvent(of: .value, with: { (snapshot) in
+            var result = [PushNotification]()
+            for child in snapshot.children {
+                guard let childSnapshot = child as? FIRDataSnapshot, let noti = PushNotification(snapshot: childSnapshot) else {
+                    continue
+                }
+                result.append(noti)
+            }
+            completion(result, nil)
+        })
+    }
+
+    public func createNotiAll(_ noti: PushNotification, completion: GeneralErrorCallback?) {
+        let timestamp = NSDate().timeIntervalSince1970
+        let notiRef = notisAllRef.child(String(timestamp)).childByAutoId()
+        var value = noti.toDictionary()
+        value[Config.timestamp] = timestamp 
+        notiRef.setValue(value)
+        if let completion = completion {
+            completion(nil)
+        }
+    }
+
+    public func getNotiAll(count: Int, completion: @escaping GetNotificationsCallback) {
+        let notiRef = notisAllRef
+        let query = notiRef.queryOrdered(byChild: Config.timestamp).queryLimited(toLast: UInt(count))
+        query.observeSingleEvent(of: .value, with: { (snapshot) in
+            var result = [PushNotification]()
+            for child in snapshot.children {
+                guard let childSnapshot = child as? FIRDataSnapshot, let noti = PushNotification(snapshot: childSnapshot) else {
+                    continue
+                }
+                result.append(noti)
+            }
+            completion(result, nil)
+        })
+    }
+
     public func createTeam(_team: Team, completion: @escaping CreateTeamCallback) {
         let teamRef = teamsRef.childByAutoId()
         _team.id = teamRef.key
