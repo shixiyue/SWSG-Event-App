@@ -13,6 +13,7 @@
  */
 
 import UIKit
+import Firebase
 
 class TeamCreateTableViewController: UITableViewController {
     //IB outlets
@@ -104,9 +105,10 @@ class TeamCreateTableViewController: UITableViewController {
             self.present(Utility.getFailAlertController(message: emptySkillFieldErrorMsg),animated: true, completion: nil)
             return
         }
-        guard let uid = user.uid else {
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else {
             return
         }
+        System.activeUser?.setUid(uid: uid)
         let team = Team(id: "", members: [uid], name: name, lookingFor: looking, isPrivate: false, tags: tags)
         System.client.createTeam(_team: team, completion: { (error) in
             if let firebaseError = error {

@@ -54,6 +54,10 @@ class TeamInfoTableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        System.activeUser?.setUid(uid: uid)
         guard let user = System.activeUser, user.type.isParticipant, let team = team else {
             return
         }

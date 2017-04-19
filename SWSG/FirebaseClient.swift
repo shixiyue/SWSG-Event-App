@@ -114,6 +114,7 @@ class FirebaseClient {
     
     public func createUserAccount(uid: String, user: User, completion: @escaping CreateUserCallback) {
         let userRef = self.usersRef.child(uid)
+        user.setUid(uid: uid)
         userRef.setValue(user.toDictionary() as Any)
         
         if let img = user.profile.image {
