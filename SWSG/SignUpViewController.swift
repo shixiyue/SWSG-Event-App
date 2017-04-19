@@ -3,7 +3,7 @@
 //  SWSG
 //
 //  Created by shixiyue on 13/3/17.
-//  Copyright Â© 2017 nus.cs3217.swsg. All rights reserved.
+//  Copyright © 2017 nus.cs3217.swsg. All rights reserved.
 //
 
 import UIKit
@@ -36,9 +36,6 @@ class SignUpViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let noti = PushNotification(type: .announcement, additionData: ["foo": "bar"], message: "one to rule")
-        let pusher = NotiPusher()
-        pusher.pushToAll(noti: noti)
     }
     
     override func viewWillAppear(_ animated: Bool) {
